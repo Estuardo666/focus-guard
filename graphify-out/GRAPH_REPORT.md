@@ -1,16 +1,16 @@
 # Graph Report - FocusGuard-Autopilot  (2026-07-30)
 
 ## Corpus Check
-- 354 files · ~262,165 words
+- 354 files · ~264,103 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2691 nodes · 4584 edges · 382 communities (314 shown, 68 thin omitted)
+- 2701 nodes · 4612 edges · 392 communities (321 shown, 71 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 112 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3ea50d77`
+- Built from commit: `cfe7981f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -49,10 +49,10 @@
 - [[_COMMUNITY_Community 31|Community 31]]
 - [[_COMMUNITY_Community 32|Community 32]]
 - [[_COMMUNITY_Community 33|Community 33]]
-- [[_COMMUNITY_Community 34|Community 34]]
 - [[_COMMUNITY_Community 35|Community 35]]
 - [[_COMMUNITY_Community 36|Community 36]]
 - [[_COMMUNITY_Community 37|Community 37]]
+- [[_COMMUNITY_Community 38|Community 38]]
 - [[_COMMUNITY_Community 39|Community 39]]
 - [[_COMMUNITY_Community 40|Community 40]]
 - [[_COMMUNITY_Community 41|Community 41]]
@@ -103,9 +103,9 @@
 - [[_COMMUNITY_Community 86|Community 86]]
 - [[_COMMUNITY_Community 87|Community 87]]
 - [[_COMMUNITY_Community 88|Community 88]]
+- [[_COMMUNITY_Community 89|Community 89]]
 - [[_COMMUNITY_Community 90|Community 90]]
 - [[_COMMUNITY_Community 91|Community 91]]
-- [[_COMMUNITY_Community 92|Community 92]]
 - [[_COMMUNITY_Community 93|Community 93]]
 - [[_COMMUNITY_Community 94|Community 94]]
 - [[_COMMUNITY_Community 95|Community 95]]
@@ -123,7 +123,6 @@
 - [[_COMMUNITY_Community 107|Community 107]]
 - [[_COMMUNITY_Community 108|Community 108]]
 - [[_COMMUNITY_Community 109|Community 109]]
-- [[_COMMUNITY_Community 110|Community 110]]
 - [[_COMMUNITY_Community 111|Community 111]]
 - [[_COMMUNITY_Community 112|Community 112]]
 - [[_COMMUNITY_Community 113|Community 113]]
@@ -161,28 +160,36 @@
 - [[_COMMUNITY_Community 145|Community 145]]
 - [[_COMMUNITY_Community 146|Community 146]]
 - [[_COMMUNITY_Community 147|Community 147]]
+- [[_COMMUNITY_Community 148|Community 148]]
 - [[_COMMUNITY_Community 149|Community 149]]
 - [[_COMMUNITY_Community 150|Community 150]]
 - [[_COMMUNITY_Community 151|Community 151]]
-- [[_COMMUNITY_Community 166|Community 166]]
-- [[_COMMUNITY_Community 372|Community 372]]
-- [[_COMMUNITY_Community 373|Community 373]]
-- [[_COMMUNITY_Community 374|Community 374]]
-- [[_COMMUNITY_Community 375|Community 375]]
-- [[_COMMUNITY_Community 376|Community 376]]
-- [[_COMMUNITY_Community 377|Community 377]]
-- [[_COMMUNITY_Community 378|Community 378]]
-- [[_COMMUNITY_Community 379|Community 379]]
-- [[_COMMUNITY_Community 380|Community 380]]
-- [[_COMMUNITY_Community 381|Community 381]]
+- [[_COMMUNITY_Community 152|Community 152]]
+- [[_COMMUNITY_Community 153|Community 153]]
+- [[_COMMUNITY_Community 154|Community 154]]
+- [[_COMMUNITY_Community 155|Community 155]]
+- [[_COMMUNITY_Community 157|Community 157]]
+- [[_COMMUNITY_Community 158|Community 158]]
+- [[_COMMUNITY_Community 159|Community 159]]
+- [[_COMMUNITY_Community 175|Community 175]]
+- [[_COMMUNITY_Community 382|Community 382]]
+- [[_COMMUNITY_Community 383|Community 383]]
+- [[_COMMUNITY_Community 384|Community 384]]
+- [[_COMMUNITY_Community 385|Community 385]]
+- [[_COMMUNITY_Community 386|Community 386]]
+- [[_COMMUNITY_Community 387|Community 387]]
+- [[_COMMUNITY_Community 388|Community 388]]
+- [[_COMMUNITY_Community 389|Community 389]]
+- [[_COMMUNITY_Community 390|Community 390]]
+- [[_COMMUNITY_Community 391|Community 391]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `FocusViewModel` - 76 edges
 2. `IpcProtocol` - 47 edges
-3. `verifyPolicy()` - 38 edges
+3. `verifyPolicy()` - 41 edges
 4. `string` - 36 edges
-5. `FocusViewModelTests` - 35 edges
-6. `MainWindow` - 34 edges
+5. `MainWindow` - 35 edges
+6. `FocusViewModelTests` - 35 edges
 7. `InMemoryFocusService` - 31 edges
 8. `FocusGuard.Domain` - 29 edges
 9. `IpcProtocol` - 27 edges
@@ -200,7 +207,7 @@
 - `ProcessAgentProtocol` --references--> `string`  [EXTRACTED]
   src/FocusGuard.Contracts/ProcessAgentContracts.cs → tests/FocusGuard.Service.Tests/StrictSessionStoreTests.cs
 
-## Communities (382 total, 68 thin omitted)
+## Communities (392 total, 71 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.05
@@ -208,7 +215,7 @@ Nodes (50): CancellationToken, Memory, ReadOnlyMemory, Stream, ValueTask, Bounde
 
 ### Community 1 - "Community 1"
 Cohesion: 0.05
-Nodes (51): int, string, GeneratedRecoveryCode, RecoveryCodeService, RecoveryCredential, byte, CancellationToken, DateTimeOffset (+43 more)
+Nodes (51): ILogger, int, string, GeneratedRecoveryCode, RecoveryCodeService, RecoveryCredential, byte, CancellationToken (+43 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.05
@@ -223,367 +230,383 @@ Cohesion: 0.08
 Nodes (17): connectNativePort(), markNativeUnavailable(), queryNative(), sendHealth(), createNativePortClient(), compiledRules(), compileMatcher(), escapeGlob() (+9 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.05
-Nodes (17): ConfirmedProcessPolicyEvaluator, ExecutableSha256Cache, ProcessMonitorPolicyReceiver, PolicyDistributionCoordinator, ExecutableSha256Cache, ProcessEnforcementWorker, Read(), ManualClock (+9 more)
+Cohesion: 0.06
+Nodes (33): FocusGuard.NativeMessaging, FocusGuard.NativeMessaging.Tests, GeneratedRegex, Regex, Stream, Task, JsonSerializerOptions, string (+25 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.05
-Nodes (16): Action, Button, CapturedItemView, BlockScreenViewModel, CapturedItemViewModel, SessionSummaryViewModel, SessionSummaryViewModelTests, StubClient (+8 more)
+Nodes (17): Application, CancellingController, ProcessTerminationTests, RecordingAuditSink, App, OwnerPresentProcessIntegrationTests, RecordingAuditSink, FakeGateway (+9 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.06
-Nodes (15): Application, CancellingController, ProcessTerminationTests, RecordingAuditSink, App, RecordingAuditSink, FakeGateway, WindowsApplicationProcessControllerTests (+7 more)
+Nodes (16): ConcurrentQueue, EnforcementPolicy, AgentAuditStore, ExtensionHealthPipeConstants, ExtensionHealthPipeService, ExtensionHealthState, EmptyFocusAuditStore, IFocusService (+8 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.07
-Nodes (28): FocusGuard.NativeMessaging, FocusGuard.NativeMessaging.Tests, GeneratedRegex, Regex, JsonSerializerOptions, string, NativeHostConfiguration, NativeHostManifest (+20 more)
-
-### Community 9 - "Community 9"
 Cohesion: 0.05
 Nodes (6): FocusViewModelTests, MemoryProfileStore, RecordingClient, IProfileStore, List, StatusResponse
 
-### Community 10 - "Community 10"
-Cohesion: 0.06
-Nodes (15): ConcurrentQueue, EnforcementPolicy, AgentAuditStore, ExtensionHealthPipeService, ExtensionHealthState, EmptyFocusAuditStore, IFocusService, InMemoryFocusService (+7 more)
-
-### Community 11 - "Community 11"
+### Community 9 - "Community 9"
 Cohesion: 0.07
 Nodes (3): Failure(), IpcProtocol, Success()
 
-### Community 12 - "Community 12"
+### Community 10 - "Community 10"
+Cohesion: 0.09
+Nodes (8): DirectoryInfo, SessionCaptureTests, TemporaryHistoryStore, TestClock, SqliteProfileStoreTests, TemporaryDatabase, SqliteSessionHistoryStoreTests, TemporaryDatabase
+
+### Community 11 - "Community 11"
 Cohesion: 0.08
+Nodes (21): FocusGuard.Monitoring.Tests, FocusGuard.Monitoring, Dictionary, ApplicationCandidate, ApplicationRuleMatcher, HashSet, IEnumerable, IReadOnlyList (+13 more)
+
+### Community 12 - "Community 12"
+Cohesion: 0.09
 Nodes (9): DesktopSettings, DesktopSettingsStore, DurationPresetViewModel, FocusViewModel, IBrush, NavigationSection, RecoveryCredential, StoredProfile (+1 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.12
-Nodes (16): Exception, Process, CancellationToken, Task, CancellationToken, IReadOnlyList, Task, TimeSpan (+8 more)
+Cohesion: 0.11
+Nodes (12): FocusGuard.Service, FocusGuard.Domain.Tests, FocusGuard.Contracts.Tests, FocusGuard.Domain, FocusGuard.Contracts, FocusGuard.Service.Tests, FocusGuard.Recovery/Program.cs, TimeSpan (+4 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.14
-Nodes (21): CancellationToken, List, Task, TimeProvider, ApplicationProcessTarget, AuditedProcessTerminator, FakeApplicationProcessController, IApplicationProcessController (+13 more)
-
-### Community 15 - "Community 15"
-Cohesion: 0.14
 Nodes (3): ICaptureStore, ISessionHistoryStore, SqliteSessionHistoryStore
 
-### Community 16 - "Community 16"
+### Community 15 - "Community 15"
 Cohesion: 0.09
 Nodes (8): FragmentedReadStream, NativeMessageFramingTests, SeekOrigin, Stream, CancellationToken, Memory, ValueTask, FragmentedReadStream
 
 ### Community 17 - "Community 17"
-Cohesion: 0.12
-Nodes (17): FocusGuard.Monitoring.Tests, FocusGuard.Monitoring, Dictionary, HashSet, IEnumerable, IReadOnlyList, TimeProvider, TimeSpan (+9 more)
+Cohesion: 0.15
+Nodes (19): Queue, CancellationToken, List, Task, TimeProvider, ApplicationProcessTarget, AuditedProcessTerminator, FakeApplicationProcessController (+11 more)
 
-### Community 19 - "Community 19"
+### Community 18 - "Community 18"
 Cohesion: 0.13
 Nodes (15): CancellationToken, Func, int, JsonSerializerOptions, string, Task, TimeProvider, TimeSpan (+7 more)
 
+### Community 19 - "Community 19"
+Cohesion: 0.14
+Nodes (13): Exception, Process, CancellationToken, IReadOnlyList, Task, TimeSpan, WindowsProcessGateway, WindowsProcessInstance (+5 more)
+
 ### Community 20 - "Community 20"
-Cohesion: 0.08
-Nodes (9): ActiveFocusView, ApplicationRulesView, StrictConfirmationView, WebsiteRulesView, ActiveFocusView, ApplicationRulesView, StrictConfirmationView, WebsiteRulesView (+1 more)
-
-### Community 21 - "Community 21"
-Cohesion: 0.15
-Nodes (10): FocusGuard.Service, FocusGuard.Contracts.Tests, FocusGuard.Domain, FocusGuard.Contracts, FocusGuard.Service.Tests, FocusGuard.Recovery/Program.cs, TimeSpan, ExtensionHealthPipeConstants (+2 more)
-
-### Community 22 - "Community 22"
 Cohesion: 0.12
 Nodes (13): ICommand, IEnumerable, IReadOnlyList, ObservableCollection, string, ApplicationMatchOption, ApplicationRuleEditorViewModel, ApplicationRuleRowViewModel (+5 more)
 
+### Community 21 - "Community 21"
+Cohesion: 0.09
+Nodes (9): DesktopSettingsStore, EnforcementRestartTests, FixedTimeProvider, SanitizedAuditStoreTests, StrictSessionStoreTests, IDisposable, string, string (+1 more)
+
 ### Community 24 - "Community 24"
-Cohesion: 0.1
-Nodes (7): Control, CaptureProtocol, BoundedPipeFraming, WeekSparkline, NativeMessageFraming, int, StyledProperty
+Cohesion: 0.09
+Nodes (8): ActiveFocusView, ApplicationRulesView, StrictConfirmationView, WebsiteRulesView, ActiveFocusView, StrictConfirmationView, WebsiteRulesView, UserControl
 
 ### Community 25 - "Community 25"
-Cohesion: 0.18
-Nodes (7): DelayedRecoveryRequestStore, StrictPolicyPersistenceCoordinator, StrictPolicyPersistenceWorker, StrictPolicySnapshotStore, ILogger, long, RecoveryAuditLog
+Cohesion: 0.24
+Nodes (3): ManualTimeProvider, StrictPolicyPersistenceTests, long
 
-### Community 27 - "Community 27"
-Cohesion: 0.14
+### Community 26 - "Community 26"
+Cohesion: 0.15
 Nodes (10): ICommand, IEnumerable, IReadOnlyList, ObservableCollection, string, DelegateCommand, RemoveCommandAdapter, WebsiteRuleEditorViewModel (+2 more)
 
+### Community 27 - "Community 27"
+Cohesion: 0.21
+Nodes (5): DelayedRecoveryRequestStore, StrictPolicyPersistenceCoordinator, StrictPolicyPersistenceWorker, StrictPolicySnapshotStore, RecoveryAuditLog
+
 ### Community 28 - "Community 28"
-Cohesion: 0.13
+Cohesion: 0.14
 Nodes (14): IReadOnlySet, DateTimeOffset, HashSet, int, JsonSerializerOptions, ReadOnlySpan, string, TimeSpan (+6 more)
 
-### Community 30 - "Community 30"
-Cohesion: 0.27
-Nodes (8): FakeGateway, ProcessTerminationStatus, Fact, InlineData, string, Task, Theory, WindowsApplicationProcessControllerTests
+### Community 29 - "Community 29"
+Cohesion: 0.19
+Nodes (7): Action, Button, BlockingProcessesForm, Program, SetupForm, Form, TextBox
 
-### Community 31 - "Community 31"
-Cohesion: 0.15
-Nodes (7): DelegateCommand, AsyncDelegateCommand, AsyncRuleCommand, DelegateCommand, RemoveCommandAdapter, WebsiteRuleRowViewModel, ICommand
+### Community 30 - "Community 30"
+Cohesion: 0.3
+Nodes (7): FakeGateway, Fact, InlineData, string, Task, Theory, WindowsApplicationProcessControllerTests
 
 ### Community 32 - "Community 32"
-Cohesion: 0.18
-Nodes (12): ExtensionHealthRequest, ExtensionHealthResponse, CancellationToken, ReadOnlyMemory, string, TimeSpan, ValueTask, IExtensionHealthClient (+4 more)
+Cohesion: 0.15
+Nodes (13): ProcessTerminationAuditEvent, StreamReader, CancellationToken, List, RecordingAuditSink, CancellationToken, Fact, List (+5 more)
 
 ### Community 33 - "Community 33"
-Cohesion: 0.14
-Nodes (6): ApplicationMatchOption, ApplicationRuleEditorViewModel, DesktopSettingsStore, WebsiteRuleEditorViewModel, RuleAction, string
-
-### Community 35 - "Community 35"
-Cohesion: 0.15
-Nodes (11): OwnerPresentProcessIntegrationTests, ITestOutputHelper, StreamReader, CancellationToken, Fact, List, string, Task (+3 more)
-
-### Community 36 - "Community 36"
-Cohesion: 0.15
-Nodes (8): CancellationTokenSource, EventArgs, ApplicationBlockedEventArgs, SessionEndedEventArgs, RoutedEventArgs, bool, Task, MainWindow
-
-### Community 37 - "Community 37"
 Cohesion: 0.15
 Nodes (6): BackgroundService, FixedTimeProvider, FocusSessionExpirationWorker, ProcessAgentPipeService, RebootExpirationDrillWorker, TimeProvider
 
-### Community 39 - "Community 39"
+### Community 35 - "Community 35"
+Cohesion: 0.21
+Nodes (7): AsyncRuleCommand, AsyncDelegateCommand, AsyncRuleCommand, NewProfileRuleDraftViewModel, SavedApplicationRuleViewModel, SavedWebsiteRuleViewModel, ICommand
+
+### Community 37 - "Community 37"
 Cohesion: 0.17
 Nodes (9): FocusGuard.Infrastructure.Windows.Tests, FocusGuard.Infrastructure.Windows.Processes, FocusGuard.Application.Tests, FocusGuard.Application, HashSet, ProtectedProcessPolicy, string, ProcessTerminationDeveloperOptions (+1 more)
 
-### Community 40 - "Community 40"
-Cohesion: 0.18
-Nodes (6): FocusGuard.Storage.Tests, FocusGuard.Storage, FocusGuard.Desktop.Tests, FocusGuard.Desktop, Fact, WebsiteRuleEditorViewModelTests
-
-### Community 41 - "Community 41"
+### Community 38 - "Community 38"
 Cohesion: 0.18
 Nodes (10): CancellationToken, DateTimeOffset, int, long, Task, TimeProvider, TimeSpan, DevelopmentServiceConstants (+2 more)
 
-### Community 42 - "Community 42"
+### Community 39 - "Community 39"
 Cohesion: 0.18
 Nodes (11): CancellationToken, DateTimeOffset, Guid, long, NamedPipeServerStream, Stream, string, Task (+3 more)
 
-### Community 43 - "Community 43"
+### Community 40 - "Community 40"
+Cohesion: 0.15
+Nodes (14): int, string, TimeProvider, TimeSpan, IExtensionHealthClient, INativeMessageHandler, NamedPipeExtensionHealthClient, NativeHost (+6 more)
+
+### Community 41 - "Community 41"
 Cohesion: 0.2
 Nodes (4): InMemoryFocusServiceTests, RecordingStrictSessionStore, TestTimeProvider, StrictPolicySnapshot
 
-### Community 44 - "Community 44"
+### Community 42 - "Community 42"
 Cohesion: 0.17
 Nodes (3): BlockScreenViewModel, BlockScreenWindow, nint
 
+### Community 43 - "Community 43"
+Cohesion: 0.23
+Nodes (7): ExtensionHealthRequest, ExtensionHealthResponse, CancellationToken, ValueTask, Fact, Task, ExtensionHealthPipeServiceTests
+
 ### Community 45 - "Community 45"
 Cohesion: 0.19
-Nodes (4): IFocusAuditStore, JsonLinesFocusAuditStore, ServiceFailureLog, SemaphoreSlim
+Nodes (4): StrictConfirmationPhraseGenerator, IStrictSessionStore, StrictSessionStore, Func
 
 ### Community 46 - "Community 46"
 Cohesion: 0.19
-Nodes (4): StrictConfirmationPhraseGenerator, IStrictSessionStore, StrictSessionStore, Func
+Nodes (4): IFocusAuditStore, JsonLinesFocusAuditStore, ServiceFailureLog, SemaphoreSlim
+
+### Community 47 - "Community 47"
+Cohesion: 0.16
+Nodes (5): ManualClock, RecordingTarget, StaleTarget, ThrowingTarget, IPolicyDistributionTarget
+
+### Community 48 - "Community 48"
+Cohesion: 0.2
+Nodes (5): FocusGuard.Storage.Tests, FocusGuard.Storage, FocusGuard.Desktop.Tests, FocusGuard.Desktop, ApplicationRulesView
 
 ### Community 49 - "Community 49"
 Cohesion: 0.21
 Nodes (9): Failure, DateTimeOffset, Fact, InlineData, Task, Theory, Failure, FixedTimeProvider (+1 more)
 
 ### Community 50 - "Community 50"
-Cohesion: 0.15
-Nodes (11): DateTimeOffset, Guid, int, TimeProvider, INativeMessageHandler, NativeHost, ServiceHealthNativeMessageHandler, CancellationToken (+3 more)
+Cohesion: 0.21
+Nodes (6): CancellationTokenSource, EventArgs, RoutedEventArgs, bool, Task, MainWindow
 
-### Community 52 - "Community 52"
+### Community 51 - "Community 51"
 Cohesion: 0.17
 Nodes (8): bool, DateTimeOffset, ICommand, IReadOnlyList, string, TimeProvider, DelegateCommand, StrictConfirmationViewModel
 
-### Community 53 - "Community 53"
-Cohesion: 0.17
-Nodes (6): bool, DurationPresetViewModel, ProfileSuggestionViewModel, DelegateCommand, StrictConfirmationViewModel, INotifyPropertyChanged
-
-### Community 55 - "Community 55"
-Cohesion: 0.18
-Nodes (7): DirectoryInfo, TemporaryHistoryStore, TemporaryDatabase, TemporaryDatabase, IDisposable, string, StrictSessionStoreTests
-
-### Community 56 - "Community 56"
+### Community 54 - "Community 54"
 Cohesion: 0.19
 Nodes (8): Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 57 - "Community 57"
+### Community 55 - "Community 55"
+Cohesion: 0.17
+Nodes (10): Avalonia, Avalonia.Desktop, Avalonia.Themes.Fluent, Microsoft.NET.Sdk, Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit (+2 more)
+
+### Community 56 - "Community 56"
 Cohesion: 0.27
 Nodes (4): IEnumerable, WebsiteRuleMatcher, Fact, WebsiteRuleMatcherTests
+
+### Community 57 - "Community 57"
+Cohesion: 0.58
+Nodes (8): blockedUrl(), formatClock(), formatMinutes(), loadSession(), message(), render(), renderSessionOver(), showFeedback()
 
 ### Community 58 - "Community 58"
 Cohesion: 0.26
 Nodes (5): IExtensionHealthClient, INativeMessageHandler, NamedPipeExtensionHealthClient, NativeHost, ServiceHealthNativeMessageHandler
 
 ### Community 60 - "Community 60"
+Cohesion: 0.23
+Nodes (6): ConfirmedProcessPolicyEvaluator, ExecutableSha256Cache, ExecutableSha256Cache, ProcessEnforcementWorker, Read(), object
+
+### Community 62 - "Community 62"
 Cohesion: 0.17
 Nodes (11): background, service_worker, description, key, manifest_version, name, permissions, version (+3 more)
 
-### Community 61 - "Community 61"
+### Community 63 - "Community 63"
 Cohesion: 0.35
 Nodes (10): BROWSER_INTERNAL_PREFIXES, CompiledWebsiteRule, compileWebsiteRules(), evaluateWebsiteRules(), isBrowserInternal(), normalizePattern(), normalizeUrl(), RuleAction (+2 more)
 
-### Community 62 - "Community 62"
-Cohesion: 0.29
-Nodes (4): ApplicationCandidate, ApplicationRuleMatcher, Fact, ApplicationRuleMatcherTests
-
-### Community 63 - "Community 63"
-Cohesion: 0.55
-Nodes (8): blockedUrl(), formatClock(), formatMinutes(), loadSession(), message(), render(), renderSessionOver(), showFeedback()
-
 ### Community 64 - "Community 64"
-Cohesion: 0.29
-Nodes (4): byte, DelayedRecoveryRequestStore, RecoveryAuditLog, JsonSerializerOptions
-
-### Community 65 - "Community 65"
 Cohesion: 0.25
 Nodes (3): ExtensionHealthProtocol, HashSet, ProtectedProcessPolicy
 
-### Community 66 - "Community 66"
+### Community 65 - "Community 65"
 Cohesion: 0.18
 Nodes (4): BlockScrimWindow, SessionSummaryWindow, SessionSummaryViewModel, Window
 
+### Community 66 - "Community 66"
+Cohesion: 0.27
+Nodes (4): CapturedItemView, CapturedItemViewModel, SessionSummaryViewModel, SessionSummaryResponse
+
 ### Community 67 - "Community 67"
+Cohesion: 0.2
+Nodes (5): bool, ProfileSuggestionViewModel, DelegateCommand, StrictConfirmationViewModel, INotifyPropertyChanged
+
+### Community 68 - "Community 68"
+Cohesion: 0.29
+Nodes (4): byte, DelayedRecoveryRequestStore, RecoveryAuditLog, JsonSerializerOptions
+
+### Community 70 - "Community 70"
 Cohesion: 0.22
 Nodes (4): FixedTimeProvider, RecordingClient, ServiceHealthNativeMessageHandlerTests, IExtensionHealthClient
 
-### Community 69 - "Community 69"
-Cohesion: 0.2
-Nodes (8): Avalonia, Avalonia.Desktop, Avalonia.Themes.Fluent, Microsoft.Data.Sqlite, SQLitePCLRaw.lib.e_sqlite3, Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk
-
-### Community 70 - "Community 70"
-Cohesion: 0.27
-Nodes (5): AuditedProcessTerminator, FakeApplicationProcessController, IApplicationProcessController, IProcessTerminationAuditSink, Queue
-
 ### Community 71 - "Community 71"
-Cohesion: 0.22
-Nodes (4): ValidationError, ValidationResult, Fact, ProfileTests
+Cohesion: 0.27
+Nodes (5): CancellationToken, DateTimeOffset, Guid, ReadOnlyMemory, ValueTask
 
 ### Community 72 - "Community 72"
 Cohesion: 0.44
 Nodes (8): compileMatcher(), compileWebsiteRules(), escapeGlob(), evaluateWebsiteRules(), isBrowserInternal(), normalizePattern(), normalizeUrl(), sanitizeUrlForLog()
 
 ### Community 73 - "Community 73"
+Cohesion: 0.31
+Nodes (3): BlockScreenViewModel, IFocusControlClient, NotifyingDelegateCommand
+
+### Community 74 - "Community 74"
 Cohesion: 0.29
 Nodes (6): ComputeHash(), Create(), HasValidIntegrity(), IConfirmedPolicyDistributionTarget, IExternallyAcknowledgedPolicyDistributionTarget, IPolicyDistributionTarget
 
-### Community 79 - "Community 79"
-Cohesion: 0.31
-Nodes (4): AsyncRuleCommand, NewProfileRuleDraftViewModel, SavedApplicationRuleViewModel, SavedWebsiteRuleViewModel
+### Community 77 - "Community 77"
+Cohesion: 0.2
+Nodes (8): Microsoft.Data.Sqlite, SQLitePCLRaw.lib.e_sqlite3, Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 81 - "Community 81"
+### Community 78 - "Community 78"
+Cohesion: 0.31
+Nodes (4): AuditedProcessTerminator, FakeApplicationProcessController, IApplicationProcessController, IProcessTerminationAuditSink
+
+### Community 79 - "Community 79"
+Cohesion: 0.24
+Nodes (4): ValidationError, ValidationResult, Fact, ProfileTests
+
+### Community 84 - "Community 84"
 Cohesion: 0.33
 Nodes (3): DevelopmentServiceConstants, DevelopmentServiceState, DevelopmentServiceWorker
 
-### Community 85 - "Community 85"
+### Community 87 - "Community 87"
+Cohesion: 0.28
+Nodes (3): ProcessMonitorPolicyReceiver, IConfirmedPolicyDistributionTarget, PolicyDelivery
+
+### Community 88 - "Community 88"
 Cohesion: 0.22
 Nodes (8): compilerOptions, module, noEmit, strict, target, include, src/**/*.ts, test/**/*.ts
 
-### Community 86 - "Community 86"
-Cohesion: 0.25
-Nodes (3): FocusGuard.Domain.Tests, Fact, RuleTests
-
-### Community 87 - "Community 87"
-Cohesion: 0.33
-Nodes (5): Stream, Task, Fact, Task, NativeHostTests
-
-### Community 88 - "Community 88"
+### Community 89 - "Community 89"
 Cohesion: 0.39
 Nodes (3): ToLong(), WindowsProcessInspector, uint
 
 ### Community 90 - "Community 90"
 Cohesion: 0.32
-Nodes (3): ApplicationRuleRowViewModel, DelegateCommand, RemoveCommandAdapter
+Nodes (3): DelegateCommand, RemoveCommandAdapter, WebsiteRuleRowViewModel
 
 ### Community 91 - "Community 91"
 Cohesion: 0.32
-Nodes (4): DateTimeOffset, Fact, StrictConfirmationViewModelTests, TestTimeProvider
+Nodes (3): ApplicationRuleRowViewModel, DelegateCommand, RemoveCommandAdapter
 
 ### Community 93 - "Community 93"
 Cohesion: 0.29
-Nodes (3): DateTimeOffset, ActiveFocusViewModelTests, TestTimeProvider
+Nodes (3): ApplicationBlockedEventArgs, NotifyingDelegateCommand, SessionEndedEventArgs
 
 ### Community 95 - "Community 95"
-Cohesion: 0.29
-Nodes (3): NativeHostTests, RecordingHandler, INativeMessageHandler
+Cohesion: 0.25
+Nodes (3): ApplicationMatchOption, ApplicationRuleEditorViewModel, RuleAction
 
 ### Community 97 - "Community 97"
-Cohesion: 0.25
-Nodes (6): Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
+Cohesion: 0.32
+Nodes (4): DateTimeOffset, Fact, StrictConfirmationViewModelTests, TestTimeProvider
 
 ### Community 98 - "Community 98"
-Cohesion: 0.25
-Nodes (6): Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
-
-### Community 99 - "Community 99"
-Cohesion: 0.25
-Nodes (6): Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
-
-### Community 100 - "Community 100"
 Cohesion: 0.36
 Nodes (4): DateTimeOffset, Fact, ActiveFocusViewModelTests, TestTimeProvider
 
-### Community 101 - "Community 101"
+### Community 100 - "Community 100"
+Cohesion: 0.29
+Nodes (3): DateTimeOffset, ActiveFocusViewModelTests, TestTimeProvider
+
+### Community 102 - "Community 102"
+Cohesion: 0.29
+Nodes (3): NativeHostTests, RecordingHandler, INativeMessageHandler
+
+### Community 103 - "Community 103"
+Cohesion: 0.25
+Nodes (6): Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
+
+### Community 104 - "Community 104"
+Cohesion: 0.25
+Nodes (6): Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
+
+### Community 105 - "Community 105"
+Cohesion: 0.25
+Nodes (6): Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
+
+### Community 106 - "Community 106"
+Cohesion: 0.36
+Nodes (3): CancellationToken, Task, IWindowsProcessGateway
+
+### Community 107 - "Community 107"
 Cohesion: 0.36
 Nodes (5): Fact, Func, Task, TimeSpan, DevelopmentServiceWorkerTests
 
-### Community 106 - "Community 106"
+### Community 113 - "Community 113"
 Cohesion: 0.29
 Nodes (5): CancellationToken, Task, TimeProvider, TimeSpan, FocusSessionExpirationWorker
 
-### Community 108 - "Community 108"
+### Community 115 - "Community 115"
 Cohesion: 0.38
-Nodes (3): SimulatedProcessMonitor, ExtensionHealthPipeConstants, TimeSpan
+Nodes (3): DurationPresetViewModel, SimulatedProcessMonitor, TimeSpan
 
-### Community 112 - "Community 112"
+### Community 118 - "Community 118"
 Cohesion: 0.29
 Nodes (5): Microsoft.Extensions.Hosting.WindowsServices, System.Security.Cryptography.ProtectedData, Microsoft.NET.Sdk, System.Security.Cryptography.ProtectedData, Microsoft.NET.Sdk
 
-### Community 113 - "Community 113"
-Cohesion: 0.52
-Nodes (3): Fact, Task, ExtensionHealthPipeServiceTests
+### Community 120 - "Community 120"
+Cohesion: 0.33
+Nodes (3): Control, WeekSparkline, StyledProperty
 
-### Community 116 - "Community 116"
+### Community 123 - "Community 123"
 Cohesion: 0.53
 Nodes (4): Create(), DefaultTextFor(), IsSanitizedWebSource(), NormalizeText()
 
-### Community 117 - "Community 117"
+### Community 124 - "Community 124"
 Cohesion: 0.53
 Nodes (4): CanTransitionTo(), ExpireIfDue(), IsExpiredAt(), TransitionTo()
 
-### Community 122 - "Community 122"
+### Community 131 - "Community 131"
 Cohesion: 0.33
 Nodes (5): name, private, scripts, test, type
 
-### Community 123 - "Community 123"
+### Community 132 - "Community 132"
 Cohesion: 0.33
 Nodes (5): coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 124 - "Community 124"
+### Community 133 - "Community 133"
 Cohesion: 0.33
 Nodes (5): coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 125 - "Community 125"
+### Community 134 - "Community 134"
 Cohesion: 0.33
 Nodes (5): coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 126 - "Community 126"
-Cohesion: 0.33
-Nodes (5): coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
-
-### Community 127 - "Community 127"
-Cohesion: 0.33
-Nodes (5): coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
-
-### Community 128 - "Community 128"
+### Community 135 - "Community 135"
 Cohesion: 0.4
 Nodes (4): AppBuilder, FocusGuard.Desktop/Program.cs, Program, STAThread
 
-### Community 129 - "Community 129"
+### Community 138 - "Community 138"
 Cohesion: 0.7
 Nodes (4): Create(), IsAccentHex(), New(), ValidateName()
 
-### Community 130 - "Community 130"
+### Community 139 - "Community 139"
 Cohesion: 0.4
 Nodes (3): ConfirmedProcessPolicyEvaluator, ProcessMonitorPolicyReceiver, SimulatedProcessMonitor
 
 ## Knowledge Gaps
 - **152 isolated node(s):** `ApplicationMatchOption`, `ApplicationRuleRowViewModel`, `NotifyingDelegateCommand`, `nint`, `BlockScreenViewModel` (+147 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **68 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **71 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `string` connect `Community 33` to `Community 6`, `Community 7`, `Community 10`, `Community 138`, `Community 12`, `Community 15`, `Community 147`, `Community 23`, `Community 24`, `Community 25`, `Community 29`, `Community 34`, `Community 35`, `Community 37`, `Community 45`, `Community 46`, `Community 51`, `Community 53`, `Community 54`, `Community 58`, `Community 64`, `Community 65`, `Community 78`, `Community 84`, `Community 103`, `Community 104`, `Community 111`, `Community 114`, `Community 118`?**
-  _High betweenness centrality (0.155) - this node is a cross-community bridge._
-- **Why does `FocusViewModel` connect `Community 12` to `Community 89`, `Community 33`, `Community 3`, `Community 37`, `Community 6`, `Community 38`, `Community 9`, `Community 10`, `Community 79`, `Community 53`, `Community 24`, `Community 25`, `Community 93`?**
-  _High betweenness centrality (0.129) - this node is a cross-community bridge._
-- **Why does `FocusViewModel` connect `Community 3` to `Community 0`, `Community 1`, `Community 53`?**
-  _High betweenness centrality (0.051) - this node is a cross-community bridge._
+- **Why does `string` connect `Community 21` to `Community 6`, `Community 7`, `Community 136`, `Community 12`, `Community 14`, `Community 22`, `Community 25`, `Community 27`, `Community 29`, `Community 31`, `Community 33`, `Community 45`, `Community 46`, `Community 52`, `Community 53`, `Community 58`, `Community 64`, `Community 67`, `Community 68`, `Community 73`, `Community 80`, `Community 83`, `Community 95`, `Community 109`, `Community 112`, `Community 121`, `Community 125`, `Community 126`?**
+  _High betweenness centrality (0.145) - this node is a cross-community bridge._
+- **Why does `FocusViewModel` connect `Community 12` to `Community 33`, `Community 34`, `Community 67`, `Community 35`, `Community 3`, `Community 100`, `Community 7`, `Community 8`, `Community 73`, `Community 110`, `Community 115`, `Community 21`, `Community 119`, `Community 25`, `Community 92`?**
+  _High betweenness centrality (0.127) - this node is a cross-community bridge._
+- **Why does `FocusViewModel` connect `Community 3` to `Community 0`, `Community 1`, `Community 67`?**
+  _High betweenness centrality (0.050) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `verifyPolicy()` (e.g. with `sendHealth()` and `evaluateConfirmedNavigation()`) actually correct?**
   _`verifyPolicy()` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `ApplicationMatchOption`, `ApplicationRuleRowViewModel`, `NotifyingDelegateCommand` to the rest of the system?**

@@ -52,6 +52,35 @@ public sealed class StrictConfirmationPhraseGeneratorTests
                 StringComparison.Ordinal) == true);
     }
 
+    [Fact]
+    public void MainWindowHostsProfileCreationAsModalOverlayInsteadOfInlineScreen()
+    {
+        var document = XDocument.Load(
+            Path.Combine(
+                FindRepositoryRoot(),
+                "src",
+                "FocusGuard.Desktop",
+                "MainWindow.axaml"));
+        XNamespace avalonia = "https://github.com/avaloniaui";
+        XNamespace x = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var rootGrid = Assert.Single(document.Root!.Elements(avalonia + "Grid"));
+        var shell = Assert.Single(
+            rootGrid.Elements(avalonia + "Grid"),
+            element => (string?)element.Attribute(x + "Name") == "ApplicationShell");
+        var overlay = Assert.Single(
+            shell.Descendants(avalonia + "Border"),
+            element => (string?)element.Attribute(x + "Name") == "NewProfileOverlay");
+
+        Assert.Equal("{Binding IsCreatingProfile}", (string?)overlay.Attribute("IsVisible"));
+        Assert.Equal("{Binding IsCreatingProfile}", (string?)overlay.Attribute("IsHitTestVisible"));
+        Assert.Contains(
+            overlay.Descendants(avalonia + "TextBlock"),
+            element => ((string?)element.Attribute("Text"))?.Contains("NewProfileTitle", StringComparison.Ordinal) == true);
+        Assert.DoesNotContain(
+            shell.Elements(avalonia + "ScrollViewer").SelectMany(element => element.Descendants()),
+            element => ((string?)element.Attribute("IsVisible"))?.Contains("IsCreatingProfile", StringComparison.Ordinal) == true);
+    }
+
     private static string FindRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);

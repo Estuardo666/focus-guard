@@ -18,6 +18,7 @@ public sealed partial class MainWindow : Window
     private readonly List<BlockScreenWindow> _blockScreens = [];
     private CancellationTokenSource? _strictTransition;
     private IInputElement? _focusBeforeStrictReview;
+    private IInputElement? _focusBeforeProfileCreation;
     private bool _refreshing;
 
     public MainWindow()
@@ -178,6 +179,34 @@ public sealed partial class MainWindow : Window
         {
             _ = SetStrictReviewVisibilityAsync(viewModel.IsStrictReviewVisible);
         }
+
+        if (e.PropertyName == nameof(FocusViewModel.IsCreatingProfile)
+            && sender is FocusViewModel profileViewModel)
+        {
+            SetProfileCreationVisibility(profileViewModel.IsCreatingProfile);
+        }
+    }
+
+    private void SetProfileCreationVisibility(bool isVisible)
+    {
+        var shell = this.FindControl<Grid>("ApplicationShell");
+        var overlay = this.FindControl<Border>("NewProfileOverlay");
+        if (shell is null || overlay is null)
+        {
+            return;
+        }
+
+        if (isVisible)
+        {
+            _focusBeforeProfileCreation = FocusManager?.GetFocusedElement();
+            overlay.IsHitTestVisible = true;
+            Dispatcher.UIThread.Post(() => this.FindControl<TextBox>("NewProfileNameInput")?.Focus());
+            return;
+        }
+
+        overlay.IsHitTestVisible = false;
+        _focusBeforeProfileCreation?.Focus();
+        _focusBeforeProfileCreation = null;
     }
 
     private async Task SetStrictReviewVisibilityAsync(bool isVisible)

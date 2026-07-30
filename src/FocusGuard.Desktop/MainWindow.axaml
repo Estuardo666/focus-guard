@@ -645,7 +645,8 @@
         </ScrollViewer>
 
         <!-- Profiles section: the only place rules are edited. -->
-        <ScrollViewer Grid.Row="1" Classes="screen" IsVisible="{Binding IsProfilesVisible}">
+        <Grid Grid.Row="1" IsVisible="{Binding IsProfilesVisible}">
+          <ScrollViewer Classes="screen">
           <Grid>
           <StackPanel Margin="28,20" Spacing="16" IsVisible="{Binding !IsCreatingProfile}">
             <Border Classes="card">
@@ -800,6 +801,17 @@
             <TextBlock Classes="caption" Text="{x:Static resources:UiStrings.FutureSessionsOnly}" TextWrapping="Wrap" />
           </StackPanel>
 
+          </Grid>
+          </ScrollViewer>
+
+          <Border
+              x:Name="NewProfileOverlay"
+              Background="{DynamicResource FgModalScrim}"
+              IsVisible="{Binding IsCreatingProfile}"
+              IsHitTestVisible="{Binding IsCreatingProfile}"
+              Focusable="True"
+              AutomationProperties.Name="{x:Static resources:UiStrings.CreateProfile}">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
           <StackPanel
               Margin="28,28"
               MaxWidth="760"
@@ -945,8 +957,9 @@
               </StackPanel>
             </Border>
           </StackPanel>
-          </Grid>
-        </ScrollViewer>
+            </ScrollViewer>
+          </Border>
+        </Grid>
 
         <!-- Activity section -->
         <ScrollViewer Grid.Row="1" Classes="screen" IsVisible="{Binding IsActivityVisible}">
