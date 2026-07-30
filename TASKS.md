@@ -51,3 +51,4 @@ Status values: `TODO`, `IN_PROGRESS`, `DONE`, `BLOCKED`.
 - [x] FG-123 Add safe persistent profile duplication with copied rules and active-session locking (`DONE`)
 - [x] FG-124 Add validated persistent profile rename with active-session locking (`DONE`)
 - [x] FG-125 Add confirmed persistent profile deletion with last-profile protection (`DONE`)
+- [x] FG-126 Add friendly guided profile creation with transparent suggestions and custom rules

@@ -41,6 +41,20 @@
   <data name="LastProfileRequired" xml:space="preserve"><value>FocusGuard must keep at least one profile.</value></data>
   <data name="ProfileDeleted" xml:space="preserve"><value>{0} was deleted. A remaining profile is now selected.</value></data>
   <data name="ProfileDeleteFailed" xml:space="preserve"><value>The profile no longer exists or could not be deleted.</value></data>
+  <data name="NewProfile" xml:space="preserve"><value>New profile</value></data>
+  <data name="NewProfileTitle" xml:space="preserve"><value>What gets in your way?</value></data>
+  <data name="NewProfileDescription" xml:space="preserve"><value>Choose recurring distractions or start empty. You can change every rule later.</value></data>
+  <data name="NewProfileSuggestionsLabel" xml:space="preserve"><value>Quick suggestions</value></data>
+  <data name="NewProfileSuggestionsHint" xml:space="preserve"><value>Nothing is selected for you. Each option shows the exact domains it adds.</value></data>
+  <data name="NewProfileCustomRuleLabel" xml:space="preserve"><value>Add a site or application</value></data>
+  <data name="NewProfileCustomRulePlaceholder" xml:space="preserve"><value>reddit.com or discord.exe</value></data>
+  <data name="NewProfileRuleRequired" xml:space="preserve"><value>Enter a domain or an executable file name.</value></data>
+  <data name="NewProfileRuleAlreadyAdded" xml:space="preserve"><value>This rule is already added.</value></data>
+  <data name="NewProfileSummary" xml:space="preserve"><value>{0} website rule(s) · {1} application rule(s). An empty profile is allowed.</value></data>
+  <data name="CreateProfile" xml:space="preserve"><value>Create profile</value></data>
+  <data name="ProfileCreated" xml:space="preserve"><value>{0} is ready. Add more detail or use it for a future session.</value></data>
+  <data name="CancelProfileCreation" xml:space="preserve"><value>Cancel profile creation</value></data>
+  <data name="RemoveDraftRule" xml:space="preserve"><value>Remove draft rule</value></data>
   <data name="SavedWebsiteRules" xml:space="preserve"><value>saved website rules</value></data>
   <data name="SavedApplicationRules" xml:space="preserve"><value>saved application rules</value></data>
   <data name="DurationLabel" xml:space="preserve"><value>Duration</value></data>

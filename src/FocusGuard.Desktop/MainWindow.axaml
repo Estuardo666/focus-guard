@@ -269,7 +269,7 @@
                     <Button
                         Classes="profileSwatch addSwatch"
                         Content="&#xE710;"
-                        Click="ProfilesNavigationClick"
+                        Click="NewProfileClick"
                         ToolTip.Tip="{x:Static resources:UiStrings.AddProfile}"
                         AutomationProperties.Name="{x:Static resources:UiStrings.AddProfile}" />
                   </StackPanel>
@@ -646,12 +646,13 @@
 
         <!-- Profiles section: the only place rules are edited. -->
         <ScrollViewer Grid.Row="1" Classes="screen" IsVisible="{Binding IsProfilesVisible}">
-          <StackPanel Margin="28,20" Spacing="16">
+          <Grid>
+          <StackPanel Margin="28,20" Spacing="16" IsVisible="{Binding !IsCreatingProfile}">
             <Border Classes="card">
               <StackPanel Spacing="14">
                 <StackPanel Spacing="6">
                   <TextBlock Classes="caption" Text="{x:Static resources:UiStrings.ProfileLabel}" />
-                  <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                  <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
                     <ComboBox
                         x:Name="ProfileSelector"
                         MinWidth="240"
@@ -666,11 +667,16 @@
                     </ComboBox>
                     <Button
                         Grid.Column="1"
+                        Content="{x:Static resources:UiStrings.NewProfile}"
+                        Command="{Binding NewProfileCommand}"
+                        AutomationProperties.Name="{x:Static resources:UiStrings.NewProfile}" />
+                    <Button
+                        Grid.Column="2"
                         Content="{x:Static resources:UiStrings.DuplicateProfile}"
                         Command="{Binding DuplicateProfileCommand}"
                         AutomationProperties.Name="{x:Static resources:UiStrings.DuplicateProfile}" />
                     <Button
-                        Grid.Column="2"
+                        Grid.Column="3"
                         Classes="danger"
                         Content="{x:Static resources:UiStrings.DeleteProfile}"
                         Command="{Binding DeleteProfileCommand}"
@@ -793,6 +799,153 @@
 
             <TextBlock Classes="caption" Text="{x:Static resources:UiStrings.FutureSessionsOnly}" TextWrapping="Wrap" />
           </StackPanel>
+
+          <StackPanel
+              Margin="28,28"
+              MaxWidth="760"
+              HorizontalAlignment="Center"
+              Spacing="18"
+              IsVisible="{Binding IsCreatingProfile}">
+            <Grid ColumnDefinitions="*,Auto">
+              <StackPanel Spacing="7">
+                <TextBlock
+                    Text="{x:Static resources:UiStrings.NewProfileTitle}"
+                    FontSize="{DynamicResource FgFontDisplay}"
+                    FontWeight="SemiBold" />
+                <TextBlock
+                    Classes="secondary"
+                    Text="{x:Static resources:UiStrings.NewProfileDescription}"
+                    TextWrapping="Wrap"
+                    MaxWidth="620" />
+              </StackPanel>
+              <Button
+                  Grid.Column="1"
+                  Classes="ghost"
+                  Content="{x:Static resources:UiStrings.Cancel}"
+                  Command="{Binding CancelCreateProfileCommand}"
+                  AutomationProperties.Name="{x:Static resources:UiStrings.CancelProfileCreation}" />
+            </Grid>
+
+            <Border Classes="card" Padding="22">
+              <StackPanel Spacing="18">
+                <StackPanel Spacing="7">
+                  <TextBlock Classes="caption" Text="{x:Static resources:UiStrings.ProfileNameLabel}" />
+                  <TextBox
+                      x:Name="NewProfileNameInput"
+                      Text="{Binding NewProfileNameInput}"
+                      MaxLength="80"
+                      AutomationProperties.Name="{x:Static resources:UiStrings.ProfileNameLabel}" />
+                  <TextBlock
+                      Classes="caption"
+                      Foreground="{DynamicResource FgWarning}"
+                      Text="{Binding NewProfileNameValidationMessage}"
+                      TextWrapping="Wrap" />
+                </StackPanel>
+
+                <Border Height="1" Background="{DynamicResource FgBorder}" />
+
+                <StackPanel Spacing="9">
+                  <TextBlock
+                      Text="{x:Static resources:UiStrings.NewProfileSuggestionsLabel}"
+                      FontWeight="SemiBold" />
+                  <TextBlock
+                      Classes="caption"
+                      Text="{x:Static resources:UiStrings.NewProfileSuggestionsHint}"
+                      TextWrapping="Wrap" />
+                  <ItemsControl ItemsSource="{Binding NewProfileSuggestions}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:ProfileSuggestionViewModel">
+                        <ToggleButton
+                            Classes="suggestion"
+                            IsChecked="{Binding IsSelected}"
+                            ToolTip.Tip="{Binding DomainSummary}"
+                            AutomationProperties.Name="{Binding Label}">
+                          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="7">
+                            <TextBlock
+                                Classes="icon"
+                                Text="{Binding SelectionGlyph}"
+                                Foreground="{DynamicResource ProfileAccent}"
+                                VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" Spacing="1">
+                              <TextBlock Text="{Binding Label}" FontWeight="SemiBold" />
+                              <TextBlock
+                                  Classes="caption"
+                                  Text="{Binding DomainSummary}"
+                                  Foreground="{DynamicResource FgTextTertiary}" />
+                            </StackPanel>
+                          </Grid>
+                        </ToggleButton>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+
+                <StackPanel Spacing="7">
+                  <TextBlock
+                      Classes="caption"
+                      Text="{x:Static resources:UiStrings.NewProfileCustomRuleLabel}" />
+                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <TextBox
+                        Text="{Binding NewProfileCustomRuleInput}"
+                        PlaceholderText="{x:Static resources:UiStrings.NewProfileCustomRulePlaceholder}"
+                        AutomationProperties.Name="{x:Static resources:UiStrings.NewProfileCustomRuleLabel}" />
+                    <Button
+                        Grid.Column="1"
+                        Content="{x:Static resources:UiStrings.Add}"
+                        Command="{Binding AddNewProfileCustomRuleCommand}" />
+                  </Grid>
+                  <TextBlock
+                      Classes="caption"
+                      Foreground="{DynamicResource FgWarning}"
+                      Text="{Binding NewProfileRuleValidationMessage}"
+                      TextWrapping="Wrap" />
+                  <ItemsControl ItemsSource="{Binding NewProfileDraftRules}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:NewProfileRuleDraftViewModel">
+                        <Border Classes="chip">
+                          <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock Classes="caption" Text="{Binding KindLabel}" />
+                            <TextBlock Text="{Binding Display}" />
+                            <Button
+                                Classes="chipClose"
+                                Content="&#xE711;"
+                                Command="{Binding RemoveCommand}"
+                                AutomationProperties.Name="{x:Static resources:UiStrings.RemoveDraftRule}" />
+                          </StackPanel>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+
+                <Border Classes="inset" Padding="14">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock
+                        Text="{Binding NewProfileSummaryText}"
+                        TextWrapping="Wrap"
+                        VerticalAlignment="Center" />
+                    <Button
+                        Grid.Column="1"
+                        Classes="primary"
+                        Content="{x:Static resources:UiStrings.CreateProfile}"
+                        Command="{Binding CreateProfileCommand}"
+                        AutomationProperties.Name="{x:Static resources:UiStrings.CreateProfile}" />
+                  </Grid>
+                </Border>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+          </Grid>
         </ScrollViewer>
 
         <!-- Activity section -->

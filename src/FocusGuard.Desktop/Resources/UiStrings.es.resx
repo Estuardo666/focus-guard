@@ -41,6 +41,20 @@
   <data name="LastProfileRequired" xml:space="preserve"><value>FocusGuard debe conservar al menos un perfil.</value></data>
   <data name="ProfileDeleted" xml:space="preserve"><value>Se eliminó {0}. Ahora está seleccionado otro perfil.</value></data>
   <data name="ProfileDeleteFailed" xml:space="preserve"><value>El perfil ya no existe o no se pudo eliminar.</value></data>
+  <data name="NewProfile" xml:space="preserve"><value>Nuevo perfil</value></data>
+  <data name="NewProfileTitle" xml:space="preserve"><value>¿Qué se interpone en tu enfoque?</value></data>
+  <data name="NewProfileDescription" xml:space="preserve"><value>Elige distracciones habituales o empieza vacío. Después podrás cambiar cada regla.</value></data>
+  <data name="NewProfileSuggestionsLabel" xml:space="preserve"><value>Sugerencias rápidas</value></data>
+  <data name="NewProfileSuggestionsHint" xml:space="preserve"><value>No seleccionamos nada por ti. Cada opción muestra los dominios exactos que añade.</value></data>
+  <data name="NewProfileCustomRuleLabel" xml:space="preserve"><value>Añade un sitio o una aplicación</value></data>
+  <data name="NewProfileCustomRulePlaceholder" xml:space="preserve"><value>reddit.com o discord.exe</value></data>
+  <data name="NewProfileRuleRequired" xml:space="preserve"><value>Escribe un dominio o el nombre de un ejecutable.</value></data>
+  <data name="NewProfileRuleAlreadyAdded" xml:space="preserve"><value>Esta regla ya está añadida.</value></data>
+  <data name="NewProfileSummary" xml:space="preserve"><value>{0} regla(s) de sitios · {1} regla(s) de aplicaciones. Se permite un perfil vacío.</value></data>
+  <data name="CreateProfile" xml:space="preserve"><value>Crear perfil</value></data>
+  <data name="ProfileCreated" xml:space="preserve"><value>{0} está listo. Añade más detalles o úsalo en una sesión futura.</value></data>
+  <data name="CancelProfileCreation" xml:space="preserve"><value>Cancelar creación del perfil</value></data>
+  <data name="RemoveDraftRule" xml:space="preserve"><value>Quitar regla del borrador</value></data>
   <data name="SavedWebsiteRules" xml:space="preserve"><value>reglas de sitios guardadas</value></data>
   <data name="SavedApplicationRules" xml:space="preserve"><value>reglas de aplicaciones guardadas</value></data>
   <data name="DurationLabel" xml:space="preserve"><value>Duración</value></data>

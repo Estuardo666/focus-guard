@@ -9,6 +9,33 @@ public sealed partial class DesignSystemTests
     private static readonly XNamespace X = "http://schemas.microsoft.com/winfx/2006/xaml";
 
     [Fact]
+    public void GuidedProfileCreationUsesExplicitAccessibleSuggestionControls()
+    {
+        var mainWindow = LoadDesktopXaml("MainWindow.axaml");
+        var suggestion = Assert.Single(
+            mainWindow.Descendants(Avalonia + "ToggleButton"),
+            element => ((string?)element.Attribute("Classes"))?.Contains(
+                    "suggestion",
+                    StringComparison.Ordinal) == true);
+
+        Assert.Equal("{Binding IsSelected}", (string?)suggestion.Attribute("IsChecked"));
+        Assert.Equal("{Binding DomainSummary}", (string?)suggestion.Attribute("ToolTip.Tip"));
+        Assert.Contains(
+            suggestion.Descendants(Avalonia + "TextBlock"),
+            element => (string?)element.Attribute("Text") == "{Binding DomainSummary}");
+
+        var controls = LoadDesktopXaml("Styles", "Controls.axaml");
+        var style = Assert.Single(
+            controls.Descendants(Avalonia + "Style"),
+            element => (string?)element.Attribute("Selector") == "ToggleButton.suggestion");
+        Assert.Contains(
+            style.Elements(Avalonia + "Setter"),
+            setter =>
+                (string?)setter.Attribute("Property") == "MinHeight"
+                && (string?)setter.Attribute("Value") == "44");
+    }
+
+    [Fact]
     public void DarkZenPaletteMatchesTheApprovedSemanticTokens()
     {
         var document = LoadDesktopXaml("Styles", "Tokens.axaml");

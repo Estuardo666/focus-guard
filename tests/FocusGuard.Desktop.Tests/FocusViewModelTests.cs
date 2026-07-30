@@ -432,6 +432,107 @@ public sealed class FocusViewModelTests
     }
 
     [Fact]
+    public async Task NewProfileSuggestionsStartExplicitAndExposeExactDomains()
+    {
+        var viewModel = new FocusViewModel(new RecordingClient(), new MemoryProfileStore());
+        await viewModel.RefreshAsync();
+
+        await viewModel.BeginCreateProfileAsync();
+
+        Assert.True(viewModel.IsCreatingProfile);
+        Assert.All(viewModel.NewProfileSuggestions, suggestion => Assert.False(suggestion.IsSelected));
+        var twitter = Assert.Single(
+            viewModel.NewProfileSuggestions,
+            suggestion => suggestion.Label == "X / Twitter");
+        Assert.Equal("x.com · twitter.com", twitter.DomainSummary);
+    }
+
+    [Fact]
+    public async Task GuidedProfileCreationPersistsSelectedAndCustomRules()
+    {
+        var store = new MemoryProfileStore();
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        await viewModel.BeginCreateProfileAsync();
+        viewModel.NewProfileNameInput = "  Social break  ";
+        Assert.Single(viewModel.NewProfileSuggestions, suggestion => suggestion.Label == "X / Twitter")
+            .IsSelected = true;
+        viewModel.NewProfileCustomRuleInput = "discord.exe";
+        await viewModel.AddNewProfileCustomRuleAsync();
+
+        await viewModel.CreateProfileAsync();
+
+        var profiles = await store.ListProfilesAsync();
+        Assert.Equal(2, profiles.Count);
+        var created = Assert.Single(profiles, profile => profile.Name == "Social break");
+        Assert.Equal(created.Id, viewModel.SelectedProfile!.Id);
+        Assert.Equal(["twitter.com", "x.com"], created.WebsiteRules.Select(rule => rule.Pattern).Order().ToArray());
+        Assert.Equal("discord.exe", Assert.Single(created.ApplicationRules).Value);
+        Assert.False(viewModel.IsCreatingProfile);
+    }
+
+    [Fact]
+    public async Task GuidedProfileCreationAllowsEmptyProfile()
+    {
+        var store = new MemoryProfileStore();
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        await viewModel.BeginCreateProfileAsync();
+        viewModel.NewProfileNameInput = "Writing";
+
+        await viewModel.CreateProfileAsync();
+
+        var created = Assert.Single(
+            await store.ListProfilesAsync(),
+            profile => profile.Name == "Writing");
+        Assert.Empty(created.ApplicationRules);
+        Assert.Empty(created.WebsiteRules);
+    }
+
+    [Fact]
+    public async Task GuidedProfileCreationRejectsInvalidAndDuplicateCustomRules()
+    {
+        var viewModel = new FocusViewModel(new RecordingClient(), new MemoryProfileStore());
+        await viewModel.RefreshAsync();
+        await viewModel.BeginCreateProfileAsync();
+
+        viewModel.NewProfileCustomRuleInput = "reddit.com";
+        await viewModel.AddNewProfileCustomRuleAsync();
+        viewModel.NewProfileCustomRuleInput = "REDDIT.com";
+        await viewModel.AddNewProfileCustomRuleAsync();
+
+        Assert.Single(viewModel.NewProfileDraftRules);
+        Assert.Contains("already added", viewModel.NewProfileRuleValidationMessage);
+
+        viewModel.NewProfileCustomRuleInput = "reddit.com?private=1";
+        await viewModel.AddNewProfileCustomRuleAsync();
+        Assert.Single(viewModel.NewProfileDraftRules);
+        Assert.NotEmpty(viewModel.NewProfileRuleValidationMessage);
+    }
+
+    [Fact]
+    public async Task GuidedProfileCreationCancelAndActiveSessionDoNotPersist()
+    {
+        var store = new MemoryProfileStore();
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        await viewModel.BeginCreateProfileAsync();
+        viewModel.NewProfileNameInput = "Temporary";
+        await viewModel.CancelCreateProfileAsync();
+
+        Assert.False(viewModel.IsCreatingProfile);
+        Assert.Single(await store.ListProfilesAsync());
+
+        viewModel.StartFocusCommand.Execute(null);
+        Assert.True(SpinWait.SpinUntil(() => viewModel.IsActive, TimeSpan.FromSeconds(1)));
+        Assert.False(viewModel.NewProfileCommand.CanExecute(null));
+        await viewModel.BeginCreateProfileAsync();
+
+        Assert.False(viewModel.IsCreatingProfile);
+        Assert.Single(await store.ListProfilesAsync());
+    }
+
+    [Fact]
     public async Task FirstRunHeaderShowsASentenceRatherThanAZeroTotal()
     {
         var viewModel = new FocusViewModel(new RecordingClient(), new MemoryProfileStore());

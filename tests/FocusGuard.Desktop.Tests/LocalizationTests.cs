@@ -24,6 +24,7 @@ public sealed class LocalizationTests
             Assert.Equal("Duplicar perfil", UiStrings.DuplicateProfile);
             Assert.Equal("Renombrar perfil", UiStrings.RenameProfile);
             Assert.Equal("Eliminar perfil", UiStrings.DeleteProfile);
+            Assert.Equal("Crear perfil", UiStrings.CreateProfile);
             Assert.Contains("Escribe", UiStrings.StrictConfirmationPrompt);
             Assert.Equal(UiStrings.StrictPhraseFirstWords, UiStrings.Get("StrictPhraseFirstWords"));
         }
@@ -58,6 +59,7 @@ public sealed class LocalizationTests
             Assert.Equal("Duplicate profile", UiStrings.DuplicateProfile);
             Assert.Equal("Rename profile", UiStrings.RenameProfile);
             Assert.Equal("Delete profile", UiStrings.DeleteProfile);
+            Assert.Equal("Create profile", UiStrings.CreateProfile);
             Assert.Contains("Type", UiStrings.StrictConfirmationPrompt);
             Assert.Contains("Focus", UiStrings.StrictPhraseSecondWords);
         }

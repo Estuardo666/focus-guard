@@ -118,6 +118,60 @@ public sealed class SavedWebsiteRuleViewModel(
     public void RefreshCanRemove() => _removeCommand.RaiseCanExecuteChanged();
 }
 
+public sealed class ProfileSuggestionViewModel(
+    string label,
+    IReadOnlyList<string> domains,
+    Action changed) : INotifyPropertyChanged
+{
+    private bool _isSelected;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public string Label { get; } = label;
+
+    public IReadOnlyList<string> Domains { get; } = domains;
+
+    public string DomainSummary => string.Join(" · ", Domains);
+
+    public string SelectionGlyph => IsSelected ? "\uE73E" : string.Empty;
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            if (_isSelected == value)
+            {
+                return;
+            }
+
+            _isSelected = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectionGlyph)));
+            changed();
+        }
+    }
+
+    public void Reset() => IsSelected = false;
+}
+
+public sealed class NewProfileRuleDraftViewModel(
+    Guid id,
+    string display,
+    ApplicationRule? applicationRule,
+    WebsiteRule? websiteRule,
+    Func<Guid, Task> remove)
+{
+    private readonly AsyncRuleCommand _removeCommand = new(() => remove(id), () => true);
+
+    public Guid Id { get; } = id;
+    public string Display { get; } = display;
+    public ApplicationRule? ApplicationRule { get; } = applicationRule;
+    public WebsiteRule? WebsiteRule { get; } = websiteRule;
+    public string KindLabel => ApplicationRule is null ? UiStrings.WebsitesLabel : UiStrings.ApplicationsLabel;
+    public ICommand RemoveCommand => _removeCommand;
+}
+
 public sealed class FocusViewModel : INotifyPropertyChanged
 {
     private readonly IFocusControlClient _client;
@@ -135,6 +189,10 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     private readonly AsyncDelegateCommand _deleteProfileCommand;
     private readonly AsyncDelegateCommand _confirmProfileDeleteCommand;
     private readonly AsyncDelegateCommand _cancelProfileDeleteCommand;
+    private readonly AsyncDelegateCommand _newProfileCommand;
+    private readonly AsyncDelegateCommand _addNewProfileCustomRuleCommand;
+    private readonly AsyncDelegateCommand _createProfileCommand;
+    private readonly AsyncDelegateCommand _cancelCreateProfileCommand;
     private DurationPresetViewModel _selectedDurationPreset;
     private RecoveryCredential? _pendingRecoveryCredential;
     private bool _isStrictMode;
@@ -174,6 +232,10 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     private bool _showAllWebsiteRules;
     private bool _showAllApplicationRules;
     private bool _isDeleteProfileConfirmationVisible;
+    private bool _isCreatingProfile;
+    private string _newProfileNameInput = string.Empty;
+    private string _newProfileCustomRuleInput = string.Empty;
+    private string _newProfileRuleValidationMessage = string.Empty;
     private IBrush _profileAccentBrush = DefaultAccentBrush;
 
     /// <summary>Chips shown before the overflow affordance takes over.</summary>
@@ -248,6 +310,29 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         _cancelProfileDeleteCommand = new AsyncDelegateCommand(
             CancelProfileDeleteAsync,
             () => IsDeleteProfileConfirmationVisible);
+        _newProfileCommand = new AsyncDelegateCommand(
+            BeginCreateProfileAsync,
+            () => CanEditProfileRules);
+        _addNewProfileCustomRuleCommand = new AsyncDelegateCommand(
+            AddNewProfileCustomRuleAsync,
+            () => IsCreatingProfile && !IsBusy);
+        _createProfileCommand = new AsyncDelegateCommand(
+            CreateProfileAsync,
+            () => CanCreateProfile);
+        _cancelCreateProfileCommand = new AsyncDelegateCommand(
+            CancelCreateProfileAsync,
+            () => IsCreatingProfile && !IsBusy);
+        NewProfileSuggestions =
+        [
+            new("Instagram", ["instagram.com"], OnNewProfileSuggestionChanged),
+            new("X / Twitter", ["x.com", "twitter.com"], OnNewProfileSuggestionChanged),
+            new("YouTube", ["youtube.com"], OnNewProfileSuggestionChanged),
+            new("TikTok", ["tiktok.com"], OnNewProfileSuggestionChanged),
+            new("Facebook", ["facebook.com"], OnNewProfileSuggestionChanged),
+            new("Reddit", ["reddit.com"], OnNewProfileSuggestionChanged),
+            new("Netflix", ["netflix.com"], OnNewProfileSuggestionChanged),
+            new("Twitch", ["twitch.tv"], OnNewProfileSuggestionChanged)
+        ];
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -261,6 +346,8 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     public ObservableCollection<SavedWebsiteRuleViewModel> SavedWebsiteRules { get; } = [];
 
     public ObservableCollection<ActivityEventViewModel> RecentBlocks { get; } = [];
+    public ObservableCollection<NewProfileRuleDraftViewModel> NewProfileDraftRules { get; } = [];
+    public IReadOnlyList<ProfileSuggestionViewModel> NewProfileSuggestions { get; }
 
     public NavigationSection Section
     {
@@ -352,6 +439,10 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     public ICommand DeleteProfileCommand => _deleteProfileCommand;
     public ICommand ConfirmProfileDeleteCommand => _confirmProfileDeleteCommand;
     public ICommand CancelProfileDeleteCommand => _cancelProfileDeleteCommand;
+    public ICommand NewProfileCommand => _newProfileCommand;
+    public ICommand AddNewProfileCustomRuleCommand => _addNewProfileCustomRuleCommand;
+    public ICommand CreateProfileCommand => _createProfileCommand;
+    public ICommand CancelCreateProfileCommand => _cancelCreateProfileCommand;
 
     public string ProfileNameInput
     {
@@ -441,6 +532,89 @@ public sealed class FocusViewModel : INotifyPropertyChanged
             SelectedProfile.Name,
             SelectedProfile.ApplicationRules.Count,
             SelectedProfile.WebsiteRules.Count);
+
+    public bool IsCreatingProfile
+    {
+        get => _isCreatingProfile;
+        private set
+        {
+            if (SetField(ref _isCreatingProfile, value))
+            {
+                OnPropertyChanged(nameof(CanCreateProfile));
+                NotifyCommands();
+            }
+        }
+    }
+
+    public string NewProfileNameInput
+    {
+        get => _newProfileNameInput;
+        set
+        {
+            if (SetField(ref _newProfileNameInput, value ?? string.Empty))
+            {
+                OnPropertyChanged(nameof(NewProfileNameValidationMessage));
+                OnPropertyChanged(nameof(CanCreateProfile));
+                _createProfileCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
+    public string NewProfileNameValidationMessage
+    {
+        get
+        {
+            var result = Profile.ValidateName(NewProfileNameInput);
+            if (!result.IsValid)
+            {
+                return result.Errors[0].Code == "profile.name.too_long"
+                    ? UiStrings.ProfileNameTooLong
+                    : UiStrings.ProfileNameRequired;
+            }
+
+            return Profiles.Any(profile =>
+                string.Equals(profile.Name, result.Value, StringComparison.CurrentCultureIgnoreCase))
+                ? UiStrings.ProfileNameAlreadyExists
+                : string.Empty;
+        }
+    }
+
+    public string NewProfileCustomRuleInput
+    {
+        get => _newProfileCustomRuleInput;
+        set
+        {
+            if (SetField(ref _newProfileCustomRuleInput, value ?? string.Empty))
+            {
+                NewProfileRuleValidationMessage = string.Empty;
+            }
+        }
+    }
+
+    public string NewProfileRuleValidationMessage
+    {
+        get => _newProfileRuleValidationMessage;
+        private set => SetField(ref _newProfileRuleValidationMessage, value);
+    }
+
+    public int NewProfileWebsiteRuleCount =>
+        BuildNewProfileWebsiteRules().Count;
+
+    public int NewProfileApplicationRuleCount =>
+        NewProfileDraftRules.Count(rule => rule.ApplicationRule is not null);
+
+    public string NewProfileSummaryText => string.Format(
+        CultureInfo.CurrentCulture,
+        UiStrings.NewProfileSummary,
+        NewProfileWebsiteRuleCount,
+        NewProfileApplicationRuleCount);
+
+    public bool CanCreateProfile =>
+        IsCreatingProfile
+        && CanNavigateToEditors
+        && !IsBusy
+        && Profile.ValidateName(NewProfileNameInput).IsValid
+        && string.IsNullOrEmpty(NewProfileNameValidationMessage);
 
     public IReadOnlyList<DurationPresetViewModel> DurationPresets { get; }
 
@@ -624,6 +798,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
                 if (value)
                 {
                     IsDeleteProfileConfirmationVisible = false;
+                    IsCreatingProfile = false;
                 }
                 RaiseSessionPresentationChanged();
                 RefreshRuleCommands();
@@ -1449,6 +1624,10 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         _deleteProfileCommand.RaiseCanExecuteChanged();
         _confirmProfileDeleteCommand.RaiseCanExecuteChanged();
         _cancelProfileDeleteCommand.RaiseCanExecuteChanged();
+        _newProfileCommand.RaiseCanExecuteChanged();
+        _addNewProfileCustomRuleCommand.RaiseCanExecuteChanged();
+        _createProfileCommand.RaiseCanExecuteChanged();
+        _cancelCreateProfileCommand.RaiseCanExecuteChanged();
     }
 
     private async Task AddWebsiteRuleAsync()
@@ -1683,6 +1862,188 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         {
             IsBusy = false;
         }
+    }
+
+    public Task BeginCreateProfileAsync()
+    {
+        if (!CanEditProfileRules)
+        {
+            StatusMessage = UiStrings.RulesLocked;
+            return Task.CompletedTask;
+        }
+
+        IsDeleteProfileConfirmationVisible = false;
+        NewProfileNameInput = string.Empty;
+        NewProfileCustomRuleInput = string.Empty;
+        NewProfileRuleValidationMessage = string.Empty;
+        NewProfileDraftRules.Clear();
+        foreach (var suggestion in NewProfileSuggestions)
+        {
+            suggestion.Reset();
+        }
+
+        IsCreatingProfile = true;
+        RaiseNewProfileSummaryChanged();
+        return Task.CompletedTask;
+    }
+
+    public Task CancelCreateProfileAsync()
+    {
+        IsCreatingProfile = false;
+        NewProfileDraftRules.Clear();
+        NewProfileRuleValidationMessage = string.Empty;
+        return Task.CompletedTask;
+    }
+
+    public Task AddNewProfileCustomRuleAsync()
+    {
+        var input = NewProfileCustomRuleInput.Trim();
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            NewProfileRuleValidationMessage = UiStrings.NewProfileRuleRequired;
+            return Task.CompletedTask;
+        }
+
+        if (input.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+        {
+            var result = ApplicationRule.Create(
+                RuleAction.Block,
+                ApplicationMatchKind.FileName,
+                input);
+            if (!result.IsValid)
+            {
+                NewProfileRuleValidationMessage = result.Errors[0].Message;
+                return Task.CompletedTask;
+            }
+
+            if (NewProfileDraftRules.Any(rule =>
+                rule.ApplicationRule is not null
+                && string.Equals(
+                    rule.ApplicationRule.Value,
+                    result.Value!.Value,
+                    StringComparison.OrdinalIgnoreCase)))
+            {
+                NewProfileRuleValidationMessage = UiStrings.NewProfileRuleAlreadyAdded;
+                return Task.CompletedTask;
+            }
+
+            var applicationRule = result.Value!;
+            NewProfileDraftRules.Add(new NewProfileRuleDraftViewModel(
+                applicationRule.Id,
+                applicationRule.Value,
+                applicationRule,
+                null,
+                RemoveNewProfileDraftRuleAsync));
+        }
+        else
+        {
+            var result = WebsiteRule.Create(RuleAction.Block, input);
+            if (!result.IsValid)
+            {
+                NewProfileRuleValidationMessage = result.Errors[0].Message;
+                return Task.CompletedTask;
+            }
+
+            var websiteRule = result.Value!;
+            if (BuildNewProfileWebsiteRules().Any(rule =>
+                string.Equals(rule.Pattern, websiteRule.Pattern, StringComparison.OrdinalIgnoreCase)))
+            {
+                NewProfileRuleValidationMessage = UiStrings.NewProfileRuleAlreadyAdded;
+                return Task.CompletedTask;
+            }
+
+            NewProfileDraftRules.Add(new NewProfileRuleDraftViewModel(
+                websiteRule.Id,
+                websiteRule.Pattern,
+                null,
+                websiteRule,
+                RemoveNewProfileDraftRuleAsync));
+        }
+
+        NewProfileCustomRuleInput = string.Empty;
+        NewProfileRuleValidationMessage = string.Empty;
+        RaiseNewProfileSummaryChanged();
+        return Task.CompletedTask;
+    }
+
+    public async Task CreateProfileAsync()
+    {
+        if (!CanCreateProfile)
+        {
+            StatusMessage = NewProfileNameValidationMessage;
+            return;
+        }
+
+        var profileResult = Profile.Create(NewProfileNameInput);
+        var profile = profileResult.Value!;
+        var stored = new StoredProfile(
+            profile.Id,
+            profile.Name,
+            NewProfileDraftRules
+                .Where(rule => rule.ApplicationRule is not null)
+                .Select(rule => rule.ApplicationRule!)
+                .ToArray(),
+            BuildNewProfileWebsiteRules());
+
+        IsBusy = true;
+        try
+        {
+            await _profileStore.SaveProfileAsync(stored);
+            IsCreatingProfile = false;
+            await LoadProfilesAsync(CancellationToken.None, stored.Id);
+            StatusMessage = string.Format(
+                CultureInfo.CurrentCulture,
+                UiStrings.ProfileCreated,
+                stored.Name);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private Task RemoveNewProfileDraftRuleAsync(Guid id)
+    {
+        var rule = NewProfileDraftRules.FirstOrDefault(item => item.Id == id);
+        if (rule is not null)
+        {
+            NewProfileDraftRules.Remove(rule);
+            RaiseNewProfileSummaryChanged();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private IReadOnlyList<WebsiteRule> BuildNewProfileWebsiteRules()
+    {
+        var rules = new Dictionary<string, WebsiteRule>(StringComparer.OrdinalIgnoreCase);
+        foreach (var pattern in NewProfileSuggestions
+                     .Where(suggestion => suggestion.IsSelected)
+                     .SelectMany(suggestion => suggestion.Domains))
+        {
+            var rule = WebsiteRule.Create(RuleAction.Block, pattern).Value!;
+            rules.TryAdd(rule.Pattern, rule);
+        }
+
+        foreach (var draft in NewProfileDraftRules.Where(rule => rule.WebsiteRule is not null))
+        {
+            rules.TryAdd(draft.WebsiteRule!.Pattern, draft.WebsiteRule);
+        }
+
+        return rules.Values.ToArray();
+    }
+
+    private void OnNewProfileSuggestionChanged()
+    {
+        NewProfileRuleValidationMessage = string.Empty;
+        RaiseNewProfileSummaryChanged();
+    }
+
+    private void RaiseNewProfileSummaryChanged()
+    {
+        OnPropertyChanged(nameof(NewProfileWebsiteRuleCount));
+        OnPropertyChanged(nameof(NewProfileApplicationRuleCount));
+        OnPropertyChanged(nameof(NewProfileSummaryText));
     }
 
     private async Task LoadProfilesAsync(

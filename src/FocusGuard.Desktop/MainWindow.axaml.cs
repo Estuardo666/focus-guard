@@ -277,6 +277,18 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    private async void NewProfileClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not FocusViewModel viewModel)
+        {
+            return;
+        }
+
+        viewModel.ShowSection(NavigationSection.Profiles);
+        await viewModel.BeginCreateProfileAsync();
+        Dispatcher.UIThread.Post(() => this.FindControl<TextBox>("NewProfileNameInput")?.Focus());
+    }
+
     private void FocusNavigationClick(object? sender, RoutedEventArgs e)
     {
         if (DataContext is FocusViewModel viewModel)
