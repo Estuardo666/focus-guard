@@ -68,17 +68,18 @@ public sealed class StrictConfirmationPhraseGeneratorTests
             rootGrid.Elements(avalonia + "Grid"),
             element => (string?)element.Attribute(x + "Name") == "ApplicationShell");
         var overlay = Assert.Single(
-            shell.Descendants(avalonia + "Border"),
+            rootGrid.Elements(avalonia + "Border"),
             element => (string?)element.Attribute(x + "Name") == "NewProfileOverlay");
 
         Assert.Equal("{Binding IsCreatingProfile}", (string?)overlay.Attribute("IsVisible"));
         Assert.Equal("{Binding IsCreatingProfile}", (string?)overlay.Attribute("IsHitTestVisible"));
+        Assert.Equal("NewProfileKeyDown", (string?)overlay.Attribute("KeyDown"));
         Assert.Contains(
             overlay.Descendants(avalonia + "TextBlock"),
             element => ((string?)element.Attribute("Text"))?.Contains("NewProfileTitle", StringComparison.Ordinal) == true);
         Assert.DoesNotContain(
-            shell.Elements(avalonia + "ScrollViewer").SelectMany(element => element.Descendants()),
-            element => ((string?)element.Attribute("IsVisible"))?.Contains("IsCreatingProfile", StringComparison.Ordinal) == true);
+            shell.Descendants(avalonia + "Border"),
+            element => (string?)element.Attribute(x + "Name") == "NewProfileOverlay");
     }
 
     private static string FindRepositoryRoot()

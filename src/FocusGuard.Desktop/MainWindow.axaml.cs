@@ -191,7 +191,8 @@ public sealed partial class MainWindow : Window
     {
         var shell = this.FindControl<Grid>("ApplicationShell");
         var overlay = this.FindControl<Border>("NewProfileOverlay");
-        if (shell is null || overlay is null)
+        var blur = shell?.Effect as BlurEffect;
+        if (shell is null || overlay is null || blur is null)
         {
             return;
         }
@@ -199,12 +200,16 @@ public sealed partial class MainWindow : Window
         if (isVisible)
         {
             _focusBeforeProfileCreation = FocusManager?.GetFocusedElement();
+            shell.IsHitTestVisible = false;
             overlay.IsHitTestVisible = true;
+            blur.Radius = 7;
             Dispatcher.UIThread.Post(() => this.FindControl<TextBox>("NewProfileNameInput")?.Focus());
             return;
         }
 
         overlay.IsHitTestVisible = false;
+        shell.IsHitTestVisible = true;
+        blur.Radius = 0;
         _focusBeforeProfileCreation?.Focus();
         _focusBeforeProfileCreation = null;
     }
@@ -380,6 +385,17 @@ public sealed partial class MainWindow : Window
             && DataContext is FocusViewModel { CanCancelStrict: true } viewModel)
         {
             viewModel.CancelStrictCommand.Execute(null);
+            e.Handled = true;
+        }
+    }
+
+    private void NewProfileKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape
+            && DataContext is FocusViewModel { IsCreatingProfile: true } viewModel
+            && viewModel.CancelCreateProfileCommand.CanExecute(null))
+        {
+            viewModel.CancelCreateProfileCommand.Execute(null);
             e.Handled = true;
         }
     }
