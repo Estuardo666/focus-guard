@@ -36,18 +36,10 @@ public sealed record Profile
         string? description = null,
         string? accentHex = null)
     {
-        var normalized = name?.Trim();
-
-        if (string.IsNullOrWhiteSpace(normalized))
+        var nameResult = ValidateName(name);
+        if (!nameResult.IsValid)
         {
-            return ValidationResult<Profile>.Failure(
-                new ValidationError("profile.name.required", "Profile name is required."));
-        }
-
-        if (normalized.Length > 80)
-        {
-            return ValidationResult<Profile>.Failure(
-                new ValidationError("profile.name.too_long", "Profile name must be 80 characters or fewer."));
+            return ValidationResult<Profile>.Failure([.. nameResult.Errors]);
         }
 
         var normalizedDescription = string.IsNullOrWhiteSpace(description) ? null : description.Trim();
@@ -67,7 +59,26 @@ public sealed record Profile
         }
 
         return ValidationResult<Profile>.Success(
-            new Profile(ProfileId.New(), normalized, normalizedDescription, normalizedAccent?.ToUpperInvariant()));
+            new Profile(ProfileId.New(), nameResult.Value!, normalizedDescription, normalizedAccent?.ToUpperInvariant()));
+    }
+
+    public static ValidationResult<string> ValidateName(string? name)
+    {
+        var normalized = name?.Trim();
+
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return ValidationResult<string>.Failure(
+                new ValidationError("profile.name.required", "Profile name is required."));
+        }
+
+        if (normalized.Length > 80)
+        {
+            return ValidationResult<string>.Failure(
+                new ValidationError("profile.name.too_long", "Profile name must be 80 characters or fewer."));
+        }
+
+        return ValidationResult<string>.Success(normalized);
     }
 
     /// <summary>Accepts only <c>#RRGGBB</c>: the accent is fed straight to a brush parser.</summary>

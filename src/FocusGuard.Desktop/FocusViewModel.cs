@@ -131,6 +131,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     private readonly AsyncDelegateCommand _addWebsiteRuleCommand;
     private readonly AsyncDelegateCommand _addApplicationRuleCommand;
     private readonly AsyncDelegateCommand _duplicateProfileCommand;
+    private readonly AsyncDelegateCommand _renameProfileCommand;
     private DurationPresetViewModel _selectedDurationPreset;
     private RecoveryCredential? _pendingRecoveryCredential;
     private bool _isStrictMode;
@@ -154,6 +155,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     private NavigationSection _section = NavigationSection.Focus;
     private string _websiteRuleInput = string.Empty;
     private string _applicationRuleInput = string.Empty;
+    private string _profileNameInput = string.Empty;
     private readonly DurationPresetViewModel _customPreset;
     private int _customDurationMinutes = 45;
     private DateTimeOffset? _sessionStart;
@@ -230,6 +232,9 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         _duplicateProfileCommand = new AsyncDelegateCommand(
             DuplicateSelectedProfileAsync,
             () => CanEditProfileRules);
+        _renameProfileCommand = new AsyncDelegateCommand(
+            RenameSelectedProfileAsync,
+            () => CanRenameProfile);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -302,6 +307,10 @@ public sealed class FocusViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(HeaderSubtitle));
                 ApplyProfileAccent();
                 LoadSelectedRuleRows();
+                _profileNameInput = value?.Name ?? string.Empty;
+                OnPropertyChanged(nameof(ProfileNameInput));
+                OnPropertyChanged(nameof(ProfileNameValidationMessage));
+                OnPropertyChanged(nameof(CanRenameProfile));
                 OnPropertyChanged(nameof(CanStart));
                 NotifyCommands();
             }
@@ -323,6 +332,65 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     public ICommand AddWebsiteRuleCommand => _addWebsiteRuleCommand;
     public ICommand AddApplicationRuleCommand => _addApplicationRuleCommand;
     public ICommand DuplicateProfileCommand => _duplicateProfileCommand;
+    public ICommand RenameProfileCommand => _renameProfileCommand;
+
+    public string ProfileNameInput
+    {
+        get => _profileNameInput;
+        set
+        {
+            if (SetField(ref _profileNameInput, value ?? string.Empty))
+            {
+                OnPropertyChanged(nameof(ProfileNameValidationMessage));
+                OnPropertyChanged(nameof(CanRenameProfile));
+                _renameProfileCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
+    public string ProfileNameValidationMessage
+    {
+        get
+        {
+            var result = Profile.ValidateName(ProfileNameInput);
+            if (!result.IsValid)
+            {
+                return result.Errors[0].Code switch
+                {
+                    "profile.name.too_long" => UiStrings.ProfileNameTooLong,
+                    _ => UiStrings.ProfileNameRequired
+                };
+            }
+
+            if (SelectedProfile is null)
+            {
+                return UiStrings.ProfileNameRequired;
+            }
+
+            if (string.Equals(result.Value, SelectedProfile.Name, StringComparison.CurrentCulture))
+            {
+                return string.Empty;
+            }
+
+            return Profiles.Any(profile =>
+                profile.Id != SelectedProfile.Id
+                && string.Equals(profile.Name, result.Value, StringComparison.CurrentCultureIgnoreCase))
+                ? UiStrings.ProfileNameAlreadyExists
+                : string.Empty;
+        }
+    }
+
+    public bool CanRenameProfile
+    {
+        get
+        {
+            var result = Profile.ValidateName(ProfileNameInput);
+            return CanEditProfileRules
+                && result.IsValid
+                && !string.Equals(result.Value, SelectedProfile?.Name, StringComparison.CurrentCulture)
+                && string.IsNullOrEmpty(ProfileNameValidationMessage);
+        }
+    }
 
     public IReadOnlyList<DurationPresetViewModel> DurationPresets { get; }
 
@@ -501,6 +569,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(CanStop));
                 OnPropertyChanged(nameof(ModeLabel));
                 OnPropertyChanged(nameof(CanEditProfileRules));
+                OnPropertyChanged(nameof(CanRenameProfile));
                 RaiseSessionPresentationChanged();
                 RefreshRuleCommands();
                 NotifyCommands();
@@ -1268,6 +1337,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(CanStop));
                 OnPropertyChanged(nameof(CanConfirmStrict));
                 OnPropertyChanged(nameof(CanEditProfileRules));
+                OnPropertyChanged(nameof(CanRenameProfile));
                 RefreshRuleCommands();
                 NotifyCommands();
             }
@@ -1318,6 +1388,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         _addWebsiteRuleCommand.RaiseCanExecuteChanged();
         _addApplicationRuleCommand.RaiseCanExecuteChanged();
         _duplicateProfileCommand.RaiseCanExecuteChanged();
+        _renameProfileCommand.RaiseCanExecuteChanged();
     }
 
     private async Task AddWebsiteRuleAsync()
@@ -1449,6 +1520,45 @@ public sealed class FocusViewModel : INotifyPropertyChanged
             {
                 return candidate;
             }
+        }
+    }
+
+    public async Task RenameSelectedProfileAsync()
+    {
+        if (!CanEditProfileRules || SelectedProfile is null)
+        {
+            StatusMessage = UiStrings.RulesLocked;
+            return;
+        }
+
+        var nameResult = Profile.ValidateName(ProfileNameInput);
+        if (!nameResult.IsValid || !CanRenameProfile)
+        {
+            StatusMessage = string.Equals(
+                nameResult.Value,
+                SelectedProfile.Name,
+                StringComparison.CurrentCulture)
+                ? UiStrings.ProfileNameUnchanged
+                : ProfileNameValidationMessage;
+            return;
+        }
+
+        var profileId = SelectedProfile.Id;
+        var renamed = SelectedProfile with { Name = nameResult.Value! };
+
+        IsBusy = true;
+        try
+        {
+            await _profileStore.SaveProfileAsync(renamed);
+            await LoadProfilesAsync(CancellationToken.None, profileId);
+            StatusMessage = string.Format(
+                CultureInfo.CurrentCulture,
+                UiStrings.ProfileRenamed,
+                renamed.Name);
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 

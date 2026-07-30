@@ -26,6 +26,13 @@
   <data name="ProfileCopyName" xml:space="preserve"><value>Copia de {0}</value></data>
   <data name="ProfileCopyNumberSuffix" xml:space="preserve"><value> ({0})</value></data>
   <data name="ProfileDuplicated" xml:space="preserve"><value>{0} está listo para editar. Sus reglas solo se aplican a sesiones futuras.</value></data>
+  <data name="ProfileNameLabel" xml:space="preserve"><value>Nombre del perfil</value></data>
+  <data name="RenameProfile" xml:space="preserve"><value>Renombrar perfil</value></data>
+  <data name="ProfileNameRequired" xml:space="preserve"><value>Escribe un nombre para el perfil.</value></data>
+  <data name="ProfileNameTooLong" xml:space="preserve"><value>Usa 80 caracteres o menos.</value></data>
+  <data name="ProfileNameUnchanged" xml:space="preserve"><value>Escribe un nombre diferente.</value></data>
+  <data name="ProfileNameAlreadyExists" xml:space="preserve"><value>Ya existe un perfil con este nombre.</value></data>
+  <data name="ProfileRenamed" xml:space="preserve"><value>El perfil ahora se llama {0}. Las políticas activas no cambian.</value></data>
   <data name="SavedWebsiteRules" xml:space="preserve"><value>reglas de sitios guardadas</value></data>
   <data name="SavedApplicationRules" xml:space="preserve"><value>reglas de aplicaciones guardadas</value></data>
   <data name="DurationLabel" xml:space="preserve"><value>Duración</value></data>

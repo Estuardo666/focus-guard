@@ -31,6 +31,13 @@ public static class UiStrings
     public static string ProfileCopyName => Get(nameof(ProfileCopyName));
     public static string ProfileCopyNumberSuffix => Get(nameof(ProfileCopyNumberSuffix));
     public static string ProfileDuplicated => Get(nameof(ProfileDuplicated));
+    public static string ProfileNameLabel => Get(nameof(ProfileNameLabel));
+    public static string RenameProfile => Get(nameof(RenameProfile));
+    public static string ProfileNameRequired => Get(nameof(ProfileNameRequired));
+    public static string ProfileNameTooLong => Get(nameof(ProfileNameTooLong));
+    public static string ProfileNameUnchanged => Get(nameof(ProfileNameUnchanged));
+    public static string ProfileNameAlreadyExists => Get(nameof(ProfileNameAlreadyExists));
+    public static string ProfileRenamed => Get(nameof(ProfileRenamed));
     public static string SavedWebsiteRules => Get(nameof(SavedWebsiteRules));
     public static string SavedApplicationRules => Get(nameof(SavedApplicationRules));
     public static string DurationLabel => Get(nameof(DurationLabel));

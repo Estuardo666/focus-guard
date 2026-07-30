@@ -291,6 +291,72 @@ public sealed class FocusViewModelTests
     }
 
     [Fact]
+    public async Task RenameProfilePersistsNormalizedNameAndPreservesContents()
+    {
+        var store = new MemoryProfileStore();
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        var original = viewModel.SelectedProfile!;
+        viewModel.ProfileNameInput = "  Writing  ";
+
+        await viewModel.RenameSelectedProfileAsync();
+
+        var renamed = Assert.Single(await store.ListProfilesAsync());
+        Assert.Equal(original.Id, renamed.Id);
+        Assert.Equal("Writing", renamed.Name);
+        Assert.Equal(original.ApplicationRules, renamed.ApplicationRules);
+        Assert.Equal(original.WebsiteRules, renamed.WebsiteRules);
+        Assert.Equal(renamed.Id, viewModel.SelectedProfile!.Id);
+        Assert.Equal("Writing", viewModel.ProfileNameInput);
+    }
+
+    [Fact]
+    public async Task RenameProfileRejectsInvalidUnchangedAndDuplicateNames()
+    {
+        var store = new MemoryProfileStore();
+        var duplicate = new StoredProfile(ProfileId.New(), "Writing", [], []);
+        await store.SaveProfileAsync(duplicate);
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        var original = viewModel.SelectedProfile!;
+
+        viewModel.ProfileNameInput = " ";
+        Assert.False(viewModel.RenameProfileCommand.CanExecute(null));
+        Assert.NotEmpty(viewModel.ProfileNameValidationMessage);
+
+        viewModel.ProfileNameInput = new string('A', 81);
+        Assert.False(viewModel.RenameProfileCommand.CanExecute(null));
+
+        viewModel.ProfileNameInput = original.Name;
+        Assert.False(viewModel.RenameProfileCommand.CanExecute(null));
+
+        viewModel.ProfileNameInput = "writing";
+        Assert.False(viewModel.RenameProfileCommand.CanExecute(null));
+        Assert.Contains("already exists", viewModel.ProfileNameValidationMessage);
+
+        await viewModel.RenameSelectedProfileAsync();
+        Assert.Contains((await store.ListProfilesAsync()), profile => profile.Name == original.Name);
+    }
+
+    [Fact]
+    public async Task ActiveSessionDisablesAndRefusesProfileRename()
+    {
+        var store = new MemoryProfileStore();
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        viewModel.ProfileNameInput = "Writing";
+
+        viewModel.StartFocusCommand.Execute(null);
+        Assert.True(SpinWait.SpinUntil(() => viewModel.IsActive, TimeSpan.FromSeconds(1)));
+
+        Assert.False(viewModel.RenameProfileCommand.CanExecute(null));
+        await viewModel.RenameSelectedProfileAsync();
+
+        Assert.Equal("Deep Work", (await store.ListProfilesAsync()).Single().Name);
+        Assert.Contains("cannot be changed", viewModel.StatusMessage);
+    }
+
+    [Fact]
     public async Task FirstRunHeaderShowsASentenceRatherThanAZeroTotal()
     {
         var viewModel = new FocusViewModel(new RecordingClient(), new MemoryProfileStore());

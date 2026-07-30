@@ -21,4 +21,16 @@ public sealed class ProfileTests
         Assert.True(result.IsValid);
         Assert.Equal("Deep Work", result.Value!.Name);
     }
+
+    [Fact]
+    public void ValidateName_TrimsValidNameAndRejectsInvalidLengths()
+    {
+        var valid = Profile.ValidateName("  Deep Work  ");
+        var empty = Profile.ValidateName("   ");
+        var overlong = Profile.ValidateName(new string('A', 81));
+
+        Assert.Equal("Deep Work", valid.Value);
+        Assert.Contains(empty.Errors, error => error.Code == "profile.name.required");
+        Assert.Contains(overlong.Errors, error => error.Code == "profile.name.too_long");
+    }
 }
