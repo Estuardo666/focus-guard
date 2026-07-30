@@ -651,7 +651,7 @@
               <StackPanel Spacing="14">
                 <StackPanel Spacing="6">
                   <TextBlock Classes="caption" Text="{x:Static resources:UiStrings.ProfileLabel}" />
-                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                  <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
                     <ComboBox
                         x:Name="ProfileSelector"
                         MinWidth="240"
@@ -669,6 +669,12 @@
                         Content="{x:Static resources:UiStrings.DuplicateProfile}"
                         Command="{Binding DuplicateProfileCommand}"
                         AutomationProperties.Name="{x:Static resources:UiStrings.DuplicateProfile}" />
+                    <Button
+                        Grid.Column="2"
+                        Classes="danger"
+                        Content="{x:Static resources:UiStrings.DeleteProfile}"
+                        Command="{Binding DeleteProfileCommand}"
+                        AutomationProperties.Name="{x:Static resources:UiStrings.DeleteProfile}" />
                   </Grid>
                   <TextBlock Classes="caption" Text="{x:Static resources:UiStrings.ProfileNameLabel}" />
                   <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
@@ -687,6 +693,33 @@
                       Foreground="{DynamicResource FgWarning}"
                       Text="{Binding ProfileNameValidationMessage}"
                       TextWrapping="Wrap" />
+                  <Border
+                      Background="{DynamicResource FgDangerSoft}"
+                      BorderBrush="{DynamicResource FgDanger}"
+                      BorderThickness="1"
+                      CornerRadius="{DynamicResource FgRadiusMedium}"
+                      IsVisible="{Binding IsDeleteProfileConfirmationVisible}"
+                      Padding="14"
+                      AutomationProperties.Name="{x:Static resources:UiStrings.DeleteProfileConfirmationTitle}">
+                    <StackPanel Spacing="10">
+                      <TextBlock
+                          Text="{x:Static resources:UiStrings.DeleteProfileConfirmationTitle}"
+                          FontWeight="SemiBold"
+                          Foreground="{DynamicResource FgDanger}" />
+                      <TextBlock Text="{Binding DeleteProfileConfirmationText}" TextWrapping="Wrap" />
+                      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                        <Button
+                            Content="{x:Static resources:UiStrings.KeepProfile}"
+                            Command="{Binding CancelProfileDeleteCommand}"
+                            AutomationProperties.Name="{x:Static resources:UiStrings.KeepProfile}" />
+                        <Button
+                            Classes="danger"
+                            Content="{x:Static resources:UiStrings.ConfirmDeleteProfile}"
+                            Command="{Binding ConfirmProfileDeleteCommand}"
+                            AutomationProperties.Name="{x:Static resources:UiStrings.ConfirmDeleteProfile}" />
+                      </StackPanel>
+                    </StackPanel>
+                  </Border>
                 </StackPanel>
 
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="16">

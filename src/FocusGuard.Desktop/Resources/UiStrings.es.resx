@@ -33,6 +33,14 @@
   <data name="ProfileNameUnchanged" xml:space="preserve"><value>Escribe un nombre diferente.</value></data>
   <data name="ProfileNameAlreadyExists" xml:space="preserve"><value>Ya existe un perfil con este nombre.</value></data>
   <data name="ProfileRenamed" xml:space="preserve"><value>El perfil ahora se llama {0}. Las políticas activas no cambian.</value></data>
+  <data name="DeleteProfile" xml:space="preserve"><value>Eliminar perfil</value></data>
+  <data name="DeleteProfileConfirmationTitle" xml:space="preserve"><value>¿Eliminar este perfil?</value></data>
+  <data name="DeleteProfileConfirmation" xml:space="preserve"><value>{0} y sus {1} regla(s) de aplicaciones y {2} regla(s) de sitios se eliminarán permanentemente. Esta acción no se puede deshacer.</value></data>
+  <data name="ConfirmDeleteProfile" xml:space="preserve"><value>Eliminar perfil permanentemente</value></data>
+  <data name="KeepProfile" xml:space="preserve"><value>Conservar perfil</value></data>
+  <data name="LastProfileRequired" xml:space="preserve"><value>FocusGuard debe conservar al menos un perfil.</value></data>
+  <data name="ProfileDeleted" xml:space="preserve"><value>Se eliminó {0}. Ahora está seleccionado otro perfil.</value></data>
+  <data name="ProfileDeleteFailed" xml:space="preserve"><value>El perfil ya no existe o no se pudo eliminar.</value></data>
   <data name="SavedWebsiteRules" xml:space="preserve"><value>reglas de sitios guardadas</value></data>
   <data name="SavedApplicationRules" xml:space="preserve"><value>reglas de aplicaciones guardadas</value></data>
   <data name="DurationLabel" xml:space="preserve"><value>Duración</value></data>

@@ -50,3 +50,4 @@ Status values: `TODO`, `IN_PROGRESS`, `DONE`, `BLOCKED`.
 - [x] FG-122 Reconcile the existing C# formatting baseline and restore a clean format gate (`DONE`)
 - [x] FG-123 Add safe persistent profile duplication with copied rules and active-session locking (`DONE`)
 - [x] FG-124 Add validated persistent profile rename with active-session locking (`DONE`)
+- [x] FG-125 Add confirmed persistent profile deletion with last-profile protection (`DONE`)

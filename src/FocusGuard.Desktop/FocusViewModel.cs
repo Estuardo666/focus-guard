@@ -132,6 +132,9 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     private readonly AsyncDelegateCommand _addApplicationRuleCommand;
     private readonly AsyncDelegateCommand _duplicateProfileCommand;
     private readonly AsyncDelegateCommand _renameProfileCommand;
+    private readonly AsyncDelegateCommand _deleteProfileCommand;
+    private readonly AsyncDelegateCommand _confirmProfileDeleteCommand;
+    private readonly AsyncDelegateCommand _cancelProfileDeleteCommand;
     private DurationPresetViewModel _selectedDurationPreset;
     private RecoveryCredential? _pendingRecoveryCredential;
     private bool _isStrictMode;
@@ -170,6 +173,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     private DesktopSettings _settings;
     private bool _showAllWebsiteRules;
     private bool _showAllApplicationRules;
+    private bool _isDeleteProfileConfirmationVisible;
     private IBrush _profileAccentBrush = DefaultAccentBrush;
 
     /// <summary>Chips shown before the overflow affordance takes over.</summary>
@@ -235,6 +239,15 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         _renameProfileCommand = new AsyncDelegateCommand(
             RenameSelectedProfileAsync,
             () => CanRenameProfile);
+        _deleteProfileCommand = new AsyncDelegateCommand(
+            RequestProfileDeleteAsync,
+            () => CanDeleteProfile);
+        _confirmProfileDeleteCommand = new AsyncDelegateCommand(
+            ConfirmProfileDeleteAsync,
+            () => CanConfirmProfileDelete);
+        _cancelProfileDeleteCommand = new AsyncDelegateCommand(
+            CancelProfileDeleteAsync,
+            () => IsDeleteProfileConfirmationVisible);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -307,10 +320,13 @@ public sealed class FocusViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(HeaderSubtitle));
                 ApplyProfileAccent();
                 LoadSelectedRuleRows();
+                IsDeleteProfileConfirmationVisible = false;
                 _profileNameInput = value?.Name ?? string.Empty;
                 OnPropertyChanged(nameof(ProfileNameInput));
                 OnPropertyChanged(nameof(ProfileNameValidationMessage));
                 OnPropertyChanged(nameof(CanRenameProfile));
+                OnPropertyChanged(nameof(CanDeleteProfile));
+                OnPropertyChanged(nameof(DeleteProfileConfirmationText));
                 OnPropertyChanged(nameof(CanStart));
                 NotifyCommands();
             }
@@ -333,6 +349,9 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     public ICommand AddApplicationRuleCommand => _addApplicationRuleCommand;
     public ICommand DuplicateProfileCommand => _duplicateProfileCommand;
     public ICommand RenameProfileCommand => _renameProfileCommand;
+    public ICommand DeleteProfileCommand => _deleteProfileCommand;
+    public ICommand ConfirmProfileDeleteCommand => _confirmProfileDeleteCommand;
+    public ICommand CancelProfileDeleteCommand => _cancelProfileDeleteCommand;
 
     public string ProfileNameInput
     {
@@ -391,6 +410,37 @@ public sealed class FocusViewModel : INotifyPropertyChanged
                 && string.IsNullOrEmpty(ProfileNameValidationMessage);
         }
     }
+
+    public bool CanDeleteProfile =>
+        CanEditProfileRules
+        && Profiles.Count > 1;
+
+    public bool IsDeleteProfileConfirmationVisible
+    {
+        get => _isDeleteProfileConfirmationVisible;
+        private set
+        {
+            if (SetField(ref _isDeleteProfileConfirmationVisible, value))
+            {
+                OnPropertyChanged(nameof(CanConfirmProfileDelete));
+                _confirmProfileDeleteCommand.RaiseCanExecuteChanged();
+                _cancelProfileDeleteCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
+    public bool CanConfirmProfileDelete =>
+        IsDeleteProfileConfirmationVisible
+        && CanDeleteProfile;
+
+    public string DeleteProfileConfirmationText => SelectedProfile is null
+        ? string.Empty
+        : string.Format(
+            CultureInfo.CurrentCulture,
+            UiStrings.DeleteProfileConfirmation,
+            SelectedProfile.Name,
+            SelectedProfile.ApplicationRules.Count,
+            SelectedProfile.WebsiteRules.Count);
 
     public IReadOnlyList<DurationPresetViewModel> DurationPresets { get; }
 
@@ -570,6 +620,11 @@ public sealed class FocusViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(ModeLabel));
                 OnPropertyChanged(nameof(CanEditProfileRules));
                 OnPropertyChanged(nameof(CanRenameProfile));
+                OnPropertyChanged(nameof(CanDeleteProfile));
+                if (value)
+                {
+                    IsDeleteProfileConfirmationVisible = false;
+                }
                 RaiseSessionPresentationChanged();
                 RefreshRuleCommands();
                 NotifyCommands();
@@ -1338,6 +1393,8 @@ public sealed class FocusViewModel : INotifyPropertyChanged
                 OnPropertyChanged(nameof(CanConfirmStrict));
                 OnPropertyChanged(nameof(CanEditProfileRules));
                 OnPropertyChanged(nameof(CanRenameProfile));
+                OnPropertyChanged(nameof(CanDeleteProfile));
+                OnPropertyChanged(nameof(CanConfirmProfileDelete));
                 RefreshRuleCommands();
                 NotifyCommands();
             }
@@ -1389,6 +1446,9 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         _addApplicationRuleCommand.RaiseCanExecuteChanged();
         _duplicateProfileCommand.RaiseCanExecuteChanged();
         _renameProfileCommand.RaiseCanExecuteChanged();
+        _deleteProfileCommand.RaiseCanExecuteChanged();
+        _confirmProfileDeleteCommand.RaiseCanExecuteChanged();
+        _cancelProfileDeleteCommand.RaiseCanExecuteChanged();
     }
 
     private async Task AddWebsiteRuleAsync()
@@ -1562,6 +1622,69 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         }
     }
 
+    public Task RequestProfileDeleteAsync()
+    {
+        if (!CanEditProfileRules || SelectedProfile is null)
+        {
+            StatusMessage = UiStrings.RulesLocked;
+            return Task.CompletedTask;
+        }
+
+        if (Profiles.Count <= 1)
+        {
+            StatusMessage = UiStrings.LastProfileRequired;
+            return Task.CompletedTask;
+        }
+
+        IsDeleteProfileConfirmationVisible = true;
+        return Task.CompletedTask;
+    }
+
+    public Task CancelProfileDeleteAsync()
+    {
+        IsDeleteProfileConfirmationVisible = false;
+        return Task.CompletedTask;
+    }
+
+    public async Task ConfirmProfileDeleteAsync()
+    {
+        if (!CanConfirmProfileDelete || SelectedProfile is null)
+        {
+            if (!CanEditProfileRules)
+            {
+                StatusMessage = UiStrings.RulesLocked;
+            }
+            else if (Profiles.Count <= 1)
+            {
+                StatusMessage = UiStrings.LastProfileRequired;
+            }
+
+            return;
+        }
+
+        var profile = SelectedProfile;
+        IsBusy = true;
+        try
+        {
+            if (!await _profileStore.DeleteProfileAsync(profile.Id))
+            {
+                StatusMessage = UiStrings.ProfileDeleteFailed;
+                return;
+            }
+
+            IsDeleteProfileConfirmationVisible = false;
+            await LoadProfilesAsync(CancellationToken.None);
+            StatusMessage = string.Format(
+                CultureInfo.CurrentCulture,
+                UiStrings.ProfileDeleted,
+                profile.Name);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     private async Task LoadProfilesAsync(
         CancellationToken cancellationToken,
         ProfileId? preferredProfileId = null)
@@ -1586,6 +1709,8 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         SelectedProfile = Profiles.FirstOrDefault(profile => profile.Id == preferredProfileId) ?? Profiles.First();
         RebuildProfileSwatches();
         _profilesLoaded = true;
+        OnPropertyChanged(nameof(CanDeleteProfile));
+        NotifyCommands();
     }
 
     private void RebuildProfileSwatches()

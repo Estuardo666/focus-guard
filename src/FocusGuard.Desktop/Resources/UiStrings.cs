@@ -38,6 +38,14 @@ public static class UiStrings
     public static string ProfileNameUnchanged => Get(nameof(ProfileNameUnchanged));
     public static string ProfileNameAlreadyExists => Get(nameof(ProfileNameAlreadyExists));
     public static string ProfileRenamed => Get(nameof(ProfileRenamed));
+    public static string DeleteProfile => Get(nameof(DeleteProfile));
+    public static string DeleteProfileConfirmationTitle => Get(nameof(DeleteProfileConfirmationTitle));
+    public static string DeleteProfileConfirmation => Get(nameof(DeleteProfileConfirmation));
+    public static string ConfirmDeleteProfile => Get(nameof(ConfirmDeleteProfile));
+    public static string KeepProfile => Get(nameof(KeepProfile));
+    public static string LastProfileRequired => Get(nameof(LastProfileRequired));
+    public static string ProfileDeleted => Get(nameof(ProfileDeleted));
+    public static string ProfileDeleteFailed => Get(nameof(ProfileDeleteFailed));
     public static string SavedWebsiteRules => Get(nameof(SavedWebsiteRules));
     public static string SavedApplicationRules => Get(nameof(SavedApplicationRules));
     public static string DurationLabel => Get(nameof(DurationLabel));

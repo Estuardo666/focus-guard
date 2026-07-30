@@ -357,6 +357,81 @@ public sealed class FocusViewModelTests
     }
 
     [Fact]
+    public async Task DeleteProfileRequiresVisibleConfirmationAndCanBeCancelled()
+    {
+        var store = new MemoryProfileStore();
+        await store.SaveProfileAsync(new StoredProfile(ProfileId.New(), "Writing", [], []));
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+
+        await viewModel.RequestProfileDeleteAsync();
+
+        Assert.True(viewModel.IsDeleteProfileConfirmationVisible);
+        Assert.Contains("Deep Work", viewModel.DeleteProfileConfirmationText);
+        Assert.Contains("1 application", viewModel.DeleteProfileConfirmationText);
+        Assert.Equal(2, (await store.ListProfilesAsync()).Count);
+
+        await viewModel.CancelProfileDeleteAsync();
+
+        Assert.False(viewModel.IsDeleteProfileConfirmationVisible);
+        Assert.Equal(2, (await store.ListProfilesAsync()).Count);
+    }
+
+    [Fact]
+    public async Task ConfirmProfileDeleteRemovesOnlySelectionAndSelectsFallback()
+    {
+        var store = new MemoryProfileStore();
+        var fallback = new StoredProfile(ProfileId.New(), "Writing", [], []);
+        await store.SaveProfileAsync(fallback);
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        var deletedId = viewModel.SelectedProfile!.Id;
+
+        await viewModel.RequestProfileDeleteAsync();
+        await viewModel.ConfirmProfileDeleteAsync();
+
+        var remaining = Assert.Single(await store.ListProfilesAsync());
+        Assert.Equal(fallback.Id, remaining.Id);
+        Assert.DoesNotContain(viewModel.Profiles, profile => profile.Id == deletedId);
+        Assert.Equal(fallback.Id, viewModel.SelectedProfile!.Id);
+        Assert.False(viewModel.IsDeleteProfileConfirmationVisible);
+    }
+
+    [Fact]
+    public async Task LastProfileCannotBeDeleted()
+    {
+        var store = new MemoryProfileStore();
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+
+        Assert.False(viewModel.DeleteProfileCommand.CanExecute(null));
+        await viewModel.RequestProfileDeleteAsync();
+
+        Assert.False(viewModel.IsDeleteProfileConfirmationVisible);
+        Assert.Single(await store.ListProfilesAsync());
+        Assert.Contains("at least one profile", viewModel.StatusMessage);
+    }
+
+    [Fact]
+    public async Task ActiveSessionDisablesAndRefusesProfileDelete()
+    {
+        var store = new MemoryProfileStore();
+        await store.SaveProfileAsync(new StoredProfile(ProfileId.New(), "Writing", [], []));
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+
+        viewModel.StartFocusCommand.Execute(null);
+        Assert.True(SpinWait.SpinUntil(() => viewModel.IsActive, TimeSpan.FromSeconds(1)));
+
+        Assert.False(viewModel.DeleteProfileCommand.CanExecute(null));
+        await viewModel.RequestProfileDeleteAsync();
+
+        Assert.False(viewModel.IsDeleteProfileConfirmationVisible);
+        Assert.Equal(2, (await store.ListProfilesAsync()).Count);
+        Assert.Contains("cannot be changed", viewModel.StatusMessage);
+    }
+
+    [Fact]
     public async Task FirstRunHeaderShowsASentenceRatherThanAZeroTotal()
     {
         var viewModel = new FocusViewModel(new RecordingClient(), new MemoryProfileStore());

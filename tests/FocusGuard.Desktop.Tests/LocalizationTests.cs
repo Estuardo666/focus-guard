@@ -23,6 +23,7 @@ public sealed class LocalizationTests
             Assert.Equal("Salir de FocusGuard", UiStrings.ExitFocusGuard);
             Assert.Equal("Duplicar perfil", UiStrings.DuplicateProfile);
             Assert.Equal("Renombrar perfil", UiStrings.RenameProfile);
+            Assert.Equal("Eliminar perfil", UiStrings.DeleteProfile);
             Assert.Contains("Escribe", UiStrings.StrictConfirmationPrompt);
             Assert.Equal(UiStrings.StrictPhraseFirstWords, UiStrings.Get("StrictPhraseFirstWords"));
         }
@@ -56,6 +57,7 @@ public sealed class LocalizationTests
             Assert.Contains("future sessions", UiStrings.FutureSessionsOnly);
             Assert.Equal("Duplicate profile", UiStrings.DuplicateProfile);
             Assert.Equal("Rename profile", UiStrings.RenameProfile);
+            Assert.Equal("Delete profile", UiStrings.DeleteProfile);
             Assert.Contains("Type", UiStrings.StrictConfirmationPrompt);
             Assert.Contains("Focus", UiStrings.StrictPhraseSecondWords);
         }
