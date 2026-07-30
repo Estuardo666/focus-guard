@@ -651,19 +651,25 @@
               <StackPanel Spacing="14">
                 <StackPanel Spacing="6">
                   <TextBlock Classes="caption" Text="{x:Static resources:UiStrings.ProfileLabel}" />
-                  <ComboBox
-                      x:Name="ProfileSelector"
-                      HorizontalAlignment="Left"
-                      MinWidth="240"
-                      ItemsSource="{Binding Profiles}"
-                      SelectedItem="{Binding SelectedProfile}"
-                      AutomationProperties.Name="Stored focus profile">
-                    <ComboBox.ItemTemplate>
-                      <DataTemplate x:DataType="storage:StoredProfile">
-                        <TextBlock Text="{Binding Name}" />
-                      </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                  </ComboBox>
+                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <ComboBox
+                        x:Name="ProfileSelector"
+                        MinWidth="240"
+                        ItemsSource="{Binding Profiles}"
+                        SelectedItem="{Binding SelectedProfile}"
+                        AutomationProperties.Name="Stored focus profile">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="storage:StoredProfile">
+                          <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button
+                        Grid.Column="1"
+                        Content="{x:Static resources:UiStrings.DuplicateProfile}"
+                        Command="{Binding DuplicateProfileCommand}"
+                        AutomationProperties.Name="{x:Static resources:UiStrings.DuplicateProfile}" />
+                  </Grid>
                 </StackPanel>
 
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="16">

@@ -218,6 +218,79 @@ public sealed class FocusViewModelTests
     }
 
     [Fact]
+    public async Task DuplicateProfilePersistsAndSelectsIndependentRuleCopies()
+    {
+        var store = new MemoryProfileStore();
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        var source = viewModel.SelectedProfile!;
+
+        await viewModel.DuplicateSelectedProfileAsync();
+
+        var profiles = await store.ListProfilesAsync();
+        Assert.Equal(2, profiles.Count);
+        var duplicate = Assert.Single(profiles, profile => profile.Id != source.Id);
+        Assert.Same(viewModel.SelectedProfile, viewModel.Profiles.Single(profile => profile.Id == duplicate.Id));
+        Assert.Equal("Copy of Deep Work", duplicate.Name);
+        Assert.Equal(source.Description, duplicate.Description);
+        Assert.Equal(source.AccentHex, duplicate.AccentHex);
+        Assert.Equal(source.ApplicationRules.Single().Value, duplicate.ApplicationRules.Single().Value);
+        Assert.NotEqual(source.ApplicationRules.Single().Id, duplicate.ApplicationRules.Single().Id);
+        Assert.Equal(source.WebsiteRules.Single().Pattern, duplicate.WebsiteRules.Single().Pattern);
+        Assert.NotEqual(source.WebsiteRules.Single().Id, duplicate.WebsiteRules.Single().Id);
+    }
+
+    [Fact]
+    public async Task DuplicateProfileUsesCollisionFreeName()
+    {
+        var store = new MemoryProfileStore();
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        var source = viewModel.SelectedProfile!;
+
+        await viewModel.DuplicateSelectedProfileAsync();
+        viewModel.SelectedProfile = source;
+        await viewModel.DuplicateSelectedProfileAsync();
+
+        var names = (await store.ListProfilesAsync()).Select(profile => profile.Name).ToArray();
+        Assert.Contains("Copy of Deep Work", names);
+        Assert.Contains("Copy of Deep Work (2)", names);
+    }
+
+    [Fact]
+    public async Task DuplicateProfileNameStaysWithinStorageLimit()
+    {
+        var store = new MemoryProfileStore();
+        var source = new StoredProfile(ProfileId.New(), new string('A', 80), [], []);
+        await store.SaveProfileAsync(source);
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+        viewModel.SelectedProfile = source;
+
+        await viewModel.DuplicateSelectedProfileAsync();
+
+        Assert.Equal(80, viewModel.SelectedProfile!.Name.Length);
+        Assert.StartsWith("Copy of ", viewModel.SelectedProfile.Name, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ActiveSessionDisablesAndRefusesProfileDuplication()
+    {
+        var store = new MemoryProfileStore();
+        var viewModel = new FocusViewModel(new RecordingClient(), store);
+        await viewModel.RefreshAsync();
+
+        viewModel.StartFocusCommand.Execute(null);
+        Assert.True(SpinWait.SpinUntil(() => viewModel.IsActive, TimeSpan.FromSeconds(1)));
+
+        Assert.False(viewModel.DuplicateProfileCommand.CanExecute(null));
+        await viewModel.DuplicateSelectedProfileAsync();
+
+        Assert.Single(await store.ListProfilesAsync());
+        Assert.Contains("cannot be changed", viewModel.StatusMessage);
+    }
+
+    [Fact]
     public async Task FirstRunHeaderShowsASentenceRatherThanAZeroTotal()
     {
         var viewModel = new FocusViewModel(new RecordingClient(), new MemoryProfileStore());

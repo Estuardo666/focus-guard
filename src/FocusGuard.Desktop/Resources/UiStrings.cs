@@ -27,6 +27,10 @@ public static class UiStrings
     public static string ReadyDescription => Get(nameof(ReadyDescription));
     public static string StopNormalFocus => Get(nameof(StopNormalFocus));
     public static string ProfileLabel => Get(nameof(ProfileLabel));
+    public static string DuplicateProfile => Get(nameof(DuplicateProfile));
+    public static string ProfileCopyName => Get(nameof(ProfileCopyName));
+    public static string ProfileCopyNumberSuffix => Get(nameof(ProfileCopyNumberSuffix));
+    public static string ProfileDuplicated => Get(nameof(ProfileDuplicated));
     public static string SavedWebsiteRules => Get(nameof(SavedWebsiteRules));
     public static string SavedApplicationRules => Get(nameof(SavedApplicationRules));
     public static string DurationLabel => Get(nameof(DurationLabel));

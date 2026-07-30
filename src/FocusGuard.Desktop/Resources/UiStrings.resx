@@ -22,6 +22,10 @@
   <data name="ReadyDescription" xml:space="preserve"><value>Choose a profile and start a finite service-authoritative session.</value></data>
   <data name="StopNormalFocus" xml:space="preserve"><value>Stop normal focus</value></data>
   <data name="ProfileLabel" xml:space="preserve"><value>Profile</value></data>
+  <data name="DuplicateProfile" xml:space="preserve"><value>Duplicate profile</value></data>
+  <data name="ProfileCopyName" xml:space="preserve"><value>Copy of {0}</value></data>
+  <data name="ProfileCopyNumberSuffix" xml:space="preserve"><value> ({0})</value></data>
+  <data name="ProfileDuplicated" xml:space="preserve"><value>{0} is ready to edit. Its rules apply only to future sessions.</value></data>
   <data name="SavedWebsiteRules" xml:space="preserve"><value>saved website rules</value></data>
   <data name="SavedApplicationRules" xml:space="preserve"><value>saved application rules</value></data>
   <data name="DurationLabel" xml:space="preserve"><value>Duration</value></data>

@@ -22,6 +22,10 @@
   <data name="ReadyDescription" xml:space="preserve"><value>Elige un perfil e inicia una sesión finita controlada por el servicio.</value></data>
   <data name="StopNormalFocus" xml:space="preserve"><value>Detener concentración normal</value></data>
   <data name="ProfileLabel" xml:space="preserve"><value>Perfil</value></data>
+  <data name="DuplicateProfile" xml:space="preserve"><value>Duplicar perfil</value></data>
+  <data name="ProfileCopyName" xml:space="preserve"><value>Copia de {0}</value></data>
+  <data name="ProfileCopyNumberSuffix" xml:space="preserve"><value> ({0})</value></data>
+  <data name="ProfileDuplicated" xml:space="preserve"><value>{0} está listo para editar. Sus reglas solo se aplican a sesiones futuras.</value></data>
   <data name="SavedWebsiteRules" xml:space="preserve"><value>reglas de sitios guardadas</value></data>
   <data name="SavedApplicationRules" xml:space="preserve"><value>reglas de aplicaciones guardadas</value></data>
   <data name="DurationLabel" xml:space="preserve"><value>Duración</value></data>

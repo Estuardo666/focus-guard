@@ -130,6 +130,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     private readonly AsyncDelegateCommand _stopFocusCommand;
     private readonly AsyncDelegateCommand _addWebsiteRuleCommand;
     private readonly AsyncDelegateCommand _addApplicationRuleCommand;
+    private readonly AsyncDelegateCommand _duplicateProfileCommand;
     private DurationPresetViewModel _selectedDurationPreset;
     private RecoveryCredential? _pendingRecoveryCredential;
     private bool _isStrictMode;
@@ -226,6 +227,9 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         _stopFocusCommand = new AsyncDelegateCommand(StopFocusAsync, () => CanStop);
         _addWebsiteRuleCommand = new AsyncDelegateCommand(AddWebsiteRuleAsync, () => SelectedProfile is not null);
         _addApplicationRuleCommand = new AsyncDelegateCommand(AddApplicationRuleAsync, () => SelectedProfile is not null);
+        _duplicateProfileCommand = new AsyncDelegateCommand(
+            DuplicateSelectedProfileAsync,
+            () => CanEditProfileRules);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -318,6 +322,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
     public string ApplicationRuleInput { get => _applicationRuleInput; set => SetField(ref _applicationRuleInput, value); }
     public ICommand AddWebsiteRuleCommand => _addWebsiteRuleCommand;
     public ICommand AddApplicationRuleCommand => _addApplicationRuleCommand;
+    public ICommand DuplicateProfileCommand => _duplicateProfileCommand;
 
     public IReadOnlyList<DurationPresetViewModel> DurationPresets { get; }
 
@@ -1312,6 +1317,7 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         _stopFocusCommand.RaiseCanExecuteChanged();
         _addWebsiteRuleCommand.RaiseCanExecuteChanged();
         _addApplicationRuleCommand.RaiseCanExecuteChanged();
+        _duplicateProfileCommand.RaiseCanExecuteChanged();
     }
 
     private async Task AddWebsiteRuleAsync()
@@ -1374,6 +1380,76 @@ public sealed class FocusViewModel : INotifyPropertyChanged
         await _profileStore.SaveProfileAsync(SelectedProfile with { WebsiteRules = updatedRules });
         await LoadProfilesAsync(CancellationToken.None, profileId);
         StatusMessage = UiStrings.WebsiteRuleRemoved;
+    }
+
+    public async Task DuplicateSelectedProfileAsync()
+    {
+        if (!CanEditProfileRules || SelectedProfile is null)
+        {
+            StatusMessage = UiStrings.RulesLocked;
+            return;
+        }
+
+        var source = SelectedProfile;
+        var duplicateId = ProfileId.New();
+        var duplicate = new StoredProfile(
+            duplicateId,
+            CreateDuplicateProfileName(source.Name),
+            source.ApplicationRules
+                .Select(rule => rule with { Id = Guid.NewGuid() })
+                .ToArray(),
+            source.WebsiteRules
+                .Select(rule => rule with { Id = Guid.NewGuid() })
+                .ToArray(),
+            source.Description,
+            source.AccentHex);
+
+        IsBusy = true;
+        try
+        {
+            await _profileStore.SaveProfileAsync(duplicate);
+            await LoadProfilesAsync(CancellationToken.None, duplicateId);
+            StatusMessage = string.Format(
+                CultureInfo.CurrentCulture,
+                UiStrings.ProfileDuplicated,
+                duplicate.Name);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private string CreateDuplicateProfileName(string sourceName)
+    {
+        const int maximumLength = 80;
+        var baseName = string.Format(
+            CultureInfo.CurrentCulture,
+            UiStrings.ProfileCopyName,
+            sourceName);
+        var existingNames = Profiles
+            .Select(profile => profile.Name)
+            .ToHashSet(StringComparer.CurrentCultureIgnoreCase);
+
+        var candidate = baseName[..Math.Min(baseName.Length, maximumLength)].TrimEnd();
+        if (!existingNames.Contains(candidate))
+        {
+            return candidate;
+        }
+
+        for (var copyNumber = 2; ; copyNumber++)
+        {
+            var suffix = string.Format(
+                CultureInfo.CurrentCulture,
+                UiStrings.ProfileCopyNumberSuffix,
+                copyNumber);
+            var prefixLength = Math.Max(1, maximumLength - suffix.Length);
+            candidate = $"{baseName[..Math.Min(baseName.Length, prefixLength)].TrimEnd()}{suffix}";
+            if (!existingNames.Contains(candidate))
+            {
+                return candidate;
+            }
+        }
     }
 
     private async Task LoadProfilesAsync(
