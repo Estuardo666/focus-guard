@@ -1,0 +1,2 @@
+# Keep the C# format gate reproducible on Windows and Linux.
+*.cs text eol=crlf

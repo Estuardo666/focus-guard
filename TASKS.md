@@ -47,3 +47,4 @@ Status values: `TODO`, `IN_PROGRESS`, `DONE`, `BLOCKED`.
 - [x] FG-119 Prevent the Desktop startup crash caused by the timer halo animation and rebuild the installer (`DONE`)
 - [x] FG-120 Isolate custom control themes from Fluent state painting and apply the owner-approved calm motion system (`DONE`)
 - [x] FG-121 Establish a local Git baseline and repository recovery point before further feature work (`DONE`)
+- [x] FG-122 Reconcile the existing C# formatting baseline and restore a clean format gate (`DONE`)
