@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extensionName__",
+  "version": "0.1.0",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0JLZfch+mBP75nv41XV1Yl+I8oC9jhXTRV5pOSOVAwBMCXFY+ESnaR3hwcKPb6As7Y2GC6F5HNJe9KrBIk9VGoXA/NqSFvhqWPKNVqZ3LBcH7ydUz0qEJL+NhXoiuP2Fxwf+ojVjkr1XjTV5eUaUFG8Wd4P7Y/oXwsYoBdab8BrfXrfPGxrvBzr+TEXtjZrJG1kN+XQVbVoPK+rExXn9nDIz1OSOvIHPmKzicyWH62jHdRpjrYOR/nZ6w/2kegnCnxn9LQM9yauqMcr+Qeqjt+JuiI3DwifQma7/qrwqBKSnwwyltsbUvnN/niME7KvduoTnppWFhT4MVp3IrOAfIQIDAQAB",
+  "permissions": [
+    "alarms",
+    "nativeMessaging",
+    "storage",
+    "tabs",
+    "webNavigation"
+  ],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "background": {
+    "service_worker": "src/native-health.js",
+    "type": "module"
+  }
+}

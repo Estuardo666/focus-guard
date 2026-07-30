@@ -1,0 +1,189 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Dark Zen surfaces: never pure black, with hierarchy carried by luminance. -->
+  <Color x:Key="FgSurface0Color">#0E1318</Color>
+  <Color x:Key="FgSurface1Color">#11171E</Color>
+  <Color x:Key="FgMainSurfaceColor">#151C24</Color>
+  <Color x:Key="FgSurface2Color">#19212B</Color>
+  <Color x:Key="FgSurface3Color">#1D2631</Color>
+  <Color x:Key="FgFieldSurfaceColor">#111820</Color>
+  <Color x:Key="FgSecondarySurfaceColor">#202934</Color>
+  <Color x:Key="FgSecondaryHoverColor">#25303C</Color>
+  <Color x:Key="FgSecondaryPressedColor">#192129</Color>
+  <Color x:Key="FgNavHoverColor">#0AFFFFFF</Color>
+
+  <Color x:Key="FgTextPrimaryColor">#EDF2F5</Color>
+  <Color x:Key="FgTextSecondaryColor">#AEB9C4</Color>
+  <Color x:Key="FgTextTertiaryColor">#7F8C99</Color>
+  <Color x:Key="FgTextDisabledColor">#58636E</Color>
+  <Color x:Key="FgTextOnAccentColor">#F8FAFF</Color>
+
+  <Color x:Key="FgBorderColor">#2A3542</Color>
+  <Color x:Key="FgBorderStrongColor">#344150</Color>
+  <Color x:Key="FgBorderDisabledColor">#303842</Color>
+  <Color x:Key="FgDividerColor">#12FFFFFF</Color>
+
+  <Color x:Key="FgAccentColor">#667DFF</Color>
+  <Color x:Key="FgAccentHoverColor">#788CFF</Color>
+  <Color x:Key="FgAccentPressedColor">#5269E8</Color>
+  <Color x:Key="FgAccentSoftColor">#1A667DFF</Color>
+
+  <Color x:Key="FgSuccessColor">#67B99A</Color>
+  <Color x:Key="FgSuccessSoftColor">#183229</Color>
+  <Color x:Key="FgWarningColor">#D8A657</Color>
+  <Color x:Key="FgWarningSoftColor">#302619</Color>
+  <Color x:Key="FgDangerColor">#D87878</Color>
+  <Color x:Key="FgDangerSoftColor">#321D21</Color>
+  <Color x:Key="FgInfoColor">#76A9D6</Color>
+  <Color x:Key="FgInfoSoftColor">#172A39</Color>
+  <Color x:Key="FgModalScrimColor">#B8080C10</Color>
+
+  <!-- Native Windows 11 close-button hover. -->
+  <Color x:Key="FgCloseHoverColor">#C42B1C</Color>
+  <Color x:Key="FgCaptionHoverColor">#0AFFFFFF</Color>
+  <Color x:Key="FgCaptionPressedColor">#12FFFFFF</Color>
+
+  <Color x:Key="FgFocusRingColor">#7188FF</Color>
+  <Color x:Key="FgTrackColor">#29333D</Color>
+  <Color x:Key="FgToggleTrackColor">#2D3742</Color>
+  <Color x:Key="FgToggleThumbColor">#8B96A1</Color>
+  <Color x:Key="FgToggleBorderColor">#44505D</Color>
+
+  <SolidColorBrush x:Key="FgSurface0" Color="{DynamicResource FgSurface0Color}" />
+  <SolidColorBrush x:Key="FgSurface1" Color="{DynamicResource FgSurface1Color}" />
+  <SolidColorBrush x:Key="FgMainSurface" Color="{DynamicResource FgMainSurfaceColor}" />
+  <SolidColorBrush x:Key="FgSurface2" Color="{DynamicResource FgSurface2Color}" />
+  <SolidColorBrush x:Key="FgSurface3" Color="{DynamicResource FgSurface3Color}" />
+  <SolidColorBrush x:Key="FgFieldSurface" Color="{DynamicResource FgFieldSurfaceColor}" />
+  <SolidColorBrush x:Key="FgSecondarySurface" Color="{DynamicResource FgSecondarySurfaceColor}" />
+  <SolidColorBrush x:Key="FgSecondaryHover" Color="{DynamicResource FgSecondaryHoverColor}" />
+  <SolidColorBrush x:Key="FgSecondaryPressed" Color="{DynamicResource FgSecondaryPressedColor}" />
+  <SolidColorBrush x:Key="FgNavHover" Color="{DynamicResource FgNavHoverColor}" />
+
+  <!-- Legacy aliases kept so existing views bind without churn. -->
+  <SolidColorBrush x:Key="FgBackground" Color="{DynamicResource FgSurface0Color}" />
+  <SolidColorBrush x:Key="FgSurface" Color="{DynamicResource FgMainSurfaceColor}" />
+  <SolidColorBrush x:Key="FgSurfaceElevated" Color="{DynamicResource FgSurface3Color}" />
+
+  <SolidColorBrush x:Key="FgTextPrimary" Color="{DynamicResource FgTextPrimaryColor}" />
+  <SolidColorBrush x:Key="FgTextSecondary" Color="{DynamicResource FgTextSecondaryColor}" />
+  <SolidColorBrush x:Key="FgTextTertiary" Color="{DynamicResource FgTextTertiaryColor}" />
+  <SolidColorBrush x:Key="FgTextDisabled" Color="{DynamicResource FgTextDisabledColor}" />
+  <SolidColorBrush x:Key="FgBorder" Color="{DynamicResource FgBorderColor}" />
+  <SolidColorBrush x:Key="FgBorderStrong" Color="{DynamicResource FgBorderStrongColor}" />
+  <SolidColorBrush x:Key="FgBorderDisabled" Color="{DynamicResource FgBorderDisabledColor}" />
+  <SolidColorBrush x:Key="FgDivider" Color="{DynamicResource FgDividerColor}" />
+  <SolidColorBrush x:Key="FgAccent" Color="{DynamicResource FgAccentColor}" />
+  <SolidColorBrush x:Key="FgAccentHover" Color="{DynamicResource FgAccentHoverColor}" />
+  <SolidColorBrush x:Key="FgAccentPressed" Color="{DynamicResource FgAccentPressedColor}" />
+  <SolidColorBrush x:Key="FgAccentSoft" Color="{DynamicResource FgAccentSoftColor}" />
+  <SolidColorBrush x:Key="FgSuccess" Color="{DynamicResource FgSuccessColor}" />
+  <SolidColorBrush x:Key="FgSuccessSoft" Color="{DynamicResource FgSuccessSoftColor}" />
+  <SolidColorBrush x:Key="FgWarning" Color="{DynamicResource FgWarningColor}" />
+  <SolidColorBrush x:Key="FgWarningSoft" Color="{DynamicResource FgWarningSoftColor}" />
+  <SolidColorBrush x:Key="FgDanger" Color="{DynamicResource FgDangerColor}" />
+  <SolidColorBrush x:Key="FgDangerSoft" Color="{DynamicResource FgDangerSoftColor}" />
+  <SolidColorBrush x:Key="FgInfo" Color="{DynamicResource FgInfoColor}" />
+  <SolidColorBrush x:Key="FgInfoSoft" Color="{DynamicResource FgInfoSoftColor}" />
+  <SolidColorBrush x:Key="FgModalScrim" Color="{DynamicResource FgModalScrimColor}" />
+  <SolidColorBrush x:Key="FgCloseHover" Color="{DynamicResource FgCloseHoverColor}" />
+  <SolidColorBrush x:Key="FgCaptionHover" Color="{DynamicResource FgCaptionHoverColor}" />
+  <SolidColorBrush x:Key="FgCaptionPressed" Color="{DynamicResource FgCaptionPressedColor}" />
+  <SolidColorBrush x:Key="FgFocusRing" Color="{DynamicResource FgFocusRingColor}" />
+  <SolidColorBrush x:Key="FgTrack" Color="{DynamicResource FgTrackColor}" />
+  <SolidColorBrush x:Key="FgToggleTrack" Color="{DynamicResource FgToggleTrackColor}" />
+  <SolidColorBrush x:Key="FgToggleThumb" Color="{DynamicResource FgToggleThumbColor}" />
+  <SolidColorBrush x:Key="FgToggleBorder" Color="{DynamicResource FgToggleBorderColor}" />
+  <SolidColorBrush x:Key="FgPrimaryButtonForeground" Color="{DynamicResource FgTextOnAccentColor}" />
+  <BoxShadows x:Key="FgStrictModalShadow">0 24 72 0 #7A080C10</BoxShadows>
+  <BoxShadows x:Key="FgInputFocusShadow">0 0 0 3 #24667DFF</BoxShadows>
+  <BoxShadows x:Key="FgControlIdleShadow">0 0 0 0 #00000000</BoxShadows>
+  <BoxShadows x:Key="FgControlHoverShadow">0 6 20 0 #2E000000</BoxShadows>
+  <BoxShadows x:Key="FgSummaryWindowShadow">0 28 80 0 #90080C10</BoxShadows>
+
+  <!-- Blocking surfaces. The block screen sits on the desktop rather than inside the
+       shell, so it needs a scrim heavy enough to read as "everything else went quiet". -->
+  <Color x:Key="FgBlockScrimColor">#F20B0F14</Color>
+  <SolidColorBrush x:Key="FgBlockScrim" Color="{DynamicResource FgBlockScrimColor}" />
+
+  <!-- Per-profile accent. FocusViewModel overwrites these four at runtime from
+       Profile.AccentHex, so one assignment recolors the header bar, sidebar selection
+       and sparkline together. The timer keeps the stable Zen progress gradient. -->
+  <Color x:Key="ProfileAccentColor">#667DFF</Color>
+  <SolidColorBrush x:Key="ProfileAccent" Color="{DynamicResource ProfileAccentColor}" />
+  <SolidColorBrush x:Key="ProfileAccentSoft" Color="#18667DFF" />
+
+  <LinearGradientBrush x:Key="ProfileAccentGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#667DFF" />
+    <GradientStop Offset="0.52" Color="#766FF2" />
+    <GradientStop Offset="1" Color="#9073E8" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgPrimaryActionGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#667DFF" />
+    <GradientStop Offset="0.52" Color="#766FF2" />
+    <GradientStop Offset="1" Color="#9073E8" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgPrimaryActionHoverGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#7489FF" />
+    <GradientStop Offset="1" Color="#9A7CEF" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgPrimaryActionPressedGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#566DEB" />
+    <GradientStop Offset="1" Color="#7D61D3" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgPrimaryActionDisabledGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#343D4C" />
+    <GradientStop Offset="1" Color="#3E4250" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgProgressGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#63B7B0" />
+    <GradientStop Offset="0.52" Color="#6F8CFF" />
+    <GradientStop Offset="1" Color="#A174E8" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgHeaderFadeGradient" StartPoint="0%,60%" EndPoint="0%,100%">
+    <GradientStop Offset="0" Color="#00151C24" />
+    <GradientStop Offset="1" Color="#E6151C24" />
+  </LinearGradientBrush>
+
+  <!-- Track gradient keeps the unfilled part of a ring or bar from reading as flat grey. -->
+  <LinearGradientBrush x:Key="FgTrackGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#29333D" />
+    <GradientStop Offset="1" Color="#0FFFFFFF" />
+  </LinearGradientBrush>
+
+  <!-- macOS 27-inspired continuous geometry: soft controls and generous surfaces. -->
+  <CornerRadius x:Key="FgRadiusCompact">7</CornerRadius>
+  <CornerRadius x:Key="FgRadiusSmall">10</CornerRadius>
+  <CornerRadius x:Key="FgRadiusMedium">14</CornerRadius>
+  <CornerRadius x:Key="FgRadiusLarge">20</CornerRadius>
+  <CornerRadius x:Key="FgRadiusExtraLarge">28</CornerRadius>
+  <CornerRadius x:Key="FgRadiusPill">999</CornerRadius>
+
+  <!-- Owner-approved calm motion. These curves are non-linear, critically
+       damped in feel, and intentionally avoid bounce or overshoot. -->
+  <SplineEasing x:Key="FgEaseHover" X1="0.22" Y1="1" X2="0.36" Y2="1" />
+  <SplineEasing x:Key="FgEaseFocus" X1="0.16" Y1="1" X2="0.3" Y2="1" />
+
+  <x:Double x:Key="FgControlHeight">40</x:Double>
+  <x:Double x:Key="FgTitleBarHeight">32</x:Double>
+  <x:Double x:Key="FgCaptionButtonWidth">46</x:Double>
+  <x:Double x:Key="FgSidebarWidth">208</x:Double>
+
+  <x:Double x:Key="FgFontEyebrow">11</x:Double>
+  <x:Double x:Key="FgFontCaption">12</x:Double>
+  <x:Double x:Key="FgFontBody">13</x:Double>
+  <x:Double x:Key="FgFontTitle">22</x:Double>
+
+  <!-- Header scale: the profile name is the real title at 25, and the metric sits at 30
+       rather than 44 so it never competes with the name for first read. -->
+  <x:Double x:Key="FgFontProfileName">25</x:Double>
+  <x:Double x:Key="FgFontMetric">30</x:Double>
+  <x:Double x:Key="FgFontMetricUnit">16</x:Double>
+  <x:Double x:Key="FgHeaderHeight">120</x:Double>
+  <x:Double x:Key="FgAccentBarWidth">5</x:Double>
+</ResourceDictionary>

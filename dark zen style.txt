@@ -1,0 +1,237 @@
+Paleta Dark Zen para FocusGuard
+
+La intención es transmitir calma, seguridad, concentración y control, evitando negros puros, rojos intensos y contrastes demasiado agresivos.
+
+Fondos
+Elemento	Color	Hex
+Fondo general de la aplicación	Azul carbón profundo	#0E1318
+Sidebar / titlebar	Carbón azulado	#11171E
+Superficie principal	Pizarra oscura	#151C24
+Tarjetas	Azul grafito	#19212B
+Tarjeta elevada / modal	Pizarra elevada	#1D2631
+Campos de texto	Azul noche	#111820
+Overlay oscuro	Negro azulado 72%	#080C10B8
+
+Evitar #000000: genera un contraste más duro y menos confortable durante sesiones prolongadas.
+
+Bordes y divisores
+Elemento	Color	Hex
+Borde estándar	Gris azulado sutil	#2A3542
+Borde elevado	Gris pizarra	#344150
+Borde de campo enfocado	Azul lavanda	#7188FF
+Divisor interno	Blanco al 7%	#FFFFFF12
+Borde deshabilitado	Gris apagado	#303842
+
+Los bordes deben ser suaves y poco contrastados. La jerarquía debe venir principalmente de la luminosidad de las superficies.
+
+Texto
+Elemento	Color	Hex
+Texto principal	Blanco niebla	#EDF2F5
+Texto secundario	Gris azulado claro	#AEB9C4
+Texto terciario	Gris calmado	#7F8C99
+Texto deshabilitado	Gris profundo	#58636E
+Texto sobre botón primario	Blanco frío	#F8FAFF
+Enlaces y valores destacados	Azul lavanda claro	#9DADFF
+
+No usar blanco puro en grandes cantidades. #EDF2F5 reduce la dureza visual sin perder legibilidad.
+
+Color principal de marca
+Azul zen
+Uso	Color	Hex
+Azul principal	Azul sereno	#667DFF
+Azul hover	Azul lavanda	#788CFF
+Azul pressed	Azul profundo	#5269E8
+Azul suave de fondo	Azul translúcido	#667DFF1A
+Azul de borde	Azul translúcido	#8293FF66
+
+El azul frío comunica confianza, orden y estabilidad. Conviene llevarlo ligeramente hacia lavanda para evitar que se vea corporativo o clínico.
+
+Botones de acción y aceptación
+
+Usar degradado únicamente en acciones importantes:
+
+Iniciar sesión
+Activar Strict Mode
+Guardar
+Confirmar
+Continuar
+Finalizar configuración
+Degradado principal
+Inicio: #667DFF
+Centro: #766FF2
+Final:  #9073E8
+Dirección: 135°
+
+Versión CSS conceptual:
+
+linear-gradient(135deg, #667DFF 0%, #766FF2 52%, #9073E8 100%)
+Estados
+Estado	Degradado / color
+Normal	#667DFF → #9073E8
+Hover	#7489FF → #9A7CEF
+Pressed	#566DEB → #7D61D3
+Disabled	#343D4C → #3E4250
+Focus ring	#8597FF99
+Sombra del botón
+Sombra cercana: #536BFF3D
+Resplandor suave: #7B73F026
+
+No hacer el degradado demasiado brillante. Debe sentirse premium, no como un botón gamer.
+
+Botones secundarios
+Elemento	Fondo	Borde	Texto
+Secundario normal	#202934	#354250	#D9E0E6
+Secundario hover	#27323E	#455363	#F0F3F6
+Secundario pressed	#192129	#34404C	#C8D0D8
+Ghost	Transparente	Transparente	#AEB9C4
+
+Cancelar debería ser secundario o ghost, nunca rojo, salvo que la acción sea realmente destructiva.
+
+Anillos de progreso y temporizadores
+Degradado recomendado
+Inicio: #63B7B0
+Centro: #6F8CFF
+Final:  #A174E8
+linear-gradient(135deg, #63B7B0 0%, #6F8CFF 52%, #A174E8 100%)
+
+Este degradado combina:
+
+Turquesa: respiración, equilibrio y frescura.
+Azul: concentración y estabilidad.
+Lavanda: introspección y calma.
+Fondo del anillo
+Elemento	Color
+Track vacío	#29333D
+Track secundario	#FFFFFF0F
+Centro del anillo	#151C24
+Texto principal del tiempo	#F0F4F6
+Texto secundario	#8F9CA8
+Resplandor exterior
+
+Usar varias capas muy suaves:
+
+Halo cercano: #6F8CFF52
+Halo medio:   #737EEB2E
+Halo amplio:  #8B76E817
+
+El resplandor no debe parecer neón. Debe ser difuso y con baja opacidad.
+
+Latido del resplandor
+
+Para evitar ansiedad, el latido debe ser muy lento y casi imperceptible.
+
+Ciclo recomendado
+Duración: 4.8–6 segundos
+Escala: 1.00 → 1.035 → 1.00
+Opacidad: 0.24 → 0.42 → 0.24
+Blur: 18 px → 26 px → 18 px
+Easing: ease-in-out
+
+Para una sesión activa normal:
+
+Duración ideal: 5.6 segundos
+
+No sincronizarlo con un pulso cardíaco rápido. Un ciclo de uno o dos segundos puede generar sensación de urgencia.
+
+El anillo interior debe permanecer estable. Solo debe “respirar” el halo exterior.
+
+Estados semánticos
+Éxito y protección activa
+Uso	Color	Hex
+Éxito principal	Verde salvia	#67B99A
+Fondo de éxito	Verde profundo	#183229
+Borde de éxito	Verde apagado	#356B58
+Texto de éxito	Verde claro	#A7D8C3
+
+Evitar verde neón. El verde salvia comunica bienestar sin parecer un indicador técnico agresivo.
+
+Advertencia
+Uso	Color	Hex
+Advertencia principal	Ámbar suave	#D8A657
+Fondo de advertencia	Marrón oscuro	#302619
+Borde de advertencia	Ámbar profundo	#6D512A
+Texto de advertencia	Crema cálida	#EBCB94
+
+Ideal para recovery codes, cambios irreversibles y avisos previos a Strict Mode.
+
+Error o acción destructiva
+Uso	Color	Hex
+Error principal	Coral apagado	#D87878
+Fondo de error	Rojo carbón	#321D21
+Borde de error	Rojo profundo	#713A42
+Texto de error	Rosa claro	#EAB0B5
+
+Usar rojo solo cuando existe un error real o una acción destructiva. No usarlo para comunicar disciplina o bloqueo.
+
+Información
+Uso	Color	Hex
+Información principal	Azul cielo apagado	#76A9D6
+Fondo informativo	Azul profundo	#172A39
+Texto informativo	Azul claro	#B4D1E8
+Sidebar
+Elemento	Color
+Fondo	#11171E
+Texto normal	#98A5B2
+Icono normal	#81909E
+Hover	#FFFFFF0A
+Texto hover	#DCE3E8
+Fondo seleccionado	#667DFF18
+Texto seleccionado	#EDF2FF
+Icono seleccionado	#8193FF
+
+Para el elemento seleccionado, usar una superficie azul-lavanda muy tenue. Sin borde lateral coloreado.
+
+Campos de texto
+Elemento	Color
+Fondo	#111820
+Borde	#303C48
+Texto	#E7ECEF
+Placeholder	#677481
+Hover	#3B4856
+Focus	#7188FF
+Focus glow	#667DFF24
+Error	#D87878
+
+El focus glow debe ser más sutil que el del botón principal.
+
+Checkboxes y switches
+Checkbox activo
+Fondo: #667DFF
+Marca: #FFFFFF
+Borde: #8393FF
+Halo:  #667DFF24
+Switch activo
+Track: #667DFF
+Thumb: #F5F7FF
+Glow:  #7286FF26
+Inactivo
+Track: #2D3742
+Thumb: #8B96A1
+Borde: #44505D
+Selección final recomendada
+
+La identidad visual central quedaría así:
+
+Background:       #0E1318
+Surface:          #151C24
+Card:             #19212B
+Elevated:         #1D2631
+Border:           #2A3542
+
+Text primary:     #EDF2F5
+Text secondary:   #AEB9C4
+Text muted:       #7F8C99
+
+Primary blue:     #667DFF
+Lavender:         #9073E8
+Zen teal:         #63B7B0
+
+Success:          #67B99A
+Warning:          #D8A657
+Error:            #D87878
+Degradado de acción
+#667DFF → #766FF2 → #9073E8
+Degradado de anillos
+#63B7B0 → #6F8CFF → #A174E8
+
+Esta combinación mantiene el carácter premium de FocusGuard, pero se siente más tranquila, humana y contemplativa que una interfaz basada únicamente en azul eléctrico.

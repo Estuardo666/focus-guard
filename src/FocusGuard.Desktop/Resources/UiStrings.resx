@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="ActivityTitle" xml:space="preserve"><value>Activity</value></data>
+  <data name="ActivityDescription" xml:space="preserve"><value>Sanitized events stored locally by the FocusGuard service.</value></data>
+  <data name="ActivityEmpty" xml:space="preserve"><value>No enforcement activity has been recorded.</value></data>
+  <data name="ActivityNavigation" xml:space="preserve"><value>Activity navigation</value></data>
+  <data name="ActivityApplicationBlocked" xml:space="preserve"><value>Application blocked</value></data>
+  <data name="ActivityWebsiteBlocked" xml:space="preserve"><value>Website blocked</value></data>
+  <data name="ActivityEnforcementReleased" xml:space="preserve"><value>Enforcement released</value></data>
+  <data name="ActivityRecoveryCompleted" xml:space="preserve"><value>Recovery completed</value></data>
+  <data name="ActivityGeneric" xml:space="preserve"><value>Activity</value></data>
+  <data name="FocusNavigation" xml:space="preserve"><value>Focus</value></data>
+  <data name="ProfilesNavigation" xml:space="preserve"><value>Profiles</value></data>
+  <data name="ScheduleNavigation" xml:space="preserve"><value>Schedule</value></data>
+  <data name="SettingsNavigation" xml:space="preserve"><value>Settings</value></data>
+  <data name="ProtectionStatus" xml:space="preserve"><value>Protection status</value></data>
+  <data name="ReadyTitle" xml:space="preserve"><value>Ready to focus?</value></data>
+  <data name="ReadyDescription" xml:space="preserve"><value>Choose a profile and start a finite service-authoritative session.</value></data>
+  <data name="StopNormalFocus" xml:space="preserve"><value>Stop normal focus</value></data>
+  <data name="ProfileLabel" xml:space="preserve"><value>Profile</value></data>
+  <data name="SavedWebsiteRules" xml:space="preserve"><value>saved website rules</value></data>
+  <data name="SavedApplicationRules" xml:space="preserve"><value>saved application rules</value></data>
+  <data name="DurationLabel" xml:space="preserve"><value>Duration</value></data>
+  <data name="DurationLower" xml:space="preserve"><value>duration</value></data>
+  <data name="AddWebsiteRule" xml:space="preserve"><value>Add website rule</value></data>
+  <data name="AddApplicationRule" xml:space="preserve"><value>Add application rule (file name)</value></data>
+  <data name="Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="BlockedWebsites" xml:space="preserve"><value>Blocked websites</value></data>
+  <data name="BlockedApplications" xml:space="preserve"><value>Blocked applications</value></data>
+  <data name="NoBlockedWebsites" xml:space="preserve"><value>No blocked websites in this profile.</value></data>
+  <data name="NoBlockedApplications" xml:space="preserve"><value>No blocked applications in this profile.</value></data>
+  <data name="FutureSessionsOnly" xml:space="preserve"><value>Changes to this profile apply only to future sessions. An active policy remains unchanged until it stops or expires.</value></data>
+  <data name="StartFocus" xml:space="preserve"><value>Start focus</value></data>
+  <data name="StrictMode" xml:space="preserve"><value>Strict mode</value></data>
+  <data name="ReviewBeforeActivation" xml:space="preserve"><value>Review before activation</value></data>
+  <data name="EnableEnforcement" xml:space="preserve"><value>Enable application and website enforcement for this finite session</value></data>
+  <data name="ReviewStrictFocus" xml:space="preserve"><value>Review strict focus</value></data>
+  <data name="StrictReviewEndsExactly" xml:space="preserve"><value>This finite session ends exactly {0}.</value></data>
+  <data name="SaveRecoveryCode" xml:space="preserve"><value>Save this recovery code. It is shown once and never sent to the service.</value></data>
+  <data name="SaveRecoveryCodeTitle" xml:space="preserve"><value>Save this recovery code.</value></data>
+  <data name="SaveRecoveryCodeDetail" xml:space="preserve"><value>It is shown once and never sent to the service.</value></data>
+  <data name="RecoveryCodeLabel" xml:space="preserve"><value>Recovery code</value></data>
+  <data name="CopyRecoveryCode" xml:space="preserve"><value>Copy recovery code</value></data>
+  <data name="SavedRecoveryCode" xml:space="preserve"><value>I saved the recovery code</value></data>
+  <data name="SavedRecoveryCodeDetail" xml:space="preserve"><value>I saved the code in a safe place.</value></data>
+  <data name="SavedAffectedWork" xml:space="preserve"><value>I saved work in affected applications</value></data>
+  <data name="SavedAffectedWorkDetail" xml:space="preserve"><value>All important work has been saved before activating.</value></data>
+  <data name="StrictConsequence" xml:space="preserve"><value>I understand that this block will remain active until the end time shown above.</value></data>
+  <data name="StrictConfirmationPrompt" xml:space="preserve"><value>Type “{0}” to confirm.</value></data>
+  <data name="StrictPhraseFirstWords" xml:space="preserve"><value>Calm,Centered,Clear,Gentle,Mindful,Peaceful,Present,Quiet,Restful,Steady,Tranquil,Zen</value></data>
+  <data name="StrictPhraseSecondWords" xml:space="preserve"><value>Balance,Breath,Clarity,Ease,Flow,Focus,Grounding,Harmony,Patience,Presence,Stillness,Trust</value></data>
+  <data name="TypeSentenceExactly" xml:space="preserve"><value>Type the two words exactly</value></data>
+  <data name="ActivateStrictFocus" xml:space="preserve"><value>Activate strict focus</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="SessionAuthority" xml:space="preserve"><value>Session authority</value></data>
+  <data name="SessionAuthorityDescription" xml:space="preserve"><value>The Windows service owns activation, remaining time, stop, expiration, and strict recovery state.</value></data>
+  <data name="SystemHealth" xml:space="preserve"><value>System health</value></data>
+  <data name="NoProfileSelected" xml:space="preserve"><value>No profile selected</value></data>
+  <data name="NormalMode" xml:space="preserve"><value>Normal mode</value></data>
+  <data name="NoActiveEndTime" xml:space="preserve"><value>No active end time</value></data>
+  <data name="RulesLocked" xml:space="preserve"><value>Profile rules cannot be changed while a session is active or activating.</value></data>
+  <data name="ApplicationRuleRemoved" xml:space="preserve"><value>Application rule removed from this profile. Active policies are unchanged.</value></data>
+  <data name="WebsiteRuleRemoved" xml:space="preserve"><value>Website rule removed from this profile. Active policies are unchanged.</value></data>
+  <data name="ApplicationsTitle" xml:space="preserve"><value>Applications</value></data>
+  <data name="ApplicationRulesDescription" xml:space="preserve"><value>Choose what FocusGuard should recognize during a focus session.</value></data>
+  <data name="WebsitesTitle" xml:space="preserve"><value>Websites</value></data>
+  <data name="WebsiteRulesDescription" xml:space="preserve"><value>Block domains and paths while keeping unrelated browsing data private.</value></data>
+  <data name="ActionLabel" xml:space="preserve"><value>Action</value></data>
+  <data name="MatchByLabel" xml:space="preserve"><value>Match by</value></data>
+  <data name="ValueLabel" xml:space="preserve"><value>Value</value></data>
+  <data name="DomainPatternLabel" xml:space="preserve"><value>Domain or pattern</value></data>
+  <data name="AddRule" xml:space="preserve"><value>Add rule</value></data>
+  <data name="ProfileRules" xml:space="preserve"><value>Profile rules</value></data>
+  <data name="NoApplicationRules" xml:space="preserve"><value>No application rules yet. Add a path, folder, file name, or hash above.</value></data>
+  <data name="NoWebsiteRules" xml:space="preserve"><value>No website rules yet. Try example.com, *.example.com, or *://*.example.com/* above.</value></data>
+  <data name="QueryParametersExcluded" xml:space="preserve"><value>Query parameters are excluded by default and are never shown in this draft.</value></data>
+  <data name="InFocusTitle" xml:space="preserve"><value>In focus</value></data>
+  <data name="TimeRemaining" xml:space="preserve"><value>Time remaining</value></data>
+  <data name="WebsitesLabel" xml:space="preserve"><value>Websites</value></data>
+  <data name="ApplicationsLabel" xml:space="preserve"><value>Applications</value></data>
+  <data name="RecentBlocks" xml:space="preserve"><value>Recent blocks</value></data>
+  <data name="StrictReviewDescription" xml:space="preserve"><value>Nothing starts until every consequence and recovery step is acknowledged.</value></data>
+  <data name="ExactEndTime" xml:space="preserve"><value>Exact end time</value></data>
+  <data name="ImpactedApplications" xml:space="preserve"><value>Impacted applications</value></data>
+  <data name="ImpactedWebsites" xml:space="preserve"><value>Impacted websites</value></data>
+  <data name="RecoveryReadiness" xml:space="preserve"><value>Recovery and readiness</value></data>
+  <data name="AcknowledgeRecovery" xml:space="preserve"><value>I have saved the recovery code acknowledgement</value></data>
+  <data name="AcknowledgeWork" xml:space="preserve"><value>I have saved my work and understand the warning</value></data>
+  <data name="RequiredConfirmation" xml:space="preserve"><value>Required confirmation</value></data>
+  <data name="TypeSentenceAsShown" xml:space="preserve"><value>Type the two words exactly as shown</value></data>
+  <data name="ApplicationEditorPrompt" xml:space="preserve"><value>Add an executable path, folder, file name, or SHA-256 value.</value></data>
+  <data name="WebsiteEditorPrompt" xml:space="preserve"><value>Add a domain or URL pattern. Query parameters are never retained.</value></data>
+  <data name="ExactPath" xml:space="preserve"><value>Exact executable path</value></data>
+  <data name="Folder" xml:space="preserve"><value>Folder</value></data>
+  <data name="FileName" xml:space="preserve"><value>File name</value></data>
+  <data name="Sha256Hash" xml:space="preserve"><value>SHA-256 hash</value></data>
+  <data name="LoadedApplicationRules" xml:space="preserve"><value>Loaded saved application rules for this profile.</value></data>
+  <data name="LoadedWebsiteRules" xml:space="preserve"><value>Loaded saved website rules for this profile.</value></data>
+  <data name="ApplicationDraftAdded" xml:space="preserve"><value>Application rule added. It will apply only when a session using this profile is active.</value></data>
+  <data name="WebsiteDraftAdded" xml:space="preserve"><value>Website rule added. Query parameters are excluded from this draft.</value></data>
+  <data name="ApplicationDraftRemoved" xml:space="preserve"><value>Application rule removed from this profile draft.</value></data>
+  <data name="WebsiteDraftRemoved" xml:space="preserve"><value>Website rule removed from this profile draft.</value></data>
+  <data name="ConnectingService" xml:space="preserve"><value>Connecting to the FocusGuard service…</value></data>
+  <data name="ServiceStatusPending" xml:space="preserve"><value>Service status pending</value></data>
+  <data name="DurationTwoTest" xml:space="preserve"><value>2 minutes (test)</value></data>
+  <data name="Duration25" xml:space="preserve"><value>25 minutes</value></data>
+  <data name="Duration50" xml:space="preserve"><value>50 minutes</value></data>
+  <data name="Duration90" xml:space="preserve"><value>90 minutes</value></data>
+  <data name="EnforcementOnWarning" xml:space="preserve"><value>Each application or website channel starts only after acknowledging the same intact policy. If one channel is unavailable, the other can continue and health remains degraded.</value></data>
+  <data name="EnforcementOffWarning" xml:space="preserve"><value>Enforcement is off. The timer will run without blocking applications or websites.</value></data>
+  <data name="StrictModeDescription" xml:space="preserve"><value>Strict mode requires saving a one-time recovery code and typing two English words exactly.</value></data>
+  <data name="NormalModeDescription" xml:space="preserve"><value>Normal mode can be stopped from FocusGuard at any time.</value></data>
+  <data name="ServiceUnavailable" xml:space="preserve"><value>Service unavailable</value></data>
+  <data name="ServiceUnreachable" xml:space="preserve"><value>FocusGuard cannot reach the installed service. No session was activated.</value></data>
+  <data name="SaveRecoveryNow" xml:space="preserve"><value>Save this recovery code now. It will disappear after activation.</value></data>
+  <data name="ActivationFailed" xml:space="preserve"><value>Activation failed safely: {0}</value></data>
+  <data name="StopFailed" xml:space="preserve"><value>Stop failed safely: {0}</value></data>
+  <data name="ServiceAndExtensionReady" xml:space="preserve"><value>Service ready · Browser extension ready</value></data>
+  <data name="ServiceReadyExtensionUnavailable" xml:space="preserve"><value>Service ready · Browser extension unavailable</value></data>
+  <data name="StateActivating" xml:space="preserve"><value>Activating — waiting for an acknowledgement from a requested policy channel. Blocking has not started.</value></data>
+  <data name="StateConnected" xml:space="preserve"><value>Connected — application and website enforcement confirmed.</value></data>
+  <data name="StateDegraded" xml:space="preserve"><value>Degraded — a requested component is unavailable or stale; available channels continue independently.</value></data>
+  <data name="StateExpired" xml:space="preserve"><value>Expired — the finite policy ended and all blocking was released automatically.</value></data>
+  <data name="StateReleased" xml:space="preserve"><value>The service reports the session as {0}; blocking is released.</value></data>
+  <data name="NoActiveSession" xml:space="preserve"><value>No session is active.</value></data>
+  <data name="WebsiteRuleSaved" xml:space="preserve"><value>Website rule saved.</value></data>
+  <data name="ApplicationRuleSaved" xml:space="preserve"><value>Application rule saved.</value></data>
+  <data name="DefaultProfileName" xml:space="preserve"><value>Deep Work</value></data>
+  <data name="SimulatorProtectionRunning" xml:space="preserve"><value>Protection is running in the simulator.</value></data>
+  <data name="SimulatorHealthReady" xml:space="preserve"><value>Service simulator connected · Browser extension simulator ready</value></data>
+  <data name="SimulatorFocusEnded" xml:space="preserve"><value>Focus ended. Restrictions are released in the simulator.</value></data>
+  <data name="SimulatorFocusStopped" xml:space="preserve"><value>Focus stopped. Restrictions are released in the simulator.</value></data>
+  <data name="StrictReviewInitial" xml:space="preserve"><value>Review every consequence before continuing. This screen does not activate a session.</value></data>
+  <data name="SimulatorBrowserReady" xml:space="preserve"><value>Browser extension simulator ready</value></data>
+  <data name="SimulatorRecoveryInstructions" xml:space="preserve"><value>A high-entropy recovery code is generated and shown once during a real activation. This UI-only review does not generate or store one.</value></data>
+  <data name="UnsavedWorkWarning" xml:space="preserve"><value>Save work in impacted applications before strict focus begins. Strict mode is finite but is not stopped casually.</value></data>
+  <data name="StartStrictUntil" xml:space="preserve"><value>Start strict focus until {0}</value></data>
+  <data name="SimulatorStrictReviewComplete" xml:space="preserve"><value>Strict review completed in the simulator. No strict session was activated and no recovery code was generated.</value></data>
+  <data name="EndsAt" xml:space="preserve"><value>Ends {0}</value></data>
+  <data name="OpenFocusGuard" xml:space="preserve"><value>Open FocusGuard</value></data>
+  <data name="ExitFocusGuard" xml:space="preserve"><value>Exit FocusGuard</value></data>
+  <data name="DurationCustom" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="DurationMinutesShort" xml:space="preserve">
+    <value>{0} m</value>
+  </data>
+  <data name="DurationCustomLabel" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="SessionEyebrowIdle" xml:space="preserve">
+    <value>FOCUS SESSION</value>
+  </data>
+  <data name="SessionEyebrowActive" xml:space="preserve">
+    <value>SESSION IN PROGRESS</value>
+  </data>
+  <data name="SessionMetaIdle" xml:space="preserve">
+    <value>{0} sites · {1} apps</value>
+  </data>
+  <data name="SessionMetaActive" xml:space="preserve">
+    <value>Started {0} · ends {1} · {2} sites and {3} apps blocked</value>
+  </data>
+  <data name="StatusIdle" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="StatusProtected" xml:space="preserve">
+    <value>Protected</value>
+  </data>
+  <data name="TitleBarRemaining" xml:space="preserve">
+    <value>· {0} remaining</value>
+  </data>
+  <data name="RemainingOfTotal" xml:space="preserve">
+    <value>remaining of {0} min</value>
+  </data>
+  <data name="MinutesLower" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="MoreChips" xml:space="preserve">
+    <value>+{0} more</value>
+  </data>
+  <data name="StrictActiveNotice" xml:space="preserve">
+    <value>The session ends at {0}. Strict mode is on.</value>
+  </data>
+  <data name="RelativeJustNow" xml:space="preserve">
+    <value>just now</value>
+  </data>
+  <data name="RelativeMinutes" xml:space="preserve">
+    <value>{0} min ago</value>
+  </data>
+  <data name="RelativeHours" xml:space="preserve">
+    <value>{0} h ago</value>
+  </data>
+  <data name="BlockedAttemptsLabel" xml:space="preserve">
+    <value>Blocked attempts</value>
+  </data>
+  <data name="ViewAll" xml:space="preserve">
+    <value>View all</value>
+  </data>
+  <data name="RealBlocking" xml:space="preserve">
+    <value>Real app and site blocking</value>
+  </data>
+  <data name="WebsitesWithCount" xml:space="preserve">
+    <value>Websites · {0}</value>
+  </data>
+  <data name="ApplicationsWithCount" xml:space="preserve">
+    <value>Applications · {0}</value>
+  </data>
+  <data name="ChangesNextSession" xml:space="preserve">
+    <value>Changes apply to the next session.</value>
+  </data>
+  <data name="NavigationLockedHint" xml:space="preserve">
+    <value>Locked while a session is running</value>
+  </data>
+  <data name="MinimizeWindow" xml:space="preserve">
+    <value>Minimize</value>
+  </data>
+  <data name="MaximizeWindow" xml:space="preserve">
+    <value>Maximize</value>
+  </data>
+  <data name="CloseWindow" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="RemoveRule" xml:space="preserve">
+    <value>Remove rule</value>
+  </data>
+  <data name="HeaderSubtitleFallback" xml:space="preserve">
+    <value>{0} sites and {1} apps blocked</value>
+  </data>
+  <data name="HeaderSubtitleActive" xml:space="preserve">
+    <value>Ends at {0} · you cannot switch profile now</value>
+  </data>
+  <data name="MetricRemaining" xml:space="preserve">
+    <value>REMAINING</value>
+  </data>
+  <data name="MetricFocusedToday" xml:space="preserve">
+    <value>FOCUSED TODAY</value>
+  </data>
+  <data name="FocusedHoursMinutes" xml:space="preserve">
+    <value>{0}h {1}m</value>
+  </data>
+  <data name="FocusedMinutesOnly" xml:space="preserve">
+    <value>{0}m</value>
+  </data>
+  <data name="FirstSessionHint" xml:space="preserve">
+    <value>Your first session
+starts here</value>
+  </data>
+  <data name="ProtectedBadge" xml:space="preserve">
+    <value>Protected</value>
+  </data>
+  <data name="SwitchProfile" xml:space="preserve">
+    <value>Switch profile</value>
+  </data>
+  <data name="AddProfile" xml:space="preserve">
+    <value>Add profile</value>
+  </data>
+  <data name="WeekSparklineLabel" xml:space="preserve">
+    <value>Focus minutes over the last seven days</value>
+  </data>
+  <data name="MetricRemainingOfTotal" xml:space="preserve">
+    <value>REMAINING OF {0} MIN</value>
+  </data>
+  <data name="MetricUnitHours" xml:space="preserve">
+    <value>h</value>
+  </data>
+  <data name="MetricUnitMinutes" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="BlockAppHeadline" xml:space="preserve">
+    <value>{0} will still be there later</value>
+  </data>
+  <data name="BlockAppHeadlineGeneric" xml:space="preserve">
+    <value>That app will still be there later</value>
+  </data>
+  <data name="BlockBack" xml:space="preserve">
+    <value>Back to what I was doing</value>
+  </data>
+  <data name="BlockCapture" xml:space="preserve">
+    <value>Note it for later</value>
+  </data>
+  <data name="BlockCapturePlaceholder" xml:space="preserve">
+    <value>What were you going to do there?</value>
+  </data>
+  <data name="BlockCaptureSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="BlockCaptureCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="BlockCaptureSaved" xml:space="preserve">
+    <value>Noted. You will see it when the session ends.</value>
+  </data>
+  <data name="BlockCaptureFailed" xml:space="preserve">
+    <value>That could not be noted right now.</value>
+  </data>
+  <data name="BlockAutoClose" xml:space="preserve">
+    <value>This screen closes itself when the session ends.</value>
+  </data>
+  <data name="BlockFooterNormal" xml:space="preserve">
+    <value>Normal mode · you can end it from FocusGuard</value>
+  </data>
+  <data name="BlockFooterStrict" xml:space="preserve">
+    <value>Strict mode active until {0}</value>
+  </data>
+  <data name="BlockContext" xml:space="preserve">
+    <value>You paused it until {0}. {1} to go, and you are already {2} minutes into this session.</value>
+  </data>
+  <data name="BlockMinutes" xml:space="preserve">
+    <value>{0} minutes</value>
+  </data>
+  <data name="BlockOneMinute" xml:space="preserve">
+    <value>1 minute</value>
+  </data>
+  <data name="BlockLessThanMinute" xml:space="preserve">
+    <value>less than a minute</value>
+  </data>
+  <data name="SummaryCompleteTitle" xml:space="preserve">
+    <value>Session complete</value>
+  </data>
+  <data name="SummaryStoppedTitle" xml:space="preserve">
+    <value>Session ended</value>
+  </data>
+  <data name="SummarySubtitle" xml:space="preserve">
+    <value>{0} · {1} minutes uninterrupted</value>
+  </data>
+  <data name="SummaryStoppedSubtitle" xml:space="preserve">
+    <value>{0} · {1} of {2} minutes</value>
+  </data>
+  <data name="SummaryFocusedLabel" xml:space="preserve">
+    <value>focused</value>
+  </data>
+  <data name="SummaryBlocksLabel" xml:space="preserve">
+    <value>blocks</value>
+  </data>
+  <data name="SummaryStreakLabel" xml:space="preserve">
+    <value>streak</value>
+  </data>
+  <data name="SummaryStreakUnit" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+  <data name="SummaryCapturedTitle" xml:space="preserve">
+    <value>You noted {0} things</value>
+  </data>
+  <data name="SummaryCapturedOne" xml:space="preserve">
+    <value>You noted 1 thing</value>
+  </data>
+  <data name="SummaryCapturedHint" xml:space="preserve">
+    <value>Review them now or keep them for the next break.</value>
+  </data>
+  <data name="SummaryDismissAll" xml:space="preserve">
+    <value>Dismiss all</value>
+  </data>
+  <data name="SummaryOpen" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="SummaryDismiss" xml:space="preserve">
+    <value>Dismiss</value>
+  </data>
+  <data name="SummaryAnotherSession" xml:space="preserve">
+    <value>Another {0} min session</value>
+  </data>
+  <data name="SummaryTakeBreak" xml:space="preserve">
+    <value>Take a break</value>
+  </data>
+  <data name="SummaryUnit" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="SettingsSessionEndTitle" xml:space="preserve">
+    <value>When a session ends</value>
+  </data>
+  <data name="SettingsSessionEndDescription" xml:space="preserve">
+    <value>Choose how the summary reaches you. Closing it always counts as taking a break.</value>
+  </data>
+  <data name="SettingsSessionEndWindow" xml:space="preserve">
+    <value>Open the summary window</value>
+  </data>
+  <data name="SettingsSessionEndToast" xml:space="preserve">
+    <value>Show a notification first</value>
+  </data>
+  <data name="SettingsSessionEndDimmed" xml:space="preserve">
+    <value>Open the window over a dimmed desktop</value>
+  </data>
+  <data name="SettingsSessionEndOff" xml:space="preserve">
+    <value>Do not show anything</value>
+  </data>
+  <data name="SummaryToastTitle" xml:space="preserve">
+    <value>Session complete</value>
+  </data>
+  <data name="SummaryToastBody" xml:space="preserve">
+    <value>{0} minutes focused. Open FocusGuard to review what you noted.</value>
+  </data>
+</root>

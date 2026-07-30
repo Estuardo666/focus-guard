@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../FocusGuard.Application/FocusGuard.Application.csproj" />
+  </ItemGroup>
+</Project>

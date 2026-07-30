@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FocusGuard</title>
+    <link rel="stylesheet" href="src/status-page.css">
+  </head>
+  <body>
+    <!-- The block screen is not a punishment: no red, no padlock, no "access denied".
+         It states what is left, what has been earned, and offers the two honest exits. -->
+    <main class="stage" role="main">
+      <section class="panel" aria-live="polite">
+        <div class="ring" id="ringRegion" role="img">
+          <div class="ring__glow ring__glow--outer"></div>
+          <div class="ring__glow ring__glow--near"></div>
+          <svg class="ring__svg" viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#63B7B0" />
+                <stop offset="52%" stop-color="#6F8CFF" />
+                <stop offset="100%" stop-color="#A174E8" />
+              </linearGradient>
+            </defs>
+            <circle class="ring__track" cx="60" cy="60" r="50" />
+            <circle class="ring__progress" cx="60" cy="60" r="50" id="ringProgress" />
+          </svg>
+          <div class="ring__label">
+            <span class="ring__value" id="ringValue">--</span>
+            <span class="ring__unit" id="ringUnit">min</span>
+          </div>
+        </div>
+
+        <h1 class="headline" id="headline">FocusGuard</h1>
+        <p class="context" id="context"></p>
+
+        <div class="actions">
+          <button class="button button--primary" type="button" id="backButton"></button>
+          <button class="button button--secondary" type="button" id="captureButton"></button>
+        </div>
+
+        <!-- Inline, never a separate dialog: one click, type, Enter, done. Anything
+             slower than five seconds and nobody uses it. -->
+        <form class="capture" id="captureForm" hidden>
+          <input class="capture__input" type="text" id="captureInput" maxlength="240" autocomplete="off">
+          <div class="capture__actions">
+            <button class="button button--primary button--compact" type="submit" id="captureSave"></button>
+            <button class="button button--ghost button--compact" type="button" id="captureCancel"></button>
+          </div>
+        </form>
+
+        <p class="capture__feedback" id="captureFeedback" role="status" hidden></p>
+
+        <footer class="footer">
+          <p id="autoClose"></p>
+          <p id="mode"></p>
+        </footer>
+      </section>
+    </main>
+    <script type="module" src="src/status-page.js"></script>
+  </body>
+</html>

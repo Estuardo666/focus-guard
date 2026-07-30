@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- Compiled bindings turn a mistyped binding path into a build error. -->
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../FocusGuard.Domain/FocusGuard.Domain.csproj" />
+    <ProjectReference Include="../FocusGuard.Contracts/FocusGuard.Contracts.csproj" />
+    <ProjectReference Include="../FocusGuard.Storage/FocusGuard.Storage.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="../../assets/branding/focusguard-icon.png" Link="Assets/focusguard-icon.png" />
+    <AvaloniaResource Include="../../assets/branding/header-niebla.jpg" Link="Assets/header-niebla.jpg" />
+  </ItemGroup>
+</Project>

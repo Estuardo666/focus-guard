@@ -1,0 +1,50 @@
+<UserControl
+    x:Class="FocusGuard.Desktop.WebsiteRulesView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:FocusGuard.Desktop"
+    xmlns:resources="using:FocusGuard.Desktop.Resources"
+    x:DataType="vm:WebsiteRuleEditorViewModel">
+  <ScrollViewer>
+    <Grid Margin="48,36" RowDefinitions="Auto,Auto,Auto" RowSpacing="22">
+      <StackPanel Spacing="8">
+        <TextBlock Text="{x:Static resources:UiStrings.WebsitesTitle}" FontSize="34" FontWeight="SemiBold" />
+        <TextBlock Text="{x:Static resources:UiStrings.WebsiteRulesDescription}" Foreground="{DynamicResource FgTextSecondary}" FontSize="16" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <Border Grid.Row="1" Classes="card">
+        <Grid ColumnDefinitions="180,*,Auto" ColumnSpacing="14" RowDefinitions="Auto,Auto">
+          <StackPanel Spacing="6">
+            <TextBlock Text="{x:Static resources:UiStrings.ActionLabel}" Foreground="{DynamicResource FgTextSecondary}" />
+            <ComboBox ItemsSource="{Binding Actions}" SelectedItem="{Binding SelectedAction}" AutomationProperties.Name="Website rule action" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Spacing="6">
+            <TextBlock Text="{x:Static resources:UiStrings.DomainPatternLabel}" Foreground="{DynamicResource FgTextSecondary}" />
+            <TextBox Text="{Binding PatternInput}" PlaceholderText="example.com/path/*" AutomationProperties.Name="Website rule pattern" />
+          </StackPanel>
+          <Button Grid.Column="2" Classes="primary" Content="{x:Static resources:UiStrings.AddRule}" Command="{Binding AddRuleCommand}" VerticalAlignment="Bottom" AutomationProperties.Name="Add website rule" />
+          <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding ValidationMessage}" TextWrapping="Wrap" Foreground="{DynamicResource FgTextSecondary}" />
+        </Grid>
+      </Border>
+
+      <Border Grid.Row="2" Classes="card">
+        <StackPanel Spacing="14">
+          <TextBlock Text="{x:Static resources:UiStrings.ProfileRules}" FontSize="20" FontWeight="SemiBold" />
+          <TextBlock Text="{x:Static resources:UiStrings.NoWebsiteRules}" Foreground="{DynamicResource FgTextSecondary}" TextWrapping="Wrap" IsVisible="{Binding IsEmpty}" />
+          <ItemsControl ItemsSource="{Binding Rules}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:WebsiteRuleRowViewModel">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14" Margin="0,4">
+                  <TextBlock Text="{Binding Rule.Action}" Foreground="{DynamicResource FgTextSecondary}" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="1" Text="{Binding Rule.Pattern}" VerticalAlignment="Center" />
+                  <Button Grid.Column="2" Content="{x:Static resources:UiStrings.Remove}" Command="{Binding RemoveCommand}" AutomationProperties.Name="Remove website rule" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <TextBlock Text="{x:Static resources:UiStrings.QueryParametersExcluded}" Foreground="{DynamicResource FgWarning}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </ScrollViewer>
+</UserControl>

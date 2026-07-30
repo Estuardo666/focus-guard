@@ -1,0 +1,1032 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Styles.Resources>
+    <!-- Own the complete standard-button template so Fluent cannot inject a
+         second hover/pressed layer. Controls with explicit themes (navigation
+         and caption buttons) remain fully isolated from these states. -->
+    <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
+      <Setter Property="MinHeight" Value="{DynamicResource FgControlHeight}" />
+      <Setter Property="Background" Value="{DynamicResource FgSecondarySurface}" />
+      <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+      <Setter Property="Padding" Value="16,8" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="RenderTransform" Value="scale(1)" />
+      <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+      <Setter Property="Transitions">
+        <Transitions>
+          <TransformOperationsTransition
+              Property="RenderTransform"
+              Duration="0:0:0.16"
+              Easing="{DynamicResource FgEaseHover}" />
+          <DoubleTransition Property="Opacity" Duration="0:0:0.1" Easing="CubicEaseOut" />
+        </Transitions>
+      </Setter>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border
+              x:Name="Root"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              CornerRadius="{TemplateBinding CornerRadius}"
+              Padding="{TemplateBinding Padding}"
+              BoxShadow="{DynamicResource FgControlIdleShadow}">
+            <ContentPresenter
+                Content="{TemplateBinding Content}"
+                ContentTemplate="{TemplateBinding ContentTemplate}"
+                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+          </Border>
+        </ControlTemplate>
+      </Setter>
+      <Style Selector="^ /template/ Border#Root">
+        <Setter Property="Transitions">
+          <Transitions>
+            <BrushTransition
+                Property="Background"
+                Duration="0:0:0.16"
+                Easing="{DynamicResource FgEaseHover}" />
+            <BrushTransition
+                Property="BorderBrush"
+                Duration="0:0:0.16"
+                Easing="{DynamicResource FgEaseHover}" />
+            <BoxShadowsTransition
+                Property="BoxShadow"
+                Duration="0:0:0.16"
+                Easing="{DynamicResource FgEaseHover}" />
+          </Transitions>
+        </Setter>
+      </Style>
+      <Style Selector="^:pointerover">
+        <Setter Property="Background" Value="{DynamicResource FgSecondaryHover}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+        <Setter Property="RenderTransform" Value="scale(1.015)" />
+      </Style>
+      <Style Selector="^:pointerover /template/ Border#Root">
+        <Setter Property="BoxShadow" Value="{DynamicResource FgControlHoverShadow}" />
+      </Style>
+      <Style Selector="^:pressed">
+        <Setter Property="Background" Value="{DynamicResource FgSecondaryPressed}" />
+        <Setter Property="Opacity" Value="0.94" />
+        <Setter Property="RenderTransform" Value="scale(0.985)" />
+      </Style>
+      <Style Selector="^:focus-visible">
+        <Setter Property="BorderBrush" Value="{DynamicResource FgFocusRing}" />
+      </Style>
+      <Style Selector="^:focus-visible /template/ Border#Root">
+        <Setter Property="BoxShadow" Value="{DynamicResource FgInputFocusShadow}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Foreground" Value="{DynamicResource FgTextDisabled}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FgBorderDisabled}" />
+        <Setter Property="Opacity" Value="0.48" />
+        <Setter Property="Cursor" Value="Arrow" />
+      </Style>
+    </ControlTheme>
+
+    <!-- Sidebar entry: free icon-and-label row with no containing material. -->
+    <ControlTheme x:Key="FgNavButton" TargetType="Button">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="MinHeight" Value="40" />
+      <Setter Property="Padding" Value="12,0" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Panel>
+            <Border
+                x:Name="Root"
+                Background="{TemplateBinding Background}"
+                CornerRadius="{DynamicResource FgRadiusMedium}"
+                Padding="{TemplateBinding Padding}"
+                MinHeight="{TemplateBinding MinHeight}">
+              <ContentPresenter
+                  x:Name="PART_ContentPresenter"
+                  Content="{TemplateBinding Content}"
+                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Border>
+          </Panel>
+        </ControlTemplate>
+      </Setter>
+
+      <Style Selector="^ /template/ Border#Root">
+        <Setter Property="Transitions">
+          <Transitions>
+            <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+          </Transitions>
+        </Setter>
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="RenderTransform" Value="translateX(0px)" />
+        <Setter Property="Transitions">
+          <Transitions>
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+          </Transitions>
+        </Setter>
+      </Style>
+      <Style Selector="^">
+        <Setter Property="Transitions">
+          <Transitions>
+            <BrushTransition Property="Foreground" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+          </Transitions>
+        </Setter>
+      </Style>
+
+      <Style Selector="^:pointerover">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+      </Style>
+      <Style Selector="^:pointerover /template/ Border#Root">
+        <Setter Property="Background" Value="{DynamicResource FgNavHover}" />
+      </Style>
+      <!-- Nudges toward the content on hover: the same cue as a list row leaning in. -->
+      <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="RenderTransform" Value="translateX(2px)" />
+      </Style>
+      <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Opacity" Value="0.86" />
+      </Style>
+
+      <!-- Selection is expressed through type and icon color, never a container. -->
+      <Style Selector="^.active">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+      </Style>
+      <Style Selector="^.active /template/ Border#Root">
+        <Setter Property="Background" Value="Transparent" />
+      </Style>
+      <Style Selector="^.active /template/ TextBlock.icon">
+        <Setter Property="Foreground" Value="{DynamicResource ProfileAccent}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Foreground" Value="{DynamicResource FgTextTertiary}" />
+        <Setter Property="Cursor" Value="Arrow" />
+      </Style>
+      <Style Selector="^:disabled /template/ Border#Root">
+        <Setter Property="Background" Value="Transparent" />
+      </Style>
+    </ControlTheme>
+
+    <!-- Windows 11 caption button: 46x32, square, no gap. -->
+    <ControlTheme x:Key="FgCaptionButton" TargetType="Button">
+      <Setter Property="Width" Value="{DynamicResource FgCaptionButtonWidth}" />
+      <Setter Property="Height" Value="{DynamicResource FgTitleBarHeight}" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+      <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets" />
+      <Setter Property="FontSize" Value="10" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border x:Name="Root" Background="{TemplateBinding Background}">
+            <ContentPresenter
+                Content="{TemplateBinding Content}"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center" />
+          </Border>
+        </ControlTemplate>
+      </Setter>
+      <Style Selector="^ /template/ Border#Root">
+        <Setter Property="Transitions">
+          <Transitions>
+            <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+            <BrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+          </Transitions>
+        </Setter>
+      </Style>
+      <Style Selector="^:pointerover /template/ Border#Root">
+        <Setter Property="Background" Value="{DynamicResource FgCaptionHover}" />
+      </Style>
+      <Style Selector="^:pressed /template/ Border#Root">
+        <Setter Property="Background" Value="{DynamicResource FgCaptionPressed}" />
+      </Style>
+      <Style Selector="^:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+      </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="FgCloseButton" TargetType="Button" BasedOn="{StaticResource FgCaptionButton}">
+      <Style Selector="^:pointerover /template/ Border#Root">
+        <Setter Property="Background" Value="{DynamicResource FgCloseHover}" />
+      </Style>
+      <Style Selector="^:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource FgPrimaryButtonForeground}" />
+      </Style>
+    </ControlTheme>
+
+    <!-- Duration presets: exclusive selection for free via ListBox. -->
+    <ControlTheme x:Key="FgPresetItem" TargetType="ListBoxItem">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+      <Setter Property="Padding" Value="16,8" />
+      <Setter Property="Margin" Value="0,0,6,0" />
+      <Setter Property="MinHeight" Value="40" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="RenderTransform" Value="scale(1)" />
+      <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+      <Setter Property="Transitions">
+        <Transitions>
+          <TransformOperationsTransition
+              Property="RenderTransform"
+              Duration="0:0:0.16"
+              Easing="{DynamicResource FgEaseHover}" />
+        </Transitions>
+      </Setter>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Border
+              x:Name="Root"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{DynamicResource FgBorder}"
+              BorderThickness="1"
+              CornerRadius="{DynamicResource FgRadiusMedium}"
+              Padding="{TemplateBinding Padding}"
+              MinHeight="{TemplateBinding MinHeight}">
+            <ContentPresenter
+                Content="{TemplateBinding Content}"
+                ContentTemplate="{TemplateBinding ContentTemplate}"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center" />
+          </Border>
+        </ControlTemplate>
+      </Setter>
+      <Style Selector="^ /template/ Border#Root">
+        <Setter Property="Transitions">
+          <Transitions>
+            <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+            <BrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+          </Transitions>
+        </Setter>
+      </Style>
+      <Style Selector="^:pointerover /template/ Border#Root">
+        <Setter Property="Background" Value="{DynamicResource FgNavHover}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+      </Style>
+      <Style Selector="^:pointerover">
+        <Setter Property="RenderTransform" Value="scale(1.015)" />
+      </Style>
+      <Style Selector="^:pressed">
+        <Setter Property="RenderTransform" Value="scale(0.985)" />
+      </Style>
+      <Style Selector="^:selected">
+        <Setter Property="Foreground" Value="{DynamicResource FgPrimaryButtonForeground}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+      </Style>
+      <Style Selector="^:selected /template/ Border#Root">
+        <Setter Property="Background" Value="{DynamicResource FgAccent}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FgAccent}" />
+      </Style>
+    </ControlTheme>
+
+    <!-- Dedicated switch template: only the track and thumb paint; the hit target
+         remains 40 px tall without a rectangular control background. -->
+    <ControlTheme x:Key="FgToggleSwitch" TargetType="ToggleSwitch">
+      <Setter Property="Width" Value="44" />
+      <Setter Property="MinWidth" Value="44" />
+      <Setter Property="MinHeight" Value="40" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Panel Width="44" Height="28" VerticalAlignment="Center">
+            <Border
+                x:Name="FocusRing"
+                Margin="-3"
+                BorderBrush="Transparent"
+                BorderThickness="2"
+                CornerRadius="{DynamicResource FgRadiusPill}"
+                IsHitTestVisible="False">
+              <Border.Transitions>
+                <Transitions>
+                  <BrushTransition Property="BorderBrush" Duration="0:0:0.22" Easing="{DynamicResource FgEaseFocus}" />
+                </Transitions>
+              </Border.Transitions>
+            </Border>
+            <Border
+                x:Name="Track"
+                Background="{DynamicResource FgToggleTrack}"
+                BorderBrush="{DynamicResource FgToggleBorder}"
+                BorderThickness="1"
+                CornerRadius="{DynamicResource FgRadiusPill}">
+              <Border.Transitions>
+                <Transitions>
+                  <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+                  <BrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+                </Transitions>
+              </Border.Transitions>
+            </Border>
+            <Panel x:Name="PART_MovingKnobs">
+              <Border
+                  x:Name="Thumb"
+                  Width="20"
+                  Height="20"
+                  Margin="4"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  Background="{DynamicResource FgToggleThumb}"
+                  CornerRadius="{DynamicResource FgRadiusPill}"
+                  RenderTransform="translateX(0px)">
+                <Border.Transitions>
+                  <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" Easing="{DynamicResource FgEaseHover}" />
+                  </Transitions>
+                </Border.Transitions>
+              </Border>
+            </Panel>
+          </Panel>
+        </ControlTemplate>
+      </Setter>
+      <Style Selector="^:pointerover /template/ Border#Track">
+        <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+      </Style>
+      <Style Selector="^:checked /template/ Border#Track">
+        <Setter Property="Background" Value="{DynamicResource FgAccent}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FgAccentHover}" />
+      </Style>
+      <Style Selector="^:checked /template/ Border#Thumb">
+        <Setter Property="Background" Value="{DynamicResource FgPrimaryButtonForeground}" />
+        <Setter Property="RenderTransform" Value="translateX(16px)" />
+      </Style>
+      <Style Selector="^:focus-visible /template/ Border#FocusRing">
+        <Setter Property="BorderBrush" Value="{DynamicResource FgFocusRing}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Opacity" Value="0.48" />
+        <Setter Property="Cursor" Value="Arrow" />
+      </Style>
+    </ControlTheme>
+
+    <!-- Strict acknowledgement template: one rounded square, no Fluent outer box. -->
+    <ControlTheme x:Key="FgCheckBox" TargetType="CheckBox">
+      <Setter Property="Width" Value="22" />
+      <Setter Property="Height" Value="22" />
+      <Setter Property="MinWidth" Value="22" />
+      <Setter Property="MinHeight" Value="22" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Panel Width="22" Height="22">
+            <Border
+                x:Name="FocusRing"
+                Margin="-3"
+                BorderBrush="Transparent"
+                BorderThickness="2"
+                CornerRadius="{DynamicResource FgRadiusSmall}"
+                IsHitTestVisible="False">
+              <Border.Transitions>
+                <Transitions>
+                  <BrushTransition Property="BorderBrush" Duration="0:0:0.2" Easing="{DynamicResource FgEaseFocus}" />
+                </Transitions>
+              </Border.Transitions>
+            </Border>
+            <Border
+                x:Name="Box"
+                Background="{DynamicResource FgFieldSurface}"
+                BorderBrush="{DynamicResource FgToggleBorder}"
+                BorderThickness="1"
+                CornerRadius="{DynamicResource FgRadiusCompact}">
+              <Border.Transitions>
+                <Transitions>
+                  <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+                  <BrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+                </Transitions>
+              </Border.Transitions>
+            </Border>
+            <TextBlock
+                x:Name="CheckGlyph"
+                Text="&#xE73E;"
+                FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                FontSize="12"
+                Foreground="{DynamicResource FgPrimaryButtonForeground}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Opacity="0"
+                RenderTransform="scale(0.8)"
+                RenderTransformOrigin="50%,50%">
+              <TextBlock.Transitions>
+                <Transitions>
+                  <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+                </Transitions>
+              </TextBlock.Transitions>
+            </TextBlock>
+          </Panel>
+        </ControlTemplate>
+      </Setter>
+      <Style Selector="^:pointerover /template/ Border#Box">
+        <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+      </Style>
+      <Style Selector="^:checked /template/ Border#Box">
+        <Setter Property="Background" Value="{DynamicResource FgAccent}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FgAccentHover}" />
+      </Style>
+      <Style Selector="^:checked /template/ TextBlock#CheckGlyph">
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+      </Style>
+      <Style Selector="^:focus-visible /template/ Border#FocusRing">
+        <Setter Property="BorderBrush" Value="{DynamicResource FgFocusRing}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Opacity" Value="0.48" />
+        <Setter Property="Cursor" Value="Arrow" />
+      </Style>
+    </ControlTheme>
+  </Styles.Resources>
+
+  <Style Selector="Window">
+    <Setter Property="Background" Value="{DynamicResource FgSurface0}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+    <Setter Property="FontFamily" Value="Segoe UI Variable Text, Segoe UI" />
+    <Setter Property="FontSize" Value="{DynamicResource FgFontBody}" />
+  </Style>
+
+  <Style Selector="TextBlock.eyebrow">
+    <Setter Property="FontSize" Value="{DynamicResource FgFontEyebrow}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextTertiary}" />
+    <Setter Property="LetterSpacing" Value="1.2" />
+  </Style>
+
+  <Style Selector="TextBlock.title">
+    <Setter Property="FontSize" Value="{DynamicResource FgFontTitle}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+  </Style>
+
+  <Style Selector="TextBlock.secondary">
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+  </Style>
+
+  <Style Selector="TextBlock.caption">
+    <Setter Property="FontSize" Value="{DynamicResource FgFontCaption}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+  </Style>
+
+  <Style Selector="TextBlock.metricLabel">
+    <Setter Property="FontSize" Value="{DynamicResource FgFontCaption}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+  </Style>
+
+  <!-- The profile name is the header's real title. -->
+  <Style Selector="TextBlock.profileName">
+    <Setter Property="FontSize" Value="{DynamicResource FgFontProfileName}" />
+    <Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+    <Setter Property="LetterSpacing" Value="-0.5" />
+  </Style>
+
+  <!-- 30, not 44: large enough to read across the room, small enough not to outrank the name. -->
+  <Style Selector="TextBlock.metric">
+    <Setter Property="FontSize" Value="{DynamicResource FgFontMetric}" />
+    <Setter Property="FontWeight" Value="Light" />
+    <Setter Property="LetterSpacing" Value="-0.5" />
+  </Style>
+
+  <!-- The unit runs sit smaller and quieter so "2h 18m" reads as one figure. -->
+  <Style Selector="TextBlock.metric.unit">
+    <Setter Property="FontSize" Value="{DynamicResource FgFontMetricUnit}" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+  </Style>
+
+  <Style Selector="TextBlock.metricCaption">
+    <Setter Property="FontSize" Value="{DynamicResource FgFontEyebrow}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextTertiary}" />
+    <Setter Property="LetterSpacing" Value="0.5" />
+  </Style>
+
+  <!-- Profile picker: reads as text, behaves as a button. -->
+  <Style Selector="Button.profilePicker">
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+
+  <Style Selector="Button.profilePicker:pointerover">
+    <Setter Property="Opacity" Value="0.88" />
+  </Style>
+
+  <Style Selector="Button.profileSwatch">
+    <Setter Property="Width" Value="24" />
+    <Setter Property="Height" Value="24" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusCompact}" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="RenderTransform" Value="scale(1)" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button.profileSwatch:pointerover">
+    <Setter Property="RenderTransform" Value="scale(1.015)" />
+  </Style>
+
+  <!-- "Add profile" reads as an empty slot, so it is outlined rather than filled. -->
+  <Style Selector="Button.profileSwatch.addSwatch">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextTertiary}" />
+    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets" />
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.profileSwatch.addSwatch:pointerover">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ProfileAccent}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+  </Style>
+
+  <Style Selector="TextBlock.metricValue">
+    <Setter Property="FontSize" Value="20" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+  </Style>
+
+  <Style Selector="TextBlock.icon">
+    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.primary">
+    <Setter Property="Background" Value="{DynamicResource FgPrimaryActionGradient}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgAccentHover}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgPrimaryButtonForeground}" />
+    <Setter Property="Padding" Value="26,10" />
+    <Setter Property="MinHeight" Value="40" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+  </Style>
+
+  <Style Selector="Button.primary:pointerover">
+    <Setter Property="Background" Value="{DynamicResource FgPrimaryActionHoverGradient}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgAccentHover}" />
+  </Style>
+
+  <Style Selector="Button.primary:pressed">
+    <Setter Property="Background" Value="{DynamicResource FgPrimaryActionPressedGradient}" />
+  </Style>
+
+  <Style Selector="Button.primary:disabled">
+    <Setter Property="Background" Value="{DynamicResource FgPrimaryActionDisabledGradient}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorderDisabled}" />
+  </Style>
+
+  <Style Selector="Button.strictCancel">
+    <Setter Property="Background" Value="{DynamicResource FgSecondarySurface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+    <Setter Property="Padding" Value="24,10" />
+    <Setter Property="MinHeight" Value="40" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+  </Style>
+
+  <Style Selector="Button.strictCancel:pointerover">
+    <Setter Property="Background" Value="{DynamicResource FgSecondaryHover}" />
+  </Style>
+
+  <Style Selector="Button.recoveryCopy">
+    <Setter Property="Width" Value="42" />
+    <Setter Property="Height" Value="48" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="{DynamicResource FgFieldSurface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets" />
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.danger">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgDanger}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgDanger}" />
+  </Style>
+
+  <Style Selector="Button.danger:pointerover">
+    <Setter Property="Background" Value="{DynamicResource FgDangerSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgDanger}" />
+  </Style>
+
+  <Style Selector="Button.ghost">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+  </Style>
+
+  <Style Selector="Button.ghost:pointerover">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+  </Style>
+
+  <Style Selector="Button.iconOnly">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Width" Value="26" />
+    <Setter Property="Height" Value="26" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusCompact}" />
+    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="Button.iconOnly:pointerover">
+    <Setter Property="Background" Value="{DynamicResource FgAccentSoft}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+  </Style>
+
+  <Style Selector="Button.link">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource FgAccent}" />
+    <Setter Property="Padding" Value="4,2" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="FontSize" Value="{DynamicResource FgFontCaption}" />
+  </Style>
+
+  <Style Selector="Button.link:pointerover">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource FgAccentHover}" />
+  </Style>
+
+  <Style Selector="Border.card">
+    <Setter Property="Background" Value="{DynamicResource FgSurface2}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusLarge}" />
+    <Setter Property="Padding" Value="20" />
+  </Style>
+
+  <Style Selector="Border.strictModal">
+    <Setter Property="Background" Value="{DynamicResource FgSurface3}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusExtraLarge}" />
+    <Setter Property="BoxShadow" Value="{DynamicResource FgStrictModalShadow}" />
+    <Setter Property="ClipToBounds" Value="True" />
+  </Style>
+
+  <Style Selector="Border.strictWarning">
+    <Setter Property="Background" Value="{DynamicResource FgWarningSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgWarning}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusLarge}" />
+    <Setter Property="Padding" Value="14,12" />
+  </Style>
+
+  <Style Selector="Border.strictBody">
+    <Setter Property="Background" Value="{DynamicResource FgMainSurface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="BorderThickness" Value="1,1,1,0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusLarge}" />
+    <Setter Property="Margin" Value="24,0,24,24" />
+  </Style>
+
+  <Style Selector="Border.inset">
+    <Setter Property="Background" Value="{DynamicResource FgMainSurface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusLarge}" />
+    <Setter Property="Padding" Value="16" />
+  </Style>
+
+  <!-- Status pill: first thing read on open, so it stays high contrast. -->
+  <Style Selector="Border.pill">
+    <Setter Property="Background" Value="{DynamicResource FgSurface3}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusPill}" />
+    <Setter Property="Padding" Value="10,4" />
+  </Style>
+
+  <Style Selector="Border.pill.success">
+    <Setter Property="Background" Value="{DynamicResource FgSuccessSoft}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgSuccess}" />
+  </Style>
+
+  <!-- Rule chips: a tenth of the height of the old rows, wrap side by side. -->
+  <Style Selector="Border.chip">
+    <Setter Property="Background" Value="{DynamicResource FgSurface3}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusPill}" />
+    <Setter Property="Padding" Value="10,4,6,4" />
+    <Setter Property="Margin" Value="0,0,6,6" />
+  </Style>
+
+  <Style Selector="Border.chip Button.chipClose">
+    <Setter Property="Opacity" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Width" Value="16" />
+    <Setter Property="Height" Value="16" />
+    <Setter Property="MinHeight" Value="0" />
+    <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets" />
+    <Setter Property="FontSize" Value="8" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.12" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Border.chip:pointerover Button.chipClose">
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+
+  <Style Selector="Border.chip Button.chipClose:focus-within">
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+
+  <Style Selector="Border.chip Button.chipClose:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource FgDanger}" />
+  </Style>
+
+  <!-- Ring glow. An Ellipse cannot carry a blurred halo, so the glow is a circular
+       Border sitting behind the arc. Two layers rather than one: the near halo hugs
+       the stroke, and the wide halo is laid out with a negative margin so the light
+       actually spills outside the ring instead of being trapped inside it.
+
+       Avalonia cannot animate BlurEffect.Radius, so the 18px -> 26px blur breath from
+       the style guide is produced by cross-fading two fixed-blur layers: at the peak of
+       the cycle the wide, softer layer gains proportionally more opacity than the near
+       one, which reads as the halo growing and softening. -->
+  <Style Selector="Border.ringGlow">
+    <Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusPill}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgProgressGradient}" />
+    <Setter Property="BorderThickness" Value="10" />
+    <Setter Property="Opacity" Value="0.34" />
+    <Setter Property="Effect">
+      <BlurEffect Radius="16" />
+    </Setter>
+  </Style>
+
+  <Style Selector="Border.ringGlowOuter">
+    <Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusPill}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgProgressGradient}" />
+    <Setter Property="BorderThickness" Value="14" />
+    <Setter Property="Opacity" Value="0.15" />
+    <Setter Property="Effect">
+      <BlurEffect Radius="30" />
+    </Setter>
+  </Style>
+
+  <!--
+    2.8s alternating = a 5.6s round trip, the duration the style guide calls ideal for an
+    active session. Slower than a resting pulse on purpose: anything near one second reads
+    as urgency rather than calm.
+
+    Only opacity is animated. Avalonia registers no keyframe animator for RenderTransform,
+    so a scale keyframe here would silently do nothing; the apparent growth comes instead
+    from the wide layer swinging across a far larger opacity range than the near one, so
+    at the peak of the cycle the halo reads as bigger and softer.
+  -->
+  <Style Selector="Border.ringGlow.pulsing">
+    <Style.Animations>
+      <Animation Duration="0:0:2.8" IterationCount="Infinite" Easing="SineEaseInOut" PlaybackDirection="Alternate">
+        <KeyFrame Cue="0%">
+          <Setter Property="Opacity" Value="0.24" />
+        </KeyFrame>
+        <KeyFrame Cue="100%">
+          <Setter Property="Opacity" Value="0.48" />
+        </KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+
+  <Style Selector="Border.ringGlowOuter.pulsing">
+    <Style.Animations>
+      <Animation Duration="0:0:2.8" IterationCount="Infinite" Easing="SineEaseInOut" PlaybackDirection="Alternate">
+        <KeyFrame Cue="0%">
+          <Setter Property="Opacity" Value="0.08" />
+        </KeyFrame>
+        <KeyFrame Cue="100%">
+          <Setter Property="Opacity" Value="0.32" />
+        </KeyFrame>
+      </Animation>
+    </Style.Animations>
+  </Style>
+
+  <!-- Bars take the same accent gradient as the ring. Styled through Foreground and
+       Background rather than template parts, so this holds without depending on the
+       Fluent theme's internal element names. -->
+  <Style Selector="ProgressBar">
+    <Setter Property="Foreground" Value="{DynamicResource FgProgressGradient}" />
+    <Setter Property="Background" Value="{DynamicResource FgTrackGradient}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusPill}" />
+    <Setter Property="MinHeight" Value="6" />
+  </Style>
+
+  <Style Selector="TextBox">
+    <Setter Property="MinHeight" Value="{DynamicResource FgControlHeight}" />
+    <Setter Property="Background" Value="{DynamicResource FgFieldSurface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+    <Setter Property="Padding" Value="14,8" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+        <BrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="TextBox:pointerover">
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+  </Style>
+
+  <Style Selector="TextBox:focus-within">
+    <Setter Property="BorderBrush" Value="{DynamicResource FgFocusRing}" />
+  </Style>
+
+  <Style Selector="TextBox:focus-within /template/ Border">
+    <Setter Property="BoxShadow" Value="{DynamicResource FgInputFocusShadow}" />
+  </Style>
+
+  <Style Selector="TextBox.recoveryCode">
+    <Setter Property="Height" Value="48" />
+    <Setter Property="FontFamily" Value="Consolas" />
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="LetterSpacing" Value="1.1" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="ComboBox">
+    <Setter Property="MinHeight" Value="{DynamicResource FgControlHeight}" />
+    <Setter Property="Background" Value="{DynamicResource FgFieldSurface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+    <Setter Property="Padding" Value="14,8" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+        <BrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="ComboBox:pointerover">
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+  </Style>
+
+  <Style Selector="ComboBox:focus-within">
+    <Setter Property="BorderBrush" Value="{DynamicResource FgFocusRing}" />
+  </Style>
+
+  <Style Selector="ComboBox:focus-within /template/ Border">
+    <Setter Property="BoxShadow" Value="{DynamicResource FgInputFocusShadow}" />
+  </Style>
+
+  <Style Selector="ComboBoxItem">
+    <Setter Property="MinHeight" Value="{DynamicResource FgControlHeight}" />
+    <Setter Property="Margin" Value="4,2" />
+    <Setter Property="Padding" Value="12,8" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+        <BrushTransition Property="Foreground" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="ComboBoxItem:pointerover">
+    <Setter Property="Background" Value="{DynamicResource FgSecondaryHover}" />
+  </Style>
+
+  <Style Selector="ComboBoxItem:selected">
+    <Setter Property="Background" Value="{DynamicResource FgAccentSoft}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+  </Style>
+
+  <Style Selector="ListBox">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusLarge}" />
+  </Style>
+
+  <Style Selector="NumericUpDown">
+    <Setter Property="MinHeight" Value="{DynamicResource FgControlHeight}" />
+    <Setter Property="Background" Value="{DynamicResource FgFieldSurface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+        <BrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="{DynamicResource FgEaseHover}" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="NumericUpDown:pointerover">
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+  </Style>
+
+  <Style Selector="NumericUpDown:focus-within">
+    <Setter Property="BorderBrush" Value="{DynamicResource FgFocusRing}" />
+  </Style>
+
+  <Style Selector="NumericUpDown:focus-within /template/ Border">
+    <Setter Property="BoxShadow" Value="{DynamicResource FgInputFocusShadow}" />
+  </Style>
+
+  <Style Selector="FlyoutPresenter">
+    <Setter Property="Background" Value="{DynamicResource FgSurface3}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusLarge}" />
+    <Setter Property="Padding" Value="8" />
+    <Setter Property="Opacity" Value="0" />
+    <Setter Property="RenderTransform" Value="scale(0.98)" />
+    <Setter Property="RenderTransformOrigin" Value="50%,0%" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.18" Easing="{DynamicResource FgEaseHover}" />
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" Easing="{DynamicResource FgEaseHover}" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="FlyoutPresenter[IsVisible=true]">
+    <Setter Property="Opacity" Value="1" />
+    <Setter Property="RenderTransform" Value="scale(1)" />
+  </Style>
+
+  <Style Selector="ToolTip">
+    <Setter Property="Background" Value="{DynamicResource FgSurface3}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+    <Setter Property="Padding" Value="10,7" />
+    <Setter Property="Opacity" Value="0" />
+    <Setter Property="RenderTransform" Value="translateY(4px)" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.12" Easing="CubicEaseOut" />
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.12" Easing="CubicEaseOut" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="ToolTip[IsVisible=true]">
+    <Setter Property="Opacity" Value="1" />
+    <Setter Property="RenderTransform" Value="translateY(0px)" />
+  </Style>
+
+  <Style Selector="ScrollViewer.screen">
+    <Setter Property="Opacity" Value="0" />
+    <Setter Property="RenderTransform" Value="translateY(6px)" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.26" Easing="{DynamicResource FgEaseFocus}" />
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.26" Easing="{DynamicResource FgEaseFocus}" />
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="ScrollViewer.screen[IsVisible=true]">
+    <Setter Property="Opacity" Value="1" />
+    <Setter Property="RenderTransform" Value="translateY(0px)" />
+  </Style>
+</Styles>

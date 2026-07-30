@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FocusGuard.Domain/FocusGuard.Domain.csproj" />
+    <Project Path="src/FocusGuard.Contracts/FocusGuard.Contracts.csproj" />
+    <Project Path="src/FocusGuard.Service/FocusGuard.Service.csproj" />
+    <Project Path="src/FocusGuard.Storage/FocusGuard.Storage.csproj" />
+    <Project Path="src/FocusGuard.Monitoring/FocusGuard.Monitoring.csproj" />
+    <Project Path="src/FocusGuard.Application/FocusGuard.Application.csproj" />
+    <Project Path="src/FocusGuard.Infrastructure.Windows/FocusGuard.Infrastructure.Windows.csproj" />
+    <Project Path="src/FocusGuard.NativeMessaging/FocusGuard.NativeMessaging.csproj" />
+    <Project Path="src/FocusGuard.Recovery/FocusGuard.Recovery.csproj" />
+    <Project Path="src/FocusGuard.TestTarget/FocusGuard.TestTarget.csproj" />
+    <Project Path="src/FocusGuard.Desktop/FocusGuard.Desktop.csproj" />
+    <Project Path="src/FocusGuard.DrillClient/FocusGuard.DrillClient.csproj" />
+    <Project Path="src/FocusGuard.Setup/FocusGuard.Setup.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FocusGuard.Domain.Tests/FocusGuard.Domain.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Contracts.Tests/FocusGuard.Contracts.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Service.Tests/FocusGuard.Service.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Storage.Tests/FocusGuard.Storage.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Monitoring.Tests/FocusGuard.Monitoring.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Application.Tests/FocusGuard.Application.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Infrastructure.Windows.Tests/FocusGuard.Infrastructure.Windows.Tests.csproj" />
+    <Project Path="tests/FocusGuard.NativeMessaging.Tests/FocusGuard.NativeMessaging.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Desktop.Tests/FocusGuard.Desktop.Tests.csproj" />
+  </Folder>
+</Solution>

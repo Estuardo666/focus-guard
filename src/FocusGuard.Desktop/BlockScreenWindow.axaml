@@ -1,0 +1,138 @@
+<Window
+    x:Class="FocusGuard.Desktop.BlockScreenWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:FocusGuard.Desktop"
+    x:DataType="vm:BlockScreenViewModel"
+    WindowState="FullScreen"
+    WindowDecorations="None"
+    Topmost="True"
+    ShowInTaskbar="False"
+    Background="{DynamicResource FgBlockScrim}"
+    TransparencyLevelHint="AcrylicBlur"
+    Title="FocusGuard">
+
+  <!-- The central block fades in and settles upward over 180 ms. Appearing instantly is
+       what makes a full-screen takeover feel aggressive. -->
+  <Panel>
+    <StackPanel
+        x:Name="BlockContent"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        MaxWidth="560"
+        Spacing="18"
+        Opacity="0"
+        RenderTransform="translateY(8px)">
+      <StackPanel.Transitions>
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.18" Easing="{DynamicResource FgEaseFocus}" />
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" Easing="{DynamicResource FgEaseFocus}" />
+        </Transitions>
+      </StackPanel.Transitions>
+
+      <Panel Width="132" Height="132" HorizontalAlignment="Center">
+        <Border Classes="ringGlowOuter pulsing" Margin="-8" />
+        <Border Classes="ringGlow pulsing" Margin="6" />
+        <Ellipse Stroke="{DynamicResource FgTrackGradient}" StrokeThickness="10" Margin="6" />
+        <Arc
+            Margin="6"
+            Stroke="{DynamicResource FgProgressGradient}"
+            StrokeThickness="10"
+            StrokeLineCap="Round"
+            StartAngle="-90"
+            SweepAngle="{Binding RingSweepAngle}" />
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+          <TextBlock
+              Text="{Binding RingValue}"
+              FontSize="26"
+              FontWeight="SemiBold"
+              HorizontalAlignment="Center"
+              AutomationProperties.Name="Minutes remaining in this session" />
+          <TextBlock
+              Text="min"
+              Classes="caption"
+              FontSize="{DynamicResource FgFontEyebrow}"
+              HorizontalAlignment="Center" />
+        </StackPanel>
+      </Panel>
+
+      <TextBlock
+          Text="{Binding Headline}"
+          FontSize="28"
+          FontWeight="SemiBold"
+          TextWrapping="Wrap"
+          TextAlignment="Center"
+          HorizontalAlignment="Center" />
+
+      <TextBlock
+          Text="{Binding Context}"
+          Foreground="{DynamicResource FgTextSecondary}"
+          FontSize="15"
+          TextWrapping="Wrap"
+          TextAlignment="Center"
+          MaxWidth="440"
+          HorizontalAlignment="Center" />
+
+      <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+        <Button
+            x:Name="BackButton"
+            Classes="primary"
+            Content="{Binding BackLabel}"
+            Click="BackClick" />
+        <Button
+            Classes="secondary"
+            Content="{Binding CaptureLabel}"
+            Command="{Binding ShowCaptureCommand}"
+            IsVisible="{Binding IsCaptureButtonVisible}" />
+      </StackPanel>
+
+      <!-- Inline, never a separate dialog. One click, type, Enter, done: anything that
+           takes longer than five seconds simply does not get used. -->
+      <StackPanel
+          Spacing="10"
+          Width="420"
+          HorizontalAlignment="Center"
+          IsVisible="{Binding IsCaptureVisible}">
+        <TextBox
+            x:Name="CaptureInput"
+            Text="{Binding CaptureText}"
+            PlaceholderText="{Binding CapturePlaceholder}"
+            MaxLength="240"
+            KeyDown="CaptureKeyDown"
+            AutomationProperties.Name="Note this for later" />
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+          <Button Classes="primary" Content="{Binding CaptureSaveLabel}" Command="{Binding SaveCaptureCommand}" />
+          <Button Classes="ghost" Content="{Binding CaptureCancelLabel}" Command="{Binding CancelCaptureCommand}" />
+        </StackPanel>
+      </StackPanel>
+
+      <TextBlock
+          Text="{Binding CaptureFeedback}"
+          IsVisible="{Binding HasCaptureFeedback}"
+          Foreground="{DynamicResource FgSuccess}"
+          FontSize="13"
+          TextAlignment="Center"
+          HorizontalAlignment="Center" />
+
+      <Border
+          BorderBrush="{DynamicResource FgDivider}"
+          BorderThickness="0,1,0,0"
+          Margin="0,10,0,0"
+          Padding="0,18,0,0"
+          Width="460"
+          HorizontalAlignment="Center">
+        <StackPanel Spacing="4">
+          <TextBlock
+              Text="{Binding AutoCloseNotice}"
+              Classes="caption"
+              TextAlignment="Center" />
+          <!-- Hiding an exit that exists is what makes people distrust this kind of app. -->
+          <TextBlock
+              Text="{Binding FooterMode}"
+              Classes="caption"
+              TextAlignment="Center" />
+        </StackPanel>
+      </Border>
+    </StackPanel>
+  </Panel>
+</Window>

@@ -1,0 +1,70 @@
+<UserControl
+    x:Class="FocusGuard.Desktop.StrictConfirmationView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:FocusGuard.Desktop"
+    xmlns:resources="using:FocusGuard.Desktop.Resources"
+    x:DataType="vm:StrictConfirmationViewModel">
+  <ScrollViewer>
+    <Grid Margin="48,36" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="22">
+      <StackPanel Spacing="8">
+        <TextBlock Text="{x:Static resources:UiStrings.ReviewStrictFocus}" FontSize="34" FontWeight="SemiBold" />
+        <TextBlock Text="{x:Static resources:UiStrings.StrictReviewDescription}" Foreground="{DynamicResource FgTextSecondary}" FontSize="16" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <Border Grid.Row="1" Classes="card">
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="28" RowSpacing="16">
+          <StackPanel Spacing="5">
+            <TextBlock Text="{x:Static resources:UiStrings.ProfileLabel}" Foreground="{DynamicResource FgTextSecondary}" />
+            <TextBlock Text="{Binding ProfileName}" FontSize="21" FontWeight="SemiBold" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Spacing="5">
+            <TextBlock Text="{x:Static resources:UiStrings.ExactEndTime}" Foreground="{DynamicResource FgTextSecondary}" />
+            <TextBlock Text="{Binding EndTimeText}" FontSize="21" FontWeight="SemiBold" AutomationProperties.Name="Strict focus exact end time" />
+          </StackPanel>
+          <StackPanel Grid.Row="1" Spacing="7">
+            <TextBlock Text="{x:Static resources:UiStrings.ImpactedApplications}" Foreground="{DynamicResource FgTextSecondary}" />
+            <ItemsControl ItemsSource="{Binding ImpactedApplications}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="• {Binding}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+          <StackPanel Grid.Row="1" Grid.Column="1" Spacing="7">
+            <TextBlock Text="{x:Static resources:UiStrings.ImpactedWebsites}" Foreground="{DynamicResource FgTextSecondary}" />
+            <ItemsControl ItemsSource="{Binding ImpactedWebsites}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="• {Binding}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+          <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding BrowserHealth}" Foreground="{DynamicResource FgSuccess}" AutomationProperties.Name="Browser extension health" />
+        </Grid>
+      </Border>
+
+      <Border Grid.Row="2" Classes="card">
+        <StackPanel Spacing="14">
+          <TextBlock Text="{x:Static resources:UiStrings.RecoveryReadiness}" FontSize="20" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding RecoveryInstructions}" TextWrapping="Wrap" Foreground="{DynamicResource FgTextSecondary}" />
+          <CheckBox Content="{x:Static resources:UiStrings.AcknowledgeRecovery}" IsChecked="{Binding AcknowledgeRecoverySaved}" AutomationProperties.Name="Acknowledge recovery code saved" />
+          <TextBlock Text="{Binding UnsavedWorkWarning}" TextWrapping="Wrap" Foreground="{DynamicResource FgWarning}" />
+          <CheckBox Content="{x:Static resources:UiStrings.AcknowledgeWork}" IsChecked="{Binding AcknowledgeUnsavedWork}" AutomationProperties.Name="Acknowledge unsaved work warning" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="3" Classes="card">
+        <StackPanel Spacing="14">
+          <TextBlock Text="{x:Static resources:UiStrings.RequiredConfirmation}" Foreground="{DynamicResource FgTextSecondary}" />
+          <TextBlock Text="{Binding StrictConfirmationPromptText}" TextWrapping="Wrap" />
+          <TextBox Text="{Binding TypedConfirmation}" PlaceholderText="{x:Static resources:UiStrings.TypeSentenceAsShown}" AutomationProperties.Name="Strict focus two-word confirmation phrase" />
+          <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Foreground="{DynamicResource FgTextSecondary}" />
+          <Button Classes="primary" Content="{Binding ActivationButtonText}" Command="{Binding StartStrictFocusCommand}" IsEnabled="{Binding CanActivate}" AutomationProperties.Name="Start strict focus after confirmation" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </ScrollViewer>
+</UserControl>

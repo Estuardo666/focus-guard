@@ -1,0 +1,346 @@
+/*
+ * Dark Zen block page. Deliberately no pure black and no red: the user already made the
+ * decision to block this, and the screen is only reminding them of it.
+ */
+
+:root {
+  color-scheme: dark;
+
+  --surface-0: #0e1318;
+  --surface-1: #151c24;
+  --surface-2: #19212b;
+  --surface-3: #1d2631;
+  --field: #111820;
+
+  --border: #2a3542;
+  --border-strong: #344150;
+  --border-focus: #7188ff;
+
+  --text-primary: #edf2f5;
+  --text-secondary: #aeb9c4;
+  --text-tertiary: #7f8c99;
+
+  --accent: #667dff;
+  --accent-hover: #788cff;
+  --accent-pressed: #5269e8;
+
+  --ring-track: #29333d;
+
+  --ease-hover: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-focus: cubic-bezier(0.16, 1, 0.3, 1);
+
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--surface-0);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+/* The central block fades in and settles upward. Without it the appearance is abrupt,
+   and abrupt is what makes a block screen feel like a slap. */
+.stage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  animation: enter 180ms var(--ease-focus) both;
+}
+
+@keyframes enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.panel {
+  width: min(560px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+}
+
+/* ---------- Ring ---------- */
+
+.ring {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 6px;
+}
+
+.ring__svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring__track {
+  fill: none;
+  stroke: var(--ring-track);
+  stroke-width: 10;
+}
+
+.ring__progress {
+  fill: none;
+  stroke: url(#ringGradient);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 314.159;
+  stroke-dashoffset: 314.159;
+  transition: stroke-dashoffset 600ms var(--ease-focus);
+}
+
+/*
+ * Two halo layers rather than one. The near layer hugs the stroke; the outer layer is
+ * inset negatively so the light spills past the ring instead of being trapped inside it.
+ * They breathe together on a 5.6s round trip — slow enough to read as calm rather than
+ * as a pulse rate.
+ */
+.ring__glow {
+  position: absolute;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  background: conic-gradient(from 180deg, #63b7b0, #6f8cff, #a174e8, #63b7b0);
+  mask: radial-gradient(circle, transparent 58%, #000 60%, #000 78%, transparent 82%);
+  pointer-events: none;
+}
+
+.ring__glow--near {
+  inset: 2px;
+  filter: blur(14px);
+  opacity: 0.34;
+  animation: breathe-near 5.6s ease-in-out infinite;
+}
+
+.ring__glow--outer {
+  inset: -18px;
+  filter: blur(30px);
+  opacity: 0.16;
+  animation: breathe-outer 5.6s ease-in-out infinite;
+}
+
+@keyframes breathe-near {
+  0%, 100% { opacity: 0.26; transform: scale(1); }
+  50% { opacity: 0.46; transform: scale(1.02); }
+}
+
+@keyframes breathe-outer {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.28; transform: scale(1.035); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage { animation: none; }
+  .ring__glow { animation: none; }
+  .ring__progress { transition: none; }
+}
+
+.ring__label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+.ring__value {
+  font-size: 26px;
+  font-weight: 600;
+  color: #f0f4f6;
+}
+
+.ring__unit {
+  font-size: 11px;
+  color: #8f9ca8;
+}
+
+/* ---------- Copy ---------- */
+
+.headline {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.context {
+  margin: 0;
+  max-width: 42ch;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+/* ---------- Buttons ---------- */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.button {
+  min-height: 42px;
+  padding: 0 22px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--ease-hover),
+    border-color 160ms var(--ease-hover),
+    transform 160ms var(--ease-hover),
+    box-shadow 160ms var(--ease-hover);
+}
+
+.button--compact {
+  min-height: 36px;
+  padding: 0 16px;
+}
+
+/* Hover does not brighten the button, it brings it slightly closer. */
+.button--primary {
+  background: linear-gradient(135deg, #667dff 0%, #766ff2 52%, #9073e8 100%);
+  color: #f8faff;
+}
+
+.button--primary:hover {
+  background: linear-gradient(135deg, #7489ff 0%, #9a7cef 100%);
+  transform: scale(1.015);
+}
+
+.button--primary:active {
+  background: linear-gradient(135deg, #566deb 0%, #7d61d3 100%);
+  transform: scale(0.985);
+  transition-duration: 90ms;
+}
+
+.button--secondary {
+  background: #202934;
+  border-color: #354250;
+  color: #d9e0e6;
+}
+
+.button--secondary:hover {
+  background: #27323e;
+  border-color: #455363;
+  color: #f0f3f6;
+}
+
+.button--secondary:active {
+  background: #192129;
+  transform: scale(0.985);
+  transition-duration: 90ms;
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.button--ghost:hover {
+  color: var(--text-primary);
+}
+
+.button:focus-visible {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 4px rgba(102, 125, 255, 0.12);
+}
+
+/* ---------- Capture ---------- */
+
+.capture {
+  width: min(420px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: capture-in 200ms var(--ease-focus) both;
+}
+
+@keyframes capture-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.capture__input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: var(--field);
+  border: 1px solid #303c48;
+  color: #e7ecef;
+  font: inherit;
+  font-size: 14px;
+  transition:
+    border-color 200ms var(--ease-focus),
+    box-shadow 200ms var(--ease-focus);
+}
+
+.capture__input::placeholder {
+  color: #677481;
+}
+
+.capture__input:hover {
+  border-color: #3b4856;
+}
+
+.capture__input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 4px rgba(102, 125, 255, 0.14);
+}
+
+.capture__actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.capture__feedback {
+  margin: 0;
+  font-size: 13px;
+  color: #a7d8c3;
+}
+
+.capture__feedback[data-state="error"] {
+  color: #eab0b5;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  margin-top: 10px;
+  padding-top: 18px;
+  width: min(460px, 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-tertiary);
+}

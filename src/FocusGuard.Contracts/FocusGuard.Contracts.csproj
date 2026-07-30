@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../FocusGuard.Domain/FocusGuard.Domain.csproj" />
+  </ItemGroup>
+</Project>

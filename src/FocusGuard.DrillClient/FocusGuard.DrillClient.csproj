@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <FocusGuardProduction>true</FocusGuardProduction>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../FocusGuard.Desktop/FocusGuard.Desktop.csproj" />
+    <ProjectReference Include="../FocusGuard.NativeMessaging/FocusGuard.NativeMessaging.csproj" />
+  </ItemGroup>
+</Project>

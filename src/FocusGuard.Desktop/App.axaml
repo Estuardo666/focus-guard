@@ -1,0 +1,37 @@
+<Application
+    x:Class="FocusGuard.Desktop.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resources="using:FocusGuard.Desktop.Resources">
+
+  <TrayIcon.Icons>
+    <TrayIcons>
+      <TrayIcon
+          Icon="/Assets/focusguard-icon.png"
+          ToolTipText="FocusGuard"
+          IsVisible="True"
+          Clicked="TrayIconClicked">
+        <TrayIcon.Menu>
+          <NativeMenu>
+            <NativeMenuItem Header="{x:Static resources:UiStrings.OpenFocusGuard}" Click="OpenFocusGuardClick" />
+            <NativeMenuItemSeparator />
+            <NativeMenuItem Header="{x:Static resources:UiStrings.ExitFocusGuard}" Click="ExitFocusGuardClick" />
+          </NativeMenu>
+        </TrayIcon.Menu>
+      </TrayIcon>
+    </TrayIcons>
+  </TrayIcon.Icons>
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="/Styles/Tokens.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme />
+    <StyleInclude Source="/Styles/Controls.axaml" />
+  </Application.Styles>
+</Application>

@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../FocusGuard.Domain/FocusGuard.Domain.csproj" />
+    <ProjectReference Include="../FocusGuard.Contracts/FocusGuard.Contracts.csproj" />
+  </ItemGroup>
+</Project>

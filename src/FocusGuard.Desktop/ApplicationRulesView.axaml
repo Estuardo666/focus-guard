@@ -1,0 +1,62 @@
+<UserControl
+    x:Class="FocusGuard.Desktop.ApplicationRulesView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:FocusGuard.Desktop"
+    xmlns:resources="using:FocusGuard.Desktop.Resources"
+    x:DataType="vm:ApplicationRuleEditorViewModel">
+  <ScrollViewer>
+    <Grid Margin="48,36" RowDefinitions="Auto,Auto,Auto" RowSpacing="22">
+      <StackPanel Spacing="8">
+        <TextBlock Text="{x:Static resources:UiStrings.ApplicationsTitle}" FontSize="34" FontWeight="SemiBold" />
+        <TextBlock Text="{x:Static resources:UiStrings.ApplicationRulesDescription}" Foreground="{DynamicResource FgTextSecondary}" FontSize="16" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <Border Grid.Row="1" Classes="card">
+        <Grid ColumnDefinitions="180,220,*,Auto" ColumnSpacing="14" RowDefinitions="Auto,Auto">
+          <StackPanel Spacing="6">
+            <TextBlock Text="{x:Static resources:UiStrings.ActionLabel}" Foreground="{DynamicResource FgTextSecondary}" />
+            <ComboBox ItemsSource="{Binding Actions}" SelectedItem="{Binding SelectedAction}" AutomationProperties.Name="Application rule action" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Spacing="6">
+            <TextBlock Text="{x:Static resources:UiStrings.MatchByLabel}" Foreground="{DynamicResource FgTextSecondary}" />
+            <ComboBox ItemsSource="{Binding MatchKinds}" SelectedItem="{Binding SelectedMatchKind}" AutomationProperties.Name="Application rule match kind">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:ApplicationMatchOption">
+                  <TextBlock Text="{Binding Label}" />
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </StackPanel>
+          <StackPanel Grid.Column="2" Spacing="6">
+            <TextBlock Text="{x:Static resources:UiStrings.ValueLabel}" Foreground="{DynamicResource FgTextSecondary}" />
+            <TextBox Text="{Binding ValueInput}" PlaceholderText="C:\Apps\Focus.exe" AutomationProperties.Name="Application rule value" />
+          </StackPanel>
+          <Button Grid.Column="3" Classes="primary" Content="{x:Static resources:UiStrings.AddRule}" Command="{Binding AddRuleCommand}" VerticalAlignment="Bottom" AutomationProperties.Name="Add application rule" />
+          <TextBlock Grid.Row="1" Grid.ColumnSpan="4" Text="{Binding ValidationMessage}" TextWrapping="Wrap" Foreground="{DynamicResource FgTextSecondary}" />
+        </Grid>
+      </Border>
+
+      <Border Grid.Row="2" Classes="card">
+        <StackPanel Spacing="14">
+          <TextBlock Text="{x:Static resources:UiStrings.ProfileRules}" FontSize="20" FontWeight="SemiBold" />
+          <TextBlock Text="{x:Static resources:UiStrings.NoApplicationRules}" Foreground="{DynamicResource FgTextSecondary}" IsVisible="{Binding IsEmpty}" />
+          <ItemsControl ItemsSource="{Binding Rules}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ApplicationRuleRowViewModel">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14" Margin="0,4">
+                  <TextBlock Text="{Binding Rule.Action}" Foreground="{DynamicResource FgTextSecondary}" VerticalAlignment="Center" />
+                  <StackPanel Grid.Column="1" Spacing="3">
+                    <TextBlock Text="{Binding Rule.Value}" />
+                    <TextBlock Text="{Binding Rule.MatchKind}" Foreground="{DynamicResource FgTextSecondary}" FontSize="12" />
+                  </StackPanel>
+                  <Button Grid.Column="2" Content="{x:Static resources:UiStrings.Remove}" Command="{Binding RemoveCommand}" AutomationProperties.Name="Remove application rule" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+    </Grid>
+  </ScrollViewer>
+</UserControl>

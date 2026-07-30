@@ -1,0 +1,58 @@
+<Window
+    x:Class="FocusGuard.Desktop.SessionToastWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Width="360"
+    SizeToContent="Height"
+    WindowDecorations="None"
+    CanResize="False"
+    ShowInTaskbar="False"
+    Topmost="True"
+    ShowActivated="False"
+    Background="Transparent"
+    Title="FocusGuard">
+
+  <!-- The least invasive way to close the loop: a corner card that says the session is
+       over and opens the full summary if the user wants it. -->
+  <Border
+      x:Name="Card"
+      Background="{DynamicResource FgSurface3}"
+      BorderBrush="{DynamicResource FgBorder}"
+      BorderThickness="1"
+      CornerRadius="{DynamicResource FgRadiusMedium}"
+      BoxShadow="{DynamicResource FgSummaryWindowShadow}"
+      Margin="12"
+      Padding="16,14"
+      Opacity="0"
+      RenderTransform="translateY(8px)"
+      PointerPressed="CardPressed"
+      Cursor="Hand">
+    <Border.Transitions>
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="{DynamicResource FgEaseFocus}" />
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="{DynamicResource FgEaseFocus}" />
+      </Transitions>
+    </Border.Transitions>
+
+    <Grid ColumnDefinitions="34,*" ColumnSpacing="12">
+      <Border
+          Width="30"
+          Height="30"
+          CornerRadius="{DynamicResource FgRadiusPill}"
+          Background="{DynamicResource FgSuccessSoft}"
+          VerticalAlignment="Top">
+        <TextBlock
+            Classes="icon"
+            Text="&#xE73E;"
+            FontSize="14"
+            Foreground="{DynamicResource FgSuccess}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" />
+      </Border>
+      <StackPanel Grid.Column="1" Spacing="3">
+        <TextBlock x:Name="ToastTitle" FontWeight="SemiBold" />
+        <TextBlock x:Name="ToastBody" Classes="caption" TextWrapping="Wrap" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</Window>

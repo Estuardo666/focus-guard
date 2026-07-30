@@ -1,0 +1,172 @@
+<Window
+    x:Class="FocusGuard.Desktop.SessionSummaryWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:FocusGuard.Desktop"
+    x:DataType="vm:SessionSummaryViewModel"
+    Width="470"
+    SizeToContent="Height"
+    MaxHeight="720"
+    WindowStartupLocation="CenterScreen"
+    WindowDecorations="None"
+    CanResize="False"
+    Background="Transparent"
+    ShowInTaskbar="True"
+    Title="FocusGuard">
+
+  <!-- A small window, not a takeover: the session is over, there is nothing left to
+       enforce, and the user may already be doing something else. -->
+  <Border
+      x:Name="Card"
+      Background="{DynamicResource FgSurface3}"
+      BorderBrush="{DynamicResource FgBorder}"
+      BorderThickness="1"
+      CornerRadius="{DynamicResource FgRadiusLarge}"
+      BoxShadow="{DynamicResource FgSummaryWindowShadow}"
+      Margin="16"
+      Opacity="0"
+      RenderTransform="scale(0.98)"
+      RenderTransformOrigin="50%,50%">
+    <Border.Transitions>
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="{DynamicResource FgEaseFocus}" />
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" Easing="{DynamicResource FgEaseFocus}" />
+      </Transitions>
+    </Border.Transitions>
+
+    <StackPanel Margin="24,26,24,22" Spacing="18">
+
+      <!-- Metrics before the list: the achievement first, the loose ends second. -->
+      <StackPanel Spacing="10" HorizontalAlignment="Center">
+        <Border
+            x:Name="CheckBadge"
+            Width="46"
+            Height="46"
+            CornerRadius="{DynamicResource FgRadiusPill}"
+            Background="{DynamicResource FgSuccessSoft}"
+            BorderBrush="{DynamicResource FgSuccess}"
+            BorderThickness="1"
+            HorizontalAlignment="Center"
+            IsVisible="{Binding IsCompleted}"
+            RenderTransform="scale(0.8)"
+            RenderTransformOrigin="50%,50%">
+          <Border.Transitions>
+            <Transitions>
+              <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.26" Easing="{DynamicResource FgEaseHover}" />
+            </Transitions>
+          </Border.Transitions>
+          <TextBlock
+              Classes="icon"
+              Text="&#xE73E;"
+              FontSize="21"
+              Foreground="{DynamicResource FgSuccess}"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center" />
+        </Border>
+
+        <TextBlock
+            Text="{Binding Title}"
+            FontSize="22"
+            FontWeight="SemiBold"
+            TextAlignment="Center"
+            HorizontalAlignment="Center" />
+        <TextBlock
+            Text="{Binding Subtitle}"
+            Classes="caption"
+            TextAlignment="Center"
+            TextWrapping="Wrap"
+            HorizontalAlignment="Center" />
+      </StackPanel>
+
+      <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+        <Border Classes="card" Padding="12,14">
+          <StackPanel Spacing="2" HorizontalAlignment="Center">
+            <TextBlock Text="{Binding FocusedValue}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding FocusedLabel}" Classes="caption" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Classes="card" Padding="12,14">
+          <StackPanel Spacing="2" HorizontalAlignment="Center">
+            <TextBlock Text="{Binding BlocksValue}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding BlocksLabel}" Classes="caption" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="2" Classes="card" Padding="12,14" IsVisible="{Binding HasStreak}">
+          <StackPanel Spacing="2" HorizontalAlignment="Center">
+            <TextBlock Text="{Binding StreakValue}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding StreakLabel}" Classes="caption" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <StackPanel Spacing="10" IsVisible="{Binding HasCaptures}">
+        <Grid ColumnDefinitions="*,Auto">
+          <StackPanel Spacing="2">
+            <TextBlock Text="{Binding CapturedTitle}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding CapturedHint}" Classes="caption" TextWrapping="Wrap" />
+          </StackPanel>
+          <Button
+              Grid.Column="1"
+              Classes="ghost"
+              Content="{Binding DismissAllLabel}"
+              Command="{Binding DismissAllCommand}"
+              VerticalAlignment="Top" />
+        </Grid>
+
+        <ScrollViewer MaxHeight="230" HorizontalScrollBarVisibility="Disabled">
+          <ItemsControl ItemsSource="{Binding Captures}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:CapturedItemViewModel">
+                <Border Classes="card" Padding="12,10" Margin="0,0,0,8">
+                  <Grid ColumnDefinitions="20,*,Auto,Auto" ColumnSpacing="10">
+                    <TextBlock
+                        Classes="icon"
+                        Text="{Binding Glyph}"
+                        FontSize="14"
+                        Foreground="{DynamicResource FgTextSecondary}"
+                        VerticalAlignment="Center" />
+                    <StackPanel Grid.Column="1" Spacing="2">
+                      <TextBlock Text="{Binding Text}" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{Binding Origin}" Classes="caption" />
+                    </StackPanel>
+                    <Button
+                        Grid.Column="2"
+                        Classes="ghost"
+                        Content="{Binding OpenLabel}"
+                        Command="{Binding OpenCommand}"
+                        VerticalAlignment="Center" />
+                    <Button
+                        Grid.Column="3"
+                        Classes="ghost"
+                        Content="&#xE711;"
+                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                        Command="{Binding DismissCommand}"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{Binding DismissLabel}" />
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </StackPanel>
+
+      <!-- The only two real exits. There is no "Close": dismissing the window with the
+           title-bar X already means taking a break. -->
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+        <Button
+            x:Name="AnotherSessionButton"
+            Classes="primary"
+            Content="{Binding AnotherSessionLabel}"
+            Command="{Binding AnotherSessionCommand}"
+            HorizontalAlignment="Stretch" />
+        <Button
+            Grid.Column="1"
+            Classes="secondary"
+            Content="{Binding TakeBreakLabel}"
+            Command="{Binding TakeBreakCommand}"
+            HorizontalAlignment="Stretch" />
+      </Grid>
+    </StackPanel>
+  </Border>
+</Window>

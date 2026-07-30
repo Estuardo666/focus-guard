@@ -1,0 +1,26 @@
+# Build and test output
+bin/
+obj/
+.vs/
+.idea/
+.vscode/
+TestResults/
+coverage/
+artifacts/
+
+# User and tool state
+*.user
+*.suo
+*.log
+.codex/
+node_modules/
+
+# Local application data
+*.db
+*.db-shm
+*.db-wal
+
+# Graphify machine-local and cache state
+graphify-out/cache/
+graphify-out/.graphify_root
+graphify-out/manifest.json

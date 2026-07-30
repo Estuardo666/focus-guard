@@ -1,0 +1,70 @@
+<UserControl x:Class="FocusGuard.Views.SessionHeader">
+  <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BorderSubtle}">
+    <Grid ColumnDefinitions="5,*">
+
+      <!-- Barra de acento del perfil -->
+      <Rectangle Grid.Column="0" Fill="{Binding ActiveProfile.AccentBrush}"/>
+
+      <Grid Grid.Column="1" Margin="22,20" ColumnDefinitions="*,Auto">
+
+        <!-- Identidad del perfil -->
+        <StackPanel Grid.Column="0" Spacing="6">
+          <Button Classes="ghost profile-picker" Padding="0"
+                  IsVisible="{Binding !IsSessionActive}">
+            <StackPanel Orientation="Horizontal" Spacing="7">
+              <TextBlock Text="{Binding ActiveProfile.Name}"
+                         FontSize="25" FontWeight="Medium"/>
+              <PathIcon Data="{StaticResource SelectorGlyph}" Width="16"
+                        Foreground="{DynamicResource TextMuted}"
+                        VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <!-- En sesión: el nombre no es clicable y lleva el badge -->
+          <StackPanel Orientation="Horizontal" Spacing="9"
+                      IsVisible="{Binding IsSessionActive}">
+            <TextBlock Text="{Binding ActiveProfile.Name}"
+                       FontSize="25" FontWeight="Medium"/>
+            <Border Classes="badge success" VerticalAlignment="Center">
+              <TextBlock Text="Protegido"/>
+            </Border>
+          </StackPanel>
+
+          <TextBlock Text="{Binding HeaderSubtitle}" FontSize="13"
+                     Foreground="{DynamicResource TextSecondary}"
+                     TextWrapping="Wrap"/>
+
+          <ItemsControl ItemsSource="{Binding Profiles}" Margin="0,6,0,0"
+                        IsVisible="{Binding !IsSessionActive}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="5"/></ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Button Classes="profile-swatch" Width="24" Height="24"
+                        Background="{Binding SwatchBrush}"
+                        Command="{Binding $parent[UserControl].DataContext.SelectProfileCommand}"
+                        CommandParameter="{Binding}"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+
+        <!-- Métrica -->
+        <StackPanel Grid.Column="1" HorizontalAlignment="Right" Spacing="4">
+          <TextBlock Text="{Binding MetricValue}" FontSize="30" FontWeight="Light"
+                     HorizontalAlignment="Right"
+                     Foreground="{Binding MetricBrush}"/>
+          <TextBlock Text="{Binding MetricLabel}" FontSize="11"
+                     Foreground="{DynamicResource TextMuted}"
+                     HorizontalAlignment="Right"/>
+          <views:WeekSparkline Days="{Binding WeekMinutes}" Height="26"
+                               Accent="{Binding ActiveProfile.AccentBrush}"
+                               Margin="0,6,0,0"
+                               IsVisible="{Binding HasHistory}"/>
+        </StackPanel>
+
+      </Grid>
+    </Grid>
+  </Border>
+</UserControl>

@@ -1,0 +1,42 @@
+{
+  "extensionName": { "message": "FocusGuard" },
+  "extensionDescription": { "message": "Aplica una política finita de sitios web habilitada explícitamente en FocusGuard." },
+  "blockedTitle": { "message": "Página bloqueada por FocusGuard" },
+  "blockedMessage": { "message": "Esta página está bloqueada durante tu sesión de concentración." },
+  "blockedPrivacy": { "message": "La dirección intentada y sus parámetros de consulta no se muestran aquí." },
+  "blockedHeadline": {
+    "message": "$domain$ te espera después",
+    "placeholders": { "domain": { "content": "$1", "example": "instagram.com" } }
+  },
+  "blockedHeadlineGeneric": { "message": "Este sitio te espera después" },
+  "blockedContext": {
+    "message": "Lo pusiste en pausa hasta las $end$. Faltan $remaining$ y ya llevas $elapsed$ de esta sesión.",
+    "placeholders": {
+      "end": { "content": "$1", "example": "13:04" },
+      "remaining": { "content": "$2", "example": "32 minutos" },
+      "elapsed": { "content": "$3", "example": "18" }
+    }
+  },
+  "blockedMinutesUnit": { "message": "min" },
+  "blockedMinutes": {
+    "message": "$count$ minutos",
+    "placeholders": { "count": { "content": "$1", "example": "32" } }
+  },
+  "blockedOneMinute": { "message": "1 minuto" },
+  "blockedLessThanMinute": { "message": "menos de un minuto" },
+  "blockedBack": { "message": "Volver a lo que hacía" },
+  "blockedCapture": { "message": "Anotarlo para después" },
+  "blockedCapturePlaceholder": { "message": "¿Qué ibas a hacer ahí?" },
+  "blockedCaptureSave": { "message": "Guardar" },
+  "blockedCaptureCancel": { "message": "Cancelar" },
+  "blockedCaptureSaved": { "message": "Anotado. Lo verás al terminar la sesión." },
+  "blockedCaptureFailed": { "message": "No se pudo anotar ahora mismo." },
+  "blockedAutoClose": { "message": "Esta pantalla se cierra sola cuando termine la sesión." },
+  "blockedFooterNormal": { "message": "Modo normal · puedes terminarla desde FocusGuard" },
+  "blockedFooterStrict": {
+    "message": "Modo estricto activo hasta las $end$",
+    "placeholders": { "end": { "content": "$1", "example": "13:04" } }
+  },
+  "blockedSessionOver": { "message": "La sesión terminó. Ya puedes seguir." },
+  "blockedContinue": { "message": "Continuar" }
+}

@@ -1,0 +1,469 @@
+Si FocusGuard quiere transmitir calma, disciplina y confianza, las animaciones no deben llamar la atención. El usuario debe sentir que la interfaz "respira" en lugar de "reaccionar".
+
+Mi recomendación es inspirarse más en macOS, Arc Browser, Linear y Notion, y menos en Material Design.
+
+Filosofía
+Regla 1
+
+Nada debe aparecer instantáneamente.
+
+Todo cambia suavemente.
+
+Regla 2
+
+Ningún elemento debe "saltar".
+
+Debe deslizarse entre estados.
+
+Regla 3
+
+El color nunca cambia de golpe.
+
+Siempre interpola.
+
+Curvas (Easing)
+
+No utilizar easing lineal.
+
+Usar únicamente:
+
+Hover
+cubic-bezier(0.22, 1, 0.36, 1)
+
+Muy parecido a macOS.
+
+Sensación:
+
+"el elemento se acerca".
+
+Focus
+cubic-bezier(0.16, 1, 0.3, 1)
+
+Un poco más lento.
+
+Hace que el usuario sienta que el foco "se asienta".
+
+Salida
+ease-out
+
+Siempre.
+
+Nunca hacer desaparecer algo con ease-in.
+
+Duraciones
+Hover
+140–170 ms
+
+Ideal:
+
+160 ms
+Focus
+180–220 ms
+
+Ideal
+
+200 ms
+Click
+90–120 ms
+
+Debe sentirse inmediato.
+
+Cambio de pantalla
+240–300 ms
+
+Nunca más de 350 ms.
+
+Apertura de modal
+280 ms
+
+Con fade + scale.
+
+Hover
+
+En FocusGuard el hover no debe ser un cambio de color fuerte.
+
+Debe tener tres componentes.
+
+1. Elevar ligeramente la superficie
++2% luminosidad
+
+Ejemplo
+
+Card
+
+#19212B
+
+Hover
+
+#1D2631
+2. Borde
+
+No cambiar de color completamente.
+
+Solo aumentar contraste.
+
+Normal
+
+#2A3542
+
+↓
+
+Hover
+
+#344150
+3. Sombra
+
+Muy suave.
+
+0 6 20 rgba(0,0,0,.18)
+
+No usar sombras negras enormes.
+
+Focus
+
+El focus debe sentirse como "energía".
+
+No como Windows.
+
+En vez de
+
+border azul
+
+hacer
+
+Border
+
++
+
+Glow muy sutil
+
+Ejemplo
+
+Border
+
+#7188FF
+
+Glow
+
+0 0 0 4px rgba(102,125,255,.12)
+
+No más.
+
+Inputs
+
+Estado normal
+
+BG
+
+#111820
+
+Border
+
+#303C48
+
+Hover
+
+Border
+
+#43505F
+
+Focus
+
+Border
+
+#7188FF
+
+Glow
+
+4 px
+Botones
+
+Normal
+
+Gradient
+
+667DFF
+
+↓
+
+9073E8
+
+Hover
+
+No hacerlo más brillante.
+
+Hacerlo un poco más "cercano".
+
++4%
+
+luminosidad
+
+y
+
+scale
+
+1.015
+
+Muy poco.
+
+Click
+
+scale
+
+0.985
+
+durante
+
+90 ms
+
+Da sensación física.
+
+Sidebar
+
+Hover
+
+No poner un fondo muy visible.
+
+Solo
+
+rgba(255,255,255,.04)
+
+Seleccionado
+
+No cambiar.
+
+Solo
+
+Icono
+
+↓
+
+Azul
+
++
+
+texto blanco
+
+El fondo permanece muy discreto.
+
+Cards
+
+Hover
+
+No mover demasiado.
+
+translateY(-1px)
+
+scale(1.005)
+
+Nada más.
+
+Switches
+
+Thumb
+
+Mover
+
+180 ms
+
+Glow
+
+220 ms
+
+Track
+
+160 ms
+Checkboxes
+
+Cuando aparecen
+
+No hacer
+
+fade
+
+Mejor
+
+Scale
+
+0.8
+
+↓
+
+1
+
+con
+
+160 ms
+
+Muy agradable.
+
+Progress Ring
+
+El anillo nunca debe detenerse completamente.
+
+Aunque esté quieto debe sentirse "vivo".
+
+Halo
+
+Animación
+
+Blur
+
+18 px
+
+↓
+
+24 px
+
+↓
+
+18 px
+
+Opacidad
+
+24%
+
+↓
+
+40%
+
+↓
+
+24%
+
+Escala
+
+1
+
+↓
+
+1.035
+
+↓
+
+1
+
+Duración
+
+5.5 s
+Cambio entre pantallas
+
+En vez de
+
+Fade
+
+hacer
+
+Fade
+
++
+
+6 px arriba
+
+↓
+
+posición normal
+
+Duración
+
+260 ms
+Diálogos
+
+Aparecen
+
+Opacity
+
+0
+
+↓
+
+1
+
+y
+
+Scale
+
+0.97
+
+↓
+
+1
+
+Nunca desde 0.8.
+
+Se nota artificial.
+
+Tooltips
+
+Fade
+
+120 ms
+
+Translate
+
+4 px
+
+Nada más.
+
+Dropdown
+
+Animación
+
+Opacity
+
+0
+
+↓
+
+1
+
+Scale
+
+0.98
+
+↓
+
+1
+
+Duración
+
+180 ms
+Scroll
+
+Evitar scroll brusco.
+
+Smooth
+
+220–300 ms
+Animaciones que NO usaría
+
+❌ Bounce.
+
+❌ Elastic.
+
+❌ Overshoot.
+
+❌ Zoom grandes.
+
+❌ Rotaciones.
+
+❌ Ripple estilo Material Design.
+
+❌ Brillos tipo gaming RGB.
+
+❌ Glow permanente en botones.
+
+❌ Hover que cambie completamente de color.
+
+❌ Transiciones superiores a 400 ms.
+
+La sensación que debería transmitir FocusGuard
+
+Piensa en la interfaz como si fuera un lago tranquilo:
+
+Todo responde de inmediato, pero sin sobresaltos.
+Las superficies parecen tener peso.
+Los elementos "respiran" lentamente en lugar de parpadear.
+Los cambios de estado son casi imperceptibles, pero hacen que la aplicación se sienta sólida y de alta calidad.
+
+Ese tipo de microinteracciones suele ser una de las diferencias más notorias entre una aplicación que se percibe como "hecha con un framework" y una que transmite el acabado de un producto premium.
