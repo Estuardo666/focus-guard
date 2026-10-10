@@ -1,0 +1,112 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="TextBlock.homeTitle">
+    <Setter Property="FontSize" Value="28" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="TextBlock.sectionLabel">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+  </Style>
+  <Style Selector="TextBlock.sessionName">
+    <Setter Property="FontSize" Value="19" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="Border.sessionRow">
+    <Setter Property="Padding" Value="24,20" />
+    <Setter Property="Background" Value="{DynamicResource FgSurface2}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+  </Style>
+  <Style Selector="Border.activeSessionRow">
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorderStrong}" />
+    <Setter Property="BorderThickness" Value="1" />
+  </Style>
+  <Style Selector="Border.profileTile">
+    <Setter Property="Width" Value="48" />
+    <Setter Property="Height" Value="48" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusSmall}" />
+    <Setter Property="Background" Value="{DynamicResource FgSecondarySurface}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Border.profileTile TextBlock">
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="FontSize" Value="22" />
+  </Style>
+  <Style Selector="Button.profileSession">
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="Margin" Value="0,0,10,10" />
+    <Setter Property="Padding" Value="20,16" />
+    <Setter Property="Background" Value="{DynamicResource FgSurface2}" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Button.startAction">
+    <Setter Property="Width" Value="NaN" />
+    <Setter Property="Padding" Value="18,10" />
+  </Style>
+  <Style Selector="Button.navItem.selected">
+    <Setter Property="Background" Value="{DynamicResource FgSecondarySurface}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+  </Style>
+  <!-- Fixed desktop composition: quiet surfaces and compact native-sized controls. -->
+  <Style Selector="Border.workPanel">
+    <Setter Property="Background" Value="{DynamicResource FgSurface2}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+  </Style>
+  <Style Selector="Border.card">
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusMedium}" />
+    <Setter Property="Padding" Value="16" />
+  </Style>
+  <Style Selector="Button.primary">
+    <Setter Property="Background" Value="{DynamicResource FgAccent}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusSmall}" />
+    <Setter Property="MinHeight" Value="40" />
+  </Style>
+  <Style Selector="Button.primary:disabled">
+    <Setter Property="Background" Value="{DynamicResource FgSecondarySurface}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+    <Setter Property="Opacity" Value="0.72" />
+  </Style>
+  <Style Selector="Button.startAction">
+    <Setter Property="MinHeight" Value="42" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusSmall}" />
+  </Style>
+  <Style Selector="Button.stopAction">
+    <Setter Property="Width" Value="NaN" />
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusSmall}" />
+  </Style>
+  <Style Selector="TextBox">
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusSmall}" />
+  </Style>
+  <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+    <Setter Property="Background" Value="{DynamicResource FgFieldSurface}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource FgFocusRing}" />
+  </Style>
+  <Style Selector="SelectableTextBlock.caption">
+    <Setter Property="FontSize" Value="{DynamicResource FgFontCaption}" />
+    <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+  </Style>
+  <Style Selector="SelectableTextBlock.validationError">
+    <Setter Property="Foreground" Value="{DynamicResource FgWarning}" />
+  </Style>
+  <Style Selector="ComboBox">
+    <Setter Property="CornerRadius" Value="{DynamicResource FgRadiusSmall}" />
+  </Style>
+  <Style Selector="Border.protectionPill">
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+  </Style>
+  <Style Selector="TextBlock.screenTitle">
+    <Setter Property="FontSize" Value="20" />
+  </Style>
+  <Style Selector="Border.navSidebar">
+    <Setter Property="Padding" Value="8,18,8,12" />
+  </Style>
+  <Style Selector="Button.navItem">
+    <Setter Property="Padding" Value="8,0" />
+  </Style>
+</Styles>

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text.Json;
 
@@ -80,10 +81,104 @@ public sealed record PolicyDelivery(
             }
 
             writer.WriteEndArray();
+            WritePlan(writer, policy.CyclePlan);
+            writer.WriteStartArray("breakApplicationRules");
+            foreach (var rule in policy.BreakApplicationRules ?? [])
+            {
+                WriteApplicationRule(writer, rule);
+            }
+
+            writer.WriteEndArray();
+            writer.WriteStartArray("breakWebsiteRules");
+            foreach (var rule in policy.BreakWebsiteRules ?? [])
+            {
+                WriteWebsiteRule(writer, rule);
+            }
+
+            writer.WriteEndArray();
+            writer.WriteNumber("authorizedPhaseIndex", policy.AuthorizedPhaseIndex);
+            if (policy.AuthorizedPhaseEndUtc is { } phaseEndUtc)
+            {
+                writer.WriteString("authorizedPhaseEndUtc", phaseEndUtc.ToUniversalTime());
+            }
+            else
+            {
+                writer.WriteNull("authorizedPhaseEndUtc");
+            }
             writer.WriteEndObject();
         }
 
         return Convert.ToHexString(SHA256.HashData(stream.ToArray()));
+    }
+
+    private static void WritePlan(Utf8JsonWriter writer, FocusCyclePlan? plan)
+    {
+        if (plan is null)
+        {
+            writer.WriteNull("cyclePlan");
+            return;
+        }
+
+        writer.WriteStartObject("cyclePlan");
+        writer.WriteStartObject("configuration");
+        writer.WriteString("focusDuration", plan.Configuration.FocusDuration.ToString("c", CultureInfo.InvariantCulture));
+        writer.WriteString("shortBreakDuration", plan.Configuration.ShortBreakDuration.ToString("c", CultureInfo.InvariantCulture));
+        writer.WriteString("longBreakDuration", plan.Configuration.LongBreakDuration.ToString("c", CultureInfo.InvariantCulture));
+        writer.WriteNumber("cyclesBeforeLongBreak", plan.Configuration.CyclesBeforeLongBreak);
+        writer.WriteString("terminationMode", plan.Configuration.TerminationMode.ToString());
+        if (plan.Configuration.CycleCount is { } cycleCount)
+        {
+            writer.WriteNumber("cycleCount", cycleCount);
+        }
+        else
+        {
+            writer.WriteNull("cycleCount");
+        }
+
+        if (plan.Configuration.TotalDuration is { } totalDuration)
+        {
+            writer.WriteString("totalDuration", totalDuration.ToString("c", CultureInfo.InvariantCulture));
+        }
+        else
+        {
+            writer.WriteNull("totalDuration");
+        }
+
+        writer.WriteEndObject();
+        writer.WriteStartArray("phases");
+        foreach (var phase in plan.Phases)
+        {
+            writer.WriteStartObject();
+            writer.WriteNumber("index", phase.Index);
+            writer.WriteString("kind", phase.Kind.ToString());
+            writer.WriteString("startUtc", phase.StartUtc.ToUniversalTime());
+            writer.WriteString("endUtc", phase.EndUtc.ToUniversalTime());
+            writer.WriteNumber("focusCycleNumber", phase.FocusCycleNumber);
+            writer.WriteEndObject();
+        }
+
+        writer.WriteEndArray();
+        writer.WriteString("endUtc", plan.EndUtc.ToUniversalTime());
+        writer.WriteEndObject();
+    }
+
+    private static void WriteApplicationRule(Utf8JsonWriter writer, ApplicationRule rule)
+    {
+        writer.WriteStartObject();
+        writer.WriteString("id", rule.Id);
+        writer.WriteString("action", rule.Action.ToString());
+        writer.WriteString("matchKind", rule.MatchKind.ToString());
+        writer.WriteString("value", rule.Value);
+        writer.WriteEndObject();
+    }
+
+    private static void WriteWebsiteRule(Utf8JsonWriter writer, WebsiteRule rule)
+    {
+        writer.WriteStartObject();
+        writer.WriteString("id", rule.Id);
+        writer.WriteString("action", rule.Action.ToString());
+        writer.WriteString("pattern", rule.Pattern);
+        writer.WriteEndObject();
     }
 }
 

@@ -1,0 +1,28 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FocusGuard.Desktop" xmlns:r="using:FocusGuard.Desktop.Resources"
+        x:Class="FocusGuard.Desktop.CompactFocusWindow" x:DataType="vm:FocusViewModel"
+        Title="{x:Static r:UiStrings.CompactTitle}" Width="320" MinWidth="280" SizeToContent="Height"
+        CanResize="False" WindowDecorations="None" ShowInTaskbar="False" Background="{DynamicResource FgSurface}"
+        Topmost="{Binding CompactTopmost, Mode=TwoWay}">
+  <Border BorderBrush="{DynamicResource FgBorder}" BorderThickness="1" CornerRadius="{DynamicResource FgRadiusMedium}" Padding="16">
+    <StackPanel Spacing="10">
+      <Grid ColumnDefinitions="*,40,40" ColumnSpacing="4">
+        <TextBlock Text="{Binding CompactRemainingText}" FontSize="{DynamicResource FgFontMetric}" FontWeight="SemiBold" Foreground="{DynamicResource FgTextPrimary}"
+                   PointerPressed="DragWindow" VerticalAlignment="Center" AutomationProperties.Name="{x:Static r:UiStrings.CompactTitle}" />
+        <Button x:Name="CollapseButton" Grid.Column="1" Classes="ghost desktopIcon" Content="&#xE921;" Click="ToggleCollapsed" ToolTip.Tip="{x:Static r:UiStrings.CompactCollapse}" AutomationProperties.Name="{x:Static r:UiStrings.CompactCollapse}" />
+        <Button Grid.Column="2" Classes="ghost desktopIcon" Content="&#xE711;" Click="CloseCompact" ToolTip.Tip="{x:Static r:UiStrings.CompactClose}" AutomationProperties.Name="{x:Static r:UiStrings.CompactClose}" />
+      </Grid>
+      <TextBlock Text="{Binding ActiveProfileName}" FontWeight="SemiBold" Foreground="{DynamicResource FgTextPrimary}" TextTrimming="CharacterEllipsis" PointerPressed="DragWindow" />
+      <TextBlock Text="{Binding CompactPhaseLabel}" Classes="caption" PointerPressed="DragWindow" />
+      <TextBlock Text="{Binding CompactWarningText}" IsVisible="{Binding CompactHasWarning}" Foreground="{DynamicResource FgWarning}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+      <TextBlock Text="{Binding StrictActiveNotice}" IsVisible="{Binding IsStrictSessionActive}" Foreground="{DynamicResource FgWarning}" TextWrapping="Wrap" />
+      <StackPanel x:Name="Details" Spacing="8">
+        <TextBlock Text="{Binding ActiveObjective}" IsVisible="{Binding HasActiveObjective}" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding ExactEndText}" Classes="caption" />
+        <TextBlock Text="{Binding ServiceHealthLabel}" Classes="caption" TextWrapping="Wrap" />
+        <CheckBox IsChecked="{Binding CompactTopmost}" Content="{x:Static r:UiStrings.CompactPin}" AutomationProperties.Name="{x:Static r:UiStrings.CompactPin}" />
+        <Button Classes="secondary" Content="{x:Static r:UiStrings.CompactOpen}" Click="OpenMainWindow" HorizontalAlignment="Stretch" />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</Window>

@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FocusGuard.Desktop" xmlns:r="using:FocusGuard.Desktop.Resources"
+             x:Class="FocusGuard.Desktop.TodayView" x:DataType="vm:FocusViewModel">
+  <StackPanel Spacing="14">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="4"><TextBlock Text="{x:Static r:UiStrings.TodayTitle}" Classes="screenTitle" /><TextBlock Text="{Binding TodayDateLabel}" Classes="caption" /></StackPanel>
+      <Button Grid.Column="1" Classes="ghost" Content="{x:Static r:UiStrings.RefreshView}" Command="{Binding RefreshTodayCommand}" />
+    </Grid>
+    <TextBlock Text="{Binding TodayError}" Foreground="{DynamicResource FgWarning}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+    <Grid ColumnDefinitions="176,*" ColumnSpacing="20">
+    <StackPanel Spacing="12" IsVisible="{Binding IsTodayLoaded}">
+      <Border Classes="card" Padding="16"><StackPanel Spacing="4"><TextBlock Text="{Binding TodayFocusMinutes}" FontSize="{DynamicResource FgFontMetric}" FontWeight="SemiBold" /><TextBlock Text="{x:Static r:UiStrings.TodayFocusMinutes}" Classes="caption" TextWrapping="Wrap" /></StackPanel></Border>
+      <Border Classes="card" Padding="16"><StackPanel Spacing="4"><TextBlock Text="{Binding TodayCompletedSessions}" FontSize="{DynamicResource FgFontMetric}" FontWeight="SemiBold" /><TextBlock Text="{x:Static r:UiStrings.TodayCompletedSessions}" Classes="caption" TextWrapping="Wrap" /></StackPanel></Border>
+    </StackPanel>
+    <Border Grid.Column="1" Classes="workPanel" Padding="16"><StackPanel Spacing="12">
+    <TextBlock Text="{x:Static r:UiStrings.TodayTimelineTitle}" FontWeight="SemiBold" />
+    <WrapPanel ItemSpacing="16"><TextBlock Text="{x:Static r:UiStrings.FocusPhaseLabel}" Foreground="{DynamicResource FgAccent}" /><TextBlock Text="{x:Static r:UiStrings.BreakStatus}" Foreground="{DynamicResource FgCycleBreak}" /></WrapPanel>
+    <TextBlock Text="{x:Static r:UiStrings.TodayEmpty}" IsVisible="{Binding IsTodayEmpty}" Classes="caption" />
+    <TextBlock Text="{x:Static r:UiStrings.TodayTruncated}" IsVisible="{Binding TodayTimelineTruncated}" Classes="caption" TextWrapping="Wrap" />
+    <ItemsControl ItemsSource="{Binding TodayTimeline}"><ItemsControl.ItemTemplate>
+      <DataTemplate x:DataType="vm:TodaySpanViewModel">
+        <Grid ColumnDefinitions="12,*,Auto" ColumnSpacing="12" Margin="0,0,0,12">
+          <Border Background="{DynamicResource FgCycleBreak}" CornerRadius="{DynamicResource FgRadiusPill}">
+            <Border Background="{Binding AccentBrush}" IsVisible="{Binding IsFocus}" CornerRadius="{DynamicResource FgRadiusPill}" />
+          </Border>
+          <StackPanel Grid.Column="1" Spacing="3"><TextBlock Text="{Binding TimeText}" FontWeight="SemiBold" /><TextBlock Text="{Binding ProfileName}" /><TextBlock Text="{Binding Objective}" Classes="caption" TextWrapping="Wrap" /><TextBlock Text="{Binding Outcome}" Classes="caption" /></StackPanel>
+          <StackPanel Grid.Column="2" Spacing="3"><TextBlock Text="{Binding PhaseLabel}" Classes="caption" /><TextBlock Text="{Binding DurationText}" Classes="caption" /></StackPanel>
+        </Grid>
+      </DataTemplate>
+    </ItemsControl.ItemTemplate></ItemsControl>
+    </StackPanel></Border>
+    </Grid>
+  </StackPanel>
+</UserControl>

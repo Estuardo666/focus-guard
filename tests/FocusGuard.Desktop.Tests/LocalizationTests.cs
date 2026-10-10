@@ -20,11 +20,22 @@ public sealed class LocalizationTests
             Assert.Equal("Quitar", UiStrings.Remove);
             Assert.Contains("recuperación", UiStrings.SaveRecoveryCode);
             Assert.Equal("Abrir FocusGuard", UiStrings.OpenFocusGuard);
+            Assert.Equal("Piloto React", UiStrings.ReactPilotOpen);
+            Assert.Contains("bandeja", UiStrings.ReactPilotOpenDetail);
             Assert.Equal("Salir de FocusGuard", UiStrings.ExitFocusGuard);
+            Assert.Equal("Piloto React", UiStrings.ReactPilotOpen);
+            Assert.Contains("bandeja", UiStrings.ReactPilotOpenDetail);
+            Assert.Equal("Sesión actual", UiStrings.TrayCurrentSession);
+            Assert.Equal("Tiempo restante", UiStrings.TrayTimeRemaining);
+            Assert.Equal("Sin sesión activa", UiStrings.TrayNoActiveSession);
             Assert.Equal("Duplicar perfil", UiStrings.DuplicateProfile);
             Assert.Equal("Renombrar perfil", UiStrings.RenameProfile);
             Assert.Equal("Eliminar perfil", UiStrings.DeleteProfile);
             Assert.Equal("Crear perfil", UiStrings.CreateProfile);
+            Assert.Equal("Iniciar FocusGuard con Windows", UiStrings.SettingsStartupToggle);
+            Assert.Contains("enfoque", UiStrings.SettingsBreakNotifications);
+            Assert.Equal("Subciclo de enfoque {0} iniciado", UiStrings.PhaseNotificationFocusStartedTitle);
+            Assert.Equal("Descanso corto completado", UiStrings.PhaseNotificationShortBreakEndedTitle);
             Assert.Contains("Escribe", UiStrings.StrictConfirmationPrompt);
             Assert.Equal(UiStrings.StrictPhraseFirstWords, UiStrings.Get("StrictPhraseFirstWords"));
         }
@@ -60,6 +71,11 @@ public sealed class LocalizationTests
             Assert.Equal("Rename profile", UiStrings.RenameProfile);
             Assert.Equal("Delete profile", UiStrings.DeleteProfile);
             Assert.Equal("Create profile", UiStrings.CreateProfile);
+            Assert.Equal("React pilot", UiStrings.ReactPilotOpen);
+            Assert.Contains("tray", UiStrings.ReactPilotOpenDetail);
+            Assert.Equal("React pilot", UiStrings.ReactPilotOpen);
+            Assert.Contains("tray", UiStrings.ReactPilotOpenDetail);
+            Assert.Equal("Start FocusGuard with Windows", UiStrings.SettingsStartupToggle);
             Assert.Contains("Type", UiStrings.StrictConfirmationPrompt);
             Assert.Contains("Focus", UiStrings.StrictPhraseSecondWords);
         }

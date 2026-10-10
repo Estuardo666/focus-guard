@@ -1,0 +1,34 @@
+# FG204 — Revisioned weekly schedule editing
+Plan: additive authenticated revisioned schedule IPC retaining legacy messages; semantic schedule fingerprint, CAS under service gate and schedule-worker-owned state preservation. Host exact normal-only save/enable/delete requests from saved profile snapshots, no caller policy rules, finite duration, blocked-rule consent and one-use operation IDs. React editor with explicit automatic-start consent, local clock plus zone, weekdays, profile/duration, service-returned next occurrence and conflict review. Style follows five-skill design contract. Build-only verification, no tests per current continuation instructions. Package0.1.52. Existing classic IPC and installed parity remain separate gates.
+
+Service and contracts: new additive IPC messages keep legacy schedule protocol/Classic reads available. `WeeklyScheduleRevision` fingerprints schedule identity/name/day/local minute/time zone/enabled/normal activation duration/profile/rule snapshot. Revisioned list returns immutable configuration revisions and blocked-rule counts. Revisioned save/create, pause/enable, delete compare under the same service workflow gate used by schedule execution, so the scheduler and editor cannot write concurrently. Creation requires no current ID/revision; update/enable/delete require current revision. Stale/overlap/limit/missing are known refusals with a fresh schedule snapshot. Legacy API remains unchanged.
+
+Host: only verified pilot may mutate; fresh inactive/terminal service status; per-document bridge/request/rate/deadline gate plus bounded consumed operation IDs. Save takes a profile id, loads the profile itself, compiles a finite normal non-strict activation snapshot and rejects requested enforcement without blocked rules. Page supplies no executable path, rule list, recovery credential, or raw activation payload. Read-only fallback supports an older service but leaves revisions/editing disabled; there is no mutation fallback/replay.
+
+React: schedule cards show configured wall clock with TimeZoneId, service next occurrence, last result, profile and enforcement. New/edit form lists saved profiles, weekdays, local clock, zone, duration, optional blocking with counts, and explicit separate consent checkbox for future automatic starts. Save review restates selected profile and automatic run; enable/pause/delete each have own confirmation. Status must be ready, inactive and pilot-enabled. Unknown write disables retry until schedule list is explicitly reloaded. Schedule snapshot gets fresh service projection after accepted change; no locally invented next occurrence.
+
+Validation this checkpoint: full solution Release build0 warnings/errors and UI TS/production CSP. No test suites added or run. Build/package0.1.52 pending. Existing FG162 component schedule behavior exists, but new revision path has not received its own regression test, visual screenshot, Windows timezone/DST live review, or installed auto-run test. No owner schedule, installed schedule, session or profile was changed.
+
+| Before | After | Why |
+| --- | --- | --- |
+| React could read schedules only | Revisioned schedule mutation messages | brings the next Phase8 workflow to the new UI |
+| Two windows could overwrite stale schedule data | Service compares semantic revision under worker/editor gate | preserves weekly rule edits and the runner's current schedule state |
+| A saved schedule could hide what will auto-start | Review shows days, local time/zone, saved profile, duration, blocking and separate auto-start consent | user can assess each future launch before confirming |
+| Browser supplied policy data | Native host compiles policy from saved profile | the page selects a profile without constructing activation rules |
+
+Editor React: new/edit form binds profile and revision from the page snapshot. Disabled when host lacks new revisioned capability. A new schedule stores the selected saved profile's immutable normal policy snapshot through the native host; the page cannot submit policy rules. A profile page may be switched while the old scheduled profile option remains visible, with old saved block counts used for the existing profile. Enforcement cannot be checked when no blocked rules exist. New schedules are paused by default; automatic activation requires a separate explicit consent checkbox and a service review. Edit/save, enable/pause, and delete each have a separate confirmation. CAS conflict/overlap/reference/limit errors leave automatic scheduling unchanged and refreshable. Timeout/exception is unknown, no mutation retry. Existing protocol stays available and old schedule list is readable/editing-disabled when service lacks revisioned endpoint.
+
+Performance refinement during asset build: previous all-in-one host.js exceeded Vite's 500kB warning after schedule editor. The editor now loads as local `chunks/ScheduleEditor.js` only when the schedules tab renders; production `host.js`489.66kB gzip148.11kB, schedule chunk12.32kB gzip3.33kB. The host explicitly packages/serves that one same-origin asset; verifier checks chunk naming/content and the installer builder checks embedded hash. CSP remains self-only and no dynamic remote origin.
+
+Final build evidence: full solution Release build0 warnings/errors; React TS/production build and CSP/local asset verifier passed. No tests or interactive screenshots were run this checkpoint under current continuation instructions. Installer0.1.52 generation pending. Service itself was not installed/started; no schedules/profiles/session were altered.
+
+Final design review record (Before/After/Why):
+
+| Before | After | Why |
+| --- | --- | --- |
+| Schedules were read-only in React | Revisioned save/pause/enable/delete with distinct review | completes schedule configuration while guarding automatic launches |
+| Startup loaded the full schedule form code | ScheduleEditor is a same-origin lazy chunk; main host.js489.66kB gzip148.11kB, schedule editor12.32kB gzip3.33kB | keeps schedule cost off users who open another tab |
+| Weekly wall time could be mistaken for owner local time | Clock shown beside service schedule TimeZoneId; next run comes only from service | makes DST/time-zone meaning explicit |
+| Page could submit a profile's arbitrary rules | Native host loads saved profile and snapshots its current normal rules | schedule policy remains a saved-profile choice |
+
+Final package0.1.52 generated into fresh package-final directory; installer and menu ZIP created, builder checks for embedded host resources including chunks/ScheduleEditor.js completed. Setup SHA256 01A73D7F8A83720E3DED478BBC5994B23046226A10AE83F144F6482A4B0B7D32. Not installed. Release solution build0 warnings/errors; UI TypeScript/production CSP build passed. No tests or visual screenshots run in this checkpoint; actual running-service DST/next occurrence and installation acceptance remain open.

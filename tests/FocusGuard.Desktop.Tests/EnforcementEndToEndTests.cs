@@ -1,3 +1,4 @@
+using FocusGuard.Client;
 using FocusGuard.Contracts;
 using FocusGuard.Domain;
 using FocusGuard.Monitoring;

@@ -4,6 +4,8 @@
  * without ending the session.
  */
 
+import { releaseBlockedNavigationIfAllowed } from "./navigation-enforcement.js";
+
 const CAPTURE_MESSAGE = "focusGuardCapture";
 const RING_CIRCUMFERENCE = 2 * Math.PI * 50;
 
@@ -104,6 +106,21 @@ async function loadSession() {
   }
 
   session = { startUtc, endUtc, isStrict: policy.isStrict === true };
+}
+
+async function releaseIfAllowed() {
+  if (!target) {
+    return false;
+  }
+
+  const stored = await chrome.storage.local.get([
+    "focusGuardPolicy",
+    "focusGuardEnforcementConfirmed"
+  ]);
+  return releaseBlockedNavigationIfAllowed(
+    target.toString(),
+    stored,
+    (url) => window.location.replace(url));
 }
 
 function renderSessionOver() {
@@ -214,13 +231,20 @@ elements.captureForm.addEventListener("submit", async (event) => {
 });
 
 await loadSession();
-render();
+if (!await releaseIfAllowed()) {
+  render();
+}
 setInterval(() => render(), 1_000);
 
 // The policy is refreshed by the service worker heartbeat, so following it lets the page
 // notice the session ending without polling the service itself.
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === "local" && changes.focusGuardPolicy) {
-    void loadSession().then(() => render());
+  if (areaName === "local" &&
+      (changes.focusGuardPolicy || changes.focusGuardEnforcementConfirmed)) {
+    void loadSession().then(async () => {
+      if (!await releaseIfAllowed()) {
+        render();
+      }
+    });
   }
 });

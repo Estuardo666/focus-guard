@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="WindowTitle" xml:space="preserve"><value>FocusGuard</value></data>
+  <data name="ElevatedDescription" xml:space="preserve"><value>FocusGuard debe ejecutarse como el usuario que inició sesión. Cierra esta ventana e inícialo sin privilegios de administrador.</value></data>
+  <data name="RuntimeMissingTitle" xml:space="preserve"><value>Se requiere WebView2 Runtime</value></data>
+  <data name="RuntimeMissingDescription" xml:space="preserve"><value>FocusGuard no encontró Microsoft Edge WebView2 Runtime. Instala o repara el runtime y vuelve a intentarlo. No se inició ni modificó ninguna sesión.</value></data>
+  <data name="HostFailureTitle" xml:space="preserve"><value>FocusGuard no pudo abrir su interfaz local</value></data>
+  <data name="HostFailureDescription" xml:space="preserve"><value>No se pudo iniciar la interfaz local. La sesión de enfoque no cambió. Vuelve a intentarlo.</value></data>
+  <data name="RendererFailureTitle" xml:space="preserve"><value>La interfaz dejó de responder</value></data>
+  <data name="RendererFailureDescription" xml:space="preserve"><value>FocusGuard volverá a intentar abrir la interfaz local. El servicio conserva el control de las sesiones activas.</value></data>
+  <data name="Retry" xml:space="preserve"><value>Reintentar</value></data>
+  <data name="Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="ShellTitle" xml:space="preserve"><value>FocusGuard</value></data>
+  <data name="ShellDescription" xml:space="preserve"><value>Este shell local está preparado para la interfaz React. No inicia ni detiene sesiones de enfoque.</value></data>
+  <data name="ShellReady" xml:space="preserve"><value>La interfaz local está cargada.</value></data>
+  <data name="BridgeUnavailable" xml:space="preserve"><value>El acceso al servicio está desactivado hasta integrar la autorización de la Fase 4.</value></data>
+  <data name="RecoveryCodeFileTitle" xml:space="preserve"><value>Guardar código de recuperación de FocusGuard</value></data>
+</root>

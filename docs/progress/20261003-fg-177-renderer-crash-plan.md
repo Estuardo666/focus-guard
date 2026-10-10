@@ -1,0 +1,3 @@
+# FG177 — Native renderer crash evidence
+
+Use fixed native smoke flag and scoped CoreWebView2.CallDevToolsProtocolMethodAsync(Page.crash,{}) on the smoke WebView instance. No PID targeting, no global process kill, no JS bridge method or installed endpoint. Unique smoke userDataFolder and default denied IPC composition retained. Require actual RenderProcessExited ProcessFailed event then fresh local navigation/document/bridge reply; report exit0 only after these signals. Timeout20s and no synthetic DispatchRendererFailure counted. Regenerate/validate standalone0.1.27 after changed host; installed LocalService gate remains outstanding.

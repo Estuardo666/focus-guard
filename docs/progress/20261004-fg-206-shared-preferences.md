@@ -1,0 +1,15 @@
+# FG206 — Shared desktop preferences
+Plan: bridge only safe presentation/workflow preferences through DesktopSettingsStore in owner LocalAppData; add UI language compatibly. Read/save exact enum+range fields; preserve existing hidden fields and profile themes. React persist theme/language/reduced-motion/session-end/cycle notices/enforcement default/last duration/mode/preset, settings tab. No per-profile override, startup/tray or compact promise without implementation. Build-only; package0.1.54. No tests per active continuation instruction. Break-policy choice and remaining phases4–10 acceptance remain open.
+
+Migration semantics: React now uses DesktopSettingsStore's existing per-owner JSON location, which is shared with Classic. The bridge only exposes the dedicated preference DTO; load/save cannot expose the dictionary of profile themes, process start registration or unrelated fields. Save merges the allowed fields into a fresh settings object and verifies readback. Theme/language header controls persist on acknowledgement; reduce-motion is passed into MotionConfig and OS preference stays respected; default blocking, timer/cycle mode and duration seed session setup. SessionEndPresentation and CyclePhaseNotifications remain in the DTO/store but are not rendered as editable React controls in this checkpoint because the new host does not yet present native summary/toasts. Compact/tray/startup/profile-specific theme remain unsupported. No service policy changes.
+
+Build evidence: pending at checkpoint creation. No tests or screenshots this turn. Package0.1.54 pending; migration phases4–10 active. Five requested design skills continue through FOCUSGUARD_DESIGN.md.
+
+Build check: TypeScript initially found the missing new locale key and host constructor field; both were fixed. Full solution Release build then succeeded with0 warnings/errors. No test suites added/run. Package0.1.54 pending.
+
+Final Release0.1.54 generated into fresh package-final output. Installer and menu ZIP present; embedded Host/React resources checked by builder including local lazy chunks. SHA256 9163ACDF2F40BDA75EF76FB18864AE4FA58950025B11789C8AD4FAEA33D9ED64; not installed. Full solution Release build0 warnings/errors, React strict TS and production verifier passed. No tests or screenshots run. React leaves session-end presentation, cycle-phase notification, per-profile theme, compact/tray/startup controls read-only/pending.
+
+
+## Seguimiento FG-207
+
+FG207 conectó en React `SessionEndPresentation` y `CyclePhaseNotifications`, ya compartidos por `DesktopSettingsStore`: resumen modal, resumen con fondo más atenuado, aviso dentro de la app o ninguno; aviso al iniciar enfoque/pausa corta. Las transiciones se detectan sólo entre snapshots consecutivos `ready` del mismo sessionId; stale, desconexión y primer snapshot reinician la referencia para no anunciar sucesos pasados al reconectar. El aviso de fin consulta el resumen final autoritativo del servicio; repetir sólo precarga los minutos y vuelve al flujo normal de revisión. Paquete0.1.55 generado; build Release y hashes incrustados verificados; no instalado.

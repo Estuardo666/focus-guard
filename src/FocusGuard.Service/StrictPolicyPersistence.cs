@@ -279,9 +279,17 @@ public sealed class StrictPolicySnapshotStore
             ?? throw new InvalidDataException("Application rules are required.");
         var websiteRules = snapshot.Policy.WebsiteRules
             ?? throw new InvalidDataException("Website rules are required.");
-        if (applicationRules.Count + websiteRules.Count > MaximumRuleCount
+        var breakApplicationRules = snapshot.Policy.BreakApplicationRules ?? [];
+        var breakWebsiteRules = snapshot.Policy.BreakWebsiteRules ?? [];
+        if (applicationRules.Count + websiteRules.Count
+                + breakApplicationRules.Count + breakWebsiteRules.Count > MaximumRuleCount
             || applicationRules.Any(rule => !IsValid(rule))
-            || websiteRules.Any(rule => !IsValid(rule)))
+            || websiteRules.Any(rule => !IsValid(rule))
+            // Break exceptions are Block-only at ingress (CycleIpcProtocol, FG-216); snapshots written by older
+            // builds carry Allow, so persistence accepts any defined action and leaves the semantics to ingress.
+            || breakApplicationRules.Any(rule => !IsValid(rule))
+            || breakWebsiteRules.Any(rule => !IsValid(rule))
+            || snapshot.Policy.CyclePlan is { } plan && !IsValid(plan, snapshot.Policy.EndUtc))
         {
             throw new InvalidDataException("The strict policy rules are invalid.");
         }
@@ -302,6 +310,18 @@ public sealed class StrictPolicySnapshotStore
         && !string.IsNullOrWhiteSpace(rule.Pattern)
         && rule.Pattern.Length <= 32_768
         && !rule.Pattern.Contains('?', StringComparison.Ordinal);
+
+    private static bool IsValid(FocusCyclePlan plan, DateTimeOffset policyEndUtc) =>
+        plan.Phases.Count > 0
+        && plan.EndUtc == policyEndUtc
+        && plan.Phases[^1].EndUtc == plan.EndUtc
+        && plan.Phases.All(phase =>
+            phase.Index >= 0
+            && Enum.IsDefined(phase.Kind)
+            && phase.FocusCycleNumber > 0
+            && phase.StartUtc.Offset == TimeSpan.Zero
+            && phase.EndUtc.Offset == TimeSpan.Zero
+            && phase.EndUtc > phase.StartUtc);
 
     private static DateTimeOffset MaxUtc(DateTimeOffset left, DateTimeOffset right) =>
         left.ToUniversalTime() >= right.ToUniversalTime()

@@ -1,0 +1,218 @@
+<Window
+    x:Class="FocusGuard.Desktop.TrayFlyoutWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:FocusGuard.Desktop"
+    xmlns:resources="using:FocusGuard.Desktop.Resources"
+    x:DataType="vm:FocusViewModel"
+    Title="FocusGuard"
+    Width="420"
+    Height="560"
+    CanResize="False"
+    ShowInTaskbar="False"
+    Topmost="True"
+    WindowStartupLocation="Manual"
+    WindowDecorations="None"
+    ExtendClientAreaToDecorationsHint="True"
+    TransparencyLevelHint="AcrylicBlur,Transparent"
+    Background="Transparent"
+    KeyDown="FlyoutKeyDown">
+
+  <Border
+      Margin="12"
+      Padding="24"
+      CornerRadius="{DynamicResource FgRadiusExtraLarge}"
+      Background="{DynamicResource FgSurface1}"
+      BorderBrush="{DynamicResource FgBorderStrong}"
+      BorderThickness="1"
+      BoxShadow="{DynamicResource FgStrictModalShadow}">
+    <Grid RowDefinitions="Auto,18,*,18,Auto">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <Border
+            Width="52"
+            Height="52"
+            CornerRadius="{DynamicResource FgRadiusLarge}"
+            Background="{DynamicResource ProfileAccentSoft}">
+          <TextBlock
+              Text="&#xE83D;"
+              FontFamily="Segoe Fluent Icons"
+              FontSize="27"
+              Foreground="{Binding ProfileAccentBrush}"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center" />
+        </Border>
+
+        <StackPanel Grid.Column="1" Margin="14,1,0,0" Spacing="3">
+          <TextBlock
+              Text="FocusGuard"
+              FontSize="20"
+              FontWeight="SemiBold"
+              Foreground="{DynamicResource FgTextPrimary}" />
+          <TextBlock
+              Text="{Binding StatusPillText}"
+              FontSize="{DynamicResource FgFontBody}"
+              Foreground="{DynamicResource FgTextSecondary}" />
+        </StackPanel>
+
+        <Border
+            Grid.Column="2"
+            Width="28"
+            Height="28"
+            CornerRadius="{DynamicResource FgRadiusPill}"
+            Background="{DynamicResource FgSuccessSoft}"
+            VerticalAlignment="Center"
+            AutomationProperties.Name="{Binding StatusPillText}">
+          <Ellipse
+              Width="10"
+              Height="10"
+              Fill="{DynamicResource FgSuccess}"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center" />
+        </Border>
+      </Grid>
+
+      <Border
+          Grid.Row="2"
+          Padding="18"
+          CornerRadius="{DynamicResource FgRadiusLarge}"
+          Background="{DynamicResource FgSurface2}"
+          BorderBrush="{DynamicResource FgBorder}"
+          BorderThickness="1">
+        <Grid RowDefinitions="Auto,18,Auto,18,Auto,18,Auto,18,Auto">
+          <Grid ColumnDefinitions="24,*,Auto">
+            <TextBlock Classes="trayGlyph" Text="&#xE823;" />
+            <TextBlock Grid.Column="1" Classes="trayLabel" Text="{x:Static resources:UiStrings.TrayCurrentSession}" />
+            <TextBlock
+                Grid.Column="2"
+                Text="{Binding ProfileName}"
+                FontSize="15"
+                FontWeight="SemiBold"
+                Foreground="{DynamicResource FgTextPrimary}"
+                TextTrimming="CharacterEllipsis"
+                MaxWidth="155" />
+          </Grid>
+
+          <Grid Grid.Row="2" ColumnDefinitions="24,*,Auto">
+            <TextBlock Classes="trayGlyph" Text="&#xE916;" />
+            <TextBlock Grid.Column="1" Classes="trayLabel" Text="{x:Static resources:UiStrings.TrayTimeRemaining}" />
+            <TextBlock
+                Grid.Column="2"
+                Text="{Binding RemainingText}"
+                IsVisible="{Binding IsActive}"
+                FontSize="18"
+                FontWeight="SemiBold"
+                Foreground="{Binding ProfileAccentBrush}" />
+            <TextBlock
+                Grid.Column="2"
+                Text="{x:Static resources:UiStrings.TrayNoActiveSession}"
+                IsVisible="{Binding IsInactive}"
+                FontSize="{DynamicResource FgFontBody}"
+                Foreground="{DynamicResource FgTextTertiary}" />
+          </Grid>
+
+          <Grid Grid.Row="4" ColumnDefinitions="24,*,Auto">
+            <TextBlock Classes="trayGlyph" Text="&#xE774;" />
+            <TextBlock Grid.Column="1" Classes="trayLabel" Text="{x:Static resources:UiStrings.TrayWebsitesBlocked}" />
+            <TextBlock Grid.Column="2" Classes="trayValue" Text="{Binding WebsiteRuleCount}" />
+          </Grid>
+
+          <Grid Grid.Row="6" ColumnDefinitions="24,*,Auto">
+            <TextBlock Classes="trayGlyph" Text="&#xE737;" />
+            <TextBlock Grid.Column="1" Classes="trayLabel" Text="{x:Static resources:UiStrings.TrayApplicationsBlocked}" />
+            <TextBlock Grid.Column="2" Classes="trayValue" Text="{Binding ApplicationRuleCount}" />
+          </Grid>
+
+          <Border
+              Grid.Row="7"
+              Margin="0,16,0,0"
+              Padding="12,9"
+              CornerRadius="{DynamicResource FgRadiusMedium}"
+              Background="{DynamicResource FgWarningSoft}"
+              IsVisible="{Binding IsStrictSessionActive}">
+            <TextBlock
+                Text="{Binding StrictActiveNotice}"
+                TextWrapping="Wrap"
+                FontSize="{DynamicResource FgFontCaption}"
+                Foreground="{DynamicResource FgWarning}" />
+          </Border>
+
+          <Border
+              Grid.Row="8"
+              Margin="0,16,0,0"
+              Padding="12,10"
+              CornerRadius="{DynamicResource FgRadiusMedium}"
+              Background="{DynamicResource FgSurface3}"
+              IsVisible="{Binding IsCycleSession}">
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding CurrentPhaseLabel}" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding CycleProgressText}" Classes="caption" />
+              <TextBlock Text="{Binding NextPhaseText}" Classes="caption" />
+              <Button
+                  Theme="{StaticResource FgNavButton}"
+                  Content="{x:Static resources:UiStrings.ContinueFocusNow}"
+                  Command="{Binding SkipBreakCommand}"
+                  IsVisible="{Binding CanSkipBreak}"
+                  AutomationProperties.Name="Continue focus now" />
+            </StackPanel>
+          </Border>
+        </Grid>
+      </Border>
+
+      <StackPanel Grid.Row="4" Spacing="4">
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+          <Button Theme="{StaticResource FgNavButton}" Content="{x:Static resources:UiStrings.CompactMode}" Click="CompactClick" AutomationProperties.Name="{x:Static resources:UiStrings.CompactMode}" />
+          <Button Grid.Column="1" Theme="{StaticResource FgNavButton}" Content="{x:Static resources:UiStrings.ReactPilotOpen}" Click="ReactPilotClick" ToolTip.Tip="{x:Static resources:UiStrings.ReactPilotOpenDetail}" AutomationProperties.Name="{x:Static resources:UiStrings.ReactPilotOpen}" />
+        </Grid>
+        <Button
+            Theme="{StaticResource FgNavButton}"
+            Click="OpenFocusGuardClick"
+            AutomationProperties.Name="{x:Static resources:UiStrings.OpenFocusGuard}">
+          <Grid ColumnDefinitions="22,*">
+            <TextBlock Classes="icon" Text="&#xE8A7;" />
+            <TextBlock Grid.Column="1" Margin="12,0,0,0" Text="{x:Static resources:UiStrings.OpenFocusGuard}" />
+          </Grid>
+        </Button>
+        <Button
+            Theme="{StaticResource FgNavButton}"
+            Click="SettingsClick"
+            AutomationProperties.Name="{x:Static resources:UiStrings.SettingsNavigation}">
+          <Grid ColumnDefinitions="22,*,Auto">
+            <TextBlock Classes="icon" Text="&#xE713;" />
+            <TextBlock Grid.Column="1" Margin="12,0,0,0" Text="{x:Static resources:UiStrings.SettingsNavigation}" />
+            <TextBlock Grid.Column="2" Classes="icon" Text="&#xE76C;" FontSize="12" />
+          </Grid>
+        </Button>
+        <Button
+            Theme="{StaticResource FgNavButton}"
+            Click="ExitFocusGuardClick"
+            AutomationProperties.Name="{x:Static resources:UiStrings.ExitFocusGuard}">
+          <Grid ColumnDefinitions="22,*">
+            <TextBlock Classes="icon" Text="&#xE7E8;" />
+            <TextBlock Grid.Column="1" Margin="12,0,0,0" Text="{x:Static resources:UiStrings.ExitFocusGuard}" />
+          </Grid>
+        </Button>
+      </StackPanel>
+    </Grid>
+  </Border>
+
+  <Window.Styles>
+    <Style Selector="TextBlock.trayGlyph">
+      <Setter Property="FontFamily" Value="Segoe Fluent Icons" />
+      <Setter Property="FontSize" Value="17" />
+      <Setter Property="Foreground" Value="{Binding ProfileAccentBrush}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.trayLabel">
+      <Setter Property="Margin" Value="10,0,0,0" />
+      <Setter Property="FontSize" Value="{DynamicResource FgFontBody}" />
+      <Setter Property="Foreground" Value="{DynamicResource FgTextSecondary}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.trayValue">
+      <Setter Property="FontSize" Value="15" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource FgTextPrimary}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+  </Window.Styles>
+</Window>

@@ -1,0 +1,9 @@
+# FG182 — Owner-present installed idle service restart
+
+Owner executed prepared guarded script in elevated PowerShell. Service PID32572 ->21696, ServiceReady/BrowserReady true, stateInactive. Agent PID2236/session1/creation1791066764168 unchanged. Readonly independent SCM/current installed Diagnostic status matches Running/LocalService/PID21696 and Ready/extensionReady/Inactive/zero/no session IDs. Current Codex executor remains non-elevated. No machine operation performed by Codex.
+
+This proves an actual idle installed service restart, restored authenticated control and accepted NativeMessaging-role heartbeat on a new service instance. Same Agent PID proves process continuity only, not Agent handshake/policy acknowledgement. Inactive is expected: normal sessions are not restart-persisted and guarded test had no active session. Do not claim active strict/recovery/enforcement continuity.
+
+Next acceptance: positive real Agent policy acknowledgement and both channel confirmation, preferably using a normal finite allow-only profile (no Block rules, no strict/recovery) through the existing trusted Avalonia UI. Requested process/browser channels are selected by nonempty rules; allow-only policy performs no closure/redirect under current matchers. Need owner-generated activation because current installed Diagnostic CLI exposes only activate-strict and readonly commands; do not use strict merely to make validation easier. No changes to engine, accounts, ACLs or deployed manifests. Actual blocking test remains separate owner-present gate. Host real status/normal close/reopen and isolated renderer-crash proofs remain FG181/180.
+
+Evidence artifacts/fg182/owner-restart-receipt.json and status-after-owner-restart.json. Broad goal remains incomplete. No shipped source changed; no new installer needed.

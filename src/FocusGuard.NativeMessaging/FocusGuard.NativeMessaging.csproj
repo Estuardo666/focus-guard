@@ -3,6 +3,7 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../FocusGuard.Ipc.Windows/FocusGuard.Ipc.Windows.csproj" />
     <ProjectReference Include="../FocusGuard.Domain/FocusGuard.Domain.csproj" />
     <ProjectReference Include="../FocusGuard.Contracts/FocusGuard.Contracts.csproj" />
   </ItemGroup>

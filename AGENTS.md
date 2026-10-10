@@ -20,6 +20,7 @@ For every task:
 8. Update `TASKS.md`.
 9. Record a checkpoint in `docs/progress/`.
 10. Continue only when the current acceptance criteria pass.
+11. After every change that affects a shipped component, regenerate and validate the versioned standalone installer before reporting completion.
 
 ## Autonomous execution rules
 

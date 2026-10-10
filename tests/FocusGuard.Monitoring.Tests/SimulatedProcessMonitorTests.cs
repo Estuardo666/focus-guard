@@ -71,6 +71,58 @@ public sealed class SimulatedProcessMonitorTests
         Assert.Empty(monitor.Evaluate(policy, [new ProcessSnapshot("instance-1", "blocked.exe")]));
     }
 
+    [Fact]
+    public void ExitedProcessIsReleasedFromDeduplicationState()
+    {
+        var clock = new TestTimeProvider(DateTimeOffset.UtcNow);
+        var monitor = new SimulatedProcessMonitor(TimeSpan.Zero, clock);
+        var policy = CreatePolicy(
+            clock.GetUtcNow(),
+            TimeSpan.FromMinutes(5),
+            new ApplicationRule(
+                Guid.NewGuid(),
+                RuleAction.Block,
+                ApplicationMatchKind.FileName,
+                "blocked.exe"));
+        var snapshot = new ProcessSnapshot("instance-1", "blocked.exe");
+
+        Assert.Single(monitor.Evaluate(policy, [snapshot]));
+        monitor.Evaluate(policy, []);
+
+        Assert.Equal(
+            ProcessActionKind.RequestGracefulClose,
+            Assert.Single(monitor.Evaluate(policy, [snapshot])).Kind);
+    }
+
+    [Fact]
+    public void CompiledRuleIndexKeepsSteadyStateAllocationsBounded()
+    {
+        var clock = new TestTimeProvider(DateTimeOffset.UtcNow);
+        var monitor = new SimulatedProcessMonitor(TimeSpan.Zero, clock);
+        var rules = Enumerable.Range(0, 10_000)
+            .Select(index => new ApplicationRule(
+                Guid.NewGuid(),
+                RuleAction.Block,
+                ApplicationMatchKind.FileName,
+                $"process-{index}.exe"))
+            .ToArray();
+        var policy = CreatePolicy(clock.GetUtcNow(), TimeSpan.FromMinutes(5), rules);
+        var snapshot = new ProcessSnapshot("stable-instance", @"C:\Apps\process-9999.exe");
+        monitor.Evaluate(policy, [snapshot]);
+        monitor.Evaluate(policy, [snapshot]);
+
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        for (var iteration = 0; iteration < 100; iteration++)
+        {
+            monitor.Evaluate(policy, [snapshot]);
+        }
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+
+        Assert.True(
+            allocated < 256 * 1024,
+            $"Steady-state rule evaluation allocated {allocated:N0} bytes.");
+    }
+
     private static EnforcementPolicy CreatePolicy(DateTimeOffset startUtc, TimeSpan duration, params ApplicationRule[] rules)
     {
         var session = Session.Create(ProfileId.New(), startUtc, duration, StrictModeOptions.Normal).Value!

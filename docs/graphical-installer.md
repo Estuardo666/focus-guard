@@ -1,18 +1,21 @@
 # FocusGuard graphical installer
 
 The distribution includes `FocusGuard.Setup.exe`, a self-contained Windows
-installer UI. Its embedded manifest requests administrator elevation. The GUI
-delegates installation and uninstallation to the reviewed PowerShell scripts;
-it does not duplicate service, ACL, native-host, or rollback logic.
+installer with its complete, version-matched product payload embedded. Its
+manifest requests administrator elevation. At startup it extracts the bounded
+payload into a unique temporary directory and delegates installation and
+uninstallation to the reviewed PowerShell scripts; it does not duplicate
+service, ACL, native-host, or rollback logic.
 
 Branding comes from `assets/branding/focusguard-icon.png` (the owner-provided
 shield/camera icon). The build preserves that source and generates the Setup
 `.ico` plus the 16/32/48/128 pixel browser icons from it.
 
-Keep the executable beside `install-focusguard.ps1`, `uninstall-focusguard.ps1`,
-`publish/`, `native-messaging/`, `browser-extension/`, and `manifest.json`.
-The operation log shows script output and exit status. Uninstallation requires
-confirmation and remains guarded by strict-session recovery checks.
+The executable can be copied and run by itself. Adjacent scripts or `publish/`
+folders are not used by the production build, preventing a new Setup UI from
+silently installing an old payload. The operation log shows script output and
+exit status. Uninstallation requires confirmation and remains guarded by
+strict-session recovery checks.
 
 Build with `.\scripts\build-installer.ps1`. The executable is at
 `artifacts/installer/FocusGuard-0.1.0/FocusGuard.Setup.exe`, and the complete
@@ -36,3 +39,9 @@ The FG-120 package isolates FocusGuard-owned button/navigation/preset templates
 from Fluent state painting and applies the calm-motion review. It is in
 `artifacts/installer/FocusGuard-0.1.0-calm-motion/`, with complete archive
 `artifacts/installer/FocusGuard-0.1.0-calm-motion-win-x64.zip`.
+
+The FG-159 single-click reinstall candidate is the versioned standalone
+`artifacts/installer/FocusGuard-0.1.9-Setup.exe`, with complete archive
+`artifacts/installer/FocusGuard-0.1.9-win-x64.zip`. Its source, embedded payload,
+browser packages, and graphical smoke test are validated; the owner-present
+installed reinstall drill remains pending.

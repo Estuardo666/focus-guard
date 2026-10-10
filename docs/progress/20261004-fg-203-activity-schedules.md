@@ -1,0 +1,15 @@
+# FG203 — Today and weekly schedule read views
+Plan: connect existing IPC Today and weekly schedule list as read-only typed host methods, minimal bounded DTO projections, display local-calendar-day focus/timeline and weekly schedule summaries in new React tabs. No schedule edits, strict credentials, raw rule values or local activity inventions. Preserve read errors and local-time DST day boundaries. Build-only verification under current continuation instruction; package0.1.51. Captures, playback, schedule edits, preferences/tray, installed acceptance and break-policy decision remain open.
+
+Implemented exact native read methods `today.get` (`startUtc/endUtc`) and `schedules.list` (empty object), authorized under existing verified read-profile capability. Today request uses UTC <=2-day contract; service timeline projected to max128 simple phase spans with id/name/kind/bounds/completed, no rule/policy data. Host checks counts, range, sorting, phase-kind/UTC/name/id and payload size. Schedule projection omits activation payload and profile rules; validates <=12, unique IDs, bounded name, weekday/minute/timezone, duration/counts and UTC occurrences. React calculates current local calendar day's two UTC boundaries so DST shorter/longer days are represented; renders focus seconds/completions/timeline/truncation. Schedule view shows weekly day selection, configured local clock and explicit time-zone ID, current service next occurrence and last outcome. Every panel is read-only.
+
+Validation: source builds only this checkpoint (no tests added/run per current continuation instruction): full .NET solution Release build0 warnings/errors; React TypeScript strict check, Vite production dist and CSP/local asset verifier passed. Package0.1.51 pending. No desktop services, actual owner data, schedule entries or sessions changed. Design uses current FOCUSGUARD_DESIGN five-skill contract: clear chronology/card hierarchy, local typography/colors, no invented chart, no decorative motion. Screenshots/live installed acceptance not performed.
+
+| Before | After | Why |
+| --- | --- | --- |
+| Connection tab only | Today activity summary and phase chronology | makes existing service history inspectable in React |
+| Weekly schedules only accessible in classic UI | Read-only schedule cards with service next occurrence | shows when existing automation will run without granting edits |
+| Clock-zone ambiguity | schedule local time and TimeZoneId shown together | avoids presenting configured wall time as the owner's local zone |
+| Could imply synthetic trend data | actual service counts/spans and empty/truncated states | remains faithful to persisted records |
+
+Final standalone0.1.51 rebuilt after the date/time-zone label correction into fresh package-final output. Builder embedded-host freshness/CSP checks passed. SHA256 25C3ABB5E041A1F5D1DC43A583966F2ECEBB0E458EA74155886C02624B2D0A53. artifacts/fg203/FocusGuard-0.1.51-Setup.exe, not installed. Full solution Release build0 warnings/errors; React strict TS+production Vite+local CSP verifier passed. No tests were added or run this checkpoint.

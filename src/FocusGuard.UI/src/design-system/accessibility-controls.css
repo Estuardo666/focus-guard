@@ -1,0 +1,153 @@
+:root {
+  --control-line: #707a7c;
+}
+
+:root[data-theme='light'] {
+  --control-line: #6f7c75;
+}
+
+input:not([type='checkbox']):not([type='radio']),
+select,
+textarea {
+  border-color: var(--control-line);
+}
+
+.preset-manager fieldset.preset-list {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.preset-list .preset-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid var(--control-line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.preset-list .preset-option.selected {
+  border-color: var(--accent);
+  background: var(--raised);
+}
+
+.preset-list .preset-option:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.preset-list .preset-option input[type='radio'] {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.preset-list .preset-option-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.preset-manager fieldset.preset-list:disabled .preset-option {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+/* Keep profile color marks compact while the full 44px control stays clickable. */
+.profile-colors .color-choice {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+}
+
+.profile-colors .color-choice[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--raised);
+}
+
+.profile-color-swatch {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--control-line);
+  border-radius: 50%;
+  color: #17231d;
+}
+
+.profile-color-check {
+  width: 12px;
+  height: 12px;
+}
+
+@media (forced-colors: active) {
+  .profile-colors .color-choice {
+    forced-color-adjust: auto;
+    border: 1px solid CanvasText;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+
+  .profile-colors .color-choice[aria-pressed='true'] {
+    border-color: Highlight;
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .profile-color-swatch {
+    forced-color-adjust: none;
+    border-color: CanvasText;
+  }
+}
+
+/* Keep the keyboard skip link clear of the page heading while it is visible. */
+.app-shell > .skip-link:focus ~ .main {
+  padding-top: 100px;
+}
+
+@media (max-width: 1000px) {
+  .app-shell > .skip-link:focus ~ .main {
+    padding-top: 84px;
+  }
+}
+
+@media (forced-colors: active) {
+  .skip-link:focus-visible {
+    background: Highlight;
+    color: HighlightText;
+    outline-color: Highlight;
+  }
+}
+
+@media (forced-colors: active) {
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea {
+    border-color: CanvasText;
+  }
+
+  .preset-manager fieldset.preset-list .preset-option {
+    border-color: CanvasText;
+  }
+
+  .preset-manager fieldset.preset-list .preset-option.selected {
+    outline: 1px solid Highlight;
+  }
+}

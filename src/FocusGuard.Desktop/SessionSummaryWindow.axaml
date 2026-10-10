@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:FocusGuard.Desktop"
+    xmlns:r="using:FocusGuard.Desktop.Resources"
     x:DataType="vm:SessionSummaryViewModel"
     Width="470"
     SizeToContent="Height"
@@ -34,7 +35,7 @@
       </Transitions>
     </Border.Transitions>
 
-    <StackPanel Margin="24,26,24,22" Spacing="18">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"><StackPanel Margin="24,26,24,22" Spacing="18">
 
       <!-- Metrics before the list: the achievement first, the loose ends second. -->
       <StackPanel Spacing="10" HorizontalAlignment="Center">
@@ -65,7 +66,7 @@
         </Border>
 
         <TextBlock
-            Text="{Binding Title}"
+            Text="{Binding CompletedMinutesText}"
             FontSize="22"
             FontWeight="SemiBold"
             TextAlignment="Center"
@@ -95,6 +96,21 @@
           <StackPanel Spacing="2" HorizontalAlignment="Center">
             <TextBlock Text="{Binding StreakValue}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" />
             <TextBlock Text="{Binding StreakLabel}" Classes="caption" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <Grid ColumnDefinitions="*,*" ColumnSpacing="10" IsVisible="{Binding HasCycleMetrics}">
+        <Border Classes="card" Padding="12,14">
+          <StackPanel Spacing="2" HorizontalAlignment="Center">
+            <TextBlock Text="{Binding CompletedFocusCyclesValue}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding CompletedFocusCyclesLabel}" Classes="caption" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Classes="card" Padding="12,14">
+          <StackPanel Spacing="2" HorizontalAlignment="Center">
+            <TextBlock Text="{Binding CompletedBreaksValue}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding CompletedBreaksLabel}" Classes="caption" HorizontalAlignment="Center" />
           </StackPanel>
         </Border>
       </Grid>
@@ -151,6 +167,17 @@
         </ScrollViewer>
       </StackPanel>
 
+      <StackPanel Spacing="6" IsVisible="{Binding HasObjective}">
+        <TextBlock Text="{x:Static r:UiStrings.ObjectiveWorked}" Classes="caption" />
+        <TextBlock Text="{Binding Objective}" FontWeight="SemiBold" TextWrapping="Wrap" />
+      </StackPanel>
+      <Expander Header="{x:Static r:UiStrings.ReflectionLabel}">
+        <StackPanel Spacing="6">
+          <TextBox Text="{Binding Reflection}" MaxLength="1000" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="70" AutomationProperties.Name="{x:Static r:UiStrings.ReflectionLabel}" />
+          <TextBlock Text="{x:Static r:UiStrings.ReflectionHint}" Classes="caption" />
+        </StackPanel>
+      </Expander>
+
       <!-- The only two real exits. There is no "Close": dismissing the window with the
            title-bar X already means taking a break. -->
       <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
@@ -167,6 +194,6 @@
             Command="{Binding TakeBreakCommand}"
             HorizontalAlignment="Stretch" />
       </Grid>
-    </StackPanel>
+    </StackPanel></ScrollViewer>
   </Border>
 </Window>

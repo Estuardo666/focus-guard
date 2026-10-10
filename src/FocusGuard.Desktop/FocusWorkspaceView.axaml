@@ -1,0 +1,296 @@
+<UserControl x:Class="FocusGuard.Desktop.FocusWorkspaceView" xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="using:FocusGuard.Desktop" xmlns:storage="using:FocusGuard.Storage" xmlns:resources="using:FocusGuard.Desktop.Resources" x:DataType="vm:FocusViewModel">
+  <Grid>
+    <Grid x:Name="SessionHome" Margin="32,28" RowDefinitions="Auto,*,Auto" RowSpacing="22" IsEnabled="{Binding !IsSessionSetupOpen}">
+      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="20">
+        <StackPanel Spacing="6">
+          <TextBlock Text="{x:Static resources:UiStrings.HomeSessions}" Classes="homeTitle" />
+          <TextBlock Text="{x:Static resources:UiStrings.HomeIntro}" Classes="caption" />
+        </StackPanel>
+        <Button Grid.Column="1" Classes="ghost desktopIcon" Content="" Click="OpenCompact" ToolTip.Tip="{x:Static resources:UiStrings.CompactMode}" AutomationProperties.Name="{x:Static resources:UiStrings.CompactMode}" />
+      </Grid>
+      <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="18" Margin="0,0,4,0">
+          <TextBlock Text="{x:Static resources:UiStrings.HomeNow}" Classes="sectionLabel" />
+          <Border Classes="sessionRow" IsVisible="{Binding IsInactive}">
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="14">
+              <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="16">
+                <Border Classes="profileTile">
+                  <TextBlock Classes="fluentIcon" Text="" />
+                </Border>
+                <StackPanel Grid.Column="1" Spacing="5" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding ProfileName}" Classes="sessionName" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Text="{Binding HomeProfileScope}" Classes="caption" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <Button x:Name="HomeStart" Grid.Column="2" Classes="primary startAction" Command="{Binding StartFocusCommand}" Content="{Binding StartFocusButtonText}" AutomationProperties.Name="{Binding StartFocusButtonText}" />
+              </Grid>
+              <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="4">
+                  <TextBlock Text="{Binding PlannedReleaseText}" IsVisible="{Binding IsSimpleTimerMode}" Classes="caption" />
+                  <TextBlock Text="{Binding CycleEndText}" IsVisible="{Binding IsCycleMode}" Classes="caption" />
+                  <TextBlock Text="{Binding StrictModeConsequence}" Foreground="{DynamicResource FgWarning}" IsVisible="{Binding IsStrictMode}" TextWrapping="Wrap" />
+                </StackPanel>
+                <Button Grid.Column="1" Classes="link compact" Click="ConfigureSession" Content="{x:Static resources:UiStrings.HomeConfigure}" />
+              </Grid>
+            </Grid>
+          </Border>
+          <Border Classes="sessionRow activeSessionRow" IsVisible="{Binding IsActive}">
+            <StackPanel Spacing="16">
+              <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="16">
+                <Border Classes="profileTile" Background="{DynamicResource ProfileAccentSoft}">
+                  <TextBlock Classes="fluentIcon" Text="" />
+                </Border>
+                <StackPanel Grid.Column="1" Spacing="5" VerticalAlignment="Center">
+                  <TextBlock Text="{Binding ActiveProfileName}" Classes="sessionName" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Text="{Binding CurrentPhaseLabel}" Classes="caption" />
+                  <TextBlock Text="{Binding ActiveObjective}" IsVisible="{Binding HasActiveObjective}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding ActiveObjective}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                  <StackPanel x:Name="RingDigitsPanel" Orientation="Horizontal" HorizontalAlignment="Right" AutomationProperties.LiveSetting="Polite" />
+                  <TextBlock x:Name="RingCaptionText" Classes="caption" HorizontalAlignment="Right" />
+                </StackPanel>
+              </Grid>
+              <ProgressBar x:Name="SessionProgress" Minimum="0" Maximum="360" Value="{Binding RingSweepAngle}" Height="3" Foreground="{DynamicResource ProfileAccentGradient}" Background="{DynamicResource FgBorder}" AutomationProperties.Name="{x:Static resources:UiStrings.FocusPhaseLabel}" />
+              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="5">
+                  <TextBlock Text="{Binding NextBreakText}" Classes="caption" TextWrapping="Wrap" />
+                  <TextBlock x:Name="ActiveEndSummary" Text="{Binding SessionEndSummaryText}" Classes="caption" TextWrapping="Wrap" />
+                  <TextBlock Text="{Binding StrictActiveNotice}" IsVisible="{Binding IsStrictSessionActive}" Foreground="{DynamicResource FgWarning}" TextWrapping="Wrap" />
+                </StackPanel>
+                <WrapPanel Grid.Column="1" ItemSpacing="8" VerticalAlignment="Center">
+                  <Button Classes="outline compact" Content="{x:Static resources:UiStrings.BackToFocusNow}" Command="{Binding SkipBreakCommand}" IsVisible="{Binding CanSkipBreak}" />
+                  <Button Classes="danger stopAction" Content="{x:Static resources:UiStrings.StopSession}" Command="{Binding StopFocusCommand}" IsVisible="{Binding CanStop}" />
+                </WrapPanel>
+              </Grid>
+              <StackPanel IsVisible="{Binding IsCycleSession}" Spacing="8">
+                <TextBlock Text="{Binding CycleProgressText}" Classes="caption" />
+                <vm:CyclePhaseTimeline Height="4" Configuration="{Binding SelectedCycleConfiguration}" CurrentPhase="{Binding CurrentPhaseStatus}" TrackBrush="{DynamicResource FgCycleTimelineTrack}" FocusBrush="{DynamicResource ProfileAccentGradient}" FocusFutureBrush="{DynamicResource ProfileAccentSoft}" BreakBrush="{DynamicResource FgCycleBreak}" BreakFutureBrush="{DynamicResource FgCycleBreakSoft}" IsReduceMotion="{Binding IsReduceMotionEnabled}" />
+              </StackPanel>
+            </StackPanel>
+          </Border>
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="{x:Static resources:UiStrings.HomeUpcoming}" Classes="sectionLabel" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Classes="link compact" Content="{x:Static resources:UiStrings.HomeSchedule}" Click="OpenSchedule" IsEnabled="{Binding CanNavigateToEditors}" />
+          </Grid>
+          <Border Classes="sessionRow" IsVisible="{Binding !HasHomeUpcoming}">
+            <Grid ColumnDefinitions="48,*" ColumnSpacing="16">
+              <Border Classes="profileTile">
+                <TextBlock Classes="fluentIcon" Text="" />
+              </Border>
+              <StackPanel Grid.Column="1" Spacing="5" VerticalAlignment="Center">
+                <TextBlock Text="{Binding HomeUpcomingEmptyTitle}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding HomeUpcomingEmptyHint}" Classes="caption" TextWrapping="Wrap" />
+              </StackPanel>
+            </Grid>
+          </Border>
+          <ItemsControl ItemsSource="{Binding HomeUpcoming}" IsVisible="{Binding HasHomeUpcoming}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ScheduleRowViewModel">
+                <Border Classes="sessionRow" Margin="0,0,0,10">
+                  <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="16">
+                    <Border Classes="profileTile">
+                      <TextBlock Classes="fluentIcon" Text="" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="5">
+                      <TextBlock Text="{Binding Name}" Classes="sessionName" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{Binding ProfileName}" Classes="caption" />
+                      <TextBlock Text="{Binding HomeStartText}" Classes="caption" ToolTip.Tip="{Binding NextPreview}" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="2" Text="{Binding TimeText}" Classes="caption" VerticalAlignment="Center" />
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="{x:Static resources:UiStrings.HomeProfiles}" Classes="sectionLabel" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Classes="link compact" Content="{x:Static resources:UiStrings.EditProfiles}" Click="OpenProfilesClick" IsEnabled="{Binding CanNavigateToEditors}" />
+          </Grid>
+          <ItemsControl ItemsSource="{Binding HomeProfiles}" IsEnabled="{Binding CanNavigateToEditors}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <UniformGrid Columns="2" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:HomeProfileViewModel">
+                <Button Classes="profileSession" ContextRequested="ProfileMenuRequested" Command="{Binding OpenCommand}" AutomationProperties.Name="{Binding Name}">
+                  <Grid ColumnDefinitions="8,*,Auto" ColumnSpacing="14">
+                    <Border Width="6" CornerRadius="{DynamicResource FgRadiusSmall}" Background="{Binding Accent}" />
+                    <StackPanel Grid.Column="1" Spacing="6">
+                      <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{Binding Scope}" Classes="caption" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="2" Classes="fluentIcon" Text="" VerticalAlignment="Center" />
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </ScrollViewer>
+      <Border Grid.Row="2" BorderBrush="{DynamicResource FgBorder}" BorderThickness="0,1,0,0" Padding="0,14,0,0">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+          <StackPanel Spacing="4">
+            <Border Classes="protectionPill" AutomationProperties.LiveSetting="Polite">
+              <TextBlock Text="{Binding ProtectionStatusText}" Classes="caption" />
+            </Border>
+            <Button Classes="link compact" HorizontalAlignment="Left" Content="{Binding HomeTodaySummary}" Click="OpenActivityClick" />
+            <TextBlock Text="{Binding CompactWarningText}" IsVisible="{Binding CompactHasWarning}" Foreground="{DynamicResource FgWarning}" TextWrapping="Wrap" />
+          </StackPanel>
+          <Button x:Name="BlocksButton" Grid.Column="1" Classes="secondary" Content="{x:Static resources:UiStrings.HomeRules}">
+            <Button.Flyout>
+              <Flyout Placement="Top">
+                <Border x:Name="BlockSidebar" Width="310">
+                  <StackPanel Spacing="12">
+                    <TextBlock Text="{Binding ProtectionStatusText}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding ActiveBlockingDescription}" Classes="caption" TextWrapping="Wrap" />
+                    <ScrollViewer MaxHeight="200">
+                      <StackPanel Spacing="8">
+                        <ItemsControl ItemsSource="{Binding BlockingWebsiteRules}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:SavedWebsiteRuleViewModel">
+                              <TextBlock Text="{Binding Rule.Pattern}" TextWrapping="Wrap" />
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding BlockingApplicationRules}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:SavedApplicationRuleViewModel">
+                              <TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" />
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="{x:Static resources:UiStrings.BreakKeepsBlockingHeader}" IsVisible="{Binding HasBreakExceptions}" Classes="caption" TextWrapping="Wrap" />
+                        <ItemsControl ItemsSource="{Binding BreakExceptionItems}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:BlockedItemViewModel">
+                              <TextBlock Text="{Binding Label}" TextWrapping="Wrap" />
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                      </StackPanel>
+                    </ScrollViewer>
+                    <TextBlock Text="{Binding ProtectionDetailText}" IsVisible="{Binding HasProtectionDetail}" Classes="caption" TextWrapping="Wrap" />
+                    <WrapPanel ItemSpacing="8">
+                      <Button Classes="link compact" Content="{x:Static resources:UiStrings.EditRules}" Click="OpenProfilesClick" IsVisible="{Binding CanEditProfileRules}" />
+                      <Button Classes="outline compact" Content="{x:Static resources:UiStrings.RetryProtection}" Command="{Binding RetryProtectionCommand}" IsVisible="{Binding IsProtectionActionable}" />
+                    </WrapPanel>
+                  </StackPanel>
+                </Border>
+              </Flyout>
+            </Button.Flyout>
+          </Button>
+        </Grid>
+      </Border>
+    </Grid>
+    <Border Background="{DynamicResource FgModalScrim}" IsVisible="{Binding IsSessionSetupOpen}">
+      <Border x:Name="SessionSetupPanel" Focusable="True" Classes="workPanel" Width="540" MaxHeight="700" Margin="20" Padding="24" VerticalAlignment="Center" KeyboardNavigation.TabNavigation="Cycle">
+        <Grid RowDefinitions="Auto,*" RowSpacing="16">
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBlock Text="{x:Static resources:UiStrings.HomeEditSession}" Classes="screenTitle" VerticalAlignment="Center" />
+            <Button Grid.Column="1" Classes="ghost desktopIcon" Content="" Click="CloseSetup" AutomationProperties.Name="{x:Static resources:UiStrings.Cancel}" />
+          </Grid>
+          <Grid Grid.Row="1">
+            <Grid RowDefinitions="*,Auto" IsVisible="{Binding IsInactive}">
+              <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="12" Margin="0,0,6,4">
+                  <ComboBox ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}" HorizontalAlignment="Stretch" AutomationProperties.Name="{x:Static resources:UiStrings.ChooseProfile}">
+                    <ComboBox.ItemTemplate>
+                      <DataTemplate x:DataType="storage:StoredProfile">
+                        <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                      </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                  </ComboBox>
+                  <Border Classes="segmentedTrack" ClipToBounds="True" HorizontalAlignment="Left">
+                    <Grid Height="{DynamicResource FgSegmentedHeight}">
+                      <Border Classes="segmentedThumb" Classes.cycles="{Binding IsCycleMode}" Classes.reduceMotion="{Binding IsReduceMotionEnabled}" />
+                      <ListBox Classes="segmentedOptions" ItemsSource="{Binding SessionModes}" SelectedItem="{Binding SelectedSessionMode}" ItemContainerTheme="{StaticResource FgSegmentedItem}">
+                        <ListBox.ItemsPanel>
+                          <ItemsPanelTemplate>
+                            <UniformGrid Rows="1" />
+                          </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                          <DataTemplate x:DataType="vm:SessionModeChoiceViewModel">
+                            <TextBlock Text="{Binding Label}" />
+                          </DataTemplate>
+                        </ListBox.ItemTemplate>
+                      </ListBox>
+                    </Grid>
+                  </Border>
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <TextBlock Text="{Binding QuickStartDurationMinutes}" Classes="durationValue" />
+                    <SelectableTextBlock Grid.Column="1" Text="{Binding PlannedEndText}" IsVisible="{Binding IsSimpleTimerMode}" Classes="caption" VerticalAlignment="Center" TextWrapping="Wrap" />
+                    <SelectableTextBlock Grid.Column="1" Text="{Binding CycleEndText}" IsVisible="{Binding IsCycleMode}" Classes="caption" VerticalAlignment="Center" TextWrapping="Wrap" />
+                  </Grid>
+                  <TextBlock Text="{x:Static resources:UiStrings.ObjectiveLabel}" Classes="caption" />
+                  <TextBox Text="{Binding ObjectiveInput}" MaxLength="240" PlaceholderText="{x:Static resources:UiStrings.ObjectivePlaceholder}" AutomationProperties.Name="{x:Static resources:UiStrings.ObjectiveLabel}" />
+                  <Expander x:Name="AdvancedSessionOptions" Header="{x:Static resources:UiStrings.AdvancedOptions}" HorizontalAlignment="Stretch">
+                    <StackPanel Spacing="12" Margin="0,10,0,0">
+                      <StackPanel Spacing="10" IsVisible="{Binding IsSimpleTimerMode}">
+                        <ListBox Classes="durationPresets" ItemsSource="{Binding DurationChoices}" SelectedItem="{Binding SelectedDurationPreset}" ItemContainerTheme="{StaticResource FgDurationItem}" AutomationProperties.Name="{x:Static resources:UiStrings.DurationLabel}">
+                          <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                              <WrapPanel ItemSpacing="8" LineSpacing="8" />
+                            </ItemsPanelTemplate>
+                          </ListBox.ItemsPanel>
+                          <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:DurationPresetViewModel">
+                              <TextBlock Text="{Binding ShortLabel}" />
+                            </DataTemplate>
+                          </ListBox.ItemTemplate>
+                        </ListBox>
+                        <NumericUpDown Width="132" Minimum="1" Maximum="720" Value="{Binding SelectedDurationMinutes}" FormatString="0" IsVisible="{Binding IsCustomDurationSelected}" HorizontalAlignment="Left" AutomationProperties.Name="{x:Static resources:UiStrings.DurationLabel}" />
+                      </StackPanel>
+                      <StackPanel Spacing="10" IsVisible="{Binding IsCycleMode}">
+                        <ItemsControl ItemsSource="{Binding CyclePresetCards}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:CyclePresetCardViewModel">
+                              <RadioButton Classes="cycleCard" GroupName="CyclePreset" IsChecked="{Binding IsSelected, Mode=TwoWay}" AutomationProperties.Name="{Binding Name}">
+                                <StackPanel Spacing="6">
+                                  <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <vm:CyclePresetIcon Width="18" Height="18" PresetId="{Binding Id}" Stroke="{DynamicResource FgAccent}" />
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                                  </StackPanel>
+                                  <SelectableTextBlock Text="{Binding CompositionText}" Classes="caption" TextWrapping="Wrap" />
+                                  <TextBlock Text="{Binding LengthText}" Classes="caption" />
+                                  <vm:CyclePhaseTimeline Height="6" Configuration="{Binding Configuration}" FocusBrush="{DynamicResource ProfileAccentGradient}" TrackBrush="{DynamicResource FgCycleTimelineTrack}" BreakBrush="{DynamicResource FgCycleBreak}" FocusFutureBrush="{DynamicResource ProfileAccentSoft}" BreakFutureBrush="{DynamicResource FgCycleBreakSoft}" />
+                                </StackPanel>
+                              </RadioButton>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <SelectableTextBlock Text="{Binding CycleEndText}" Classes="caption" TextWrapping="Wrap" />
+                        <WrapPanel ItemSpacing="8" LineSpacing="8">
+                          <Button Classes="secondary compact" Content="{x:Static resources:UiStrings.NewCyclePreset}" Command="{Binding CreateCyclePresetCommand}" />
+                          <Button Classes="link compact" Content="{x:Static resources:UiStrings.EditCyclePreset}" Command="{Binding EditCyclePresetCommand}" IsVisible="{Binding CanDeleteCyclePreset}" />
+                          <Button Classes="link compact" Content="{x:Static resources:UiStrings.DeleteCyclePreset}" Command="{Binding DeleteCyclePresetCommand}" IsVisible="{Binding CanDeleteCyclePreset}" />
+                        </WrapPanel>
+                      </StackPanel>
+                      <Border Classes="settingRowDivider" />
+                      <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <StackPanel Spacing="4">
+                          <TextBlock Text="{x:Static resources:UiStrings.StrictMode}" />
+                          <SelectableTextBlock Classes="caption" Text="{Binding StrictModeConsequence}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" Theme="{StaticResource FgToggleSwitch}" OnContent="" OffContent="" IsChecked="{Binding IsStrictMode}" AutomationProperties.Name="{x:Static resources:UiStrings.StrictMode}" />
+                      </Grid>
+                    </StackPanel>
+                  </Expander>
+                </StackPanel>
+              </ScrollViewer>
+              <StackPanel Grid.Row="1" Spacing="8" Margin="0,12,0,0">
+                <SelectableTextBlock Text="{Binding StrictModeConsequence}" Foreground="{DynamicResource FgWarning}" IsVisible="{Binding IsStrictMode}" TextWrapping="Wrap" />
+                <Button Classes="primary setupStartAction" Command="{Binding StartFocusCommand}" AutomationProperties.Name="{Binding StartFocusButtonText}" HorizontalAlignment="Stretch">
+                  <TextBlock Text="{Binding StartFocusButtonText}" HorizontalAlignment="Center" />
+                </Button>
+                <SelectableTextBlock Classes="caption" Text="{Binding PlannedReleaseText}" IsVisible="{Binding IsSimpleTimerMode}" TextWrapping="Wrap" />
+                <SelectableTextBlock Classes="caption" Text="{Binding CycleEndText}" IsVisible="{Binding IsCycleMode}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Border>
+    </Border>
+  </Grid>
+</UserControl>

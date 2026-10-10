@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using FocusGuard.Client;
 using FocusGuard.Contracts;
 using FocusGuard.Desktop.Resources;
 
@@ -78,13 +79,23 @@ public sealed class SessionSummaryViewModel : INotifyPropertyChanged
 {
     private readonly IFocusControlClient _client;
     private readonly SessionSummaryResponse _summary;
+    private readonly Action<string>? _saveReflection;
+    private string _reflection;
 
     public SessionSummaryViewModel(
         SessionSummaryResponse summary,
-        IFocusControlClient? client = null)
+        IFocusControlClient? client = null,
+        string objective = "",
+        string reflection = "",
+        Action<string>? saveReflection = null,
+        bool reduceMotion = false)
     {
         _summary = summary ?? throw new ArgumentNullException(nameof(summary));
         _client = client ?? new NamedPipeFocusControlClient();
+        Objective = objective;
+        _reflection = reflection;
+        _saveReflection = saveReflection;
+        ReduceMotion = reduceMotion;
         foreach (var capture in summary.Captures)
         {
             Captures.Add(new CapturedItemViewModel(capture, ResolveCapture));
@@ -100,6 +111,12 @@ public sealed class SessionSummaryViewModel : INotifyPropertyChanged
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+    public string Objective { get; }
+    public bool ReduceMotion { get; }
+    public bool HasObjective => !string.IsNullOrWhiteSpace(Objective);
+    public string Reflection { get => _reflection; set { _reflection = (value ?? "")[..Math.Min((value ?? "").Length, 1000)]; PropertyChanged?.Invoke(this, new(nameof(Reflection))); } }
+    public void SaveReflection() => _saveReflection?.Invoke(Reflection);
+    public string CompletedMinutesText => IsCompleted ? string.Format(CultureInfo.CurrentCulture, UiStrings.CompletedMinutes, _summary.FocusedMinutes) : Title;
 
     /// <summary>Chain straight into another session of the same length.</summary>
     public event EventHandler? RequestedAnotherSession;
@@ -148,6 +165,16 @@ public sealed class SessionSummaryViewModel : INotifyPropertyChanged
 
     public string StreakLabel => UiStrings.SummaryStreakLabel;
 
+    public bool HasCycleMetrics => _summary.CycleMetrics is not null;
+
+    public string CompletedFocusCyclesValue => (_summary.CycleMetrics?.CompletedFocusCycles ?? 0).ToString(CultureInfo.CurrentCulture);
+
+    public string CompletedFocusCyclesLabel => UiStrings.SummaryCompletedFocusCyclesLabel;
+
+    public string CompletedBreaksValue => (_summary.CycleMetrics?.CompletedBreaks ?? 0).ToString(CultureInfo.CurrentCulture);
+
+    public string CompletedBreaksLabel => UiStrings.SummaryCompletedBreaksLabel;
+
     /// <summary>A streak is only shown for a session that actually ran to its end.</summary>
     public bool HasStreak => IsCompleted && _summary.StreakDays > 0;
 
@@ -161,12 +188,9 @@ public sealed class SessionSummaryViewModel : INotifyPropertyChanged
 
     public string DismissAllLabel => UiStrings.SummaryDismissAll;
 
-    public string AnotherSessionLabel => string.Format(
-        CultureInfo.CurrentCulture,
-        UiStrings.SummaryAnotherSession,
-        _summary.PlannedMinutes);
+    public string AnotherSessionLabel => UiStrings.RepeatSession;
 
-    public string TakeBreakLabel => UiStrings.SummaryTakeBreak;
+    public string TakeBreakLabel => UiStrings.BackToFocus;
 
     public int PlannedMinutes => _summary.PlannedMinutes;
 

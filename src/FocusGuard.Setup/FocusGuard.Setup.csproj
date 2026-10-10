@@ -9,4 +9,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>focusguard.ico</ApplicationIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="../../assets/branding/fonts/Geist-Regular.ttf" Link="Fonts/Geist-Regular.ttf" />
+    <EmbeddedResource Include="../../assets/branding/fonts/Geist-SemiBold.ttf" Link="Fonts/Geist-SemiBold.ttf" />
+    <EmbeddedResource Include="$(FocusGuardPayloadArchive)"
+                      LogicalName="FocusGuard.Payload.zip"
+                      Condition="'$(FocusGuardPayloadArchive)' != '' and Exists('$(FocusGuardPayloadArchive)')" />
+  </ItemGroup>
 </Project>

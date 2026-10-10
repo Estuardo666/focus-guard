@@ -36,6 +36,7 @@ public sealed partial class SessionSummaryWindow : Window
     protected override void OnOpened(EventArgs e)
     {
         base.OnOpened(e);
+        if (_viewModel?.ReduceMotion == true) { Card.Transitions = null; CheckBadge.Transitions = null; }
         Card.Opacity = 1;
         Card.RenderTransform = TransformOperations.Parse("scale(1)");
 
@@ -55,6 +56,7 @@ public sealed partial class SessionSummaryWindow : Window
     {
         if (_viewModel is not null)
         {
+            _viewModel.SaveReflection();
             _viewModel.RequestedClose -= RequestedClose;
             _viewModel.RequestedAnotherSession -= RequestedAnotherSession;
             _viewModel = null;

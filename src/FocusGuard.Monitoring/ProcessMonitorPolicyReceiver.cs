@@ -2,11 +2,13 @@ using FocusGuard.Domain;
 
 namespace FocusGuard.Monitoring;
 
-public sealed class ProcessMonitorPolicyReceiver(TimeProvider? timeProvider = null)
+public sealed class ProcessMonitorPolicyReceiver(TimeProvider? timeProvider = null, TimeSpan? confirmationLifetime = null)
     : IConfirmedPolicyDistributionTarget
 {
     private readonly object _gate = new();
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
+    private readonly TimeSpan? _confirmationLifetime = ValidateLifetime(confirmationLifetime);
+    private long _confirmedAtTimestamp;
     private PolicyDelivery? _activeDelivery;
     private bool _confirmed;
 
@@ -66,6 +68,7 @@ public sealed class ProcessMonitorPolicyReceiver(TimeProvider? timeProvider = nu
         {
             ClearIfExpiredNoLock();
             _confirmed = _activeDelivery?.PolicyId == policyId && confirmed;
+            if (_confirmed) _confirmedAtTimestamp = _timeProvider.GetTimestamp();
         }
 
         return ValueTask.CompletedTask;
@@ -74,10 +77,30 @@ public sealed class ProcessMonitorPolicyReceiver(TimeProvider? timeProvider = nu
     private void ClearIfExpiredNoLock()
     {
         if (_activeDelivery is not null
-            && _activeDelivery.Policy.EndUtc <= _timeProvider.GetUtcNow().ToUniversalTime())
+            && (_activeDelivery.Policy.EndUtc <= _timeProvider.GetUtcNow().ToUniversalTime()
+                || (_confirmed && _confirmationLifetime is TimeSpan lifetime
+                    && _timeProvider.GetElapsedTime(_confirmedAtTimestamp) >= lifetime)))
         {
             _activeDelivery = null;
             _confirmed = false;
         }
+    }
+
+    public ValueTask ResetAsync(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        lock (_gate)
+        {
+            _activeDelivery = null;
+            _confirmed = false;
+        }
+        return ValueTask.CompletedTask;
+    }
+
+    private static TimeSpan? ValidateLifetime(TimeSpan? lifetime)
+    {
+        if (lifetime is TimeSpan value && value <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(lifetime));
+        return lifetime;
     }
 }

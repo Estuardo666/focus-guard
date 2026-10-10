@@ -1,5 +1,7 @@
+using FocusGuard.Client;
 using FocusGuard.Contracts;
 using FocusGuard.Desktop;
+using FocusGuard.Domain;
 
 namespace FocusGuard.Desktop.Tests;
 
@@ -15,6 +17,20 @@ public sealed class SessionSummaryViewModelTests
         Assert.Contains("50", viewModel.FocusedValue);
         Assert.Equal("14", viewModel.BlocksValue);
         Assert.Contains("6", viewModel.StreakValue);
+    }
+
+    [Fact]
+    public void CycleMetricsAppearOnlyWhenTheServiceHasKnownCycleHistory()
+    {
+        var timer = new SessionSummaryViewModel(Summary(), new StubClient());
+        var cycle = new SessionSummaryViewModel(Summary(new CycleHistoryMetrics(2, 1)), new StubClient());
+
+        Assert.False(timer.HasCycleMetrics);
+        Assert.True(cycle.HasCycleMetrics);
+        Assert.Equal("2", cycle.CompletedFocusCyclesValue);
+        Assert.Equal("1", cycle.CompletedBreaksValue);
+        Assert.Equal("Focus cycles completed", cycle.CompletedFocusCyclesLabel);
+        Assert.Equal("Breaks completed", cycle.CompletedBreaksLabel);
     }
 
     [Fact]
@@ -81,10 +97,10 @@ public sealed class SessionSummaryViewModelTests
         viewModel.AnotherSessionCommand.Execute(null);
 
         Assert.Equal(50, requested);
-        Assert.Contains("50", viewModel.AnotherSessionLabel);
+        Assert.Equal("Repeat session", viewModel.AnotherSessionLabel);
     }
 
-    private static SessionSummaryResponse Summary() =>
+    private static SessionSummaryResponse Summary(CycleHistoryMetrics? cycleMetrics = null) =>
         new(
             Available: true,
             SessionId: Guid.NewGuid(),
@@ -113,11 +129,27 @@ public sealed class SessionSummaryViewModelTests
                     "ChatGPT.exe",
                     DateTimeOffset.UtcNow,
                     CaptureProtocol.PendingResolution)
-            ]);
+            ],
+            CycleMetrics: cycleMetrics);
 
     private sealed class StubClient : IFocusControlClient
     {
         public List<ResolveCapturesRequest> Resolved { get; } = [];
+
+        public ValueTask<PrepareSessionResponse> PrepareAsync(
+            PrepareSessionRequest request,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public ValueTask<ActivatePreparedSessionResponse> ActivatePreparedAsync(
+            ActivatePreparedSessionRequest request,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public ValueTask<SkipBreakResponse> SkipBreakAsync(
+            SkipBreakRequest request,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
 
         public ValueTask<StatusResponse> GetStatusAsync(CancellationToken cancellationToken) =>
             throw new NotSupportedException();

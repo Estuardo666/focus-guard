@@ -73,6 +73,15 @@ public sealed class PolicyDistributionCoordinator(
         }
     }
 
+    internal PolicyDelivery? GetCurrentDeliveryForBrowserStatus()
+    {
+        lock (_gate)
+        {
+            ExpireNoLock();
+            return _delivery;
+        }
+    }
+
     public PolicyDelivery? ExchangeProcessAcknowledgement(PolicyAcknowledgement? acknowledgement)
     {
         PolicyDelivery? delivery;
@@ -152,10 +161,12 @@ public sealed class PolicyDistributionCoordinator(
             lock (_gate)
             {
                 ExpireNoLock();
+                var applicationRequested = _delivery is not null && HasApplicationRules(_delivery.Policy);
+                var websiteRequested = _delivery is not null && HasWebsiteRules(_delivery.Policy);
                 return _delivery is not null
-                    && (_delivery.Policy.ApplicationRules.Count == 0
+                    && (!applicationRequested
                         || Matches(_delivery, _processAcknowledgement))
-                    && (_delivery.Policy.WebsiteRules.Count == 0
+                    && (!websiteRequested
                         || Matches(_delivery, _browserAcknowledgement));
             }
         }
@@ -173,11 +184,13 @@ public sealed class PolicyDistributionCoordinator(
                     return false;
                 }
 
-                return (_delivery.Policy.ApplicationRules.Count == 0
-                        && _delivery.Policy.WebsiteRules.Count == 0)
-                    || (_delivery.Policy.ApplicationRules.Count > 0
+                var applicationRequested = HasApplicationRules(_delivery.Policy);
+                var websiteRequested = HasWebsiteRules(_delivery.Policy);
+
+                return (!applicationRequested && !websiteRequested)
+                    || (applicationRequested
                         && Matches(_delivery, _processAcknowledgement))
-                    || (_delivery.Policy.WebsiteRules.Count > 0
+                    || (websiteRequested
                         && Matches(_delivery, _browserAcknowledgement));
             }
         }
@@ -265,4 +278,10 @@ public sealed class PolicyDistributionCoordinator(
             acknowledgement.PolicyHash,
             delivery.PolicyHash,
             StringComparison.Ordinal);
+
+    private static bool HasApplicationRules(EnforcementPolicy policy) =>
+        policy.ApplicationRules.Count > 0 || policy.BreakApplicationRules is { Count: > 0 };
+
+    private static bool HasWebsiteRules(EnforcementPolicy policy) =>
+        policy.WebsiteRules.Count > 0 || policy.BreakWebsiteRules is { Count: > 0 };
 }

@@ -25,8 +25,13 @@ public sealed class DevelopmentServiceWorkerTests
     [Fact]
     public void Constants_UseDevelopmentOnlyIdentity()
     {
+#if FOCUSGUARD_PRODUCTION
+        Assert.Equal("FocusGuard", DevelopmentServiceConstants.ServiceName);
+        Assert.Equal("FocusGuard Service", DevelopmentServiceConstants.DisplayName);
+#else
         Assert.Equal("FocusGuard.Development", DevelopmentServiceConstants.ServiceName);
         Assert.Equal("FocusGuard Development Service", DevelopmentServiceConstants.DisplayName);
+#endif
     }
 
     private static async Task WaitUntilAsync(Func<bool> condition, TimeSpan timeout)

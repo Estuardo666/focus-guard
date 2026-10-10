@@ -1,62 +1,82 @@
 [CmdletBinding()]
 param(
-    [ValidateRange(3, 30)]
-    [int]$DurationMinutes = 10
+    [switch]$PreflightOnly,
+    [switch]$Arm,
+    [switch]$OwnerPresent
 )
 
 $ErrorActionPreference = 'Stop'
-$repositoryRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$drillClient = Join-Path $repositoryRoot 'src\FocusGuard.DrillClient\bin\Release\net10.0\FocusGuard.DrillClient.exe'
-$stateDirectory = Join-Path $repositoryRoot 'artifacts\fg112-reboot'
-$statePath = Join-Path $stateDirectory 'state.json'
-$activePolicyPath = 'C:\ProgramData\FocusGuard\StrictPersistence\active-policy.json'
+if ($PreflightOnly.IsPresent -eq $Arm.IsPresent) {
+    throw 'Specify exactly one of -PreflightOnly or -Arm.'
+}
+if ($Arm -and -not $OwnerPresent) {
+    throw 'Arming a production reboot drill requires -OwnerPresent.'
+}
+
+$installRoot = [IO.Path]::GetFullPath((Join-Path ${env:ProgramFiles} 'FocusGuard'))
+$drillClient = Join-Path $installRoot 'FocusGuard.DrillClient.exe'
+$stateDirectory = Join-Path $PSScriptRoot '..\artifacts\fg112-reboot'
+$service = Get-CimInstance Win32_Service -Filter "Name='FocusGuard'"
+$status = $null
+$statusExitCode = $null
+$reason = $null
+
+if ($null -eq $service -or $service.State -ne 'Running' -or $service.StartMode -ne 'Auto' -or
+    $service.StartName -ne 'NT AUTHORITY\LocalService' -or
+    [IO.Path]::GetFullPath($service.PathName.Trim('"')) -ne (Join-Path $installRoot 'FocusGuard.Service.exe')) {
+    $reason = 'FocusGuard must be installed, running automatically, and owned by LocalService.'
+} elseif (-not (Test-Path -LiteralPath $drillClient -PathType Leaf)) {
+    $reason = 'The installed Diagnostic status client is missing.'
+} else {
+    $statusOutput = (& $drillClient status | Out-String)
+    $statusExitCode = $LASTEXITCODE
+    if ($statusExitCode -ne 0) {
+        $reason = "Installed Diagnostic status failed with exit code $statusExitCode."
+    } else {
+        $status = $statusOutput | ConvertFrom-Json
+        if (-not $status.serviceReady -or $status.sessionState -ne 'Active' -or
+            -not $status.strictMode -or -not $status.enforcementConnected -or
+            [string]::IsNullOrWhiteSpace([string]$status.sessionId) -or
+            $null -eq $status.endUtc -or
+            [DateTimeOffset]::UtcNow -ge [DateTimeOffset]$status.endUtc) {
+            $reason = 'Start a finite strict session through the reviewed FocusGuard UI and wait for both channels before arming the reboot drill.'
+        }
+    }
+}
+
+$preflight = [pscustomobject]@{
+    Mode = if ($PreflightOnly) { 'PreflightOnly' } else { 'Arm' }
+    Ready = [string]::IsNullOrWhiteSpace($reason)
+    Reason = $reason
+    ServiceState = $service.State
+    ServicePid = $service.ProcessId
+    ServiceAccount = $service.StartName
+    SessionState = $status.sessionState
+    StrictMode = $status.strictMode
+    EnforcementConnected = $status.enforcementConnected
+        SessionEndUtc = $status.endUtc
+    DiagnosticActivationUsed = $false
+    MachineStateChanged = $false
+}
+if ($PreflightOnly) { $preflight; return }
+if (-not $preflight.Ready) { throw $reason }
 
 $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $principal = [Security.Principal.WindowsPrincipal]::new($identity)
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    throw 'Run this script from an elevated PowerShell window.'
-}
-if (-not (Test-Path -LiteralPath $drillClient -PathType Leaf)) {
-    throw 'Build FocusGuard.DrillClient Release before arming the drill.'
-}
-if (Test-Path -LiteralPath $activePolicyPath) {
-    throw 'A production strict policy is already persisted.'
+    throw 'Arming the production reboot drill requires an already elevated PowerShell process; this script never auto-elevates.'
 }
 
-$service = Get-CimInstance Win32_Service -Filter "Name='FocusGuard'"
-if ($null -eq $service -or $service.State -ne 'Running' -or $service.StartMode -ne 'Auto') {
-    throw 'FocusGuard must be installed, running, and automatic.'
-}
-if ($service.StartName -ne 'NT AUTHORITY\LocalService') {
-    throw "Unexpected service account: $($service.StartName)"
-}
-if ([IO.Path]::GetFullPath($service.PathName.Trim('"')) -ne 'C:\Program Files\FocusGuard\FocusGuard.Service.exe') {
-    throw "Unexpected service path: $($service.PathName)"
-}
-
-$activation = ((& $drillClient activate-strict ($DurationMinutes * 60) | Out-String) | ConvertFrom-Json)
-if ($LASTEXITCODE -ne 0 -or -not $activation.activation.accepted) {
-    throw 'Production strict activation failed.'
-}
-$acknowledgement = $null
-for ($attempt = 0; $attempt -lt 10; $attempt++) {
-    $acknowledgement = ((& $drillClient acknowledge | Out-String) | ConvertFrom-Json)
-    if ($LASTEXITCODE -eq 0 -and $acknowledgement.sessionState -eq 'Active') { break }
-    Start-Sleep -Milliseconds 250
-}
-if ($null -eq $acknowledgement -or $acknowledgement.sessionState -ne 'Active') {
-    throw 'Dual policy acknowledgement did not activate enforcement.'
-}
-if (-not (Test-Path -LiteralPath $activePolicyPath -PathType Leaf)) {
-    throw 'Strict policy was not persisted before reboot.'
-}
-
+$stateDirectory = [IO.Path]::GetFullPath($stateDirectory)
 New-Item -ItemType Directory -Path $stateDirectory -Force | Out-Null
+$runId = [Guid]::NewGuid()
+$statePath = Join-Path $stateDirectory "state-$($runId.ToString('N')).json"
 $state = [ordered]@{
-    schemaVersion = 1
-    sessionId = $activation.activation.sessionId
-    startUtc = $activation.activation.startUtc
-    endUtc = $activation.activation.endUtc
+    schemaVersion = 2
+    runId = $runId
+    sessionId = $status.sessionId
+    startUtc = $status.startUtc
+    endUtc = $status.endUtc
     bootUtcBeforeRestart = ([DateTimeOffset](Get-CimInstance Win32_OperatingSystem).LastBootUpTime).ToUniversalTime().ToString('O')
     armedUtc = [DateTimeOffset]::UtcNow.ToString('O')
 }
@@ -64,9 +84,12 @@ $state = [ordered]@{
 
 [pscustomobject]@{
     Armed = $true
+    RunId = $runId
     SessionId = $state.sessionId
     EndUtc = $state.endUtc
     BootUtcBeforeRestart = $state.bootUtcBeforeRestart
     StatePath = $statePath
+    DiagnosticActivationUsed = $false
     NextCommand = 'Restart-Computer'
+    CompletionCommand = ".\scripts\complete-fg112-production-reboot-drill.ps1 -RunId $runId"
 }

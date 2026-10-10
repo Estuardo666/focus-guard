@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>FocusGuard.UI</AssemblyName>
+    <RootNamespace>FocusGuard.Host.Windows</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../FocusGuard.Ipc.Windows/FocusGuard.Ipc.Windows.csproj" />
+    <ProjectReference Include="../FocusGuard.Client/FocusGuard.Client.csproj" />
+    <ProjectReference Include="../FocusGuard.Platform.Windows/FocusGuard.Platform.Windows.csproj" />
+    <PackageReference Include="Microsoft.Web.WebView2" />
+  </ItemGroup>
+  <Target Name="BuildLocalReactUi" BeforeTargets="PrepareForBuild">
+    <Exec Command="npm run build" WorkingDirectory="$(MSBuildThisFileDirectory)../FocusGuard.UI" />
+    <ItemGroup>
+      <Content Include="../FocusGuard.UI/dist/index.html" Link="ui/index.html" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/host.js" Link="ui/host.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/host.css" Link="ui/host.css" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/ScheduleEditor.js" Link="ui/chunks/ScheduleEditor.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/PreferencesPanel.js" Link="ui/chunks/PreferencesPanel.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/ProfileEditor.js" Link="ui/chunks/ProfileEditor.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/SessionHistoryDetail.js" Link="ui/chunks/SessionHistoryDetail.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/DashboardStart.js" Link="ui/chunks/DashboardStart.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/CompactFocus.js" Link="ui/chunks/CompactFocus.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/SessionEndExperience.js" Link="ui/chunks/SessionEndExperience.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/focus-time.js" Link="ui/chunks/focus-time.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/WorkflowViews.js" Link="ui/chunks/WorkflowViews.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/StrictReviewPanel.js" Link="ui/chunks/StrictReviewPanel.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/strict.js" Link="ui/chunks/strict.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/count-label.js" Link="ui/chunks/count-label.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/fonts/Geist-Regular.ttf" Link="ui/fonts/Geist-Regular.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/fonts/Geist-SemiBold.ttf" Link="ui/fonts/Geist-SemiBold.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/fonts/OFL-Geist.txt" Link="ui/fonts/OFL-Geist.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+  <Target Name="RemoveUnusedWebView2WpfReference" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Remove="@(Reference)" Condition="'%(Reference.Filename)' == 'Microsoft.Web.WebView2.Wpf'" />
+    </ItemGroup>
+    <Message Text="WebView2 references: @(Reference->'%(Filename)', ', ')" Importance="Low" />
+  </Target>
+</Project>

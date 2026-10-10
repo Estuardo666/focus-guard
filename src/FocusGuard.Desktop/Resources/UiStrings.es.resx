@@ -1,430 +1,191 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
-  <resheader name="version"><value>2.0</value></resheader>
-  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
-  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
-  <data name="ActivityTitle" xml:space="preserve"><value>Actividad</value></data>
-  <data name="ActivityDescription" xml:space="preserve"><value>Eventos saneados almacenados localmente por el servicio FocusGuard.</value></data>
-  <data name="ActivityEmpty" xml:space="preserve"><value>No se ha registrado actividad de bloqueo.</value></data>
-  <data name="ActivityNavigation" xml:space="preserve"><value>Navegación de actividad</value></data>
-  <data name="ActivityApplicationBlocked" xml:space="preserve"><value>Aplicación bloqueada</value></data>
-  <data name="ActivityWebsiteBlocked" xml:space="preserve"><value>Sitio web bloqueado</value></data>
-  <data name="ActivityEnforcementReleased" xml:space="preserve"><value>Bloqueo liberado</value></data>
-  <data name="ActivityRecoveryCompleted" xml:space="preserve"><value>Recuperación completada</value></data>
-  <data name="ActivityGeneric" xml:space="preserve"><value>Actividad</value></data>
-  <data name="FocusNavigation" xml:space="preserve"><value>Concentración</value></data>
-  <data name="ProfilesNavigation" xml:space="preserve"><value>Perfiles</value></data>
-  <data name="ScheduleNavigation" xml:space="preserve"><value>Horario</value></data>
-  <data name="SettingsNavigation" xml:space="preserve"><value>Ajustes</value></data>
-  <data name="ProtectionStatus" xml:space="preserve"><value>Estado de protección</value></data>
-  <data name="ReadyTitle" xml:space="preserve"><value>¿Listo para concentrarte?</value></data>
-  <data name="ReadyDescription" xml:space="preserve"><value>Elige un perfil e inicia una sesión finita controlada por el servicio.</value></data>
-  <data name="StopNormalFocus" xml:space="preserve"><value>Detener concentración normal</value></data>
-  <data name="ProfileLabel" xml:space="preserve"><value>Perfil</value></data>
-  <data name="DuplicateProfile" xml:space="preserve"><value>Duplicar perfil</value></data>
-  <data name="ProfileCopyName" xml:space="preserve"><value>Copia de {0}</value></data>
-  <data name="ProfileCopyNumberSuffix" xml:space="preserve"><value> ({0})</value></data>
-  <data name="ProfileDuplicated" xml:space="preserve"><value>{0} está listo para editar. Sus reglas solo se aplican a sesiones futuras.</value></data>
-  <data name="ProfileNameLabel" xml:space="preserve"><value>Nombre del perfil</value></data>
-  <data name="RenameProfile" xml:space="preserve"><value>Renombrar perfil</value></data>
-  <data name="ProfileNameRequired" xml:space="preserve"><value>Escribe un nombre para el perfil.</value></data>
-  <data name="ProfileNameTooLong" xml:space="preserve"><value>Usa 80 caracteres o menos.</value></data>
-  <data name="ProfileNameUnchanged" xml:space="preserve"><value>Escribe un nombre diferente.</value></data>
-  <data name="ProfileNameAlreadyExists" xml:space="preserve"><value>Ya existe un perfil con este nombre.</value></data>
-  <data name="ProfileRenamed" xml:space="preserve"><value>El perfil ahora se llama {0}. Las políticas activas no cambian.</value></data>
-  <data name="DeleteProfile" xml:space="preserve"><value>Eliminar perfil</value></data>
-  <data name="DeleteProfileConfirmationTitle" xml:space="preserve"><value>¿Eliminar este perfil?</value></data>
-  <data name="DeleteProfileConfirmation" xml:space="preserve"><value>{0} y sus {1} regla(s) de aplicaciones y {2} regla(s) de sitios se eliminarán permanentemente. Esta acción no se puede deshacer.</value></data>
-  <data name="ConfirmDeleteProfile" xml:space="preserve"><value>Eliminar perfil permanentemente</value></data>
-  <data name="KeepProfile" xml:space="preserve"><value>Conservar perfil</value></data>
-  <data name="LastProfileRequired" xml:space="preserve"><value>FocusGuard debe conservar al menos un perfil.</value></data>
-  <data name="ProfileDeleted" xml:space="preserve"><value>Se eliminó {0}. Ahora está seleccionado otro perfil.</value></data>
-  <data name="ProfileDeleteFailed" xml:space="preserve"><value>El perfil ya no existe o no se pudo eliminar.</value></data>
-  <data name="NewProfile" xml:space="preserve"><value>Nuevo perfil</value></data>
-  <data name="NewProfileTitle" xml:space="preserve"><value>¿Qué se interpone en tu enfoque?</value></data>
-  <data name="NewProfileDescription" xml:space="preserve"><value>Elige distracciones habituales o empieza vacío. Después podrás cambiar cada regla.</value></data>
-  <data name="NewProfileSuggestionsLabel" xml:space="preserve"><value>Sugerencias rápidas</value></data>
-  <data name="NewProfileSuggestionsHint" xml:space="preserve"><value>No seleccionamos nada por ti. Cada opción muestra los dominios exactos que añade.</value></data>
-  <data name="NewProfileCustomRuleLabel" xml:space="preserve"><value>Añade un sitio o una aplicación</value></data>
-  <data name="NewProfileCustomRulePlaceholder" xml:space="preserve"><value>reddit.com o discord.exe</value></data>
-  <data name="NewProfileRuleRequired" xml:space="preserve"><value>Escribe un dominio o el nombre de un ejecutable.</value></data>
-  <data name="NewProfileRuleAlreadyAdded" xml:space="preserve"><value>Esta regla ya está añadida.</value></data>
-  <data name="NewProfileSummary" xml:space="preserve"><value>{0} regla(s) de sitios · {1} regla(s) de aplicaciones. Se permite un perfil vacío.</value></data>
-  <data name="CreateProfile" xml:space="preserve"><value>Crear perfil</value></data>
-  <data name="ProfileCreated" xml:space="preserve"><value>{0} está listo. Añade más detalles o úsalo en una sesión futura.</value></data>
-  <data name="CancelProfileCreation" xml:space="preserve"><value>Cancelar creación del perfil</value></data>
-  <data name="RemoveDraftRule" xml:space="preserve"><value>Quitar regla del borrador</value></data>
-  <data name="SavedWebsiteRules" xml:space="preserve"><value>reglas de sitios guardadas</value></data>
-  <data name="SavedApplicationRules" xml:space="preserve"><value>reglas de aplicaciones guardadas</value></data>
-  <data name="DurationLabel" xml:space="preserve"><value>Duración</value></data>
-  <data name="DurationLower" xml:space="preserve"><value>duración</value></data>
-  <data name="AddWebsiteRule" xml:space="preserve"><value>Añadir regla de sitio</value></data>
-  <data name="AddApplicationRule" xml:space="preserve"><value>Añadir regla de aplicación (nombre de archivo)</value></data>
-  <data name="Add" xml:space="preserve"><value>Añadir</value></data>
-  <data name="Remove" xml:space="preserve"><value>Quitar</value></data>
-  <data name="BlockedWebsites" xml:space="preserve"><value>Sitios bloqueados</value></data>
-  <data name="BlockedApplications" xml:space="preserve"><value>Aplicaciones bloqueadas</value></data>
-  <data name="NoBlockedWebsites" xml:space="preserve"><value>No hay sitios bloqueados en este perfil.</value></data>
-  <data name="NoBlockedApplications" xml:space="preserve"><value>No hay aplicaciones bloqueadas en este perfil.</value></data>
-  <data name="FutureSessionsOnly" xml:space="preserve"><value>Los cambios en este perfil solo se aplican a sesiones futuras. Una política activa no cambia hasta detenerse o expirar.</value></data>
-  <data name="StartFocus" xml:space="preserve"><value>Iniciar concentración</value></data>
-  <data name="StrictMode" xml:space="preserve"><value>Modo estricto</value></data>
-  <data name="ReviewBeforeActivation" xml:space="preserve"><value>Revisar antes de activar</value></data>
-  <data name="EnableEnforcement" xml:space="preserve"><value>Habilitar bloqueo de aplicaciones y sitios durante esta sesión finita</value></data>
-  <data name="ReviewStrictFocus" xml:space="preserve"><value>Revisar concentración estricta</value></data>
-  <data name="StrictReviewEndsExactly" xml:space="preserve"><value>Esta sesión finita termina exactamente {0}.</value></data>
-  <data name="SaveRecoveryCode" xml:space="preserve"><value>Guarda este código de recuperación. Se muestra una vez y nunca se envía al servicio.</value></data>
-  <data name="SaveRecoveryCodeTitle" xml:space="preserve"><value>Guarda este código de recuperación.</value></data>
-  <data name="SaveRecoveryCodeDetail" xml:space="preserve"><value>Se muestra una vez y nunca se envía al servicio.</value></data>
-  <data name="RecoveryCodeLabel" xml:space="preserve"><value>Código de recuperación</value></data>
-  <data name="CopyRecoveryCode" xml:space="preserve"><value>Copiar código de recuperación</value></data>
-  <data name="SavedRecoveryCode" xml:space="preserve"><value>Guardé el código de recuperación</value></data>
-  <data name="SavedRecoveryCodeDetail" xml:space="preserve"><value>Guardé el código en un lugar seguro.</value></data>
-  <data name="SavedAffectedWork" xml:space="preserve"><value>Guardé mi trabajo en las aplicaciones afectadas</value></data>
-  <data name="SavedAffectedWorkDetail" xml:space="preserve"><value>Guardé todo el trabajo importante antes de activar.</value></data>
-  <data name="StrictConsequence" xml:space="preserve"><value>Entiendo que este bloqueo permanecerá activo hasta la hora de finalización mostrada arriba.</value></data>
-  <data name="StrictConfirmationPrompt" xml:space="preserve"><value>Escribe “{0}” para confirmar.</value></data>
-  <data name="StrictPhraseFirstWords" xml:space="preserve"><value>Calm,Centered,Clear,Gentle,Mindful,Peaceful,Present,Quiet,Restful,Steady,Tranquil,Zen</value></data>
-  <data name="StrictPhraseSecondWords" xml:space="preserve"><value>Balance,Breath,Clarity,Ease,Flow,Focus,Grounding,Harmony,Patience,Presence,Stillness,Trust</value></data>
-  <data name="TypeSentenceExactly" xml:space="preserve"><value>Escribe exactamente las dos palabras</value></data>
-  <data name="ActivateStrictFocus" xml:space="preserve"><value>Activar concentración estricta</value></data>
-  <data name="Cancel" xml:space="preserve"><value>Cancelar</value></data>
-  <data name="SessionAuthority" xml:space="preserve"><value>Autoridad de sesión</value></data>
-  <data name="SessionAuthorityDescription" xml:space="preserve"><value>El servicio de Windows controla activación, tiempo restante, detención, expiración y recuperación estricta.</value></data>
-  <data name="SystemHealth" xml:space="preserve"><value>Estado del sistema</value></data>
-  <data name="NoProfileSelected" xml:space="preserve"><value>Ningún perfil seleccionado</value></data>
-  <data name="NormalMode" xml:space="preserve"><value>Modo normal</value></data>
-  <data name="NoActiveEndTime" xml:space="preserve"><value>No hay una hora de finalización activa</value></data>
-  <data name="RulesLocked" xml:space="preserve"><value>Las reglas del perfil no pueden cambiar mientras una sesión está activa o activándose.</value></data>
-  <data name="ApplicationRuleRemoved" xml:space="preserve"><value>Regla de aplicación eliminada del perfil. Las políticas activas no cambian.</value></data>
-  <data name="WebsiteRuleRemoved" xml:space="preserve"><value>Regla de sitio eliminada del perfil. Las políticas activas no cambian.</value></data>
-  <data name="ApplicationsTitle" xml:space="preserve"><value>Aplicaciones</value></data>
-  <data name="ApplicationRulesDescription" xml:space="preserve"><value>Elige qué debe reconocer FocusGuard durante una sesión de concentración.</value></data>
-  <data name="WebsitesTitle" xml:space="preserve"><value>Sitios web</value></data>
-  <data name="WebsiteRulesDescription" xml:space="preserve"><value>Bloquea dominios y rutas manteniendo privados los datos de navegación no relacionados.</value></data>
-  <data name="ActionLabel" xml:space="preserve"><value>Acción</value></data>
-  <data name="MatchByLabel" xml:space="preserve"><value>Coincidir por</value></data>
-  <data name="ValueLabel" xml:space="preserve"><value>Valor</value></data>
-  <data name="DomainPatternLabel" xml:space="preserve"><value>Dominio o patrón</value></data>
-  <data name="AddRule" xml:space="preserve"><value>Añadir regla</value></data>
-  <data name="ProfileRules" xml:space="preserve"><value>Reglas del perfil</value></data>
-  <data name="NoApplicationRules" xml:space="preserve"><value>Aún no hay reglas de aplicaciones. Añade una ruta, carpeta, nombre o hash.</value></data>
-  <data name="NoWebsiteRules" xml:space="preserve"><value>Aún no hay reglas de sitios. Prueba example.com, *.example.com o *://*.example.com/*.</value></data>
-  <data name="QueryParametersExcluded" xml:space="preserve"><value>Los parámetros de consulta se excluyen y nunca se muestran en este borrador.</value></data>
-  <data name="InFocusTitle" xml:space="preserve"><value>En concentración</value></data>
-  <data name="TimeRemaining" xml:space="preserve"><value>Tiempo restante</value></data>
-  <data name="WebsitesLabel" xml:space="preserve"><value>Sitios web</value></data>
-  <data name="ApplicationsLabel" xml:space="preserve"><value>Aplicaciones</value></data>
-  <data name="RecentBlocks" xml:space="preserve"><value>Bloqueos recientes</value></data>
-  <data name="StrictReviewDescription" xml:space="preserve"><value>Nada comienza hasta confirmar cada consecuencia y paso de recuperación.</value></data>
-  <data name="ExactEndTime" xml:space="preserve"><value>Hora exacta de finalización</value></data>
-  <data name="ImpactedApplications" xml:space="preserve"><value>Aplicaciones afectadas</value></data>
-  <data name="ImpactedWebsites" xml:space="preserve"><value>Sitios afectados</value></data>
-  <data name="RecoveryReadiness" xml:space="preserve"><value>Recuperación y preparación</value></data>
-  <data name="AcknowledgeRecovery" xml:space="preserve"><value>He guardado la confirmación del código de recuperación</value></data>
-  <data name="AcknowledgeWork" xml:space="preserve"><value>He guardado mi trabajo y entiendo la advertencia</value></data>
-  <data name="RequiredConfirmation" xml:space="preserve"><value>Confirmación requerida</value></data>
-  <data name="TypeSentenceAsShown" xml:space="preserve"><value>Escribe las dos palabras exactamente como aparecen</value></data>
-  <data name="ApplicationEditorPrompt" xml:space="preserve"><value>Añade una ruta ejecutable, carpeta, nombre de archivo o valor SHA-256.</value></data>
-  <data name="WebsiteEditorPrompt" xml:space="preserve"><value>Añade un dominio o patrón URL. Los parámetros de consulta nunca se conservan.</value></data>
-  <data name="ExactPath" xml:space="preserve"><value>Ruta ejecutable exacta</value></data>
-  <data name="Folder" xml:space="preserve"><value>Carpeta</value></data>
-  <data name="FileName" xml:space="preserve"><value>Nombre de archivo</value></data>
-  <data name="Sha256Hash" xml:space="preserve"><value>Hash SHA-256</value></data>
-  <data name="LoadedApplicationRules" xml:space="preserve"><value>Se cargaron las reglas de aplicaciones guardadas para este perfil.</value></data>
-  <data name="LoadedWebsiteRules" xml:space="preserve"><value>Se cargaron las reglas de sitios guardadas para este perfil.</value></data>
-  <data name="ApplicationDraftAdded" xml:space="preserve"><value>Regla de aplicación añadida. Solo se aplicará cuando esté activa una sesión con este perfil.</value></data>
-  <data name="WebsiteDraftAdded" xml:space="preserve"><value>Regla de sitio añadida. Los parámetros de consulta se excluyen del borrador.</value></data>
-  <data name="ApplicationDraftRemoved" xml:space="preserve"><value>Regla de aplicación eliminada del borrador del perfil.</value></data>
-  <data name="WebsiteDraftRemoved" xml:space="preserve"><value>Regla de sitio eliminada del borrador del perfil.</value></data>
-  <data name="ConnectingService" xml:space="preserve"><value>Conectando con el servicio FocusGuard…</value></data>
-  <data name="ServiceStatusPending" xml:space="preserve"><value>Estado del servicio pendiente</value></data>
-  <data name="DurationTwoTest" xml:space="preserve"><value>2 minutos (prueba)</value></data>
-  <data name="Duration25" xml:space="preserve"><value>25 minutos</value></data>
-  <data name="Duration50" xml:space="preserve"><value>50 minutos</value></data>
-  <data name="Duration90" xml:space="preserve"><value>90 minutos</value></data>
-  <data name="EnforcementOnWarning" xml:space="preserve"><value>Cada canal de aplicaciones o sitios comienza solo después de confirmar la misma política íntegra. Si un canal no está disponible, el otro puede continuar y el estado permanece degradado.</value></data>
-  <data name="EnforcementOffWarning" xml:space="preserve"><value>El bloqueo está desactivado. El temporizador funcionará sin bloquear aplicaciones ni sitios.</value></data>
-  <data name="StrictModeDescription" xml:space="preserve"><value>El modo estricto requiere guardar un código de recuperación de un solo uso y escribir exactamente dos palabras en inglés.</value></data>
-  <data name="NormalModeDescription" xml:space="preserve"><value>El modo normal puede detenerse desde FocusGuard en cualquier momento.</value></data>
-  <data name="ServiceUnavailable" xml:space="preserve"><value>Servicio no disponible</value></data>
-  <data name="ServiceUnreachable" xml:space="preserve"><value>FocusGuard no puede comunicarse con el servicio instalado. No se activó ninguna sesión.</value></data>
-  <data name="SaveRecoveryNow" xml:space="preserve"><value>Guarda ahora este código de recuperación. Desaparecerá después de la activación.</value></data>
-  <data name="ActivationFailed" xml:space="preserve"><value>La activación falló de forma segura: {0}</value></data>
-  <data name="StopFailed" xml:space="preserve"><value>La detención falló de forma segura: {0}</value></data>
-  <data name="ServiceAndExtensionReady" xml:space="preserve"><value>Servicio listo · Extensión del navegador lista</value></data>
-  <data name="ServiceReadyExtensionUnavailable" xml:space="preserve"><value>Servicio listo · Extensión del navegador no disponible</value></data>
-  <data name="StateActivating" xml:space="preserve"><value>Activando — esperando la confirmación de un canal solicitado. El bloqueo no ha comenzado.</value></data>
-  <data name="StateConnected" xml:space="preserve"><value>Conectado — bloqueo de aplicaciones y sitios confirmado.</value></data>
-  <data name="StateDegraded" xml:space="preserve"><value>Degradado — falta un componente solicitado o está desactualizado; los canales disponibles continúan de forma independiente.</value></data>
-  <data name="StateExpired" xml:space="preserve"><value>Expirado — la política finita terminó y todo el bloqueo se liberó automáticamente.</value></data>
-  <data name="StateReleased" xml:space="preserve"><value>El servicio informa que la sesión está {0}; el bloqueo está liberado.</value></data>
-  <data name="NoActiveSession" xml:space="preserve"><value>No hay ninguna sesión activa.</value></data>
-  <data name="WebsiteRuleSaved" xml:space="preserve"><value>Regla de sitio guardada.</value></data>
-  <data name="ApplicationRuleSaved" xml:space="preserve"><value>Regla de aplicación guardada.</value></data>
-  <data name="DefaultProfileName" xml:space="preserve"><value>Trabajo profundo</value></data>
-  <data name="SimulatorProtectionRunning" xml:space="preserve"><value>La protección se está ejecutando en el simulador.</value></data>
-  <data name="SimulatorHealthReady" xml:space="preserve"><value>Simulador del servicio conectado · Simulador de extensión listo</value></data>
-  <data name="SimulatorFocusEnded" xml:space="preserve"><value>La concentración terminó. Las restricciones se liberaron en el simulador.</value></data>
-  <data name="SimulatorFocusStopped" xml:space="preserve"><value>La concentración se detuvo. Las restricciones se liberaron en el simulador.</value></data>
-  <data name="StrictReviewInitial" xml:space="preserve"><value>Revisa cada consecuencia antes de continuar. Esta pantalla no activa una sesión.</value></data>
-  <data name="SimulatorBrowserReady" xml:space="preserve"><value>Simulador de extensión del navegador listo</value></data>
-  <data name="SimulatorRecoveryInstructions" xml:space="preserve"><value>Durante una activación real se genera un código de recuperación de alta entropía y se muestra una sola vez. Esta revisión visual no genera ni almacena ninguno.</value></data>
-  <data name="UnsavedWorkWarning" xml:space="preserve"><value>Guarda el trabajo en las aplicaciones afectadas antes del modo estricto. Es finito, pero no se detiene casualmente.</value></data>
-  <data name="StartStrictUntil" xml:space="preserve"><value>Iniciar concentración estricta hasta {0}</value></data>
-  <data name="SimulatorStrictReviewComplete" xml:space="preserve"><value>Revisión estricta completada en el simulador. No se activó ninguna sesión ni se generó un código de recuperación.</value></data>
-  <data name="EndsAt" xml:space="preserve"><value>Termina {0}</value></data>
-  <data name="OpenFocusGuard" xml:space="preserve"><value>Abrir FocusGuard</value></data>
-  <data name="ExitFocusGuard" xml:space="preserve"><value>Salir de FocusGuard</value></data>
-  <data name="DurationCustom" xml:space="preserve">
+<?xml version="1.0" encoding="utf-8"?><root><resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>2.0</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader><data name="ActivityTitle" xml:space="preserve"><value>Actividad</value></data><data name="ActivityDescription" xml:space="preserve"><value>Eventos saneados almacenados localmente por el servicio FocusGuard.</value></data><data name="ActivityEmpty" xml:space="preserve"><value>No se ha registrado actividad de bloqueo.</value></data><data name="ActivityNavigation" xml:space="preserve"><value>Navegación de actividad</value></data><data name="ActivityApplicationBlocked" xml:space="preserve"><value>Aplicación bloqueada</value></data><data name="ActivityWebsiteBlocked" xml:space="preserve"><value>Sitio web bloqueado</value></data><data name="ActivityEnforcementReleased" xml:space="preserve"><value>Bloqueo liberado</value></data><data name="ActivityRecoveryCompleted" xml:space="preserve"><value>Recuperación completada</value></data><data name="ActivityGeneric" xml:space="preserve"><value>Actividad</value></data><data name="FocusNavigation" xml:space="preserve"><value>Foco</value></data><data name="ProfilesNavigation" xml:space="preserve"><value>Perfiles</value></data><data name="ScheduleNavigation" xml:space="preserve"><value>Horarios</value></data><data name="SettingsNavigation" xml:space="preserve"><value>Ajustes</value></data><data name="ProtectionStatus" xml:space="preserve"><value>Estado de protección</value></data><data name="ReadyTitle" xml:space="preserve"><value>¿Listo para concentrarte?</value></data><data name="ReadyDescription" xml:space="preserve"><value>Elige un perfil e inicia una sesión finita controlada por el servicio.</value></data><data name="StopNormalFocus" xml:space="preserve"><value>Detener concentración normal</value></data><data name="TimerMode" xml:space="preserve"><value>Temporizador</value></data><data name="CyclesMode" xml:space="preserve"><value>Ciclos</value></data><data name="SessionModeLabel" xml:space="preserve"><value>Modo de sesión</value></data><data name="CyclePresetLabel" xml:space="preserve"><value>Preset de ciclos</value></data><data name="NewCyclePreset" xml:space="preserve"><value>Nuevo ciclo personalizado</value></data><data name="ComingSoon" xml:space="preserve"><value>Próximamente</value></data><data name="NewCyclePresetTitle" xml:space="preserve"><value>Nuevo ciclo personalizado</value></data><data name="EditCyclePresetTitle" xml:space="preserve"><value>Editar ciclo personalizado</value></data><data name="NewCyclePresetDescription" xml:space="preserve"><value>Elige cuánto te concentras, cuánto descansas y cuándo termina la sesión. Todo lo demás funciona igual que en un ciclo predefinido.</value></data><data name="CyclePresetNameLabel" xml:space="preserve"><value>Nombre del ciclo</value></data><data name="CyclePresetNameRequired" xml:space="preserve"><value>Ponle un nombre al ciclo.</value></data><data name="CycleTerminationLabel" xml:space="preserve"><value>Terminar la sesión por</value></data><data name="CancelCycleEditing" xml:space="preserve"><value>Cancelar la edición del ciclo</value></data><data name="CustomCycleBadge" xml:space="preserve"><value>Personalizado</value></data><data name="EditCyclePreset" xml:space="preserve"><value>Editar ciclo</value></data><data name="CycleHowItWorksTitle" xml:space="preserve"><value>Cómo funciona un ciclo</value></data><data name="CycleHowItWorksBody" xml:space="preserve"><value>Un ciclo alterna bloques de enfoque con descansos. El bloqueo de tu perfil se aplica durante cada bloque de enfoque. Cuando empieza un descanso el bloqueo se libera, y vuelve solo en cuanto comienza el siguiente bloque de enfoque.</value></data><data name="CycleHowBreaksWork" xml:space="preserve"><value>Las excepciones de descanso acotan esa liberación: si agregas algo ahí, sigue bloqueado durante la pausa.</value></data><data name="CycleCompositionLine" xml:space="preserve"><value>{0} min de enfoque, luego un descanso de {1} min</value></data><data name="CycleLongBreakLine" xml:space="preserve"><value>Cada {0} bloques de enfoque el descanso es largo, de {1} min</value></data><data name="CycleLengthByCount" xml:space="preserve"><value>{0} bloques de enfoque en total</value></data><data name="CycleLengthByDuration" xml:space="preserve"><value>{0} min en total</value></data><data name="BreakReleasedNotice" xml:space="preserve"><value>Descanso: bloqueo en pausa.</value></data><data name="SaveCyclePreset" xml:space="preserve"><value>Guardar ciclo</value></data><data name="DeleteCyclePreset" xml:space="preserve"><value>Eliminar ciclo</value></data><data name="NewCyclePresetDefaultName" xml:space="preserve"><value>Mi ciclo</value></data><data name="CyclePresetCreated" xml:space="preserve"><value>Ciclo personalizado creado.</value></data><data name="CyclePresetSaved" xml:space="preserve"><value>Ciclo personalizado guardado.</value></data><data name="CyclePresetDeleted" xml:space="preserve"><value>Ciclo personalizado eliminado.</value></data><data name="CycleSettingsLoadFailed" xml:space="preserve"><value>No se pudo actualizar la configuración de ciclos: {0}</value></data><data name="CycleFocusMinutes" xml:space="preserve"><value>Minutos de enfoque</value></data><data name="CycleShortBreakMinutes" xml:space="preserve"><value>Minutos de descanso corto</value></data><data name="CycleLongBreakMinutes" xml:space="preserve"><value>Minutos de descanso largo</value></data><data name="CycleLongBreakFrequency" xml:space="preserve"><value>Descanso largo cada</value></data><data name="CycleCount" xml:space="preserve"><value>Ciclos de enfoque</value></data><data name="CycleTotalDurationMinutes" xml:space="preserve"><value>Minutos de duración total</value></data><data name="CycleCountTermination" xml:space="preserve"><value>Número de ciclos</value></data><data name="TotalDurationTermination" xml:space="preserve"><value>Duración total</value></data><data name="BreakExceptions" xml:space="preserve"><value>Siguen bloqueados en los descansos</value></data><data name="BreakExceptionsHint" xml:space="preserve"><value>El descanso libera todo lo de arriba. Lo que agregues acá sigue bloqueado igual.</value></data><data name="NoBreakExceptions" xml:space="preserve"><value>Nada por ahora: los descansos liberan todos los sitios y apps de este perfil.</value></data><data name="BreakExceptionSite" xml:space="preserve"><value>Sitio</value></data><data name="BreakExceptionApp" xml:space="preserve"><value>App</value></data><data name="BreakApplicationInput" xml:space="preserve"><value>Nombre del ejecutable</value></data><data name="BreakWebsiteInput" xml:space="preserve"><value>Host o patrón web</value></data><data name="AddBreakException" xml:space="preserve"><value>Agregar excepción de descanso</value></data><data name="PreparedCyclePlan" xml:space="preserve"><value>Plan de ciclos preparado</value></data><data name="PreparedPhase" xml:space="preserve"><value>Ciclo {0} · {1} · {2}–{3}</value></data><data name="CyclePresetRequired" xml:space="preserve"><value>Selecciona primero un preset de ciclos.</value></data><data name="CycleSummary" xml:space="preserve"><value>{0} min de enfoque · {1} min de descanso corto · {2} min de descanso largo · cada {3} ciclos · {4} ciclos</value></data><data name="CycleEndsAt" xml:space="preserve"><value>Termina a las {0}</value></data><data name="TotalDurationMode" xml:space="preserve"><value>duración total</value></data><data name="ContinueFocusNow" xml:space="preserve"><value>Continuar enfoque ahora</value></data><data name="SkipBreakFailed" xml:space="preserve"><value>No se pudo omitir el descanso: {0}</value></data><data name="FocusPhase" xml:space="preserve"><value>Enfoque</value></data><data name="ShortBreakPhase" xml:space="preserve"><value>Descanso corto</value></data><data name="LongBreakPhase" xml:space="preserve"><value>Descanso largo</value></data><data name="SimpleTimerPhase" xml:space="preserve"><value>Temporizador</value></data><data name="CycleProgress" xml:space="preserve"><value>Ciclo {0} de {1}</value></data><data name="NextPhase" xml:space="preserve"><value>Siguiente: {0} a las {1}</value></data><data name="NoNextPhase" xml:space="preserve"><value>Fase final</value></data><data name="ProfileLabel" xml:space="preserve"><value>Perfil</value></data><data name="DuplicateProfile" xml:space="preserve"><value>Duplicar perfil</value></data><data name="ProfileCopyName" xml:space="preserve"><value>Copia de {0}</value></data><data name="ProfileCopyNumberSuffix" xml:space="preserve"><value> ({0})</value></data><data name="ProfileDuplicated" xml:space="preserve"><value>{0} está listo para editar. Sus reglas solo se aplican a sesiones futuras.</value></data><data name="ProfileNameLabel" xml:space="preserve"><value>Nombre del perfil</value></data><data name="RenameProfile" xml:space="preserve"><value>Renombrar perfil</value></data><data name="ProfileNameRequired" xml:space="preserve"><value>Escribe un nombre para el perfil.</value></data><data name="ProfileNameTooLong" xml:space="preserve"><value>Usa 80 caracteres o menos.</value></data><data name="ProfileNameUnchanged" xml:space="preserve"><value>Escribe un nombre diferente.</value></data><data name="ProfileNameAlreadyExists" xml:space="preserve"><value>Ya existe un perfil con este nombre.</value></data><data name="ProfileRenamed" xml:space="preserve"><value>El perfil ahora se llama {0}. Las políticas activas no cambian.</value></data><data name="DeleteProfile" xml:space="preserve"><value>Eliminar perfil</value></data><data name="DeleteProfileConfirmationTitle" xml:space="preserve"><value>¿Eliminar este perfil?</value></data><data name="DeleteProfileConfirmation" xml:space="preserve"><value>{0} y sus {1} regla(s) de aplicaciones y {2} regla(s) de sitios se eliminarán permanentemente. Esta acción no se puede deshacer.</value></data><data name="ConfirmDeleteProfile" xml:space="preserve"><value>Eliminar perfil permanentemente</value></data><data name="KeepProfile" xml:space="preserve"><value>Conservar perfil</value></data><data name="LastProfileRequired" xml:space="preserve"><value>FocusGuard debe conservar al menos un perfil.</value></data><data name="ProfileDeleted" xml:space="preserve"><value>Se eliminó {0}. Ahora está seleccionado otro perfil.</value></data><data name="ProfileDeleteFailed" xml:space="preserve"><value>El perfil ya no existe o no se pudo eliminar.</value></data><data name="NewProfile" xml:space="preserve"><value>Nuevo perfil</value></data><data name="EditProfiles" xml:space="preserve"><value>Editar perfiles</value></data><data name="NewProfileTitle" xml:space="preserve"><value>¿Qué se interpone en tu enfoque?</value></data><data name="NewProfileDescription" xml:space="preserve"><value>Elige distracciones habituales o empieza vacío. Después podrás cambiar cada regla.</value></data><data name="NewProfileSuggestionsLabel" xml:space="preserve"><value>Sugerencias rápidas</value></data><data name="ProfileColorLabel" xml:space="preserve"><value>Color del perfil</value></data><data name="ProfileColorHint" xml:space="preserve"><value>El acento tiñe el encabezado, la barra lateral y el color de este perfil.</value></data><data name="NewProfileSuggestionsHint" xml:space="preserve"><value>No seleccionamos nada por ti. Cada opción muestra los dominios exactos que añade.</value></data><data name="NewProfileCustomRuleLabel" xml:space="preserve"><value>Añade un sitio o una aplicación</value></data><data name="NewProfileCustomRulePlaceholder" xml:space="preserve"><value>reddit.com o discord.exe</value></data><data name="NewProfileRuleRequired" xml:space="preserve"><value>Escribe un dominio o el nombre de un ejecutable.</value></data><data name="NewProfileRuleAlreadyAdded" xml:space="preserve"><value>Esta regla ya está añadida.</value></data><data name="NewProfileSummary" xml:space="preserve"><value>{0} regla(s) de sitios · {1} regla(s) de aplicaciones. Se permite un perfil vacío.</value></data><data name="CreateProfile" xml:space="preserve"><value>Crear perfil</value></data><data name="ProfileCreated" xml:space="preserve"><value>{0} está listo. Añade más detalles o úsalo en una sesión futura.</value></data><data name="CancelProfileCreation" xml:space="preserve"><value>Cancelar creación del perfil</value></data><data name="RemoveDraftRule" xml:space="preserve"><value>Quitar regla del borrador</value></data><data name="SavedWebsiteRules" xml:space="preserve"><value>reglas de sitios guardadas</value></data><data name="SavedApplicationRules" xml:space="preserve"><value>reglas de aplicaciones guardadas</value></data><data name="DurationLabel" xml:space="preserve"><value>Duración</value></data><data name="DurationLower" xml:space="preserve"><value>duración</value></data><data name="AddWebsiteRule" xml:space="preserve"><value>Añadir regla de sitio</value></data><data name="AddApplicationRule" xml:space="preserve"><value>Añadir regla de aplicación (nombre de archivo)</value></data><data name="Add" xml:space="preserve"><value>Añadir</value></data><data name="Remove" xml:space="preserve"><value>Quitar</value></data><data name="BlockedWebsites" xml:space="preserve"><value>Sitios bloqueados</value></data><data name="BlockedApplications" xml:space="preserve"><value>Aplicaciones bloqueadas</value></data><data name="NoBlockedWebsites" xml:space="preserve"><value>No hay sitios bloqueados en este perfil.</value></data><data name="NoBlockedApplications" xml:space="preserve"><value>No hay aplicaciones bloqueadas en este perfil.</value></data><data name="FutureSessionsOnly" xml:space="preserve"><value>Los cambios en este perfil solo se aplican a sesiones futuras. Una política activa no cambia hasta detenerse o expirar.</value></data><data name="StartFocus" xml:space="preserve"><value>Empezar foco</value></data><data name="StartingFocus" xml:space="preserve"><value>Iniciando…</value></data><data name="LockedDuringSession" xml:space="preserve"><value>No se puede cambiar durante una sesión activa.</value></data><data name="StrictMode" xml:space="preserve"><value>Modo estricto</value></data><data name="ReviewBeforeActivation" xml:space="preserve"><value>Revisar antes de activar</value></data><data name="EnableEnforcement" xml:space="preserve"><value>Habilitar bloqueo de aplicaciones y sitios durante esta sesión finita</value></data><data name="ReviewStrictFocus" xml:space="preserve"><value>Revisar concentración estricta</value></data><data name="StrictReviewEndsExactly" xml:space="preserve"><value>Esta sesión finita termina exactamente {0}.</value></data><data name="SaveRecoveryCode" xml:space="preserve"><value>Guarda este código de recuperación. Se muestra una vez y nunca se envía al servicio.</value></data><data name="SaveRecoveryCodeTitle" xml:space="preserve"><value>Guarda este código de recuperación.</value></data><data name="SaveRecoveryCodeDetail" xml:space="preserve"><value>Se muestra una vez y nunca se envía al servicio.</value></data><data name="RecoveryCodeLabel" xml:space="preserve"><value>Código de recuperación</value></data><data name="CopyRecoveryCode" xml:space="preserve"><value>Copiar código de recuperación</value></data><data name="SavedRecoveryCode" xml:space="preserve"><value>Guardé el código de recuperación</value></data><data name="SavedRecoveryCodeDetail" xml:space="preserve"><value>Guardé el código en un lugar seguro.</value></data><data name="SavedAffectedWork" xml:space="preserve"><value>Guardé mi trabajo en las aplicaciones afectadas</value></data><data name="SavedAffectedWorkDetail" xml:space="preserve"><value>Guardé todo el trabajo importante antes de activar.</value></data><data name="StrictConsequence" xml:space="preserve"><value>Entiendo que este bloqueo permanecerá activo hasta la hora de finalización mostrada arriba.</value></data><data name="StrictConfirmationPrompt" xml:space="preserve"><value>Escribe “{0}” para confirmar.</value></data><data name="StrictPhraseFirstWords" xml:space="preserve"><value>Calm,Centered,Clear,Gentle,Mindful,Peaceful,Present,Quiet,Restful,Steady,Tranquil,Zen</value></data><data name="StrictPhraseSecondWords" xml:space="preserve"><value>Balance,Breath,Clarity,Ease,Flow,Focus,Grounding,Harmony,Patience,Presence,Stillness,Trust</value></data><data name="TypeSentenceExactly" xml:space="preserve"><value>Escribe exactamente las dos palabras</value></data><data name="ActivateStrictFocus" xml:space="preserve"><value>Activar concentración estricta</value></data><data name="Cancel" xml:space="preserve"><value>Cancelar</value></data><data name="SessionAuthority" xml:space="preserve"><value>Autoridad de sesión</value></data><data name="SessionAuthorityDescription" xml:space="preserve"><value>El servicio de Windows controla activación, tiempo restante, detención, expiración y recuperación estricta.</value></data><data name="SystemHealth" xml:space="preserve"><value>Estado del sistema</value></data><data name="NoProfileSelected" xml:space="preserve"><value>Ningún perfil seleccionado</value></data><data name="NormalMode" xml:space="preserve"><value>Modo normal</value></data><data name="NoActiveEndTime" xml:space="preserve"><value>No hay una hora de finalización activa</value></data><data name="RulesLocked" xml:space="preserve"><value>Las reglas del perfil no pueden cambiar mientras una sesión está activa o activándose.</value></data><data name="ApplicationRuleRemoved" xml:space="preserve"><value>Regla de aplicación eliminada del perfil. Las políticas activas no cambian.</value></data><data name="WebsiteRuleRemoved" xml:space="preserve"><value>Regla de sitio eliminada del perfil. Las políticas activas no cambian.</value></data><data name="ApplicationsTitle" xml:space="preserve"><value>Aplicaciones</value></data><data name="ApplicationRulesDescription" xml:space="preserve"><value>Elige qué debe reconocer FocusGuard durante una sesión de concentración.</value></data><data name="WebsitesTitle" xml:space="preserve"><value>Sitios web</value></data><data name="WebsiteRulesDescription" xml:space="preserve"><value>Bloquea dominios y rutas manteniendo privados los datos de navegación no relacionados.</value></data><data name="ActionLabel" xml:space="preserve"><value>Acción</value></data><data name="NewApplicationActionLabel" xml:space="preserve"><value>Acción para nuevas aplicaciones</value></data><data name="NewWebsiteActionLabel" xml:space="preserve"><value>Acción para nuevos sitios web</value></data><data name="MatchByLabel" xml:space="preserve"><value>Coincidir por</value></data><data name="ValueLabel" xml:space="preserve"><value>Valor</value></data><data name="DomainPatternLabel" xml:space="preserve"><value>Dominio o patrón</value></data><data name="AddRule" xml:space="preserve"><value>Añadir regla</value></data><data name="ProfileRules" xml:space="preserve"><value>Reglas del perfil</value></data><data name="NoApplicationRules" xml:space="preserve"><value>Aún no hay reglas de aplicaciones. Añade una ruta, carpeta, nombre o hash.</value></data><data name="NoWebsiteRules" xml:space="preserve"><value>Aún no hay reglas de sitios. Prueba example.com, *.example.com o *://*.example.com/*.</value></data><data name="QueryParametersExcluded" xml:space="preserve"><value>Los parámetros de consulta se excluyen y nunca se muestran en este borrador.</value></data><data name="InFocusTitle" xml:space="preserve"><value>En concentración</value></data><data name="TimeRemaining" xml:space="preserve"><value>Tiempo restante</value></data><data name="WebsitesLabel" xml:space="preserve"><value>Sitios web</value></data><data name="ApplicationsLabel" xml:space="preserve"><value>Aplicaciones</value></data><data name="RecentBlocks" xml:space="preserve"><value>Bloqueos recientes</value></data><data name="StrictReviewDescription" xml:space="preserve"><value>Nada comienza hasta confirmar cada consecuencia y paso de recuperación.</value></data><data name="ExactEndTime" xml:space="preserve"><value>Hora exacta de finalización</value></data><data name="ImpactedApplications" xml:space="preserve"><value>Aplicaciones afectadas</value></data><data name="ImpactedWebsites" xml:space="preserve"><value>Sitios afectados</value></data><data name="RecoveryReadiness" xml:space="preserve"><value>Recuperación y preparación</value></data><data name="AcknowledgeRecovery" xml:space="preserve"><value>He guardado la confirmación del código de recuperación</value></data><data name="AcknowledgeWork" xml:space="preserve"><value>He guardado mi trabajo y entiendo la advertencia</value></data><data name="RequiredConfirmation" xml:space="preserve"><value>Confirmación requerida</value></data><data name="TypeSentenceAsShown" xml:space="preserve"><value>Escribe las dos palabras exactamente como aparecen</value></data><data name="ApplicationEditorPrompt" xml:space="preserve"><value>Añade una ruta ejecutable, carpeta, nombre de archivo o valor SHA-256.</value></data><data name="WebsiteEditorPrompt" xml:space="preserve"><value>Añade un dominio o patrón URL. Los parámetros de consulta nunca se conservan.</value></data><data name="ExactPath" xml:space="preserve"><value>Ruta ejecutable exacta</value></data><data name="Folder" xml:space="preserve"><value>Carpeta</value></data><data name="FileName" xml:space="preserve"><value>Nombre de archivo</value></data><data name="Sha256Hash" xml:space="preserve"><value>Hash SHA-256</value></data><data name="LoadedApplicationRules" xml:space="preserve"><value>Se cargaron las reglas de aplicaciones guardadas para este perfil.</value></data><data name="LoadedWebsiteRules" xml:space="preserve"><value>Se cargaron las reglas de sitios guardadas para este perfil.</value></data><data name="ApplicationDraftAdded" xml:space="preserve"><value>Regla de aplicación añadida. Solo se aplicará cuando esté activa una sesión con este perfil.</value></data><data name="WebsiteDraftAdded" xml:space="preserve"><value>Regla de sitio añadida. Los parámetros de consulta se excluyen del borrador.</value></data><data name="ApplicationDraftRemoved" xml:space="preserve"><value>Regla de aplicación eliminada del borrador del perfil.</value></data><data name="WebsiteDraftRemoved" xml:space="preserve"><value>Regla de sitio eliminada del borrador del perfil.</value></data><data name="ConnectingService" xml:space="preserve"><value>Conectando con el servicio FocusGuard…</value></data><data name="ServiceStatusPending" xml:space="preserve"><value>Estado del servicio pendiente</value></data><data name="DurationTwoTest" xml:space="preserve"><value>2 minutos (prueba)</value></data><data name="Duration25" xml:space="preserve"><value>25 minutos</value></data><data name="Duration50" xml:space="preserve"><value>50 minutos</value></data><data name="Duration90" xml:space="preserve"><value>90 minutos</value></data><data name="EnforcementOnWarning" xml:space="preserve"><value>Cada canal de aplicaciones o sitios comienza solo después de confirmar la misma política íntegra. Si un canal no está disponible, el otro puede continuar y el estado permanece degradado.</value></data><data name="EnforcementOffWarning" xml:space="preserve"><value>Sin bloqueo de apps ni sitios.</value></data><data name="StrictModeDescription" xml:space="preserve"><value>El modo estricto requiere guardar un código de recuperación de un solo uso y escribir exactamente dos palabras en inglés.</value></data><data name="NormalModeDescription" xml:space="preserve"><value>El modo normal puede detenerse desde FocusGuard en cualquier momento.</value></data><data name="ServiceUnavailable" xml:space="preserve"><value>Servicio no disponible</value></data><data name="ServiceUnreachable" xml:space="preserve"><value>FocusGuard no puede comunicarse con el servicio instalado. No se activó ninguna sesión.</value></data><data name="SaveRecoveryNow" xml:space="preserve"><value>Guarda ahora este código de recuperación. Desaparecerá después de la activación.</value></data><data name="ActivationFailed" xml:space="preserve"><value>La activación falló de forma segura: {0}</value></data><data name="StopFailed" xml:space="preserve"><value>La detención falló de forma segura: {0}</value></data><data name="ServiceAndExtensionReady" xml:space="preserve"><value>Servicio listo · Extensión del navegador lista</value></data><data name="ServiceReadyExtensionUnavailable" xml:space="preserve"><value>Servicio listo · Extensión del navegador no disponible</value></data><data name="StateActivating" xml:space="preserve"><value>Activando — esperando la confirmación de un canal solicitado. El bloqueo no ha comenzado.</value></data><data name="StateConnected" xml:space="preserve"><value>Conectado — bloqueo de aplicaciones y sitios confirmado.</value></data><data name="StateDegraded" xml:space="preserve"><value>Degradado — falta un componente solicitado o está desactualizado; los canales disponibles continúan de forma independiente.</value></data><data name="StateExpired" xml:space="preserve"><value>Expirado — la política finita terminó y todo el bloqueo se liberó automáticamente.</value></data><data name="StateReleased" xml:space="preserve"><value>El servicio informa que la sesión está {0}; el bloqueo está liberado.</value></data><data name="NoActiveSession" xml:space="preserve"><value>No hay ninguna sesión activa.</value></data><data name="WebsiteRuleSaved" xml:space="preserve"><value>Regla de sitio guardada.</value></data><data name="ApplicationRuleSaved" xml:space="preserve"><value>Regla de aplicación guardada.</value></data><data name="DefaultProfileName" xml:space="preserve"><value>Trabajo profundo</value></data><data name="SimulatorProtectionRunning" xml:space="preserve"><value>La protección se está ejecutando en el simulador.</value></data><data name="SimulatorHealthReady" xml:space="preserve"><value>Simulador del servicio conectado · Simulador de extensión listo</value></data><data name="SimulatorFocusEnded" xml:space="preserve"><value>La concentración terminó. Las restricciones se liberaron en el simulador.</value></data><data name="SimulatorFocusStopped" xml:space="preserve"><value>La concentración se detuvo. Las restricciones se liberaron en el simulador.</value></data><data name="StrictReviewInitial" xml:space="preserve"><value>Revisa cada consecuencia antes de continuar. Esta pantalla no activa una sesión.</value></data><data name="SimulatorBrowserReady" xml:space="preserve"><value>Simulador de extensión del navegador listo</value></data><data name="SimulatorRecoveryInstructions" xml:space="preserve"><value>Durante una activación real se genera un código de recuperación de alta entropía y se muestra una sola vez. Esta revisión visual no genera ni almacena ninguno.</value></data><data name="UnsavedWorkWarning" xml:space="preserve"><value>Guarda el trabajo en las aplicaciones afectadas antes del modo estricto. Es finito, pero no se detiene casualmente.</value></data><data name="StartStrictUntil" xml:space="preserve"><value>Iniciar concentración estricta hasta {0}</value></data><data name="SimulatorStrictReviewComplete" xml:space="preserve"><value>Revisión estricta completada en el simulador. No se activó ninguna sesión ni se generó un código de recuperación.</value></data><data name="EndsAt" xml:space="preserve"><value>Termina {0}</value></data><data name="OpenFocusGuard" xml:space="preserve"><value>Abrir FocusGuard</value></data><data name="ExitFocusGuard" xml:space="preserve"><value>Salir de FocusGuard</value></data><data name="TrayCurrentSession" xml:space="preserve"><value>Sesión actual</value></data><data name="TrayTimeRemaining" xml:space="preserve"><value>Tiempo restante</value></data><data name="TrayWebsitesBlocked" xml:space="preserve"><value>Sitios bloqueados</value></data><data name="TrayApplicationsBlocked" xml:space="preserve"><value>Aplicaciones bloqueadas</value></data><data name="TrayNoActiveSession" xml:space="preserve"><value>Sin sesión activa</value></data><data name="DurationCustom" xml:space="preserve">
     <value>Otro</value>
-  </data>
-  <data name="DurationMinutesShort" xml:space="preserve">
-    <value>{0} m</value>
-  </data>
-  <data name="DurationCustomLabel" xml:space="preserve">
+  </data><data name="DurationMinutesShort" xml:space="preserve">
+    <value>{0} min</value>
+  </data><data name="DurationCustomLabel" xml:space="preserve">
     <value>Minutos</value>
-  </data>
-  <data name="SessionEyebrowIdle" xml:space="preserve">
+  </data><data name="SessionEyebrowIdle" xml:space="preserve">
     <value>SESIÓN DE ENFOQUE</value>
-  </data>
-  <data name="SessionEyebrowActive" xml:space="preserve">
+  </data><data name="SessionEyebrowActive" xml:space="preserve">
     <value>SESIÓN EN CURSO</value>
-  </data>
-  <data name="SessionMetaIdle" xml:space="preserve">
+  </data><data name="SessionMetaIdle" xml:space="preserve">
     <value>{0} sitios · {1} apps</value>
-  </data>
-  <data name="SessionMetaActive" xml:space="preserve">
+  </data><data name="SessionMetaActive" xml:space="preserve">
     <value>Empezó {0} · termina {1} · {2} sitios y {3} apps bloqueados</value>
-  </data>
-  <data name="StatusIdle" xml:space="preserve">
+  </data><data name="StatusIdle" xml:space="preserve">
     <value>Inactiva</value>
-  </data>
-  <data name="StatusProtected" xml:space="preserve">
+  </data><data name="StatusProtected" xml:space="preserve">
     <value>Protegido</value>
-  </data>
-  <data name="TitleBarRemaining" xml:space="preserve">
+  </data><data name="TitleBarRemaining" xml:space="preserve">
     <value>· {0} restantes</value>
-  </data>
-  <data name="RemainingOfTotal" xml:space="preserve">
+  </data><data name="RemainingOfTotal" xml:space="preserve">
     <value>restantes de {0} min</value>
-  </data>
-  <data name="MinutesLower" xml:space="preserve">
+  </data><data name="MinutesLower" xml:space="preserve">
     <value>minutos</value>
-  </data>
-  <data name="MoreChips" xml:space="preserve">
+  </data><data name="MoreChips" xml:space="preserve">
     <value>+{0} más</value>
-  </data>
-  <data name="StrictActiveNotice" xml:space="preserve">
+  </data><data name="StrictActiveNotice" xml:space="preserve">
     <value>La sesión terminará a las {0}. El modo estricto está activo.</value>
-  </data>
-  <data name="RelativeJustNow" xml:space="preserve">
+  </data><data name="RelativeJustNow" xml:space="preserve">
     <value>hace un momento</value>
-  </data>
-  <data name="RelativeMinutes" xml:space="preserve">
+  </data><data name="RelativeMinutes" xml:space="preserve">
     <value>hace {0} min</value>
-  </data>
-  <data name="RelativeHours" xml:space="preserve">
+  </data><data name="RelativeHours" xml:space="preserve">
     <value>hace {0} h</value>
-  </data>
-  <data name="BlockedAttemptsLabel" xml:space="preserve">
+  </data><data name="BlockedAttemptsLabel" xml:space="preserve">
     <value>Intentos bloqueados</value>
-  </data>
-  <data name="ViewAll" xml:space="preserve">
+  </data><data name="ViewAll" xml:space="preserve">
     <value>Ver todo</value>
-  </data>
-  <data name="RealBlocking" xml:space="preserve">
+  </data><data name="RealBlocking" xml:space="preserve">
     <value>Bloqueo real de apps y sitios</value>
-  </data>
-  <data name="WebsitesWithCount" xml:space="preserve">
+  </data><data name="WebsitesWithCount" xml:space="preserve">
     <value>Sitios web · {0}</value>
-  </data>
-  <data name="ApplicationsWithCount" xml:space="preserve">
+  </data><data name="ApplicationsWithCount" xml:space="preserve">
     <value>Aplicaciones · {0}</value>
-  </data>
-  <data name="ChangesNextSession" xml:space="preserve">
+  </data><data name="ChangesNextSession" xml:space="preserve">
     <value>Los cambios aplican a la próxima sesión.</value>
-  </data>
-  <data name="NavigationLockedHint" xml:space="preserve">
+  </data><data name="NavigationLockedHint" xml:space="preserve">
     <value>Bloqueado mientras hay una sesión activa</value>
-  </data>
-  <data name="MinimizeWindow" xml:space="preserve">
+  </data><data name="MinimizeWindow" xml:space="preserve">
     <value>Minimizar</value>
-  </data>
-  <data name="MaximizeWindow" xml:space="preserve">
+  </data><data name="MaximizeWindow" xml:space="preserve">
     <value>Maximizar</value>
-  </data>
-  <data name="CloseWindow" xml:space="preserve">
+  </data><data name="CloseWindow" xml:space="preserve">
     <value>Cerrar</value>
-  </data>
-  <data name="RemoveRule" xml:space="preserve">
+  </data><data name="RemoveRule" xml:space="preserve">
     <value>Quitar regla</value>
-  </data>
-  <data name="HeaderSubtitleFallback" xml:space="preserve">
+  </data><data name="HeaderSubtitleFallback" xml:space="preserve">
     <value>{0} sitios y {1} apps bloqueados</value>
-  </data>
-  <data name="HeaderSubtitleActive" xml:space="preserve">
+  </data><data name="HeaderSubtitleActive" xml:space="preserve">
     <value>Termina a las {0} · no puedes cambiar de perfil ahora</value>
-  </data>
-  <data name="MetricRemaining" xml:space="preserve">
+  </data><data name="MetricRemaining" xml:space="preserve">
     <value>RESTANTES</value>
-  </data>
-  <data name="MetricFocusedToday" xml:space="preserve">
+  </data><data name="MetricFocusedToday" xml:space="preserve">
     <value>ENFOCADO HOY</value>
-  </data>
-  <data name="FocusedHoursMinutes" xml:space="preserve">
+  </data><data name="FocusedHoursMinutes" xml:space="preserve">
     <value>{0}h {1}m</value>
-  </data>
-  <data name="FocusedMinutesOnly" xml:space="preserve">
+  </data><data name="FocusedMinutesOnly" xml:space="preserve">
     <value>{0}m</value>
-  </data>
-  <data name="FirstSessionHint" xml:space="preserve">
+  </data><data name="FirstSessionHint" xml:space="preserve">
     <value>Tu primera sesión
 empieza aquí</value>
-  </data>
-  <data name="ProtectedBadge" xml:space="preserve">
+  </data><data name="ProtectedBadge" xml:space="preserve">
     <value>Protegido</value>
-  </data>
-  <data name="SwitchProfile" xml:space="preserve">
+  </data><data name="SwitchProfile" xml:space="preserve">
     <value>Cambiar de perfil</value>
-  </data>
-  <data name="AddProfile" xml:space="preserve">
+  </data><data name="AddProfile" xml:space="preserve">
     <value>Añadir perfil</value>
-  </data>
-  <data name="WeekSparklineLabel" xml:space="preserve">
+  </data><data name="WeekSparklineLabel" xml:space="preserve">
     <value>Minutos de enfoque de los últimos siete días</value>
-  </data>
-  <data name="MetricRemainingOfTotal" xml:space="preserve">
+  </data><data name="MetricRemainingOfTotal" xml:space="preserve">
     <value>RESTANTES DE {0} MIN</value>
-  </data>
-  <data name="MetricUnitHours" xml:space="preserve">
+  </data><data name="MetricUnitHours" xml:space="preserve">
     <value>h</value>
-  </data>
-  <data name="MetricUnitMinutes" xml:space="preserve">
+  </data><data name="MetricUnitMinutes" xml:space="preserve">
     <value>m</value>
-  </data>
-  <data name="BlockAppHeadline" xml:space="preserve">
+  </data><data name="BlockAppHeadline" xml:space="preserve">
     <value>{0} te espera después</value>
-  </data>
-  <data name="BlockAppHeadlineGeneric" xml:space="preserve">
+  </data><data name="BlockAppHeadlineGeneric" xml:space="preserve">
     <value>Esa aplicación te espera después</value>
-  </data>
-  <data name="BlockBack" xml:space="preserve">
+  </data><data name="BlockBack" xml:space="preserve">
     <value>Volver a lo que hacía</value>
-  </data>
-  <data name="BlockCapture" xml:space="preserve">
+  </data><data name="BlockCapture" xml:space="preserve">
     <value>Anotarlo para después</value>
-  </data>
-  <data name="BlockCapturePlaceholder" xml:space="preserve">
+  </data><data name="BlockCapturePlaceholder" xml:space="preserve">
     <value>¿Qué ibas a hacer ahí?</value>
-  </data>
-  <data name="BlockCaptureSave" xml:space="preserve">
+  </data><data name="BlockCaptureSave" xml:space="preserve">
     <value>Guardar</value>
-  </data>
-  <data name="BlockCaptureCancel" xml:space="preserve">
+  </data><data name="BlockCaptureCancel" xml:space="preserve">
     <value>Cancelar</value>
-  </data>
-  <data name="BlockCaptureSaved" xml:space="preserve">
+  </data><data name="BlockCaptureSaved" xml:space="preserve">
     <value>Anotado. Lo verás al terminar la sesión.</value>
-  </data>
-  <data name="BlockCaptureFailed" xml:space="preserve">
+  </data><data name="BlockCaptureFailed" xml:space="preserve">
     <value>No se pudo anotar ahora mismo.</value>
-  </data>
-  <data name="BlockAutoClose" xml:space="preserve">
+  </data><data name="BlockAutoClose" xml:space="preserve">
     <value>Esta pantalla se cierra sola cuando termine la sesión.</value>
-  </data>
-  <data name="BlockFooterNormal" xml:space="preserve">
+  </data><data name="BlockFooterNormal" xml:space="preserve">
     <value>Modo normal · puedes terminarla desde FocusGuard</value>
-  </data>
-  <data name="BlockFooterStrict" xml:space="preserve">
+  </data><data name="BlockFooterStrict" xml:space="preserve">
     <value>Modo estricto activo hasta las {0}</value>
-  </data>
-  <data name="BlockContext" xml:space="preserve">
+  </data><data name="BlockContext" xml:space="preserve">
     <value>Lo pusiste en pausa hasta las {0}. Faltan {1} y ya llevas {2} de esta sesión.</value>
-  </data>
-  <data name="BlockMinutes" xml:space="preserve">
+  </data><data name="BlockMinutes" xml:space="preserve">
     <value>{0} minutos</value>
-  </data>
-  <data name="BlockOneMinute" xml:space="preserve">
+  </data><data name="BlockOneMinute" xml:space="preserve">
     <value>1 minuto</value>
-  </data>
-  <data name="BlockLessThanMinute" xml:space="preserve">
+  </data><data name="BlockLessThanMinute" xml:space="preserve">
     <value>menos de un minuto</value>
-  </data>
-  <data name="SummaryCompleteTitle" xml:space="preserve">
+  </data><data name="SummaryCompleteTitle" xml:space="preserve">
     <value>Sesión completa</value>
-  </data>
-  <data name="SummaryStoppedTitle" xml:space="preserve">
+  </data><data name="SummaryStoppedTitle" xml:space="preserve">
     <value>Sesión terminada</value>
-  </data>
-  <data name="SummarySubtitle" xml:space="preserve">
+  </data><data name="SummarySubtitle" xml:space="preserve">
     <value>{0} · {1} minutos sin interrupciones</value>
-  </data>
-  <data name="SummaryStoppedSubtitle" xml:space="preserve">
+  </data><data name="SummaryStoppedSubtitle" xml:space="preserve">
     <value>{0} · {1} de {2} minutos</value>
-  </data>
-  <data name="SummaryFocusedLabel" xml:space="preserve">
+  </data><data name="SummaryFocusedLabel" xml:space="preserve">
     <value>enfocado</value>
-  </data>
-  <data name="SummaryBlocksLabel" xml:space="preserve">
+  </data><data name="SummaryBlocksLabel" xml:space="preserve">
     <value>bloqueos</value>
-  </data>
-  <data name="SummaryStreakLabel" xml:space="preserve">
+  </data><data name="SummaryStreakLabel" xml:space="preserve">
     <value>de racha</value>
-  </data>
-  <data name="SummaryStreakUnit" xml:space="preserve">
+  </data><data name="SummaryStreakUnit" xml:space="preserve">
     <value>{0} días</value>
-  </data>
-  <data name="SummaryCapturedTitle" xml:space="preserve">
+  </data><data name="SummaryCapturedTitle" xml:space="preserve">
     <value>Anotaste {0} cosas</value>
-  </data>
-  <data name="SummaryCapturedOne" xml:space="preserve">
+  </data><data name="SummaryCapturedOne" xml:space="preserve">
     <value>Anotaste 1 cosa</value>
-  </data>
-  <data name="SummaryCapturedHint" xml:space="preserve">
+  </data><data name="SummaryCapturedHint" xml:space="preserve">
     <value>Revísalas ahora o guárdalas para la próxima pausa.</value>
-  </data>
-  <data name="SummaryDismissAll" xml:space="preserve">
+  </data><data name="SummaryDismissAll" xml:space="preserve">
     <value>Descartar todo</value>
-  </data>
-  <data name="SummaryOpen" xml:space="preserve">
+  </data><data name="SummaryOpen" xml:space="preserve">
     <value>Abrir</value>
-  </data>
-  <data name="SummaryDismiss" xml:space="preserve">
+  </data><data name="SummaryDismiss" xml:space="preserve">
     <value>Descartar</value>
-  </data>
-  <data name="SummaryAnotherSession" xml:space="preserve">
+  </data><data name="SummaryAnotherSession" xml:space="preserve">
     <value>Otra sesión de {0} min</value>
-  </data>
-  <data name="SummaryTakeBreak" xml:space="preserve">
+  </data><data name="SummaryTakeBreak" xml:space="preserve">
     <value>Tomar un descanso</value>
-  </data>
-  <data name="SummaryUnit" xml:space="preserve">
+  </data><data name="SummaryUnit" xml:space="preserve">
     <value>m</value>
-  </data>
-  <data name="SettingsSessionEndTitle" xml:space="preserve">
+  </data><data name="SettingsSessionEndTitle" xml:space="preserve">
     <value>Cuando termina una sesión</value>
-  </data>
-  <data name="SettingsSessionEndDescription" xml:space="preserve">
+  </data><data name="SettingsSessionEndDescription" xml:space="preserve">
     <value>Elige cómo te llega el resumen. Cerrarlo siempre equivale a tomar un descanso.</value>
-  </data>
-  <data name="SettingsSessionEndWindow" xml:space="preserve">
+  </data><data name="SettingsSessionEndWindow" xml:space="preserve">
     <value>Abrir la ventana de resumen</value>
-  </data>
-  <data name="SettingsSessionEndToast" xml:space="preserve">
+  </data><data name="SettingsSessionEndToast" xml:space="preserve">
     <value>Mostrar antes una notificación</value>
-  </data>
-  <data name="SettingsSessionEndDimmed" xml:space="preserve">
+  </data><data name="SettingsSessionEndDimmed" xml:space="preserve">
     <value>Abrir la ventana sobre el escritorio oscurecido</value>
-  </data>
-  <data name="SettingsSessionEndOff" xml:space="preserve">
+  </data><data name="SettingsSessionEndOff" xml:space="preserve">
     <value>No mostrar nada</value>
-  </data>
-  <data name="SummaryToastTitle" xml:space="preserve">
+  </data><data name="SettingsAppearanceTitle" xml:space="preserve">
+    <value>Apariencia</value>
+  </data><data name="SettingsAppearanceDescription" xml:space="preserve">
+    <value>Dark Zen va bien con poca luz; White Zen con luz de día. El cambio se aplica al instante.</value>
+  </data><data name="SettingsAppearanceLight" xml:space="preserve">
+    <value>White Zen (tema claro)</value>
+  </data><data name="SettingsStartupTitle" xml:space="preserve">
+    <value>Inicio de Windows</value>
+  </data><data name="SettingsStartupDescription" xml:space="preserve">
+    <value>Abre FocusGuard discretamente en el área de notificación al iniciar sesión en Windows.</value>
+  </data><data name="SettingsStartupToggle" xml:space="preserve">
+    <value>Iniciar FocusGuard con Windows</value>
+  </data><data name="SettingsGeneralTab" xml:space="preserve"><value>General</value></data><data name="SettingsNotificationsTab" xml:space="preserve"><value>Notificaciones</value></data><data name="SettingsStartupTab" xml:space="preserve"><value>Inicio</value></data><data name="SettingsIntegrationsTab" xml:space="preserve"><value>Integraciones</value></data><data name="SettingsProtectionTab" xml:space="preserve"><value>Protección</value></data><data name="SettingsAdvancedTab" xml:space="preserve"><value>Avanzado</value></data><data name="SettingsClose" xml:space="preserve"><value>Cerrar Ajustes</value></data><data name="SettingsTitle" xml:space="preserve"><value>Ajustes de la aplicación</value></data><data name="SettingsSubtitle" xml:space="preserve"><value>Se aplican a todos los perfiles y a las sesiones futuras.</value></data><data name="SettingsDone" xml:space="preserve"><value>Listo</value></data><data name="CycleEyebrow" xml:space="preserve"><value>Ciclo</value></data><data name="SettingsBehaviorSection" xml:space="preserve"><value>Comportamiento de sesión</value></data><data name="SettingsReduceMotion" xml:space="preserve"><value>Reducir movimiento</value></data><data name="SettingsReduceMotionDescription" xml:space="preserve"><value>Usa fundidos breves en lugar de movimiento, escalado o pulsos ambientales.</value></data><data name="SettingsSessionReminders" xml:space="preserve"><value>Recordatorios de sesión</value></data><data name="SettingsBreakNotifications" xml:space="preserve"><value>Notificaciones de enfoque y descanso corto</value></data><data name="SettingsWeeklySummary" xml:space="preserve"><value>Resumen semanal</value></data><data name="SettingsNotificationsDescription" xml:space="preserve"><value>Elige qué eventos de FocusGuard aparecen sobre el reloj de la barra de tareas.</value></data><data name="SettingsStartMinimized" xml:space="preserve"><value>Iniciar minimizado</value></data><data name="SettingsShowInTray" xml:space="preserve"><value>Mostrar en el área de notificación</value></data><data name="SettingsBrowserExtension" xml:space="preserve"><value>Extensión del navegador</value></data><data name="SettingsProtectionService" xml:space="preserve"><value>Servicio de protección</value></data><data name="SettingsRecoveryCode" xml:space="preserve"><value>Código de recuperación</value></data><data name="SettingsExportLogs" xml:space="preserve"><value>Exportar registros de soporte</value></data><data name="SettingsResetAll" xml:space="preserve"><value>Restablecer todos los ajustes</value></data><data name="SettingsUnavailable" xml:space="preserve"><value>No disponible en esta versión</value></data><data name="SettingsProfileTheme" xml:space="preserve"><value>Usar un tema para este perfil</value></data><data name="SettingsProfileThemeDescription" xml:space="preserve"><value>El tema del perfil sustituye la apariencia global mientras este perfil está activo.</value></data><data name="SettingsProfileAppearance" xml:space="preserve"><value>Apariencia del perfil</value></data><data name="SettingsProfileAppearanceDescription" xml:space="preserve"><value>Desactivado usa Dark Zen; activado usa White Zen.</value></data><data name="StatusTimerOnly" xml:space="preserve"><value>Solo temporizador</value></data><data name="StatusNoRules" xml:space="preserve"><value>Sin reglas</value></data><data name="NoBlockingRulesActive" xml:space="preserve"><value>Este perfil no tiene aplicaciones ni sitios web bloqueados. Detén la sesión y agrega reglas para activar el bloqueo.</value></data><data name="StatusDegraded" xml:space="preserve"><value>Degradado</value></data><data name="FocusActiveLabel" xml:space="preserve"><value>Focus activo</value></data><data name="ViewBlockedItems" xml:space="preserve"><value>Ver elementos bloqueados</value></data><data name="SummaryToastTitle" xml:space="preserve">
     <value>Sesión completa</value>
-  </data>
-  <data name="SummaryToastBody" xml:space="preserve">
+  </data><data name="SummaryToastBody" xml:space="preserve">
     <value>{0} minutos enfocado. Abre FocusGuard para revisar lo que anotaste.</value>
-  </data>
-</root>
+  </data><data name="PhaseNotificationFocusStartedTitle" xml:space="preserve"><value>Subciclo de enfoque {0} iniciado</value></data><data name="PhaseNotificationFocusStartedBody" xml:space="preserve"><value>El subciclo de enfoque {0} está activo hasta las {1:t}.</value></data><data name="PhaseNotificationFocusEndedTitle" xml:space="preserve"><value>Subciclo de enfoque {0} completado</value></data><data name="PhaseNotificationFocusEndedBody" xml:space="preserve"><value>Esta fase de enfoque ha terminado.</value></data><data name="PhaseNotificationShortBreakStartedTitle" xml:space="preserve"><value>Descanso corto iniciado</value></data><data name="PhaseNotificationShortBreakStartedBody" xml:space="preserve"><value>Tu descanso corto está activo hasta las {0:t}.</value></data><data name="PhaseNotificationShortBreakEndedTitle" xml:space="preserve"><value>Descanso corto completado</value></data><data name="PhaseNotificationShortBreakEndedBody" xml:space="preserve"><value>Tu descanso corto ha terminado.</value></data><data name="NavSessionGroup" xml:space="preserve"><value>Sesión</value></data><data name="NavProfilesGroup" xml:space="preserve"><value>Perfiles</value></data><data name="ProfileLockedInSession" xml:space="preserve"><value>Perfil bloqueado</value></data><data name="ProfileScope" xml:space="preserve"><value>{0} sitios · {1} apps</value></data><data name="PlannedEnd" xml:space="preserve"><value>min · termina {0}</value></data><data name="PlannedRelease" xml:space="preserve"><value>Se libera solo a las {0}</value></data><data name="BlockedNowHeader" xml:space="preserve"><value>Bloqueado ahora</value></data><data name="WillBlockHeader" xml:space="preserve"><value>Se bloqueará</value></data><data name="EditRules" xml:space="preserve"><value>Editar</value></data><data name="BlockedAttemptsToday" xml:space="preserve"><value>{0} intentos bloqueados hoy</value></data><data name="ServiceAndExtensionActive" xml:space="preserve"><value>Servicio y extensión activos</value></data><data name="ProtectionReady" xml:space="preserve"><value>Protección lista</value></data><data name="ProtectionExtensionDown" xml:space="preserve"><value>La extensión del navegador no responde</value></data><data name="ProtectionExtensionDownDetail" xml:space="preserve"><value>Las apps siguen bloqueadas. Los sitios web no, hasta que la extensión vuelva a responder.</value></data><data name="ProtectionServiceUnavailable" xml:space="preserve"><value>El servicio de FocusGuard no está disponible</value></data><data name="ProtectionServiceUnavailableDetail" xml:space="preserve"><value>Ahora mismo no se bloquea nada. Podés iniciar sesiones, pero no van a bloquear nada.</value></data><data name="ProtectedWithScope" xml:space="preserve"><value>Protegido · {0} sitios y {1} apps</value></data><data name="BreakActivePill" xml:space="preserve"><value>Descanso activo</value></data><data name="RetryProtection" xml:space="preserve"><value>Reintentar</value></data><data name="ProtectionDetails" xml:space="preserve"><value>Detalles</value></data><data name="StrictModeOffNotice" xml:space="preserve"><value>Modo estricto desactivado</value></data><data name="BreakKeepsBlockingHeader" xml:space="preserve"><value>En el descanso se libera todo menos</value></data><data name="StrictModeInfo" xml:space="preserve"><value>El modo estricto quita el botón de terminar durante toda la sesión. Resiste que cierres la app, que reinicies y que cambies la hora del sistema, pero un administrador decidido todavía puede desactivarlo desde el Modo seguro.</value></data><data name="SessionHeadline" xml:space="preserve"><value>{0} · {1}</value></data><data name="TimerSessionKind" xml:space="preserve"><value>temporizador</value></data><data name="CycleSessionKind" xml:space="preserve"><value>ciclo</value></data><data name="ThenBreakOf" xml:space="preserve"><value>luego {0} min de pausa</value></data><data name="NextBlockStartsAt" xml:space="preserve"><value>El siguiente bloque comienza a las {0}</value></data><data name="BreakReleasedSummary" xml:space="preserve"><value>Se liberaron temporalmente {0} sitios y {1} apps</value></data><data name="WholeCycleEndsAt" xml:space="preserve"><value>Todo el ciclo termina a las {0}</value></data><data name="TimerEndsAndReleases" xml:space="preserve"><value>Termina a las {0} · se libera solo</value></data><data name="OfThisBlock" xml:space="preserve"><value>de este bloque</value></data><data name="UntilNextBlock" xml:space="preserve"><value>hasta el próximo bloque</value></data><data name="BreakStatus" xml:space="preserve"><value>Descanso</value></data><data name="BackToFocusNow" xml:space="preserve"><value>Volver al foco ahora</value></data><data name="SkipToBreak" xml:space="preserve"><value>Saltar al descanso</value></data><data name="StopCycle" xml:space="preserve"><value>Terminar ciclo</value></data><data name="StopSession" xml:space="preserve"><value>Terminar sesión</value></data><data name="CycleCardComposition" xml:space="preserve"><value>{0} bloques de {1} min · descansos de {2}</value></data><data name="CycleCardLastBreak" xml:space="preserve"><value> · el último de {0}</value></data><data name="StrictModeConsequence" xml:space="preserve"><value>No podrás cancelar hasta el final</value></data><data name="StrictStepOne" xml:space="preserve"><value>Paso 1 de 2</value></data><data name="StrictStepTwo" xml:space="preserve"><value>Paso 2 de 2</value></data><data name="StrictSaveCodeTitle" xml:space="preserve"><value>Guarda tu código de recuperación</value></data><data name="StrictSaveCodeBody" xml:space="preserve"><value>Es la única forma de terminar la sesión antes de tiempo. No se guarda en ningún servidor y no volveremos a mostrarlo.</value></data><data name="StrictRecoveryWarning" xml:space="preserve"><value>Si pierdes el código no podrás desbloquear antes de las {0}, ni siquiera reiniciando.</value></data><data name="StrictDownloadCode" xml:space="preserve"><value>Descargar</value></data><data name="StrictPrintCode" xml:space="preserve"><value>Imprimir</value></data><data name="StrictCopyCode" xml:space="preserve"><value>Copiar</value></data><data name="StrictSavedIt" xml:space="preserve"><value>Ya lo guardé</value></data><data name="StrictBack" xml:space="preserve"><value>Atrás</value></data><data name="StrictLockTitle" xml:space="preserve"><value>No vas a poder cancelar hasta las {0}</value></data><data name="StrictLockSubtitle" xml:space="preserve"><value>Son {0} con {1} sitios y {2} apps bloqueados, sin botón de salida.</value></data><data name="StrictDuringThatTime" xml:space="preserve"><value>Durante ese tiempo</value></data><data name="StrictResistsRestart" xml:space="preserve"><value>Sigue activo si cierras la app, reinicias o cambias la hora del sistema</value></data><data name="StrictResistsRename" xml:space="preserve"><value>Renombrar o copiar un ejecutable no lo evade</value></data><data name="StrictAdminLimit" xml:space="preserve"><value>Un administrador decidido puede desactivarlo desde Modo seguro</value></data><data name="StrictSeeLimits" xml:space="preserve"><value>Ver límites</value></data><data name="StrictAppClosureWarning" xml:space="preserve"><value>Guarda tu trabajo en {0}: se cerrarán al empezar.</value></data><data name="StrictTypeToConfirm" xml:space="preserve"><value>Escribe {0} para confirmar</value></data><data name="StrictProfileNamePlaceholder" xml:space="preserve"><value>Nombre del perfil</value></data><data name="StrictConfirmButton" xml:space="preserve"><value>Bloquear {0}</value></data><data name="StrictLimitsTitle" xml:space="preserve"><value>Qué no resiste el modo estricto</value></data><data name="StrictLimitsBody" xml:space="preserve"><value>El modo estricto es una barrera deliberada, no autenticación. Resiste cerrar la interfaz, un reinicio normal, cambios de reloj, ediciones básicas de configuración, desactivar temporalmente la extensión, y renombrar o copiar ejecutables cuando existe una regla por hash.
+
+No resiste a un administrador decidido, el Modo seguro, editar los datos sin conexión desde otro sistema operativo, ni manipulaciones fuera del modelo de amenaza.</value></data><data name="StrictLimitsClose" xml:space="preserve"><value>Entendido</value></data><data name="StrictTypeToConfirmPrefix" xml:space="preserve"><value>Escribe</value></data><data name="StrictTypeToConfirmSuffix" xml:space="preserve"><value>para confirmar</value></data><data name="QuickStartMinutes" xml:space="preserve"><value>Iniciar {0} minutos</value></data><data name="QuickStartSummary" xml:space="preserve"><value>{0} · {1} minutos</value></data><data name="AdvancedOptions" xml:space="preserve"><value>Opciones avanzadas</value></data><data name="ObjectiveLabel" xml:space="preserve"><value>¿En qué te vas a enfocar? (opcional)</value></data><data name="ObjectivePlaceholder" xml:space="preserve"><value>Por ejemplo, terminar la propuesta</value></data><data name="ObjectiveWorked" xml:space="preserve"><value>Objetivo trabajado</value></data><data name="NextPhaseAt" xml:space="preserve"><value>{0} a las {1}</value></data><data name="NoNextBreak" xml:space="preserve"><value>Sin descanso programado</value></data><data name="ViewBlocks" xml:space="preserve"><value>Ver bloqueos</value></data><data name="CompactMode" xml:space="preserve"><value>Ventana compacta · Ctrl+Shift+M</value></data><data name="CompactTitle" xml:space="preserve"><value>FocusGuard · Compacto</value></data><data name="CompactCollapse" xml:space="preserve"><value>Contraer / expandir</value></data><data name="CompactPin" xml:space="preserve"><value>Mantener encima</value></data><data name="CompactOpen" xml:space="preserve"><value>Abrir FocusGuard</value></data><data name="CompactClose" xml:space="preserve"><value>Cerrar ventana compacta</value></data><data name="FocusShortcuts" xml:space="preserve"><value>Ctrl+Enter iniciar · Ctrl+Shift+M compacto</value></data><data name="ProfileSearchShortcut" xml:space="preserve"><value>Buscar aplicaciones · Ctrl+F</value></data><data name="ApplicationSearchHint" xml:space="preserve"><value>Buscar por nombre de aplicación</value></data><data name="ApplicationCatalogUnavailable" xml:space="preserve"><value>No se pudo leer el menú Inicio. Puedes añadir un ejecutable en detalles.</value></data><data name="ApplicationCatalogLoading" xml:space="preserve"><value>Leyendo aplicaciones instaladas…</value></data><data name="ApplicationNoMatches" xml:space="preserve"><value>Sin aplicaciones coincidentes. Añade un nombre o ruta en detalles.</value></data><data name="InstalledApplications" xml:space="preserve"><value>Aplicaciones instaladas</value></data><data name="SavedBlocks" xml:space="preserve"><value>Reglas guardadas</value></data><data name="RuleDetails" xml:space="preserve"><value>Detalles técnicos</value></data><data name="ApplicationTechnicalHint" xml:space="preserve"><value>Aplicacion.exe o ruta completa del ejecutable</value></data><data name="RuleBlock" xml:space="preserve"><value>Bloquear</value></data><data name="RuleAllow" xml:space="preserve"><value>Permitir</value></data><data name="DomainHint" xml:space="preserve"><value>Dominio, p. ej. *.example.com</value></data><data name="DomainValidated" xml:space="preserve"><value>✓ {0} · {1}</value></data><data name="DomainInvalid" xml:space="preserve"><value>Escribe un dominio válido; omite la ruta y los parámetros de la URL.</value></data><data name="HashedApplication" xml:space="preserve"><value>Aplicación identificada por hash</value></data><data name="TodayTitle" xml:space="preserve"><value>Hoy</value></data><data name="TodayFocusMinutes" xml:space="preserve"><value>Minutos de foco completados</value></data><data name="TodayCompletedSessions" xml:space="preserve"><value>Sesiones terminadas</value></data><data name="TodayTimelineTitle" xml:space="preserve"><value>Foco y descansos</value></data><data name="TodayEmpty" xml:space="preserve"><value>Tu tiempo de foco realizado aparecerá aquí.</value></data><data name="TodayUnavailable" xml:space="preserve"><value>El historial no está disponible. Reintenta cuando el servicio esté conectado.</value></data><data name="TodayTruncated" xml:space="preserve"><value>Se muestran las últimas 128 fases. Los totales usan hasta 2.000 registros recientes de sesiones de hoy.</value></data><data name="TechnicalLog" xml:space="preserve"><value>Registro técnico de bloqueos</value></data><data name="RefreshView" xml:space="preserve"><value>Actualizar</value></data><data name="RepeatSession" xml:space="preserve"><value>Repetir sesión</value></data><data name="BackToFocus" xml:space="preserve"><value>Volver</value></data><data name="CompletedMinutes" xml:space="preserve"><value>Completaste {0} minutos</value></data><data name="ReflectionLabel" xml:space="preserve"><value>¿Qué avanzaste? (opcional)</value></data><data name="ReflectionHint" xml:space="preserve"><value>Se guarda solo en este equipo.</value></data><data name="RepeatProfileMissing" xml:space="preserve"><value>El perfil original fue eliminado. Elige un perfil para iniciar de nuevo.</value></data><data name="ScheduleDescription" xml:space="preserve"><value>Los horarios siguen al cerrar la app.</value></data><data name="ScheduleSafety" xml:space="preserve"><value>Solo modo normal. Conserva las reglas guardadas del perfil. Una sesión activa tiene prioridad; los horarios perdidos se omiten.</value></data><data name="ScheduleNameLabel" xml:space="preserve"><value>Nombre del horario</value></data><data name="ScheduleTimeLabel" xml:space="preserve"><value>Hora de inicio · HH:mm</value></data><data name="ScheduleDaysLabel" xml:space="preserve"><value>Repetir los días</value></data><data name="ScheduleEnabled" xml:space="preserve"><value>Activado</value></data><data name="SchedulePaused" xml:space="preserve"><value>Pausado</value></data><data name="ScheduleEnable" xml:space="preserve"><value>Activar</value></data><data name="SchedulePause" xml:space="preserve"><value>Pausar</value></data><data name="ScheduleEnableConsent" xml:space="preserve"><value>Activar estas sesiones semanales</value></data><data name="ScheduleEndPreview" xml:space="preserve"><value>{0}–{1} · {2} · modo normal</value></data><data name="ScheduleNext" xml:space="preserve"><value>Próxima sesión: {0}</value></data><data name="ScheduleNoNext" xml:space="preserve"><value>Sin próximas sesiones activadas</value></data><data name="ScheduleInvalidTime" xml:space="preserve"><value>Escribe una hora de 24 horas, como 09:00.</value></data><data name="ScheduleNameRequired" xml:space="preserve"><value>Asigna un nombre a este horario.</value></data><data name="ScheduleDaysRequired" xml:space="preserve"><value>Selecciona al menos un día.</value></data><data name="ScheduleUnavailable" xml:space="preserve"><value>La programación no está disponible. Conecta con el servicio actualizado y reintenta.</value></data><data name="ScheduleSaved" xml:space="preserve"><value>Horario guardado.</value></data><data name="ScheduleOverlap" xml:space="preserve"><value>Los horarios activados no pueden superponerse. Cambia la hora o pausa uno.</value></data><data name="ScheduleLimit" xml:space="preserve"><value>Puedes guardar hasta 12 horarios semanales.</value></data><data name="ScheduleEmpty" xml:space="preserve"><value>Crea tu primer horario semanal abajo.</value></data><data name="ScheduleSave" xml:space="preserve"><value>Guardar horario semanal</value></data><data name="ScheduleRemove" xml:space="preserve"><value>Eliminar horario</value></data><data name="ScheduleResultNone" xml:space="preserve"><value>Sin ejecuciones aún</value></data><data name="ScheduleResultStarted" xml:space="preserve"><value>Última sesión iniciada</value></data><data name="ScheduleResultBusy" xml:space="preserve"><value>Omitida: había otra sesión activa</value></data><data name="ScheduleResultMissed" xml:space="preserve"><value>Omitida: el horario ya había pasado</value></data><data name="ScheduleResultClaimed" xml:space="preserve"><value>Ejecución registrada; no se repetirá</value></data><data name="ScheduleResultRejected" xml:space="preserve"><value>El servicio no pudo iniciar la sesión</value></data><data name="WeekScheduleTitle" xml:space="preserve"><value>Esta semana</value></data><data name="ChooseProfile" xml:space="preserve"><value>Perfil</value></data><data name="FocusPhaseLabel" xml:space="preserve"><value>Foco</value></data><data name="TechnicalLogUnavailable" xml:space="preserve"><value>El registro técnico no está disponible. Reintenta cuando el servicio esté conectado.</value></data><data name="SchedulePolicyPreview" xml:space="preserve"><value>Copia del perfil · {0} apps · {1} sitios</value></data><data name="ScheduleBlockingEnabled" xml:space="preserve"><value>Bloqueo de aplicaciones y sitios activado para este horario.</value></data><data name="ScheduleTimerOnly" xml:space="preserve"><value>Solo temporizador: el bloqueo está desactivado para este horario.</value></data><data name="ScheduleFirstOccurrence" xml:space="preserve"><value>Primera sesión: {0}. Finaliza a las {1}.</value></data><data name="ScheduleNextDay" xml:space="preserve"><value> (día siguiente)</value></data><data name="HomeSessions" xml:space="preserve"><value>Sesiones</value></data><data name="HomeNewSession" xml:space="preserve"><value>Nueva sesión</value></data><data name="HomeNow" xml:space="preserve"><value>Ahora</value></data><data name="HomeUpcoming" xml:space="preserve"><value>Próximas</value></data><data name="HomeProfiles" xml:space="preserve"><value>Tus perfiles</value></data><data name="HomeConfigure" xml:space="preserve"><value>Configurar</value></data><data name="HomeSchedule" xml:space="preserve"><value>Programar sesión</value></data><data name="HomeNoUpcoming" xml:space="preserve"><value>Sin sesiones programadas</value></data><data name="HomeNoUpcomingHint" xml:space="preserve"><value>Reserva tiempo para tu próxima sesión.</value></data><data name="HomeIntro" xml:space="preserve"><value>Empieza ahora o programa tu próxima sesión.</value></data><data name="HomeReady" xml:space="preserve"><value>Todo listo para empezar</value></data><data name="HomeTodaySummary" xml:space="preserve"><value>{0} minutos de foco · {1} sesiones terminadas hoy</value></data><data name="HomeEditSession" xml:space="preserve"><value>Configura tu sesión</value></data><data name="HomeRules" xml:space="preserve"><value>Lista de bloqueos</value></data><data name="HomeSiteCount" xml:space="preserve"><value>{0} sitio</value></data><data name="HomeSitesCount" xml:space="preserve"><value>{0} sitios</value></data><data name="HomeAppCount" xml:space="preserve"><value>{0} app</value></data><data name="HomeAppsCount" xml:space="preserve"><value>{0} apps</value></data><data name="SessionProfileUnavailable" xml:space="preserve"><value>El perfil seleccionado ya no está disponible. Elige un perfil existente antes de empezar.</value></data><data name="SessionStateChecking" xml:space="preserve"><value>Comprobando el estado de la sesión…</value></data><data name="SessionStateStale" xml:space="preserve"><value>Conexión perdida. Mostrando el último estado confirmado de la sesión.</value></data><data name="SessionStateUnknown" xml:space="preserve"><value>El estado de la sesión es desconocido. Reconecta antes de empezar.</value></data><data name="ConnectionUnconfirmedDetail" xml:space="preserve"><value>La sesión puede seguir activa. No se puede confirmar la protección ni la liberación. Iniciar, detener y saltar están deshabilitados hasta recibir un estado actualizado del servicio.</value></data><data name="SessionActionUnconfirmed" xml:space="preserve"><value>El resultado de la solicitud no está confirmado. Reconecta para consultar el estado real antes de intentarlo otra vez.</value></data><data name="ProfileChangedReload" xml:space="preserve"><value>El perfil cambió en otra ventana. Se cargó la versión actual; revisa tus cambios antes de guardar de nuevo.</value></data><data name="CyclePresetBuiltIn" xml:space="preserve"><value>Los ciclos incorporados no se pueden cambiar ni eliminar. Duplica uno para personalizarlo.</value></data><data name="CyclePresetConflict" xml:space="preserve"><value>Este ciclo cambió en otra ventana. Cancela y vuelve a abrirlo antes de guardar.</value></data><data name="CyclePresetReferenced" xml:space="preserve"><value>Un perfil usa este ciclo como predeterminado; no se puede eliminar todavía.</value></data><data name="CyclePresetWriteUnavailable" xml:space="preserve"><value>La edición de ciclos con revisión no está disponible aquí.</value></data><data name="CyclePresetNameConflict" xml:space="preserve"><value>Ya existe un preset de ciclo con ese nombre.</value></data>
+  <data name="ReactPilotOpen" xml:space="preserve"><value>Piloto React</value></data>
+  <data name="ReactPilotOpenDetail" xml:space="preserve"><value>Prueba la nueva interfaz. Classic sigue disponible en la bandeja.</value></data>
+  <data name="ReactPilotAlreadyOpenTitle" xml:space="preserve"><value>El piloto React ya está abierto</value></data>
+  <data name="ReactPilotAlreadyOpenBody" xml:space="preserve"><value>Activa su ventana desde la barra de tareas.</value></data>
+  <data name="ReactPilotUnavailableTitle" xml:space="preserve"><value>El piloto React no está disponible</value></data>
+  <data name="ReactPilotUnavailableBody" xml:space="preserve"><value>Esta instalación no incluye FocusGuard.UI.exe.</value></data>
+  <data name="ReactPilotStartFailedTitle" xml:space="preserve"><value>No se pudo abrir el piloto React</value></data>
+  <data name="ReactPilotStartFailedBody" xml:space="preserve"><value>Comprueba la instalación e inténtalo de nuevo.</value></data>
+<data name="SummaryCompletedFocusCyclesLabel" xml:space="preserve"><value>Ciclos de enfoque completados</value></data><data name="SummaryCompletedBreaksLabel" xml:space="preserve"><value>Descansos completados</value></data></root>

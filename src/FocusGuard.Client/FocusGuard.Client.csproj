@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../FocusGuard.Contracts/FocusGuard.Contracts.csproj" />
+    <ProjectReference Include="../FocusGuard.Domain/FocusGuard.Domain.csproj" />
+    <ProjectReference Include="../FocusGuard.Storage/FocusGuard.Storage.csproj" />
+  </ItemGroup>
+</Project>

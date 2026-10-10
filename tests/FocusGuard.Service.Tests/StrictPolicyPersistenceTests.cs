@@ -57,6 +57,64 @@ public sealed class StrictPolicyPersistenceTests : IDisposable
         Assert.Single(Directory.GetFiles(_directory, "failed-open-*.json"));
     }
 
+    // Break exceptions are Block-only since FG-216, but snapshots persisted by older builds carry Allow; both must round-trip.
+    [Theory]
+    [InlineData(RuleAction.Allow)]
+    [InlineData(RuleAction.Block)]
+    public async Task Store_RoundTripsCyclePlanAndBreakExceptions(RuleAction breakAction)
+    {
+        var start = Utc(12, 0);
+        var configuration = new FocusCycleConfiguration(
+            TimeSpan.FromMinutes(25),
+            TimeSpan.FromMinutes(5),
+            TimeSpan.FromMinutes(15),
+            4,
+            CycleTerminationMode.CycleCount,
+            2,
+            null);
+        var planResult = FocusCyclePlanBuilder.Build(configuration, start);
+        Assert.True(planResult.IsValid);
+        var plan = planResult.Value!;
+        var applicationRule = new ApplicationRule(
+            Guid.NewGuid(),
+            breakAction,
+            ApplicationMatchKind.FileName,
+            "music.exe");
+        var websiteRule = new WebsiteRule(Guid.NewGuid(), breakAction, "music.example");
+        var policy = new EnforcementPolicy(
+            Guid.NewGuid(),
+            new ProfileId(Guid.NewGuid()),
+            start,
+            plan.EndUtc,
+            true,
+            [new ApplicationRule(Guid.NewGuid(), RuleAction.Block, ApplicationMatchKind.FileName, "chat.exe")],
+            [new WebsiteRule(Guid.NewGuid(), RuleAction.Block, "social.example")],
+            EnforcementEnabled: true,
+            CyclePlan: plan,
+            BreakApplicationRules: [applicationRule],
+            BreakWebsiteRules: [websiteRule],
+            AuthorizedPhaseIndex: 1,
+            AuthorizedPhaseEndUtc: plan.Phases[1].EndUtc);
+        var snapshot = new StrictPolicySnapshot(
+            1,
+            policy,
+            start,
+            "boot-before",
+            RecoveryCodeService.Generate().Credential,
+            TimeSpan.FromMinutes(15));
+
+        var store = Store();
+        await store.SaveAsync(snapshot, CancellationToken.None);
+        var result = await store.LoadAsync(start, CancellationToken.None);
+
+        Assert.Equal(StrictPolicyLoadStatus.Active, result.Status);
+        Assert.NotNull(result.Snapshot?.Policy.CyclePlan);
+        Assert.Equal(plan.Phases, result.Snapshot!.Policy.CyclePlan!.Phases);
+        Assert.Equal([applicationRule], result.Snapshot.Policy.BreakApplicationRules);
+        Assert.Equal([websiteRule], result.Snapshot.Policy.BreakWebsiteRules);
+        Assert.Equal(1, result.Snapshot.Policy.AuthorizedPhaseIndex);
+    }
+
     [Fact]
     public async Task Coordinator_BackwardWallClockCannotExtendPolicy()
     {

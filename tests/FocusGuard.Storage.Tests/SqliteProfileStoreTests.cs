@@ -154,6 +154,141 @@ public sealed class SqliteProfileStoreTests
         Assert.Equal("Legacy", loaded!.Name);
         Assert.Null(loaded.Description);
         Assert.Null(loaded.AccentHex);
+        Assert.NotNull(await store.LoadCyclePresetAsync(BuiltInCyclePresets.ClassicId));
+    }
+
+    [Fact]
+    public async Task ListProfiles_DoesNotWriteTheDatabaseWhenSchemaIsCurrent()
+    {
+        using var temporary = TemporaryDatabase.Create();
+        var profile = new StoredProfile(ProfileId.New(), "Read only", [], []);
+        var store = new SqliteProfileStore(temporary.DatabasePath);
+        await store.InitializeAsync();
+        await store.SaveProfileAsync(profile);
+
+        var sentinel = new DateTime(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        File.SetLastWriteTimeUtc(temporary.DatabasePath, sentinel);
+
+        var listed = await store.ListProfilesAsync();
+
+        Assert.Equal(profile.Id, Assert.Single(listed).Id);
+        Assert.Equal(sentinel, File.GetLastWriteTimeUtc(temporary.DatabasePath));
+    }
+
+    [Fact]
+    public async Task ListProfiles_DoesNotDowngradeANewerSchemaVersion()
+    {
+        using var temporary = TemporaryDatabase.Create();
+        await using (var connection = new SqliteConnection($"Data Source={temporary.DatabasePath};Pooling=False"))
+        {
+            await connection.OpenAsync();
+            await using var command = connection.CreateCommand();
+            command.CommandText = "PRAGMA user_version = 4;";
+            await command.ExecuteNonQueryAsync();
+        }
+
+        var store = new SqliteProfileStore(temporary.DatabasePath);
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => store.ListProfilesAsync());
+        Assert.Contains("newer than supported", exception.Message);
+
+        await using var readOnly = new SqliteConnection($"Data Source={temporary.DatabasePath};Mode=ReadOnly;Pooling=False");
+        await readOnly.OpenAsync();
+        await using var version = readOnly.CreateCommand();
+        version.CommandText = "PRAGMA user_version;";
+        Assert.Equal(4L, await version.ExecuteScalarAsync());
+    }
+
+    [Fact]
+    public async Task Initialize_SeedsStableBuiltInPresetsWithoutAllowingTheirDeletion()
+    {
+        using var temporary = TemporaryDatabase.Create();
+        var store = new SqliteProfileStore(temporary.DatabasePath);
+
+        await store.InitializeAsync();
+        var presets = await store.ListCyclePresetsAsync();
+
+        Assert.Equal(3, presets.Count);
+        Assert.All(presets, preset => Assert.True(preset.IsBuiltIn));
+        Assert.Contains(presets, preset => preset.Id == BuiltInCyclePresets.ClassicId
+            && preset.Configuration.FocusDuration == TimeSpan.FromMinutes(25)
+            && preset.Configuration.CycleCount == 4);
+        Assert.False(await store.DeleteCyclePresetAsync(BuiltInCyclePresets.ClassicId));
+    }
+
+    [Fact]
+    public async Task CustomPreset_RoundTripsAndDeletionClearsProfileDefault()
+    {
+        using var temporary = TemporaryDatabase.Create();
+        var store = new SqliteProfileStore(temporary.DatabasePath);
+        var profile = new StoredProfile(ProfileId.New(), "Custom", [], []);
+        var configuration = FocusCycleConfiguration.Create(
+            TimeSpan.FromMinutes(30),
+            TimeSpan.FromMinutes(7),
+            TimeSpan.FromMinutes(18),
+            3,
+            CycleTerminationMode.TotalDuration,
+            totalDuration: TimeSpan.FromHours(2)).Value!;
+        var preset = new StoredCyclePreset(Guid.NewGuid(), "Mi ciclo", configuration, false);
+
+        await store.SaveProfileAsync(profile);
+        await store.SaveCyclePresetAsync(preset);
+        await store.SaveProfileCycleSettingsAsync(
+            new ProfileCycleSettings(profile.Id, preset.Id, [], []));
+        var loaded = await store.LoadCyclePresetAsync(preset.Id);
+
+        Assert.Equal(preset.Name, loaded!.Name);
+        Assert.Equal(preset.Configuration, loaded.Configuration);
+        Assert.False(loaded.IsBuiltIn);
+        Assert.True(await store.DeleteCyclePresetAsync(preset.Id));
+        Assert.Null((await store.LoadProfileCycleSettingsAsync(profile.Id))!.DefaultPresetId);
+    }
+
+    // A break replaces the whole rule set with this one, so an empty list releases
+    // everything. Entries here are the exceptions to that release and only mean
+    // something as Block rules — as Allow they permitted what was already permitted.
+    [Fact]
+    public async Task ProfileCycleSettings_RoundTripOnlyBlockBreakRules()
+    {
+        using var temporary = TemporaryDatabase.Create();
+        var store = new SqliteProfileStore(temporary.DatabasePath);
+        var profile = new StoredProfile(ProfileId.New(), "Descanso", [], []);
+        var application = new BreakApplicationRule(
+            Guid.NewGuid(),
+            RuleAction.Block,
+            ApplicationMatchKind.FileName,
+            "chat.exe");
+        var website = new BreakWebsiteRule(
+            Guid.NewGuid(),
+            RuleAction.Block,
+            "x.com/*");
+
+        await store.SaveProfileAsync(profile);
+        await store.SaveProfileCycleSettingsAsync(
+            new ProfileCycleSettings(profile.Id, BuiltInCyclePresets.ClassicId, [application], [website]));
+        var loaded = await store.LoadProfileCycleSettingsAsync(profile.Id);
+
+        Assert.Equal(BuiltInCyclePresets.ClassicId, loaded!.DefaultPresetId);
+        Assert.Equal(application, Assert.Single(loaded.ApplicationRules));
+        Assert.Equal(website, Assert.Single(loaded.WebsiteRules));
+    }
+
+    [Fact]
+    public async Task ProfileCycleSettings_RejectsAllowRulesBeforeWriting()
+    {
+        using var temporary = TemporaryDatabase.Create();
+        var store = new SqliteProfileStore(temporary.DatabasePath);
+        var profile = new StoredProfile(ProfileId.New(), "Descanso", [], []);
+        await store.SaveProfileAsync(profile);
+
+        var settings = new ProfileCycleSettings(
+            profile.Id,
+            null,
+            [new BreakApplicationRule(Guid.NewGuid(), RuleAction.Allow, ApplicationMatchKind.FileName, "music.exe")],
+            []);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => store.SaveProfileCycleSettingsAsync(settings));
+        var loaded = await store.LoadProfileCycleSettingsAsync(profile.Id);
+        Assert.Empty(loaded!.ApplicationRules);
     }
 
     [Fact]

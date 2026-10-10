@@ -1,6 +1,6 @@
+using System.Buffers;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Text;
 using Microsoft.Win32.SafeHandles;
 
 namespace FocusGuard.Infrastructure.Windows.Processes;
@@ -23,23 +23,33 @@ public static class WindowsProcessInspector
             return null;
         }
 
-        var path = new StringBuilder(MaximumPathCharacters);
-        var pathLength = path.Capacity;
-        if (!QueryFullProcessImageName(handle, 0, path, ref pathLength)
-            || !GetProcessTimes(handle, out var created, out _, out _, out _))
-        {
-            return null;
-        }
-
+        var path = ArrayPool<char>.Shared.Rent(MaximumPathCharacters);
         try
         {
-            var createdUtc = DateTimeOffset.FromFileTime(created.ToLong()).ToUniversalTime();
-            return new WindowsProcessInstance(processId, createdUtc, Path.GetFullPath(path.ToString()));
+            var pathLength = Math.Min(path.Length, MaximumPathCharacters);
+            if (!QueryFullProcessImageName(handle, 0, path, ref pathLength)
+                || !GetProcessTimes(handle, out var created, out _, out _, out _))
+            {
+                return null;
+            }
+
+            try
+            {
+                var createdUtc = DateTimeOffset.FromFileTime(created.ToLong()).ToUniversalTime();
+                return new WindowsProcessInstance(
+                    processId,
+                    createdUtc,
+                    Path.GetFullPath(new string(path, 0, pathLength)));
+            }
+            catch (Exception exception) when (
+                exception is ArgumentException or NotSupportedException or PathTooLongException)
+            {
+                return null;
+            }
         }
-        catch (Exception exception) when (
-            exception is ArgumentException or NotSupportedException or PathTooLongException)
+        finally
         {
-            return null;
+            ArrayPool<char>.Shared.Return(path);
         }
     }
 
@@ -54,7 +64,7 @@ public static class WindowsProcessInspector
     private static extern bool QueryFullProcessImageName(
         SafeProcessHandle process,
         uint flags,
-        StringBuilder executableName,
+        [Out] char[] executableName,
         ref int size);
 
     [DllImport("kernel32.dll", SetLastError = true)]

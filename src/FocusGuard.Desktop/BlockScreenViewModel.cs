@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using FocusGuard.Client;
 using FocusGuard.Contracts;
 using FocusGuard.Desktop.Resources;
 

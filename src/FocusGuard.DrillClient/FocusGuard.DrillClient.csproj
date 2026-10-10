@@ -4,7 +4,8 @@
     <FocusGuardProduction>true</FocusGuardProduction>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../FocusGuard.Desktop/FocusGuard.Desktop.csproj" />
+    <ProjectReference Include="../FocusGuard.Ipc.Windows/FocusGuard.Ipc.Windows.csproj" />
+    <ProjectReference Include="../FocusGuard.Client/FocusGuard.Client.csproj" />
     <ProjectReference Include="../FocusGuard.NativeMessaging/FocusGuard.NativeMessaging.csproj" />
   </ItemGroup>
 </Project>

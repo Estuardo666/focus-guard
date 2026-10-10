@@ -20,6 +20,12 @@ public static class Program
                 return 3;
             }
 
+#if FOCUSGUARD_PRODUCTION
+            if (!OperatingSystem.IsWindows()) return 4;
+            using var authenticatedPipes = new FocusGuard.Ipc.Windows.VerifiedPipeConnectionFactory(AppContext.BaseDirectory,
+                FocusGuard.Ipc.Windows.IpcClientRole.NativeMessaging);
+            FocusGuard.Contracts.PipeConnectionFactories.Current = authenticatedPipes;
+#endif
             await NativeHost.RunAsync(
                 Console.OpenStandardInput(),
                 Console.OpenStandardOutput(),

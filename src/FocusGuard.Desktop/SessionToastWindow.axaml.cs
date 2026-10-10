@@ -10,10 +10,9 @@ using FocusGuard.Desktop.Resources;
 namespace FocusGuard.Desktop;
 
 /// <summary>
-/// The "notification first" way of announcing the end of a session: a corner card that
-/// dismisses itself, and opens the full summary when clicked. Chosen over a real Windows
-/// toast so the announcement carries the same Dark Zen surfaces as the rest of the app
-/// and does not depend on notification registration.
+/// A non-activating corner notification that stays above the taskbar clock and dismisses
+/// itself. Session summaries can open their full view when clicked; phase notices simply
+/// dismiss. It does not depend on Windows toast registration.
 /// </summary>
 public sealed partial class SessionToastWindow : Window
 {
@@ -26,13 +25,22 @@ public sealed partial class SessionToastWindow : Window
     }
 
     public SessionToastWindow(int focusedMinutes)
+        : this(
+            UiStrings.SummaryToastTitle,
+            string.Format(
+                CultureInfo.CurrentCulture,
+                UiStrings.SummaryToastBody,
+                focusedMinutes),
+            "\uE73E")
+    {
+    }
+
+    internal SessionToastWindow(string title, string body, string iconGlyph)
     {
         InitializeComponent();
-        ToastTitle.Text = UiStrings.SummaryToastTitle;
-        ToastBody.Text = string.Format(
-            CultureInfo.CurrentCulture,
-            UiStrings.SummaryToastBody,
-            focusedMinutes);
+        ToastTitle.Text = title;
+        ToastBody.Text = body;
+        ToastIcon.Text = iconGlyph;
         _dismiss = new DispatcherTimer { Interval = Lifetime };
         _dismiss.Tick += (_, _) => Close();
     }

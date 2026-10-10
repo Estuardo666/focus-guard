@@ -1,0 +1,5 @@
+# FG178 — Manifest directory canonicalization regression
+
+User reports actual stopped service: IPC service deployment denied comparing protected installRoot without final separator to AppContext.BaseDirectory with separator. Confirm readonly service Stopped. Reproduce Parse using valid manifest and trailing-slash expected root before fix. Normalize both fully-qualified directory roots preserving filesystem roots, normalize returned manifest and policy root, retain wrong/sibling/relative rejection. Scope doesn't alter manifest schema, hashes, roles, ACLs or enforcement. Subagent GPT6Luna xhigh read-only comparison review; no source/machine changes by reviewer.
+
+Run before/after focused regression, full tests and production build, scoped format, existing installer/provisioning/extension checks; regenerate fresh0.1.28 standalone with embedded DLL hash proof and native host smokes. Do not retry/install0.1.27 or start stopped service. Installed gate remains pending corrected owner-present package validation.

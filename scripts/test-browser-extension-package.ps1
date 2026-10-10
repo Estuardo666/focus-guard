@@ -1,3 +1,8 @@
+[CmdletBinding()]
+param(
+    [string]$Version = '0.1.0'
+)
+
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $buildScript = Join-Path $PSScriptRoot 'build-browser-extension.ps1'
@@ -6,9 +11,9 @@ $errors = $null
 [Management.Automation.Language.Parser]::ParseFile($buildScript, [ref]$tokens, [ref]$errors) | Out-Null
 if ($errors.Count -ne 0) { throw 'Browser extension build script has PowerShell parse errors.' }
 
-& $buildScript
+& $buildScript -Version $Version
 if (-not $?) { throw 'Browser extension package build failed.' }
-$versionRoot = Join-Path $repositoryRoot 'artifacts\browser-extension\0.1.0'
+$versionRoot = Join-Path $repositoryRoot "artifacts\browser-extension\$Version"
 $distribution = Get-Content -Raw -LiteralPath (Join-Path $versionRoot 'distribution.json') | ConvertFrom-Json
 if ($distribution.packages.Count -ne 2 -or $distribution.extensionId -ne 'emhdinkjpinjnmldipnejnbeefgonjnj') {
     throw 'Distribution manifest does not bind both packages to the expected extension identity.'

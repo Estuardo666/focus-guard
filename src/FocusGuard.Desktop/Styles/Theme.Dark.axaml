@@ -1,0 +1,240 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Graphite and mint session workspace. Semantic tokens define every dark-theme
+       color in the app; the semantic keys below are the only names views are
+       allowed to bind to. Brushes carry literal colors rather than DynamicResource
+       lookups: this dictionary is loaded as a theme variant, and a dynamic lookup
+       from inside it would resolve against whichever variant happens to be active.
+
+       Shell surfaces use neutral graphite; mint marks actions. Profile colors are
+       independent. Semantic success, warning, danger and info colors remain distinct. -->
+
+  <!-- Backgrounds -->
+  <Color x:Key="FgSurface0Color">#141517</Color>
+  <Color x:Key="FgSurface1Color">#191A1D</Color>
+  <Color x:Key="FgMainSurfaceColor">#222326</Color>
+  <Color x:Key="FgSurface2Color">#2D2F33</Color>
+  <Color x:Key="FgSurface3Color">#383B40</Color>
+  <Color x:Key="FgFieldSurfaceColor">#191A1D</Color>
+  <Color x:Key="FgSecondarySurfaceColor">#383B40</Color>
+  <Color x:Key="FgSecondaryHoverColor">#44474D</Color>
+  <Color x:Key="FgSecondaryPressedColor">#303236</Color>
+  <Color x:Key="FgNavHoverColor">#14CDD6F4</Color>
+  <Color x:Key="FgNavPressedColor">#1FCDD6F4</Color>
+
+  <!-- Tertiary captions use subtext0 for AA contrast on elevated surfaces. -->
+  <!-- Text -->
+  <Color x:Key="FgTextPrimaryColor">#F0F2F4</Color>
+  <Color x:Key="FgTextSecondaryColor">#B9BDC4</Color>
+  <Color x:Key="FgTextTertiaryColor">#B9BDC4</Color>
+  <Color x:Key="FgTextDisabledColor">#747982</Color>
+  <!-- Catppuccin accents are light, so text sitting on one has to be dark. -->
+  <Color x:Key="FgTextOnAccentColor">#141517</Color>
+
+  <!-- Borders -->
+  <Color x:Key="FgBorderColor">#383B40</Color>
+  <Color x:Key="FgBorderStrongColor">#50545B</Color>
+  <Color x:Key="FgBorderDisabledColor">#2D2F33</Color>
+  <Color x:Key="FgDividerColor">#1FCDD6F4</Color>
+
+  <!-- Mint is the action accent; blue remains the secondary information accent. -->
+  <Color x:Key="FgAccentColor">#C6EDDF</Color>
+  <Color x:Key="FgAccentSecondaryColor">#89B4FA</Color>
+  <Color x:Key="FgAccentHoverColor">#DDF5EA</Color>
+  <Color x:Key="FgAccentPressedColor">#A9D9C6</Color>
+  <Color x:Key="FgAccentSoftColor">#24C6EDDF</Color>
+  <Color x:Key="FgAccentSurfaceColor">#30483F</Color>
+
+  <!-- States -->
+  <Color x:Key="FgSuccessColor">#A6E3A1</Color>
+  <Color x:Key="FgSuccessSoftColor">#242F2C</Color>
+  <Color x:Key="FgWarningColor">#F9E2AF</Color>
+  <Color x:Key="FgWarningSoftColor">#332F26</Color>
+  <Color x:Key="FgDangerColor">#F38BA8</Color>
+  <Color x:Key="FgDangerSoftColor">#33232F</Color>
+  <Color x:Key="FgInfoColor">#89B4FA</Color>
+  <Color x:Key="FgInfoSoftColor">#222939</Color>
+  <Color x:Key="FgModalScrimColor">#C211111B</Color>
+
+  <!-- Native Windows 11 close-button hover. -->
+  <Color x:Key="FgCloseHoverColor">#C42B1C</Color>
+  <Color x:Key="FgCaptionHoverColor">#14CDD6F4</Color>
+  <Color x:Key="FgCaptionPressedColor">#1FCDD6F4</Color>
+
+  <Color x:Key="FgFocusRingColor">#B4DCCC</Color>
+  <Color x:Key="FgTrackColor">#383B40</Color>
+  <Color x:Key="FgToggleTrackColor">#383B40</Color>
+  <Color x:Key="FgToggleThumbColor">#9399B2</Color>
+  <Color x:Key="FgToggleBorderColor">#50545B</Color>
+
+  <SolidColorBrush x:Key="FgSurface0" Color="#141517" />
+  <SolidColorBrush x:Key="FgSurface1" Color="#191A1D" />
+  <SolidColorBrush x:Key="FgMainSurface" Color="#222326" />
+  <SolidColorBrush x:Key="FgSurface2" Color="#2D2F33" />
+  <SolidColorBrush x:Key="FgSurface3" Color="#383B40" />
+  <SolidColorBrush x:Key="FgFieldSurface" Color="#191A1D" />
+  <SolidColorBrush x:Key="FgSecondarySurface" Color="#383B40" />
+  <SolidColorBrush x:Key="FgSecondaryHover" Color="#44474D" />
+  <SolidColorBrush x:Key="FgSecondaryPressed" Color="#303236" />
+  <SolidColorBrush x:Key="FgNavHover" Color="#14CDD6F4" />
+  <SolidColorBrush x:Key="FgNavPressed" Color="#1FCDD6F4" />
+
+  <!-- Legacy aliases kept so existing views bind without churn. -->
+  <SolidColorBrush x:Key="FgBackground" Color="#141517" />
+  <SolidColorBrush x:Key="FgSurface" Color="#222326" />
+  <SolidColorBrush x:Key="FgSurfaceElevated" Color="#383B40" />
+
+  <SolidColorBrush x:Key="FgTextPrimary" Color="#F0F2F4" />
+  <SolidColorBrush x:Key="FgTextSecondary" Color="#B9BDC4" />
+  <SolidColorBrush x:Key="FgTextTertiary" Color="#B9BDC4" />
+  <SolidColorBrush x:Key="FgTextDisabled" Color="#747982" />
+  <SolidColorBrush x:Key="FgTextOnAccent" Color="#141517" />
+  <SolidColorBrush x:Key="FgBorder" Color="#383B40" />
+  <SolidColorBrush x:Key="FgBorderStrong" Color="#50545B" />
+  <SolidColorBrush x:Key="FgBorderDisabled" Color="#2D2F33" />
+  <SolidColorBrush x:Key="FgDivider" Color="#1FCDD6F4" />
+  <SolidColorBrush x:Key="FgAccent" Color="#C6EDDF" />
+  <SolidColorBrush x:Key="FgAccentSecondary" Color="#89B4FA" />
+  <SolidColorBrush x:Key="FgAccentHover" Color="#DDF5EA" />
+  <SolidColorBrush x:Key="FgAccentPressed" Color="#A9D9C6" />
+  <SolidColorBrush x:Key="FgAccentSoft" Color="#24C6EDDF" />
+  <SolidColorBrush x:Key="FgAccentSurface" Color="#30483F" />
+  <SolidColorBrush x:Key="FgSuccess" Color="#A6E3A1" />
+  <SolidColorBrush x:Key="FgSuccessSoft" Color="#242F2C" />
+  <SolidColorBrush x:Key="FgWarning" Color="#F9E2AF" />
+  <SolidColorBrush x:Key="FgWarningSoft" Color="#332F26" />
+  <SolidColorBrush x:Key="FgDanger" Color="#F38BA8" />
+  <SolidColorBrush x:Key="FgDangerSoft" Color="#33232F" />
+  <SolidColorBrush x:Key="FgInfo" Color="#89B4FA" />
+  <SolidColorBrush x:Key="FgInfoSoft" Color="#222939" />
+  <SolidColorBrush x:Key="FgModalScrim" Color="#C211111B" />
+  <SolidColorBrush x:Key="FgCloseHover" Color="#C42B1C" />
+  <SolidColorBrush x:Key="FgCaptionHover" Color="#14CDD6F4" />
+  <SolidColorBrush x:Key="FgCaptionPressed" Color="#1FCDD6F4" />
+  <SolidColorBrush x:Key="FgFocusRing" Color="#B4DCCC" />
+  <SolidColorBrush x:Key="FgTrack" Color="#383B40" />
+  <SolidColorBrush x:Key="FgToggleTrack" Color="#383B40" />
+  <SolidColorBrush x:Key="FgToggleThumb" Color="#9399B2" />
+  <SolidColorBrush x:Key="FgToggleBorder" Color="#50545B" />
+  <SolidColorBrush x:Key="FgPrimaryButtonForeground" Color="#141517" />
+
+  <!-- Ring. The arc itself is painted with the profile accent; everything around it
+       belongs to the theme so a recolored profile never drags the face or the ticks
+       out of the palette. Ticks have two states: ahead of the head they are lit,
+       behind it they are spent. -->
+  <SolidColorBrush x:Key="FgRingCenterSurface" Color="#191A1D" />
+  <SolidColorBrush x:Key="FgRingTrack" Color="#383B40" />
+  <SolidColorBrush x:Key="FgRingTick" Color="#9399B2" />
+  <SolidColorBrush x:Key="FgRingTickSpent" Color="#50545B" />
+  <SolidColorBrush x:Key="FgRingIndicator" Color="#F0F2F4" />
+  <!-- Legacy aliases for the ring keys above. -->
+  <SolidColorBrush x:Key="FgTimerFace" Color="#191A1D" />
+  <SolidColorBrush x:Key="FgTimerTick" Color="#9399B2" />
+  <SolidColorBrush x:Key="FgTimerIndicator" Color="#F0F2F4" />
+
+  <SolidColorBrush x:Key="FgCycleTimelineTrack" Color="#383B40" />
+  <SolidColorBrush x:Key="FgCycleBreak" Color="#94E2D5" />
+  <SolidColorBrush x:Key="FgCycleBreakSoft" Color="#2994E2D5" />
+
+  <!-- Elevation. Mocha shadows read as depth only when they stay close to crust. -->
+  <BoxShadows x:Key="FgShadowLow">0 2 8 0 #3311111B</BoxShadows>
+  <BoxShadows x:Key="FgShadowMedium">0 8 24 0 #4D11111B</BoxShadows>
+  <BoxShadows x:Key="FgShadowHigh">0 24 72 0 #8011111B</BoxShadows>
+  <BoxShadows x:Key="FgStrictModalShadow">0 24 72 0 #8011111B</BoxShadows>
+  <BoxShadows x:Key="FgInputFocusShadow">0 0 0 3 #33B4BEFE</BoxShadows>
+  <BoxShadows x:Key="FgControlIdleShadow">0 0 0 0 #00000000</BoxShadows>
+  <BoxShadows x:Key="FgControlHoverShadow">0 6 20 0 #4D11111B</BoxShadows>
+  <BoxShadows x:Key="FgSummaryWindowShadow">0 28 80 0 #9911111B</BoxShadows>
+
+  <!-- Blocking surfaces. The block screen sits on the desktop rather than inside the
+       shell, so it needs a scrim heavy enough to read as "everything else went quiet". -->
+  <Color x:Key="FgBlockScrimColor">#F211111B</Color>
+  <SolidColorBrush x:Key="FgBlockScrim" Color="#F211111B" />
+
+  <!-- Ambient lighting for the single global background. Mauve drifting into blue,
+       centred above the ring, at an intensity that never competes with content. -->
+  <RadialGradientBrush x:Key="FgAmbientGlow" Center="50%,34%" GradientOrigin="50%,34%">
+    <GradientStop Offset="0" Color="#2ACBA6F7" />
+    <GradientStop Offset="0.46" Color="#1489B4FA" />
+    <GradientStop Offset="1" Color="#001E1E2E" />
+  </RadialGradientBrush>
+
+  <!-- Ambient background: a diagonal wash across base and mantle with a faint mauve
+       drift, so the shell has depth without ever reading as a slab. -->
+  <LinearGradientBrush x:Key="FgAppBackgroundGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#1B1B29" />
+    <GradientStop Offset="0.42" Color="#222326" />
+    <GradientStop Offset="0.76" Color="#212032" />
+
+    <GradientStop Offset="1" Color="#191926" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgSidebarGradient" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Offset="0" Color="#222326" />
+    <GradientStop Offset="1" Color="#191A1D" />
+  </LinearGradientBrush>
+
+  <!-- Content pane: the same idea one step lighter, so cards still lift off it. -->
+  <LinearGradientBrush x:Key="FgContentGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#22222F" />
+    <GradientStop Offset="0.58" Color="#222326" />
+    <GradientStop Offset="1" Color="#201F32" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgPrimaryActionGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#C6EDDF" />
+    <GradientStop Offset="0.52" Color="#C6EDDF" />
+    <GradientStop Offset="1" Color="#C6EDDF" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgPrimaryActionHoverGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#DDF5EA" />
+    <GradientStop Offset="1" Color="#DDF5EA" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgPrimaryActionPressedGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#A9D9C6" />
+    <GradientStop Offset="1" Color="#A9D9C6" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgPrimaryActionDisabledGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#383B40" />
+    <GradientStop Offset="1" Color="#3A3550" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgProgressGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#94E2D5" />
+    <GradientStop Offset="0.52" Color="#89B4FA" />
+    <GradientStop Offset="1" Color="#C6EDDF" />
+  </LinearGradientBrush>
+
+  <!-- Header chips. Opaque enough that a line of body text passing underneath cannot be
+       read through them, but tinted rather than solid so they still belong to the
+       ambient surface instead of looking like a toolbar pasted on top. -->
+  <SolidColorBrush x:Key="FgHeaderChipSurface" Color="#D91E1E2E" />
+  <SolidColorBrush x:Key="FgHeaderChipHover" Color="#E6313244" />
+  <SolidColorBrush x:Key="FgHeaderChipPressed" Color="#E6181825" />
+  <SolidColorBrush x:Key="FgHeaderChipBorder" Color="#66313244" />
+
+  <SolidColorBrush x:Key="FgHeaderVeil" Color="#00000000" />
+
+  <LinearGradientBrush x:Key="FgHeaderFadeGradient" StartPoint="0%,60%" EndPoint="0%,100%">
+    <GradientStop Offset="0" Color="#001E1E2E" />
+    <GradientStop Offset="1" Color="#E61E1E2E" />
+  </LinearGradientBrush>
+
+  <!-- Track gradient keeps the unfilled part of a ring or bar from reading as flat grey. -->
+  <LinearGradientBrush x:Key="FgTrackGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#383B40" />
+    <GradientStop Offset="1" Color="#14CDD6F4" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgTimerProgressGradient" StartPoint="0%,0%" EndPoint="100%,45%">
+    <GradientStop Offset="0" Color="#B4DCCC" />
+    <GradientStop Offset="0.42" Color="#89B4FA" />
+    <GradientStop Offset="1" Color="#C6EDDF" />
+  </LinearGradientBrush>
+
+  <!-- Glows. Used for the ring halo and for state emphasis in the last minute. -->
+  <SolidColorBrush x:Key="FgGlowAccent" Color="#3DCBA6F7" />
+  <SolidColorBrush x:Key="FgGlowSuccess" Color="#3DA6E3A1" />
+  <SolidColorBrush x:Key="FgGlowWarning" Color="#3DF9E2AF" />
+</ResourceDictionary>

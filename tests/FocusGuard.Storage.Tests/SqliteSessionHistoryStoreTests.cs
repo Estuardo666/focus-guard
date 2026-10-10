@@ -1,5 +1,6 @@
 using FocusGuard.Domain;
 using FocusGuard.Storage;
+using Microsoft.Data.Sqlite;
 
 namespace FocusGuard.Storage.Tests;
 
@@ -119,6 +120,72 @@ public sealed class SqliteSessionHistoryStoreTests
         Assert.NotNull(loaded);
         Assert.Equal(latest.SessionId, loaded!.SessionId);
         Assert.True(loaded.Completed);
+    }
+
+    [Fact]
+    public async Task CycleMetrics_RoundTripWithTheHistoryEntry()
+    {
+        using var temporary = TemporaryDatabase.Create();
+        var store = new SqliteSessionHistoryStore(temporary.DatabasePath);
+        var entry = Entry(Noon, completed: true) with
+        {
+            Phases = [new(SessionPhaseKind.Focus, Noon.AddMinutes(-25), Noon)],
+            CycleMetrics = new CycleHistoryMetrics(1, 0),
+            ScheduledIntent = new ScheduledSessionIntent("Deep Work", 1, EnforcementEnabled: false)
+        };
+
+        await store.RecordAsync(entry);
+        var loaded = await store.GetAsync(entry.SessionId);
+
+        Assert.NotNull(loaded);
+        Assert.Equal(entry.CycleMetrics, loaded!.CycleMetrics);
+        Assert.Equal(entry.Phases, loaded.Phases);
+        Assert.Equal(entry.ScheduledIntent, loaded.ScheduledIntent);
+    }
+
+    [Fact]
+    public async Task LegacyPhaseTable_MigratesWithoutInventingCycleMetrics()
+    {
+        using var temporary = TemporaryDatabase.Create();
+        var sessionId = Guid.NewGuid();
+        var profileId = Guid.NewGuid();
+        await using (var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = temporary.DatabasePath, Pooling = false }.ToString()))
+        {
+            await connection.OpenAsync();
+            await using var command = connection.CreateCommand();
+            command.CommandText = """
+                CREATE TABLE SessionHistory (
+                    SessionId TEXT NOT NULL PRIMARY KEY,
+                    ProfileId TEXT NOT NULL,
+                    ProfileName TEXT NOT NULL,
+                    StartUtc TEXT NOT NULL,
+                    EndedAtUtc TEXT NOT NULL,
+                    Completed INTEGER NOT NULL,
+                    PlannedMinutes INTEGER NOT NULL,
+                    FocusedMinutes INTEGER NOT NULL,
+                    BlockedAttempts INTEGER NOT NULL
+                );
+                CREATE TABLE SessionHistoryPhases (
+                    SessionId TEXT NOT NULL PRIMARY KEY,
+                    PhasesJson TEXT NOT NULL
+                );
+                INSERT INTO SessionHistory VALUES
+                    ($sessionId, $profileId, 'Legacy cycle', $startUtc, $endUtc, 1, 25, 20, 0);
+                INSERT INTO SessionHistoryPhases VALUES ($sessionId, '[]');
+                """;
+            command.Parameters.AddWithValue("$sessionId", sessionId.ToString("D"));
+            command.Parameters.AddWithValue("$profileId", profileId.ToString("D"));
+            command.Parameters.AddWithValue("$startUtc", Noon.AddMinutes(-25).ToString("O"));
+            command.Parameters.AddWithValue("$endUtc", Noon.ToString("O"));
+            await command.ExecuteNonQueryAsync();
+        }
+
+        var migrated = await new SqliteSessionHistoryStore(temporary.DatabasePath).GetAsync(sessionId);
+
+        Assert.NotNull(migrated);
+        Assert.Null(migrated!.CycleMetrics);
+        Assert.Empty(migrated.Phases!);
+        Assert.Null(migrated.ScheduledIntent);
     }
 
     private static CapturedItem Capture(

@@ -14,6 +14,7 @@
         <TrayIcon.Menu>
           <NativeMenu>
             <NativeMenuItem Header="{x:Static resources:UiStrings.OpenFocusGuard}" Click="OpenFocusGuardClick" />
+            <NativeMenuItem Header="{x:Static resources:UiStrings.ReactPilotOpen}" Click="ReactPilotClick" />
             <NativeMenuItemSeparator />
             <NativeMenuItem Header="{x:Static resources:UiStrings.ExitFocusGuard}" Click="ExitFocusGuardClick" />
           </NativeMenu>
@@ -24,6 +25,10 @@
 
   <Application.Resources>
     <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceInclude x:Key="Dark" Source="/Styles/Theme.Dark.axaml" />
+        <ResourceInclude x:Key="Light" Source="/Styles/Theme.Light.axaml" />
+      </ResourceDictionary.ThemeDictionaries>
       <ResourceDictionary.MergedDictionaries>
         <ResourceInclude Source="/Styles/Tokens.axaml" />
       </ResourceDictionary.MergedDictionaries>
@@ -33,5 +38,6 @@
   <Application.Styles>
     <FluentTheme />
     <StyleInclude Source="/Styles/Controls.axaml" />
+    <StyleInclude Source="/Styles/Workbench.axaml" />
   </Application.Styles>
 </Application>

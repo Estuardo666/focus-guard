@@ -39,6 +39,8 @@ public sealed class ExtensionHealthPipeService : BackgroundService
     private readonly string _pipeName;
     private readonly PolicyDistributionCoordinator _policyDistribution;
     private readonly IFocusAuditStore _auditStore;
+    private readonly IIpcServerSecurity? _security;
+    private readonly Func<string, Exception, Task> _failureReporter;
 
     public ExtensionHealthPipeService(
         ExtensionHealthState healthState,
@@ -46,8 +48,12 @@ public sealed class ExtensionHealthPipeService : BackgroundService
         PolicyDistributionCoordinator? policyDistribution = null,
         TimeProvider? timeProvider = null,
         string? pipeName = null,
-        IFocusAuditStore? auditStore = null)
+        IFocusAuditStore? auditStore = null,
+        IIpcServerSecurity? security = null,
+        Func<string, Exception, Task>? failureReporter = null)
     {
+        _security = security;
+        _failureReporter = failureReporter ?? ((worker, exception) => ServiceFailureLog.WriteAsync(worker, exception));
         _healthState = healthState ?? throw new ArgumentNullException(nameof(healthState));
         _focusService = focusService ?? throw new ArgumentNullException(nameof(focusService));
         _policyDistribution = policyDistribution ?? new PolicyDistributionCoordinator(
@@ -60,40 +66,81 @@ public sealed class ExtensionHealthPipeService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        try
         {
-            await using var pipe = CreatePipe(_pipeName);
-            try
-            {
-                await pipe.WaitForConnectionAsync(stoppingToken).ConfigureAwait(false);
-                await HandleConnectionAsync(pipe, stoppingToken).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
-            {
-                return;
-            }
-            catch (IOException)
-            {
-                // A client disconnect is isolated to this one-request connection.
-            }
-            catch (InvalidDataException)
-            {
-                // Invalid frames are rejected without affecting the listener loop.
-            }
-            catch (OperationCanceledException exception)
-            {
-                await ServiceFailureLog.WriteAsync(
-                    $"{nameof(ExtensionHealthPipeService)}.RequestTimeout",
-                    exception);
-            }
-            catch (Exception exception)
-            {
-                await ServiceFailureLog.WriteAsync(nameof(ExtensionHealthPipeService), exception);
-                throw;
-            }
+            await RunListenerAsync(stoppingToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+        }
+        catch (Exception exception)
+        {
+            await ReportListenerFailureAsync(exception).ConfigureAwait(false);
+            throw;
         }
     }
 
+    private async Task RunListenerAsync(CancellationToken stoppingToken)
+    {
+        NamedPipeServerStream? pending = null;
+        var firstInstance = true;
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                pending ??= _security is null ? CreatePipe(_pipeName) : _security.CreatePipe(_pipeName, firstInstance, 2);
+                firstInstance = false;
+                var pipe = pending;
+                try
+                {
+                    await pipe.WaitForConnectionAsync(stoppingToken).ConfigureAwait(false);
+                    pending = null;
+                    if (_security is not null) pending = _security.CreatePipe(_pipeName, false, 2);
+                    await HandleConnectionAsync(pipe, stoppingToken).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                catch (IOException)
+                {
+                    // A client disconnect is isolated to this one-request connection.
+                }
+                catch (InvalidDataException)
+                {
+                    // Invalid frames are rejected without affecting the listener loop.
+                }
+                catch (OperationCanceledException exception)
+                {
+                    await ServiceFailureLog.WriteAsync(
+                        $"{nameof(ExtensionHealthPipeService)}.RequestTimeout",
+                        exception);
+                }
+                catch (UnauthorizedAccessException) { }
+
+                finally
+                {
+                    if (pending == pipe)
+                        pending = stoppingToken.IsCancellationRequested ? null
+                            : _security is null ? CreatePipe(_pipeName) : _security.CreatePipe(_pipeName, false, 2);
+                    await pipe.DisposeAsync();
+                }
+            }
+        }
+        finally { if (pending is not null) await pending.DisposeAsync(); }
+    }
+
+    private async Task ReportListenerFailureAsync(Exception exception)
+    {
+        try
+        {
+            await _failureReporter($"{nameof(ExtensionHealthPipeService)}.ListenerLoop", exception).ConfigureAwait(false);
+        }
+        catch
+        {
+            // Diagnostic failure must not hide the original listener fault.
+        }
+    }
     internal async Task HandleConnectionAsync(Stream pipe, CancellationToken stoppingToken)
     {
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
@@ -112,6 +159,8 @@ public sealed class ExtensionHealthPipeService : BackgroundService
         }
 
         var request = requestResult.Value!;
+        if (_security is not null) _security.AuthorizeBrowser(pipe as NamedPipeServerStream
+            ?? throw new UnauthorizedAccessException("Native pipe proof required."), request.Type);
         if (request.Type == ExtensionHealthProtocol.HeartbeatType)
         {
             _healthState.RecordHeartbeat(nowUtc);
@@ -122,9 +171,15 @@ public sealed class ExtensionHealthPipeService : BackgroundService
             : new FocusGuard.Domain.PolicyAcknowledgement(
                 request.AcknowledgedPolicyId.Value,
                 request.AcknowledgedPolicyHash!);
-        var policy = _policyDistribution.ExchangeBrowserAcknowledgement(acknowledgement);
 
+        // The status poll is what notices a cycle phase boundary and redistributes the
+        // policy that authorizes it. It must run before reading the current delivery,
+        // but must not clear a still-valid browser acknowledgement when status has none.
         var sessionStatus = await _focusService.GetStatusAsync(timeout.Token);
+        var policy = request.Type == ExtensionHealthProtocol.StatusType
+            ? _policyDistribution.GetCurrentDeliveryForBrowserStatus()
+            : _policyDistribution.ExchangeBrowserAcknowledgement(acknowledgement);
+
         if (request.Type == ExtensionHealthProtocol.AuditType
             && request.BlockedUrl is not null
             && policy is not null

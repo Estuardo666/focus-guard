@@ -25,6 +25,7 @@
       Padding="16,14"
       Opacity="0"
       RenderTransform="translateY(8px)"
+      AutomationProperties.LiveSetting="Polite"
       PointerPressed="CardPressed"
       Cursor="Hand">
     <Border.Transitions>
@@ -42,6 +43,7 @@
           Background="{DynamicResource FgSuccessSoft}"
           VerticalAlignment="Top">
         <TextBlock
+            x:Name="ToastIcon"
             Classes="icon"
             Text="&#xE73E;"
             FontSize="14"

@@ -1,0 +1,33 @@
+:root {
+  color-scheme: light dark;
+  font-family: "Segoe UI", sans-serif;
+  background: Canvas;
+  color: CanvasText;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+main {
+  max-width: 44rem;
+  margin: 12vh auto;
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+p {
+  line-height: 1.5;
+}
+
+#state {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid GrayText;
+  border-radius: 0.35rem;
+}

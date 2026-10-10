@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="WindowTitle" xml:space="preserve"><value>FocusGuard</value></data>
+  <data name="ElevatedDescription" xml:space="preserve"><value>FocusGuard must run as your signed-in user. Close this window and start it without administrator elevation.</value></data>
+  <data name="RuntimeMissingTitle" xml:space="preserve"><value>WebView2 Runtime is required</value></data>
+  <data name="RuntimeMissingDescription" xml:space="preserve"><value>FocusGuard could not find the Microsoft Edge WebView2 Runtime. Install or repair the runtime, then retry. No session was started or changed.</value></data>
+  <data name="HostFailureTitle" xml:space="preserve"><value>FocusGuard could not open its local interface</value></data>
+  <data name="HostFailureDescription" xml:space="preserve"><value>The local interface could not be started. Your focus session was not changed. Retry to try again.</value></data>
+  <data name="RendererFailureTitle" xml:space="preserve"><value>The interface stopped responding</value></data>
+  <data name="RendererFailureDescription" xml:space="preserve"><value>FocusGuard will retry the local interface. Any running focus session remains owned by the service.</value></data>
+  <data name="Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="ShellTitle" xml:space="preserve"><value>FocusGuard</value></data>
+  <data name="ShellDescription" xml:space="preserve"><value>This local shell is ready for the React interface. It does not start or stop focus sessions.</value></data>
+  <data name="ShellReady" xml:space="preserve"><value>Local interface loaded.</value></data>
+  <data name="BridgeUnavailable" xml:space="preserve"><value>Service access is disabled until Phase 4 authorization is integrated.</value></data>
+  <data name="RecoveryCodeFileTitle" xml:space="preserve"><value>Save FocusGuard recovery code</value></data>
+</root>

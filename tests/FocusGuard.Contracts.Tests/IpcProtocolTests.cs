@@ -1,4 +1,5 @@
 using FocusGuard.Contracts;
+using FocusGuard.Domain;
 
 namespace FocusGuard.Contracts.Tests;
 
@@ -127,7 +128,8 @@ public sealed class IpcProtocolTests
             DateTimeOffset.UtcNow,
             DateTimeOffset.UtcNow.AddMinutes(1),
             StrictMode: false,
-            EnforcementConnected: false);
+            EnforcementConnected: false,
+            ScheduledIntent: new ScheduledSessionIntent("Deep Work", 1, EnforcementEnabled: false));
         var envelope = IpcProtocol.CreateStatusResponse(correlationId, response).Value!;
 
         var bytes = IpcProtocol.WriteEnvelope(envelope);

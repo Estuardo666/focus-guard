@@ -3,6 +3,7 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../FocusGuard.Ipc.Windows/FocusGuard.Ipc.Windows.csproj" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" />
   </ItemGroup>

@@ -85,13 +85,20 @@ public sealed record EnforcementPolicy(
     bool IsStrict,
     IReadOnlyList<ApplicationRule> ApplicationRules,
     IReadOnlyList<WebsiteRule> WebsiteRules,
-    bool EnforcementEnabled = false)
+    bool EnforcementEnabled = false,
+    FocusCyclePlan? CyclePlan = null,
+    IReadOnlyList<ApplicationRule>? BreakApplicationRules = null,
+    IReadOnlyList<WebsiteRule>? BreakWebsiteRules = null,
+    int AuthorizedPhaseIndex = -1,
+    DateTimeOffset? AuthorizedPhaseEndUtc = null)
 {
     public static EnforcementPolicy Create(
         Session session,
         IEnumerable<ApplicationRule> applicationRules,
         IEnumerable<WebsiteRule> websiteRules,
-        bool enforcementEnabled = false) =>
+        bool enforcementEnabled = false,
+        IEnumerable<ApplicationRule>? breakApplicationRules = null,
+        IEnumerable<WebsiteRule>? breakWebsiteRules = null) =>
         new(
             session.Id,
             session.ProfileId,
@@ -100,5 +107,47 @@ public sealed record EnforcementPolicy(
             session.StrictMode.Enabled,
             Array.AsReadOnly(applicationRules.ToArray()),
             Array.AsReadOnly(websiteRules.ToArray()),
-            enforcementEnabled);
+            enforcementEnabled,
+            session.CyclePlan,
+            Array.AsReadOnly((breakApplicationRules ?? []).ToArray()),
+            Array.AsReadOnly((breakWebsiteRules ?? []).ToArray()),
+            -1,
+            null);
+
+    public IReadOnlyList<ApplicationRule> EffectiveApplicationRules(DateTimeOffset nowUtc)
+    {
+        if (IsAuthorizedBreak(nowUtc))
+        {
+            return BreakApplicationRules ?? [];
+        }
+
+        return ApplicationRules;
+    }
+
+    public IReadOnlyList<WebsiteRule> EffectiveWebsiteRules(DateTimeOffset nowUtc)
+    {
+        if (IsAuthorizedBreak(nowUtc))
+        {
+            return BreakWebsiteRules ?? [];
+        }
+
+        return WebsiteRules;
+    }
+
+    public bool IsAuthorizedBreak(DateTimeOffset nowUtc)
+    {
+        if (CyclePlan is null
+            || AuthorizedPhaseIndex < 0
+            || AuthorizedPhaseEndUtc is not { } phaseEndUtc
+            || nowUtc.Offset != TimeSpan.Zero
+            || nowUtc >= phaseEndUtc)
+        {
+            return false;
+        }
+
+        var phase = CyclePlan.Phases.FirstOrDefault(item => item.Index == AuthorizedPhaseIndex);
+        return phase is { Kind: SessionPhaseKind.ShortBreak or SessionPhaseKind.LongBreak }
+            && nowUtc >= phase.StartUtc
+            && nowUtc < phase.EndUtc;
+    }
 }

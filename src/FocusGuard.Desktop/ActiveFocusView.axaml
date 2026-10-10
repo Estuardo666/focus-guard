@@ -26,7 +26,7 @@
           </StackPanel>
           <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding StatusMessage}" TextWrapping="Wrap" Foreground="{DynamicResource FgTextSecondary}" />
           <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding HealthLabel}" TextWrapping="Wrap" Foreground="{DynamicResource FgSuccess}" AutomationProperties.Name="Enforcement health" />
-          <Button Grid.Row="3" Grid.ColumnSpan="2" Classes="primary" Content="{x:Static resources:UiStrings.StopNormalFocus}" Command="{Binding StopFocusCommand}" IsVisible="{Binding CanStop}" AutomationProperties.Name="Stop normal focus session" />
+          <Button Grid.Row="3" Grid.ColumnSpan="2" Classes="danger" Content="{x:Static resources:UiStrings.StopNormalFocus}" Command="{Binding StopFocusCommand}" IsVisible="{Binding CanStop}" AutomationProperties.Name="Stop normal focus session" />
         </Grid>
       </Border>
 

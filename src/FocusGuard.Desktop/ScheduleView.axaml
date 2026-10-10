@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FocusGuard.Desktop" xmlns:storage="using:FocusGuard.Storage" xmlns:r="using:FocusGuard.Desktop.Resources"
+             x:Class="FocusGuard.Desktop.ScheduleView" x:DataType="vm:FocusViewModel">
+  <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12">
+    <Grid ColumnDefinitions="*,Auto"><TextBlock Text="{x:Static r:UiStrings.WeekScheduleTitle}" Classes="screenTitle" /><Button Grid.Column="1" Classes="ghost" Content="{x:Static r:UiStrings.RefreshView}" Command="{Binding RefreshSchedulesCommand}" /></Grid>
+    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+      <ItemsControl ItemsSource="{Binding ScheduleWeek}" >
+        <ItemsControl.ItemsPanel><ItemsPanelTemplate><UniformGrid Rows="1" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate><DataTemplate x:DataType="vm:ScheduleDayViewModel">
+          <Border Classes="card" Padding="6" Margin="0,0,4,0" MinHeight="108">
+            <StackPanel Spacing="8"><TextBlock Text="{Binding Label}" FontWeight="SemiBold" /><TextBlock Text="{Binding DateLabel}" Classes="caption" />
+              <ItemsControl ItemsSource="{Binding Rows}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="vm:ScheduleRowViewModel">
+                <Border BorderBrush="{Binding AccentBrush}" BorderThickness="2,0,0,0" Padding="6,4" Margin="0,0,0,6">
+                  <StackPanel Spacing="3"><TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Name}" /><TextBlock Text="{Binding TimeText}" Classes="caption" TextWrapping="Wrap" /><TextBlock Text="{Binding StateText}" Classes="caption" /></StackPanel>
+                </Border>
+              </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+            </StackPanel>
+          </Border>
+        </DataTemplate></ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+    <Grid Grid.Row="2" ColumnDefinitions="*,320" ColumnSpacing="16">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"><StackPanel Spacing="12">
+    <TextBlock Text="{x:Static r:UiStrings.ScheduleDescription}" Classes="caption" TextWrapping="Wrap" />
+    <TextBlock Text="{Binding NextScheduledSession}" FontWeight="SemiBold" TextWrapping="Wrap" />
+    <TextBlock Text="{Binding ScheduleZoneLabel}" Classes="caption" TextWrapping="Wrap" />
+    <TextBlock Text="{Binding ScheduleMessage}" Classes="scheduleNotice" Classes.validationError="{Binding ScheduleHasError}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+
+    <TextBlock Text="{x:Static r:UiStrings.ScheduleEmpty}" IsVisible="{Binding !HasSchedules}" Classes="caption" />
+    <ItemsControl ItemsSource="{Binding Schedules}"><ItemsControl.ItemTemplate><DataTemplate x:DataType="vm:ScheduleRowViewModel">
+      <Border Classes="card" Padding="14" Margin="0,0,0,10"><StackPanel Spacing="8">
+        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" /><TextBlock Text="{Binding ProfileName}" /><TextBlock Text="{Binding TimeText}" Classes="caption" /><TextBlock Text="{Binding LastResult}" Classes="caption" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding PolicyPreview}" Classes="caption" TextWrapping="Wrap" /><TextBlock Text="{Binding EnforcementPreview}" Classes="caption" TextWrapping="Wrap" /><TextBlock Text="{Binding NextPreview}" Classes="caption" TextWrapping="Wrap" />
+        <WrapPanel ItemSpacing="8" LineSpacing="8"><Button Classes="secondary" Content="{Binding ToggleLabel}" Command="{Binding ToggleCommand}" /><Button Classes="ghost" Content="{x:Static r:UiStrings.ScheduleRemove}" Command="{Binding DeleteCommand}" /></WrapPanel>
+      </StackPanel></Border>
+    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+    </StackPanel></ScrollViewer>
+    <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Disabled">
+    <Border Classes="card" Padding="16" IsEnabled="{Binding CanEditProfileRules}">
+      <StackPanel Spacing="12">
+        <TextBlock Text="{x:Static r:UiStrings.ScheduleNameLabel}" Classes="caption" />
+        <TextBox Text="{Binding ScheduleName}" MaxLength="80" AutomationProperties.Name="{x:Static r:UiStrings.ScheduleNameLabel}" />
+        <TextBlock Text="{x:Static r:UiStrings.ChooseProfile}" Classes="caption" />
+        <ComboBox ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}" HorizontalAlignment="Stretch" AutomationProperties.Name="{x:Static r:UiStrings.ChooseProfile}"><ComboBox.ItemTemplate><DataTemplate x:DataType="storage:StoredProfile"><TextBlock Text="{Binding Name}" /></DataTemplate></ComboBox.ItemTemplate></ComboBox>
+        <TextBlock Text="{x:Static r:UiStrings.ScheduleDaysLabel}" Classes="caption" />
+        <ItemsControl ItemsSource="{Binding ScheduleDayChoices}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel ItemSpacing="12" LineSpacing="8" /></ItemsPanelTemplate></ItemsControl.ItemsPanel><ItemsControl.ItemTemplate><DataTemplate x:DataType="vm:ScheduleDayChoice"><CheckBox Content="{Binding Label}" IsChecked="{Binding IsSelected}" AutomationProperties.Name="{Binding Label}" /></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+        <WrapPanel ItemSpacing="16" LineSpacing="12">
+          <StackPanel Spacing="4"><TextBlock Text="{x:Static r:UiStrings.ScheduleTimeLabel}" Classes="caption" /><TextBox Text="{Binding ScheduleTime}" Width="112" MaxLength="5" AutomationProperties.Name="{x:Static r:UiStrings.ScheduleTimeLabel}" /></StackPanel>
+          <StackPanel Spacing="4"><TextBlock Text="{x:Static r:UiStrings.DurationLabel}" Classes="caption" /><NumericUpDown Value="{Binding ScheduleDuration}" Minimum="1" Maximum="720" FormatString="0" Width="112" AutomationProperties.Name="{x:Static r:UiStrings.DurationLabel}" /></StackPanel>
+        </WrapPanel>
+        <TextBlock Text="{Binding ScheduleEndPreview}" FontWeight="SemiBold" TextWrapping="Wrap" />
+        <TextBlock Text="{x:Static r:UiStrings.ScheduleSafety}" Classes="caption" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding ScheduleEnforcementPreview}" Classes="caption" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding ScheduleFirstRunText}" Classes="caption" TextWrapping="Wrap" />
+        <CheckBox Content="{x:Static r:UiStrings.ScheduleEnableConsent}" IsChecked="{Binding ScheduleEnabled}" AutomationProperties.Name="{x:Static r:UiStrings.ScheduleEnableConsent}" />
+        <Button Classes="primary" Content="{x:Static r:UiStrings.ScheduleSave}" Command="{Binding SaveScheduleCommand}" HorizontalAlignment="Stretch" />
+      </StackPanel>
+    </Border>
+    </ScrollViewer>
+    </Grid>
+  </Grid>
+</UserControl>

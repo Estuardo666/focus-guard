@@ -1,0 +1,242 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Catppuccin Latte. Same semantic keys as Mocha, same hierarchy, inverted
+       luminance. Brushes carry literal colors for the reason given in Theme.Dark.
+
+       Palette reference (Latte):
+         crust #DCE0E8  mantle #E6E9EF  base #EFF1F5
+         surface0 #CCD0DA  surface1 #BCC0CC  surface2 #ACB0BE
+         overlay0 #9CA0B0  overlay1 #8C8FA1  overlay2 #7C7F93
+         subtext0 #6C6F85  subtext1 #5C5F77  text #4C4F69
+         lavender #7287FD  blue #1E66F5  sapphire #209FB5  sky #04A5E5
+         teal #179299  green #40A02B  yellow #DF8E1D  peach #FE640B
+         maroon #E64553  red #D20F39  mauve #206B58  pink #EA76CB -->
+
+  <!-- Backgrounds. Latte's base is the ambient wash; cards climb to white so they
+       still lift off it. -->
+  <Color x:Key="FgSurface0Color">#DCE0E8</Color>
+  <Color x:Key="FgSurface1Color">#E6E9EF</Color>
+  <Color x:Key="FgMainSurfaceColor">#FFFFFF</Color>
+  <Color x:Key="FgSurface2Color">#F5F6F9</Color>
+  <Color x:Key="FgSurface3Color">#FFFFFF</Color>
+  <Color x:Key="FgFieldSurfaceColor">#E6E9EF</Color>
+  <Color x:Key="FgSecondarySurfaceColor">#E6E9EF</Color>
+  <Color x:Key="FgSecondaryHoverColor">#DCE0E8</Color>
+  <Color x:Key="FgSecondaryPressedColor">#CCD0DA</Color>
+  <Color x:Key="FgNavHoverColor">#144C4F69</Color>
+  <Color x:Key="FgNavPressedColor">#1F4C4F69</Color>
+
+  <!-- Small copy uses Latte subtext1 on all light surfaces. Status foregrounds
+       and the CTA midpoint are deepened to preserve WCAG AA contrast; their
+       soft backgrounds and the overall Catppuccin identity stay unchanged. -->
+  <!-- Text -->
+  <Color x:Key="FgTextPrimaryColor">#4C4F69</Color>
+  <Color x:Key="FgTextSecondaryColor">#5C5F77</Color>
+  <Color x:Key="FgTextTertiaryColor">#5C5F77</Color>
+  <Color x:Key="FgTextDisabledColor">#ACB0BE</Color>
+  <!-- White labels remain readable across every enabled primary-action gradient. -->
+  <Color x:Key="FgTextOnAccentColor">#FFFFFF</Color>
+
+  <!-- Borders -->
+  <Color x:Key="FgBorderColor">#CCD0DA</Color>
+  <Color x:Key="FgBorderStrongColor">#BCC0CC</Color>
+  <Color x:Key="FgBorderDisabledColor">#E6E9EF</Color>
+  <Color x:Key="FgDividerColor">#1F4C4F69</Color>
+
+  <!-- Accents -->
+  <Color x:Key="FgAccentColor">#206B58</Color>
+  <Color x:Key="FgAccentSecondaryColor">#1E66F5</Color>
+  <Color x:Key="FgAccentHoverColor">#267F67</Color>
+  <Color x:Key="FgAccentPressedColor">#194F42</Color>
+  <Color x:Key="FgAccentSoftColor">#1F206B58</Color>
+  <Color x:Key="FgAccentSurfaceColor">#DAECE5</Color>
+
+  <!-- States -->
+  <Color x:Key="FgSuccessColor">#276A1B</Color>
+  <Color x:Key="FgSuccessSoftColor">#E5F2E1</Color>
+  <Color x:Key="FgWarningColor">#8F5709</Color>
+  <Color x:Key="FgWarningSoftColor">#F9EEDC</Color>
+  <Color x:Key="FgDangerColor">#BD0D33</Color>
+  <Color x:Key="FgDangerSoftColor">#F9E1E5</Color>
+  <Color x:Key="FgInfoColor">#1854CE</Color>
+  <Color x:Key="FgInfoSoftColor">#E2EAFD</Color>
+  <Color x:Key="FgModalScrimColor">#994C4F69</Color>
+
+  <!-- Native Windows 11 close-button hover stays red in both themes. -->
+  <Color x:Key="FgCloseHoverColor">#C42B1C</Color>
+  <Color x:Key="FgCaptionHoverColor">#144C4F69</Color>
+  <Color x:Key="FgCaptionPressedColor">#1F4C4F69</Color>
+
+  <Color x:Key="FgFocusRingColor">#1E66F5</Color>
+  <Color x:Key="FgTrackColor">#CCD0DA</Color>
+  <Color x:Key="FgToggleTrackColor">#CCD0DA</Color>
+  <Color x:Key="FgToggleThumbColor">#8C8FA1</Color>
+  <Color x:Key="FgToggleBorderColor">#BCC0CC</Color>
+
+  <SolidColorBrush x:Key="FgSurface0" Color="#DCE0E8" />
+  <SolidColorBrush x:Key="FgSurface1" Color="#E6E9EF" />
+  <SolidColorBrush x:Key="FgMainSurface" Color="#FFFFFF" />
+  <SolidColorBrush x:Key="FgSurface2" Color="#F5F6F9" />
+  <SolidColorBrush x:Key="FgSurface3" Color="#FFFFFF" />
+  <SolidColorBrush x:Key="FgFieldSurface" Color="#E6E9EF" />
+  <SolidColorBrush x:Key="FgSecondarySurface" Color="#E6E9EF" />
+  <SolidColorBrush x:Key="FgSecondaryHover" Color="#DCE0E8" />
+  <SolidColorBrush x:Key="FgSecondaryPressed" Color="#CCD0DA" />
+  <SolidColorBrush x:Key="FgNavHover" Color="#144C4F69" />
+  <SolidColorBrush x:Key="FgNavPressed" Color="#1F4C4F69" />
+
+  <!-- Legacy aliases kept so existing views bind without churn. -->
+  <SolidColorBrush x:Key="FgBackground" Color="#EFF1F5" />
+  <SolidColorBrush x:Key="FgSurface" Color="#FFFFFF" />
+  <SolidColorBrush x:Key="FgSurfaceElevated" Color="#FFFFFF" />
+
+  <SolidColorBrush x:Key="FgTextPrimary" Color="#4C4F69" />
+  <SolidColorBrush x:Key="FgTextSecondary" Color="#5C5F77" />
+  <SolidColorBrush x:Key="FgTextTertiary" Color="#5C5F77" />
+  <SolidColorBrush x:Key="FgTextDisabled" Color="#ACB0BE" />
+  <SolidColorBrush x:Key="FgTextOnAccent" Color="#FFFFFF" />
+  <SolidColorBrush x:Key="FgBorder" Color="#CCD0DA" />
+  <SolidColorBrush x:Key="FgBorderStrong" Color="#BCC0CC" />
+  <SolidColorBrush x:Key="FgBorderDisabled" Color="#E6E9EF" />
+  <SolidColorBrush x:Key="FgDivider" Color="#1F4C4F69" />
+  <SolidColorBrush x:Key="FgAccent" Color="#206B58" />
+  <SolidColorBrush x:Key="FgAccentSecondary" Color="#1E66F5" />
+  <SolidColorBrush x:Key="FgAccentHover" Color="#267F67" />
+  <SolidColorBrush x:Key="FgAccentPressed" Color="#194F42" />
+  <SolidColorBrush x:Key="FgAccentSoft" Color="#1F206B58" />
+  <SolidColorBrush x:Key="FgAccentSurface" Color="#DAECE5" />
+  <SolidColorBrush x:Key="FgSuccess" Color="#276A1B" />
+  <SolidColorBrush x:Key="FgSuccessSoft" Color="#E5F2E1" />
+  <SolidColorBrush x:Key="FgWarning" Color="#8F5709" />
+  <SolidColorBrush x:Key="FgWarningSoft" Color="#F9EEDC" />
+  <SolidColorBrush x:Key="FgDanger" Color="#BD0D33" />
+  <SolidColorBrush x:Key="FgDangerSoft" Color="#F9E1E5" />
+  <SolidColorBrush x:Key="FgInfo" Color="#1854CE" />
+  <SolidColorBrush x:Key="FgInfoSoft" Color="#E2EAFD" />
+  <SolidColorBrush x:Key="FgModalScrim" Color="#994C4F69" />
+  <SolidColorBrush x:Key="FgCloseHover" Color="#C42B1C" />
+  <SolidColorBrush x:Key="FgCaptionHover" Color="#144C4F69" />
+  <SolidColorBrush x:Key="FgCaptionPressed" Color="#1F4C4F69" />
+  <SolidColorBrush x:Key="FgFocusRing" Color="#1E66F5" />
+  <SolidColorBrush x:Key="FgTrack" Color="#CCD0DA" />
+  <SolidColorBrush x:Key="FgToggleTrack" Color="#CCD0DA" />
+  <SolidColorBrush x:Key="FgToggleThumb" Color="#8C8FA1" />
+  <SolidColorBrush x:Key="FgToggleBorder" Color="#BCC0CC" />
+  <SolidColorBrush x:Key="FgPrimaryButtonForeground" Color="#FFFFFF" />
+
+  <!-- Ring. See Theme.Dark for why these are theme-owned and the arc is not. -->
+  <SolidColorBrush x:Key="FgRingCenterSurface" Color="#E6E9EF" />
+  <SolidColorBrush x:Key="FgRingTrack" Color="#CCD0DA" />
+  <SolidColorBrush x:Key="FgRingTick" Color="#7C7F93" />
+  <SolidColorBrush x:Key="FgRingTickSpent" Color="#BCC0CC" />
+  <SolidColorBrush x:Key="FgRingIndicator" Color="#FFFFFF" />
+  <!-- Legacy aliases for the ring keys above. -->
+  <SolidColorBrush x:Key="FgTimerFace" Color="#E6E9EF" />
+  <SolidColorBrush x:Key="FgTimerTick" Color="#7C7F93" />
+  <SolidColorBrush x:Key="FgTimerIndicator" Color="#FFFFFF" />
+
+  <SolidColorBrush x:Key="FgCycleTimelineTrack" Color="#CCD0DA" />
+  <SolidColorBrush x:Key="FgCycleBreak" Color="#179299" />
+  <SolidColorBrush x:Key="FgCycleBreakSoft" Color="#29179299" />
+
+  <!-- Light shadows have to be far weaker than their dark counterparts or the cards
+       read as cut-outs rather than as paper resting on paper. -->
+  <BoxShadows x:Key="FgShadowLow">0 2 8 0 #144C4F69</BoxShadows>
+  <BoxShadows x:Key="FgShadowMedium">0 8 24 0 #1F4C4F69</BoxShadows>
+  <BoxShadows x:Key="FgShadowHigh">0 24 72 0 #2E4C4F69</BoxShadows>
+  <BoxShadows x:Key="FgStrictModalShadow">0 24 72 0 #2E4C4F69</BoxShadows>
+  <BoxShadows x:Key="FgInputFocusShadow">0 0 0 3 #337287FD</BoxShadows>
+  <BoxShadows x:Key="FgControlIdleShadow">0 0 0 0 #00000000</BoxShadows>
+  <BoxShadows x:Key="FgControlHoverShadow">0 6 20 0 #144C4F69</BoxShadows>
+  <BoxShadows x:Key="FgSummaryWindowShadow">0 28 80 0 #334C4F69</BoxShadows>
+
+  <!-- The block screen still has to read as "everything else went quiet", which in a
+       light theme means an opaque calm wash rather than a darkening veil. -->
+  <Color x:Key="FgBlockScrimColor">#F5E6E9EF</Color>
+  <SolidColorBrush x:Key="FgBlockScrim" Color="#F5E6E9EF" />
+
+  <RadialGradientBrush x:Key="FgAmbientGlow" Center="50%,34%" GradientOrigin="50%,34%">
+    <GradientStop Offset="0" Color="#248839EF" />
+    <GradientStop Offset="0.46" Color="#121E66F5" />
+    <GradientStop Offset="1" Color="#00EFF1F5" />
+  </RadialGradientBrush>
+
+  <!-- Ambient background: a barely-there diagonal wash from base into a faint
+       lavender, so the shell has depth without ever competing with the content. -->
+  <LinearGradientBrush x:Key="FgAppBackgroundGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#F2F4F8" />
+    <GradientStop Offset="0.42" Color="#EFF1F5" />
+    <GradientStop Offset="0.76" Color="#EEEDF6" />
+    <GradientStop Offset="1" Color="#EAEDF3" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgSidebarGradient" StartPoint="0%,0%" EndPoint="0%,100%">
+    <GradientStop Offset="0" Color="#EFF1F5" />
+    <GradientStop Offset="1" Color="#E6E9EF" />
+  </LinearGradientBrush>
+
+  <!-- Content pane: near-white, drifting one step cooler then one step warmer, so the
+       cards on top of it still read as separate paper. -->
+  <LinearGradientBrush x:Key="FgContentGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#FFFFFF" />
+    <GradientStop Offset="0.58" Color="#FAFBFD" />
+    <GradientStop Offset="1" Color="#F7F5FC" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgPrimaryActionGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#206B58" />
+    <GradientStop Offset="0.52" Color="#206B58" />
+    <GradientStop Offset="1" Color="#206B58" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgPrimaryActionHoverGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#267F67" />
+    <GradientStop Offset="1" Color="#267F67" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgPrimaryActionPressedGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#194F42" />
+    <GradientStop Offset="1" Color="#194F42" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgPrimaryActionDisabledGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#CCD0DA" />
+    <GradientStop Offset="1" Color="#D3CFDE" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgProgressGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#179299" />
+    <GradientStop Offset="0.52" Color="#1E66F5" />
+    <GradientStop Offset="1" Color="#206B58" />
+  </LinearGradientBrush>
+
+  <!-- See Theme.Dark for why these are tinted rather than solid. -->
+  <SolidColorBrush x:Key="FgHeaderChipSurface" Color="#D9FFFFFF" />
+  <SolidColorBrush x:Key="FgHeaderChipHover" Color="#E6EFF1F5" />
+  <SolidColorBrush x:Key="FgHeaderChipPressed" Color="#E6DCE0E8" />
+  <SolidColorBrush x:Key="FgHeaderChipBorder" Color="#66CCD0DA" />
+
+  <LinearGradientBrush x:Key="FgHeaderVeil" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#F2EFF1F5" />
+    <GradientStop Offset="1" Color="#EDE6E9EF" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgHeaderFadeGradient" StartPoint="0%,60%" EndPoint="0%,100%">
+    <GradientStop Offset="0" Color="#00EFF1F5" />
+    <GradientStop Offset="1" Color="#E6EFF1F5" />
+  </LinearGradientBrush>
+
+  <LinearGradientBrush x:Key="FgTrackGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+    <GradientStop Offset="0" Color="#CCD0DA" />
+    <GradientStop Offset="1" Color="#144C4F69" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="FgTimerProgressGradient" StartPoint="0%,0%" EndPoint="100%,45%">
+    <GradientStop Offset="0" Color="#7287FD" />
+    <GradientStop Offset="0.42" Color="#1E66F5" />
+    <GradientStop Offset="1" Color="#206B58" />
+  </LinearGradientBrush>
+
+  <!-- Glows. Used for the ring halo and for state emphasis in the last minute. -->
+  <SolidColorBrush x:Key="FgGlowAccent" Color="#2E8839EF" />
+  <SolidColorBrush x:Key="FgGlowSuccess" Color="#2E40A02B" />
+  <SolidColorBrush x:Key="FgGlowWarning" Color="#2EDF8E1D" />
+</ResourceDictionary>

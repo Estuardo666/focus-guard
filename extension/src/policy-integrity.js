@@ -19,7 +19,39 @@ export async function computePolicyHash(delivery) {
       id: rule.id,
       action: rule.action,
       pattern: rule.pattern
-    }))
+    })),
+    cyclePlan: policy.cyclePlan ? {
+      configuration: {
+        focusDuration: policy.cyclePlan.configuration.focusDuration,
+        shortBreakDuration: policy.cyclePlan.configuration.shortBreakDuration,
+        longBreakDuration: policy.cyclePlan.configuration.longBreakDuration,
+        cyclesBeforeLongBreak: policy.cyclePlan.configuration.cyclesBeforeLongBreak,
+        terminationMode: policy.cyclePlan.configuration.terminationMode,
+        cycleCount: policy.cyclePlan.configuration.cycleCount ?? null,
+        totalDuration: policy.cyclePlan.configuration.totalDuration ?? null
+      },
+      phases: policy.cyclePlan.phases.map((phase) => ({
+        index: phase.index,
+        kind: phase.kind,
+        startUtc: phase.startUtc,
+        endUtc: phase.endUtc,
+        focusCycleNumber: phase.focusCycleNumber
+      })),
+      endUtc: policy.cyclePlan.endUtc
+    } : null,
+    breakApplicationRules: (policy.breakApplicationRules ?? []).map((rule) => ({
+      id: rule.id,
+      action: rule.action,
+      matchKind: rule.matchKind,
+      value: rule.value
+    })),
+    breakWebsiteRules: (policy.breakWebsiteRules ?? []).map((rule) => ({
+      id: rule.id,
+      action: rule.action,
+      pattern: rule.pattern
+    })),
+    authorizedPhaseIndex: policy.authorizedPhaseIndex ?? -1,
+    authorizedPhaseEndUtc: policy.authorizedPhaseEndUtc ?? null
   };
   const digest = await crypto.subtle.digest(
     "SHA-256",

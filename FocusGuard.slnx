@@ -1,5 +1,10 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/FocusGuard.Host.Windows/FocusGuard.Host.Windows.csproj" />
+    <Project Path="src/FocusGuard.Ipc.Windows/FocusGuard.Ipc.Windows.csproj" />
+    <Project Path="src/FocusGuard.Platform.Windows/FocusGuard.Platform.Windows.csproj" />
+    <Project Path="src/FocusGuard.Client/FocusGuard.Client.csproj" />
+    <Project Path="src/FocusGuard.ProcessAgent/FocusGuard.ProcessAgent.csproj" />
     <Project Path="src/FocusGuard.Domain/FocusGuard.Domain.csproj" />
     <Project Path="src/FocusGuard.Contracts/FocusGuard.Contracts.csproj" />
     <Project Path="src/FocusGuard.Service/FocusGuard.Service.csproj" />
@@ -15,6 +20,11 @@
     <Project Path="src/FocusGuard.Setup/FocusGuard.Setup.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/FocusGuard.Host.Windows.Tests/FocusGuard.Host.Windows.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Ipc.Windows.Tests/FocusGuard.Ipc.Windows.Tests.csproj" />
+    <Project Path="tests/FocusGuard.ProcessAgent.Tests/FocusGuard.ProcessAgent.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Client.Tests/FocusGuard.Client.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Desktop.UiTests/FocusGuard.Desktop.UiTests.csproj" />
     <Project Path="tests/FocusGuard.Domain.Tests/FocusGuard.Domain.Tests.csproj" />
     <Project Path="tests/FocusGuard.Contracts.Tests/FocusGuard.Contracts.Tests.csproj" />
     <Project Path="tests/FocusGuard.Service.Tests/FocusGuard.Service.Tests.csproj" />

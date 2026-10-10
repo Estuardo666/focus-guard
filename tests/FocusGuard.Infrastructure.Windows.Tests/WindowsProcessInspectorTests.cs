@@ -21,4 +21,19 @@ public sealed class WindowsProcessInspectorTests
         Assert.True(Path.IsPathFullyQualified(instance.ExecutablePath));
         Assert.Equal(TimeSpan.Zero, instance.StartedAtUtc.Offset);
     }
+
+    [Fact]
+    public void ProcessIdSourceEnumeratesCurrentProcessWithoutDuplicates()
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        var processIds = new WindowsProcessIdSource().GetProcessIds();
+
+        Assert.Contains(Environment.ProcessId, processIds);
+        Assert.DoesNotContain(processIds, processId => processId < 0);
+        Assert.Equal(processIds.Count, processIds.Distinct().Count());
+    }
 }

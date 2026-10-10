@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using FocusGuard.Domain;
 using Microsoft.Data.Sqlite;
 
@@ -8,6 +9,8 @@ namespace FocusGuard.Storage;
 /// One finished session, written when the session leaves the active state. This is what
 /// the end-of-session window reads, and what the streak is counted from.
 /// </summary>
+public sealed record SessionHistoryPhase(SessionPhaseKind Kind, DateTimeOffset StartUtc, DateTimeOffset EndUtc);
+
 public sealed record SessionHistoryEntry(
     Guid SessionId,
     ProfileId ProfileId,
@@ -17,10 +20,15 @@ public sealed record SessionHistoryEntry(
     bool Completed,
     int PlannedMinutes,
     int FocusedMinutes,
-    int BlockedAttempts);
+    int BlockedAttempts,
+    IReadOnlyList<SessionHistoryPhase>? Phases = null,
+    CycleHistoryMetrics? CycleMetrics = null,
+    ScheduledSessionIntent? ScheduledIntent = null);
 
 public interface ISessionHistoryStore
 {
+    Task<IReadOnlyList<SessionHistoryEntry>> ListRangeAsync(DateTimeOffset startUtc, DateTimeOffset endUtc, CancellationToken cancellationToken = default) =>
+        Task.FromResult<IReadOnlyList<SessionHistoryEntry>>([]);
     Task RecordAsync(SessionHistoryEntry entry, CancellationToken cancellationToken = default);
 
     Task<SessionHistoryEntry?> GetAsync(Guid sessionId, CancellationToken cancellationToken = default);
@@ -96,8 +104,10 @@ public sealed class SqliteSessionHistoryStore : ISessionHistoryStore, ICaptureSt
 
         await using var connection = await OpenAsync(cancellationToken);
         await EnsureSchemaAsync(connection, cancellationToken);
-        await ExecuteAsync(
+        using var transaction = connection.BeginTransaction();
+        await ExecuteCoreAsync(
             connection,
+            transaction,
             """
             INSERT INTO SessionHistory
                 (SessionId, ProfileId, ProfileName, StartUtc, EndedAtUtc, Completed,
@@ -111,6 +121,12 @@ public sealed class SqliteSessionHistoryStore : ISessionHistoryStore, ICaptureSt
                 Completed = excluded.Completed,
                 FocusedMinutes = excluded.FocusedMinutes,
                 BlockedAttempts = excluded.BlockedAttempts;
+            INSERT INTO SessionHistoryPhases (SessionId, PhasesJson, CycleMetricsJson, ScheduledIntentJson)
+            VALUES ($sessionId, $phases, $cycleMetrics, $scheduledIntent)
+            ON CONFLICT(SessionId) DO UPDATE SET
+                PhasesJson = excluded.PhasesJson,
+                CycleMetricsJson = excluded.CycleMetricsJson,
+                ScheduledIntentJson = excluded.ScheduledIntentJson;
             """,
             cancellationToken,
             ("$sessionId", entry.SessionId.ToString("D")),
@@ -121,7 +137,27 @@ public sealed class SqliteSessionHistoryStore : ISessionHistoryStore, ICaptureSt
             ("$completed", entry.Completed ? 1 : 0),
             ("$plannedMinutes", entry.PlannedMinutes),
             ("$focusedMinutes", entry.FocusedMinutes),
-            ("$blockedAttempts", entry.BlockedAttempts));
+            ("$blockedAttempts", entry.BlockedAttempts),
+            ("$phases", JsonSerializer.Serialize(entry.Phases ?? [])),
+            ("$cycleMetrics", entry.CycleMetrics is null ? DBNull.Value : JsonSerializer.Serialize(entry.CycleMetrics)),
+            ("$scheduledIntent", entry.ScheduledIntent is null ? DBNull.Value : JsonSerializer.Serialize(entry.ScheduledIntent)));
+        transaction.Commit();
+    }
+
+    public async Task<IReadOnlyList<SessionHistoryEntry>> ListRangeAsync(DateTimeOffset startUtc, DateTimeOffset endUtc, CancellationToken cancellationToken = default)
+    {
+        if (startUtc.Offset != TimeSpan.Zero || endUtc.Offset != TimeSpan.Zero || endUtc <= startUtc || endUtc - startUtc > TimeSpan.FromDays(2))
+            throw new ArgumentOutOfRangeException(nameof(endUtc));
+        await using var connection = await OpenAsync(cancellationToken);
+        await EnsureSchemaAsync(connection, cancellationToken);
+        await using var command = connection.CreateCommand();
+        command.CommandText = $"{HistorySelect} WHERE EndedAtUtc >= $start AND StartUtc < $end ORDER BY StartUtc DESC LIMIT 2000;";
+        command.Parameters.AddWithValue("$start", startUtc.ToString("O", CultureInfo.InvariantCulture));
+        command.Parameters.AddWithValue("$end", endUtc.ToString("O", CultureInfo.InvariantCulture));
+        var result = new List<SessionHistoryEntry>();
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        while (await reader.ReadAsync(cancellationToken)) result.Add(ReadEntry(reader));
+        return result;
     }
 
     public async Task<SessionHistoryEntry?> GetAsync(
@@ -333,7 +369,10 @@ public sealed class SqliteSessionHistoryStore : ISessionHistoryStore, ICaptureSt
     private const string HistorySelect =
         """
         SELECT SessionId, ProfileId, ProfileName, StartUtc, EndedAtUtc, Completed,
-               PlannedMinutes, FocusedMinutes, BlockedAttempts
+               PlannedMinutes, FocusedMinutes, BlockedAttempts,
+               (SELECT PhasesJson FROM SessionHistoryPhases p WHERE p.SessionId = SessionHistory.SessionId),
+               (SELECT CycleMetricsJson FROM SessionHistoryPhases p WHERE p.SessionId = SessionHistory.SessionId),
+               (SELECT ScheduledIntentJson FROM SessionHistoryPhases p WHERE p.SessionId = SessionHistory.SessionId)
         FROM SessionHistory
         """;
 
@@ -347,7 +386,10 @@ public sealed class SqliteSessionHistoryStore : ISessionHistoryStore, ICaptureSt
             reader.GetInt32(5) != 0,
             reader.GetInt32(6),
             reader.GetInt32(7),
-            reader.GetInt32(8));
+            reader.GetInt32(8),
+            reader.IsDBNull(9) ? null : JsonSerializer.Deserialize<SessionHistoryPhase[]>(reader.GetString(9)),
+            reader.IsDBNull(10) ? null : JsonSerializer.Deserialize<CycleHistoryMetrics>(reader.GetString(10)),
+            reader.IsDBNull(11) ? null : JsonSerializer.Deserialize<ScheduledSessionIntent>(reader.GetString(11)));
 
     private static void ValidateEntry(SessionHistoryEntry entry)
     {
@@ -357,7 +399,11 @@ public sealed class SqliteSessionHistoryStore : ISessionHistoryStore, ICaptureSt
             || entry.ProfileName.Length > 80
             || entry.PlannedMinutes < 0
             || entry.FocusedMinutes < 0
-            || entry.BlockedAttempts < 0)
+            || entry.BlockedAttempts < 0
+            || entry.CycleMetrics is { } cycleMetrics && !cycleMetrics.IsValid()
+            || (entry.ScheduledIntent is { } scheduledIntent
+                && (!scheduledIntent.IsValid()
+                    || !string.Equals(scheduledIntent.ProfileName, entry.ProfileName, StringComparison.Ordinal))))
         {
             throw new ArgumentException("Session history entry is invalid.", nameof(entry));
         }
@@ -413,6 +459,12 @@ public sealed class SqliteSessionHistoryStore : ISessionHistoryStore, ICaptureSt
             );
             CREATE INDEX IF NOT EXISTS IX_SessionHistory_EndedAtUtc
                 ON SessionHistory (EndedAtUtc DESC);
+            CREATE TABLE IF NOT EXISTS SessionHistoryPhases (
+                SessionId TEXT NOT NULL PRIMARY KEY,
+                PhasesJson TEXT NOT NULL,
+                CycleMetricsJson TEXT NULL,
+                ScheduledIntentJson TEXT NULL
+            );
             CREATE TABLE IF NOT EXISTS Captures (
                 Id TEXT NOT NULL PRIMARY KEY,
                 SessionId TEXT NOT NULL,
@@ -426,6 +478,69 @@ public sealed class SqliteSessionHistoryStore : ISessionHistoryStore, ICaptureSt
             CREATE INDEX IF NOT EXISTS IX_Captures_SessionId ON Captures (SessionId);
             """;
         await command.ExecuteNonQueryAsync(cancellationToken);
+        await EnsureCycleMetricsColumnAsync(connection, cancellationToken);
+        await EnsureScheduledIntentColumnAsync(connection, cancellationToken);
+    }
+
+    private static async Task EnsureScheduledIntentColumnAsync(SqliteConnection connection, CancellationToken cancellationToken)
+    {
+        var exists = false;
+        await using (var inspect = connection.CreateCommand())
+        {
+            inspect.CommandText = "PRAGMA table_info(SessionHistoryPhases);";
+            await using var reader = await inspect.ExecuteReaderAsync(cancellationToken);
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                if (string.Equals(reader.GetString(1), "ScheduledIntentJson", StringComparison.OrdinalIgnoreCase))
+                {
+                    exists = true;
+                    break;
+                }
+            }
+        }
+
+        if (exists) return;
+        await using var upgrade = connection.CreateCommand();
+        upgrade.CommandText = "ALTER TABLE SessionHistoryPhases ADD COLUMN ScheduledIntentJson TEXT NULL;";
+        try
+        {
+            await upgrade.ExecuteNonQueryAsync(cancellationToken);
+        }
+        catch (SqliteException exception) when (exception.SqliteErrorCode == 1
+            && exception.Message.Contains("duplicate column name", StringComparison.OrdinalIgnoreCase))
+        {
+            // A different concurrent opener completed the additive migration first.
+        }
+    }
+    private static async Task EnsureCycleMetricsColumnAsync(SqliteConnection connection, CancellationToken cancellationToken)
+    {
+        var exists = false;
+        await using (var inspect = connection.CreateCommand())
+        {
+            inspect.CommandText = "PRAGMA table_info(SessionHistoryPhases);";
+            await using var reader = await inspect.ExecuteReaderAsync(cancellationToken);
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                if (string.Equals(reader.GetString(1), "CycleMetricsJson", StringComparison.OrdinalIgnoreCase))
+                {
+                    exists = true;
+                    break;
+                }
+            }
+        }
+
+        if (exists) return;
+        await using var upgrade = connection.CreateCommand();
+        upgrade.CommandText = "ALTER TABLE SessionHistoryPhases ADD COLUMN CycleMetricsJson TEXT NULL;";
+        try
+        {
+            await upgrade.ExecuteNonQueryAsync(cancellationToken);
+        }
+        catch (SqliteException exception) when (exception.SqliteErrorCode == 1
+            && exception.Message.Contains("duplicate column name", StringComparison.OrdinalIgnoreCase))
+        {
+            // A different concurrent opener completed the additive migration first.
+        }
     }
 
     private static async Task ExecuteAsync(
@@ -433,8 +548,17 @@ public sealed class SqliteSessionHistoryStore : ISessionHistoryStore, ICaptureSt
         string sql,
         CancellationToken cancellationToken,
         params (string Name, object Value)[] parameters)
+        => await ExecuteCoreAsync(connection, null, sql, cancellationToken, parameters);
+
+    private static async Task ExecuteCoreAsync(
+        SqliteConnection connection,
+        SqliteTransaction? transaction,
+        string sql,
+        CancellationToken cancellationToken,
+        params (string Name, object Value)[] parameters)
     {
         await using var command = connection.CreateCommand();
+        command.Transaction = transaction;
         command.CommandText = sql;
         foreach (var parameter in parameters)
         {

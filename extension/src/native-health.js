@@ -1,5 +1,9 @@
 import { verifyPolicy } from "./policy-integrity.js";
-import { installNavigationEnforcement } from "./navigation-enforcement.js";
+import {
+  installNavigationEnforcement,
+  PHASE_BOUNDARY_ALARM,
+  schedulePhaseBoundaryAlarm
+} from "./navigation-enforcement.js";
 import { createNativePortClient } from "./native-port-client.js";
 
 const HOST_NAME = "com.focusguard.native";
@@ -20,6 +24,25 @@ const nativeClient = createNativePortClient({
   markUnavailable: markNativeUnavailable,
   onReconnect: () => { void sendHealth("heartbeat"); }
 });
+
+// A policy is only enforced once the service has seen the extension acknowledge that
+// exact delivery, which costs one heartbeat. Cycle phase boundaries issue a fresh
+// delivery, so waiting for the next scheduled beat would leave every break and every
+// return to focus unenforced for the whole interval. Acknowledging immediately closes
+// the handshake in a round trip instead.
+let acknowledgedPolicyId = null;
+let acknowledging = false;
+
+async function acknowledgeNewPolicyOnce(policyId) {
+  if (policyId === acknowledgedPolicyId || acknowledging) return;
+  acknowledgedPolicyId = policyId;
+  acknowledging = true;
+  try {
+    await sendHealth("heartbeat");
+  } finally {
+    acknowledging = false;
+  }
+}
 
 async function sendHealth(type, blockedUrl = null, captureText = null) {
   const stored = await chrome.storage.local.get("focusGuardPolicyAck");
@@ -43,10 +66,12 @@ async function sendHealth(type, blockedUrl = null, captureText = null) {
       response?.correlationId === request.correlationId &&
       typeof response?.serviceReady === "boolean" &&
       typeof response?.extensionReady === "boolean";
+    let storedPolicyId = null;
     if (valid) {
       if (response.policy) {
         const integrityValid = await verifyPolicy(response.policy);
         if (integrityValid && new Date(response.policy.policy.endUtc) > new Date()) {
+          storedPolicyId = response.policy.policyId;
           await chrome.storage.local.set({
             focusGuardPolicy: response.policy,
             focusGuardPolicyAck: {
@@ -54,11 +79,14 @@ async function sendHealth(type, blockedUrl = null, captureText = null) {
               policyHash: response.policy.policyHash
             }
           });
+          schedulePhaseBoundaryAlarm(chrome, response.policy.policy);
         } else {
           await chrome.storage.local.remove(["focusGuardPolicy", "focusGuardPolicyAck"]);
+          void chrome.alarms.clear(PHASE_BOUNDARY_ALARM);
         }
       } else {
         await chrome.storage.local.remove(["focusGuardPolicy", "focusGuardPolicyAck"]);
+        void chrome.alarms.clear(PHASE_BOUNDARY_ALARM);
       }
     }
     const confirmed = valid && response.serviceReady === true &&
@@ -72,6 +100,11 @@ async function sendHealth(type, blockedUrl = null, captureText = null) {
         ? { receivedAtUtc: new Date().toISOString(), response }
         : { receivedAtUtc: new Date().toISOString(), errorCode: "invalidResponse" }
     });
+    if (confirmed) {
+      acknowledgedPolicyId = storedPolicyId;
+    } else if (storedPolicyId !== null) {
+      void acknowledgeNewPolicyOnce(storedPolicyId);
+    }
     // A capture is only actually stored when the service was under this policy, which is
     // the same condition as a confirmed enforcement round trip.
     return confirmed;
@@ -125,7 +158,7 @@ chrome.runtime.onStartup.addListener(() => {
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === HEARTBEAT_ALARM) {
+  if (alarm.name === HEARTBEAT_ALARM || alarm.name === PHASE_BOUNDARY_ALARM) {
     void sendHealth("heartbeat");
   }
 });

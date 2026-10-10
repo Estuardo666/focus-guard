@@ -1,4 +1,5 @@
 using FocusGuard.Contracts;
+using FocusGuard.Domain;
 
 namespace FocusGuard.Contracts.Tests;
 
@@ -77,6 +78,9 @@ public sealed class CaptureProtocolTests
             BlockedAttempts: 14,
             StreakDays: 6,
             EndedAtUtc: DateTimeOffset.UtcNow,
+            CycleMetrics: new CycleHistoryMetrics(2, 1),
+            ProfileId: Guid.NewGuid(),
+            ScheduledIntent: new ScheduledSessionIntent("Deep Work", 50, EnforcementEnabled: true),
             Captures:
             [
                 new CapturedItemView(
@@ -98,6 +102,42 @@ public sealed class CaptureProtocolTests
         // list is checked separately from the scalar metrics.
         Assert.Equal(summary with { Captures = [] }, decoded.Value! with { Captures = [] });
         Assert.Equal(summary.Captures, decoded.Value!.Captures);
+    }
+
+    [Fact]
+    public void SessionSummary_RejectsInvalidCycleHistoryMetrics()
+    {
+        var envelope = IpcProtocol.CreateSessionSummaryResponse(
+            Guid.NewGuid(),
+            new SessionSummaryResponse(
+                Available: true,
+                SessionId: Guid.NewGuid(),
+                Outcome: CaptureProtocol.CompletedOutcome,
+                ProfileName: "Cycle session",
+                PlannedMinutes: 25,
+                FocusedMinutes: 20,
+                BlockedAttempts: 0,
+                StreakDays: 1,
+                EndedAtUtc: DateTimeOffset.UtcNow,
+                Captures: [],
+                CycleMetrics: new CycleHistoryMetrics(-1, 1)));
+
+        Assert.False(IpcProtocol.ReadSessionSummaryResponse(envelope.Value!).IsValid);
+    }
+
+    [Fact]
+    public void SessionSummaryReadsLegacyPayloadWithoutCycleMetricsAsUnknown()
+    {
+        var envelope = new IpcEnvelope(
+            IpcProtocol.CurrentVersion,
+            IpcMessageType.SessionSummaryResponse,
+            Guid.NewGuid(),
+            """{"available":true,"sessionId":"11111111-1111-4111-8111-111111111111","outcome":"Completed","profileName":"Cycle","plannedMinutes":3,"focusedMinutes":2,"blockedAttempts":0,"streakDays":0,"endedAtUtc":"2026-10-06T12:00:00Z","captures":[]}""");
+
+        var decoded = IpcProtocol.ReadSessionSummaryResponse(envelope);
+
+        Assert.True(decoded.IsValid);
+        Assert.Null(decoded.Value!.CycleMetrics);
     }
 
     [Fact]

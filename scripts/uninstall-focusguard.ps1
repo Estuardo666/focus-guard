@@ -4,6 +4,12 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+if (Test-Path -LiteralPath (Join-Path $env:ProgramFiles 'FocusGuard\ipc-policy.json')) {
+    $policy = Get-Content -LiteralPath (Join-Path $env:ProgramFiles 'FocusGuard\ipc-policy.json') -Raw | ConvertFrom-Json
+    $ownerSid = [Security.Principal.SecurityIdentifier]::new([string]$policy.ownerUserSid).Value
+    if ($ownerSid -notmatch '^S-1-(5-21|12-1)-') { throw 'IPC owner policy denied during uninstall.' }
+    $interactiveHive = 'Registry::HKEY_USERS\' + $ownerSid
+} else { $interactiveHive = 'HKCU:' }
 $serviceName = 'FocusGuard'
 $installRoot = [IO.Path]::GetFullPath((Join-Path ${env:ProgramFiles} 'FocusGuard'))
 $dataRoot = [IO.Path]::GetFullPath((Join-Path ${env:ProgramData} 'FocusGuard'))
@@ -11,10 +17,11 @@ $strictDirectory = Join-Path $dataRoot 'StrictPersistence'
 $activePolicy = Join-Path $strictDirectory 'active-policy.json'
 $pendingRecovery = Join-Path $strictDirectory 'recovery-request.json'
 $nativeRegistrations = @(
-    'HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.focusguard.native',
-    'HKCU:\Software\Microsoft\Edge\NativeMessagingHosts\com.focusguard.native'
+    ($interactiveHive + '\Software\Google\Chrome\NativeMessagingHosts\com.focusguard.native'),
+    ($interactiveHive + '\Software\Microsoft\Edge\NativeMessagingHosts\com.focusguard.native')
 )
 $startMenuShortcut = Join-Path ${env:ProgramData} 'Microsoft\Windows\Start Menu\Programs\FocusGuard.lnk'
+$runKey = $interactiveHive + '\Software\Microsoft\Windows\CurrentVersion\Run'
 
 $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $principal = [Security.Principal.WindowsPrincipal]::new($identity)
@@ -50,6 +57,14 @@ if ($PSCmdlet.ShouldProcess($installRoot, 'Remove FocusGuard binaries')) {
                 $installRoot + [IO.Path]::DirectorySeparatorChar,
                 [StringComparison]::OrdinalIgnoreCase)) {
                 Remove-Item -LiteralPath $registration -Recurse -Force
+            }
+        }
+    }
+    if (Test-Path -LiteralPath $runKey) {
+        foreach ($valueName in @('FocusGuard.ProcessAgent', 'FocusGuard.Desktop')) {
+            $command = (Get-ItemProperty -LiteralPath $runKey -Name $valueName -ErrorAction SilentlyContinue).$valueName
+            if ($command -and $command.IndexOf($installRoot, [StringComparison]::OrdinalIgnoreCase) -ge 0) {
+                Remove-ItemProperty -LiteralPath $runKey -Name $valueName
             }
         }
     }

@@ -1,3 +1,5 @@
+using FocusGuard.Domain;
+
 namespace FocusGuard.Contracts;
 
 /// <summary>
@@ -39,7 +41,12 @@ public sealed record SessionSummaryResponse(
     int BlockedAttempts,
     int StreakDays,
     DateTimeOffset? EndedAtUtc,
-    IReadOnlyList<CapturedItemView> Captures);
+    IReadOnlyList<CapturedItemView> Captures,
+    CycleHistoryMetrics? CycleMetrics = null,
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    Guid? ProfileId = null,
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    ScheduledSessionIntent? ScheduledIntent = null);
 
 public sealed record ResolveCapturesRequest(IReadOnlyList<Guid> CaptureIds, string Resolution);
 

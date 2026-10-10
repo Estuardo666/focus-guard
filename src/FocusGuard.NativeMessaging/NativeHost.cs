@@ -21,14 +21,17 @@ public sealed class NamedPipeExtensionHealthClient : IExtensionHealthClient
     public static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(2);
     private readonly string _pipeName;
     private readonly TimeSpan _timeout;
+    private readonly IPipeConnectionFactory _connections;
 
     public NamedPipeExtensionHealthClient(
         string pipeName,
-        TimeSpan? timeout = null)
+        TimeSpan? timeout = null,
+        IPipeConnectionFactory? connectionFactory = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(pipeName);
         _pipeName = pipeName;
         _timeout = timeout ?? DefaultTimeout;
+        _connections = connectionFactory ?? PipeConnectionFactories.Current;
         if (_timeout <= TimeSpan.Zero || _timeout > TimeSpan.FromSeconds(10))
         {
             throw new ArgumentOutOfRangeException(nameof(timeout));
@@ -44,13 +47,7 @@ public sealed class NamedPipeExtensionHealthClient : IExtensionHealthClient
         timeout.CancelAfter(_timeout);
         try
         {
-            await using var pipe = new NamedPipeClientStream(
-                ".",
-                _pipeName,
-                PipeDirection.InOut,
-                PipeOptions.Asynchronous,
-                TokenImpersonationLevel.Identification);
-            await pipe.ConnectAsync(timeout.Token).ConfigureAwait(false);
+            await using var pipe = await _connections.ConnectAsync(_pipeName, timeout.Token).ConfigureAwait(false);
             await BoundedPipeFraming.WriteAsync(
                 pipe,
                 ExtensionHealthProtocol.WriteRequest(request),

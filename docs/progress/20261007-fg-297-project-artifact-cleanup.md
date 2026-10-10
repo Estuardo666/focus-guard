@@ -1,0 +1,1 @@
+FG297: Eliminados 45 paquetes supersedidos de D, 24284779584 bytes (22,62 GiB). Conservados paquetes .100, instaladores .97/.98, codigo y evidencias. Inventario: 20261007-fg-297-cleanup-candidates.json. C y caches pendientes: eliminacion bloqueada por politica automatica. D libre final: 50492153856 bytes. Sin cambios de producto.

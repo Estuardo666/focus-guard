@@ -1,0 +1,24 @@
+<UserControl
+    x:Class="FocusGuard.Desktop.FocusBackground"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    IsHitTestVisible="False">
+
+  <!-- The one backdrop the whole application shares. It is mounted once at the root of
+       the window and never re-created: Timer, Cycles, Focus Active, the settings sheet
+       and every modal render above this same node, so switching between them cannot
+       make the light shift or the surface jump. Both layers read their colours from
+       the active theme, which is why a theme or profile change repaints the shell as a
+       single unit instead of leaving the background a frame behind.
+
+       Pure gradients, no bitmap: a texture at this size costs memory and resamples
+       badly across the DPI scales Windows actually ships. -->
+  <Panel>
+    <!-- Base surface: a low-contrast diagonal wash so the shell never reads as a slab. -->
+    <Border Background="{DynamicResource FgAppBackgroundGradient}" />
+
+    <!-- Ambient light, centred above where the ring sits. Deliberately weak; it is
+         meant to be felt rather than seen. -->
+    <Border Background="{DynamicResource FgAmbientGlow}" />
+  </Panel>
+</UserControl>

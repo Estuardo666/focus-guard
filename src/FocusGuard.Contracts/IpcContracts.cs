@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using FocusGuard.Domain;
 
 namespace FocusGuard.Contracts;
 
@@ -18,7 +19,23 @@ public enum IpcMessageType
     SessionSummaryRequest,
     SessionSummaryResponse,
     ResolveCapturesRequest,
-    ResolveCapturesResponse
+    ResolveCapturesResponse,
+    PrepareSessionRequest,
+    PrepareSessionResponse,
+    ActivatePreparedSessionRequest,
+    ActivatePreparedSessionResponse,
+    SkipBreakRequest,
+    SkipBreakResponse,
+    TodayRequest,
+    TodayResponse,
+    ScheduleListRequest,
+    ScheduleChangeRequest,
+    ScheduleResponse,
+    ReviewedStopSessionRequest,
+    ReviewedSkipBreakRequest,
+    RevisionedScheduleListRequest,
+    RevisionedScheduleChangeRequest,
+    RevisionedScheduleResponse
 }
 
 public sealed record IpcEnvelope(
@@ -39,7 +56,13 @@ public sealed record StatusResponse(
     DateTimeOffset? StartUtc,
     DateTimeOffset? EndUtc,
     bool StrictMode,
-    bool EnforcementConnected);
+    bool EnforcementConnected,
+    SessionMode Mode = SessionMode.SimpleTimer,
+    PhaseStatus? CurrentPhase = null,
+    PhaseStatus? NextPhase = null,
+    DateTimeOffset? FinalEndUtc = null,
+    [property: System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    ScheduledSessionIntent? ScheduledIntent = null);
 
 public sealed record ActivateSessionRequest(
     Guid ProfileId,
@@ -85,14 +108,14 @@ public sealed record IpcCodecResult<T>(T? Value, IReadOnlyList<string> Errors)
     public static IpcCodecResult<T> Failure(params string[] errors) => new(default, errors);
 }
 
-public static class IpcProtocol
+public static partial class IpcProtocol
 {
 #if FOCUSGUARD_PRODUCTION
-    public const string PipeName = "FocusGuard.Control.v1";
+    public const string PipeName = "FocusGuard.Control.v2";
 #else
-    public const string PipeName = "FocusGuard.Development.Control.v1";
+    public const string PipeName = "FocusGuard.Development.Control.v2";
 #endif
-    public const int CurrentVersion = 1;
+    public const int CurrentVersion = 2;
     public const int MaxPayloadBytes = 64 * 1024;
     public const int MaxJsonDepth = 16;
     public const int MinimumDurationSeconds = 60;
@@ -108,6 +131,7 @@ public static class IpcProtocol
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         PropertyNameCaseInsensitive = false,
+        UnmappedMemberHandling = System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow,
         MaxDepth = MaxJsonDepth,
         WriteIndented = false
     };
@@ -198,9 +222,14 @@ public static class IpcProtocol
                 "startUtc",
                 "endUtc",
                 "strictMode",
-                "enforcementConnected"
+                "enforcementConnected",
+                "mode",
+                "currentPhase",
+                "nextPhase",
+                "finalEndUtc"
             ],
-            ValidateStatusResponse);
+            ValidateStatusResponse,
+            ["scheduledIntent"]);
 
     public static IpcCodecResult<IpcEnvelope> CreateActivateSessionRequest(
         Guid correlationId,
@@ -358,7 +387,8 @@ public static class IpcProtocol
                 "endedAtUtc",
                 "captures"
             ],
-            ValidateSessionSummaryResponse);
+            ValidateSessionSummaryResponse,
+            ["cycleMetrics", "profileId", "scheduledIntent"]);
 
     public static IpcCodecResult<IpcEnvelope> CreateResolveCapturesRequest(
         Guid correlationId,
@@ -455,6 +485,11 @@ public static class IpcProtocol
             || response.FocusedMinutes < 0
             || response.BlockedAttempts < 0
             || response.StreakDays < 0
+            || response.CycleMetrics is { } cycleMetrics && !cycleMetrics.IsValid()
+            || (response.ScheduledIntent is { } scheduledIntent
+                && (!scheduledIntent.IsValid() || response.ProfileId is null
+                    || response.ProfileId == Guid.Empty
+                    || !string.Equals(response.ProfileName, scheduledIntent.ProfileName, StringComparison.Ordinal)))
             || (response.EndedAtUtc is not null && response.EndedAtUtc.Value.Offset != TimeSpan.Zero))
         {
             return new IpcValidationResult(["Session summary response fields are invalid."]);
@@ -657,7 +692,8 @@ public static class IpcProtocol
         IpcEnvelope envelope,
         IpcMessageType expectedType,
         string[] expectedProperties,
-        Func<T?, IpcValidationResult>? validate = null)
+        Func<T?, IpcValidationResult>? validate = null,
+        string[]? optionalProperties = null)
     {
         var envelopeValidation = ValidateExpectedEnvelope(envelope, expectedType);
         if (!envelopeValidation.IsValid)
@@ -666,7 +702,7 @@ public static class IpcProtocol
         }
 
         var bytes = Encoding.UTF8.GetBytes(envelope.PayloadJson);
-        var shape = ValidateJsonShape(bytes, expectedProperties);
+        var shape = ValidateJsonShape(bytes, expectedProperties, optionalProperties);
         if (!shape.IsValid)
         {
             return IpcCodecResult<T>.Failure([.. shape.Errors]);
@@ -700,13 +736,29 @@ public static class IpcProtocol
             || (response.EndUtc is not null && response.EndUtc.Value.Offset != TimeSpan.Zero)
             || (response.SessionId.HasValue != response.ProfileId.HasValue)
             || (response.SessionId.HasValue != response.StartUtc.HasValue)
-            || (response.SessionId.HasValue != response.EndUtc.HasValue))
+            || (response.SessionId.HasValue != response.EndUtc.HasValue)
+            || !Enum.IsDefined(response.Mode)
+            || (response.FinalEndUtc is not null && response.FinalEndUtc.Value.Offset != TimeSpan.Zero)
+            || !IsValidPhaseStatus(response.CurrentPhase)
+            || !IsValidPhaseStatus(response.NextPhase)
+            || (response.ScheduledIntent is { } scheduledIntent
+                && (!scheduledIntent.IsValid() || response.SessionId is null
+                    || response.ProfileId is null || response.StrictMode)))
         {
             return new IpcValidationResult(["Status response fields are invalid."]);
         }
 
         return IpcValidationResult.Success;
     }
+
+    private static bool IsValidPhaseStatus(PhaseStatus? phase) =>
+        phase is null
+        || (phase.Index >= 0
+            && Enum.IsDefined(phase.Kind)
+            && phase.FocusCycleNumber > 0
+            && phase.RemainingSeconds >= 0
+            && phase.EndUtc.Offset == TimeSpan.Zero
+            && (phase.StartUtc is null || phase.StartUtc.Value.Offset == TimeSpan.Zero && phase.StartUtc.Value < phase.EndUtc));
 
     private static IpcValidationResult ValidateActivateSessionResponse(ActivateSessionResponse? response)
     {
@@ -759,7 +811,8 @@ public static class IpcProtocol
 
     private static IpcValidationResult ValidateJsonShape(
         ReadOnlySpan<byte> payload,
-        string[] expectedProperties)
+        string[] expectedProperties,
+        string[]? optionalProperties = null)
     {
         if (payload.Length is 0 or > MaxPayloadBytes)
         {
@@ -781,10 +834,13 @@ public static class IpcProtocol
                 return new IpcValidationResult(["IPC JSON root must be an object."]);
             }
 
+            var allowedNames = new HashSet<string>(expectedProperties, StringComparer.Ordinal);
+            if (optionalProperties is not null)
+                allowedNames.UnionWith(optionalProperties);
             var names = new HashSet<string>(StringComparer.Ordinal);
             foreach (var property in document.RootElement.EnumerateObject())
             {
-                if (!names.Add(property.Name) || !expectedProperties.Contains(property.Name))
+                if (!names.Add(property.Name) || !allowedNames.Contains(property.Name))
                 {
                     return new IpcValidationResult(["IPC JSON shape is invalid."]);
                 }

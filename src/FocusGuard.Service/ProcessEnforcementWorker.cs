@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Security.Cryptography;
 using FocusGuard.Application;
 using FocusGuard.Contracts;
@@ -15,13 +14,16 @@ public sealed class ProcessEnforcementWorker(
     IApplicationProcessController controller,
     IFocusAuditStore auditStore,
     ILogger<ProcessEnforcementWorker> logger,
-    TimeProvider? timeProvider = null) : BackgroundService
+    TimeProvider? timeProvider = null,
+    IWindowsProcessIdSource? processIdSource = null) : BackgroundService
 {
     public static readonly TimeSpan PollInterval = TimeSpan.FromMilliseconds(500);
     public static readonly TimeSpan GracePeriod = TimeSpan.FromSeconds(2);
     private readonly ConfirmedProcessPolicyEvaluator _evaluator =
         new(receiver, GracePeriod, timeProvider);
     private readonly ExecutableSha256Cache _hashCache = new();
+    private readonly IWindowsProcessIdSource _processIdSource =
+        processIdSource ?? new WindowsProcessIdSource();
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -36,7 +38,8 @@ public sealed class ProcessEnforcementWorker(
                         .ConfigureAwait(false);
                     continue;
                 }
-                var needsHashes = delivery.Policy.ApplicationRules.Any(
+                var needsHashes = delivery.Policy.EffectiveApplicationRules(
+                    (timeProvider ?? TimeProvider.System).GetUtcNow().ToUniversalTime()).Any(
                     rule => rule.MatchKind == FocusGuard.Domain.ApplicationMatchKind.Sha256);
                 var snapshots = SnapshotProcesses(needsHashes);
                 foreach (var action in _evaluator.Evaluate(snapshots))
@@ -91,29 +94,26 @@ public sealed class ProcessEnforcementWorker(
     {
         var snapshots = new List<ProcessSnapshot>();
         var protectedPolicy = new ProtectedProcessPolicy();
-        foreach (var process in Process.GetProcesses())
+        foreach (var processId in _processIdSource.GetProcessIds())
         {
-            using (process)
+            try
             {
-                try
-                {
-                    var instance = WindowsProcessInspector.TryRead(process.Id);
-                    if (instance is null) continue;
-                    var path = instance.ExecutablePath;
-                    var started = instance.StartedAtUtc;
-                    snapshots.Add(new ProcessSnapshot(
-                        $"{process.Id}:{started.UtcTicks}",
-                        path,
-                        computeHashes ? _hashCache.GetHash(path) : null,
-                        protectedPolicy.IsProtected(path),
-                        process.Id,
-                        started));
-                }
-                catch (Exception exception) when (
-                    exception is Win32Exception or InvalidOperationException or IOException or UnauthorizedAccessException)
-                {
-                    // Inaccessible and exiting processes fail open for this scan.
-                }
+                var instance = WindowsProcessInspector.TryRead(processId);
+                if (instance is null) continue;
+                var path = instance.ExecutablePath;
+                var started = instance.StartedAtUtc;
+                snapshots.Add(new ProcessSnapshot(
+                    $"{processId}:{started.UtcTicks}",
+                    path,
+                    computeHashes ? _hashCache.GetHash(path) : null,
+                    protectedPolicy.IsProtected(path),
+                    processId,
+                    started));
+            }
+            catch (Exception exception) when (
+                exception is Win32Exception or InvalidOperationException or IOException or UnauthorizedAccessException)
+            {
+                // Inaccessible and exiting processes fail open for this scan.
             }
         }
         return snapshots;

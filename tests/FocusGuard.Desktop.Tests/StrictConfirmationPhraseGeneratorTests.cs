@@ -71,9 +71,19 @@ public sealed class StrictConfirmationPhraseGeneratorTests
             rootGrid.Elements(avalonia + "Border"),
             element => (string?)element.Attribute(x + "Name") == "NewProfileOverlay");
 
-        Assert.Equal("{Binding IsCreatingProfile}", (string?)overlay.Attribute("IsVisible"));
-        Assert.Equal("{Binding IsCreatingProfile}", (string?)overlay.Attribute("IsHitTestVisible"));
+        // Visibility is driven by the same code-behind transition strict review
+        // uses, so the overlay starts hidden instead of binding IsVisible.
+        Assert.Equal("False", (string?)overlay.Attribute("IsVisible"));
+        Assert.Equal("False", (string?)overlay.Attribute("IsHitTestVisible"));
         Assert.Equal("NewProfileKeyDown", (string?)overlay.Attribute("KeyDown"));
+        var dialog = Assert.Single(
+            overlay.Elements(avalonia + "Border"),
+            element => (string?)element.Attribute(x + "Name") == "NewProfileDialog");
+        Assert.Contains("strictModal", (string?)dialog.Attribute("Classes"));
+        var nameInput = Assert.Single(
+            dialog.Descendants(avalonia + "TextBox"),
+            element => (string?)element.Attribute(x + "Name") == "NewProfileNameInput");
+        Assert.Contains("nameField", (string?)nameInput.Attribute("Classes"));
         Assert.Contains(
             overlay.Descendants(avalonia + "TextBlock"),
             element => ((string?)element.Attribute("Text"))?.Contains("NewProfileTitle", StringComparison.Ordinal) == true);
