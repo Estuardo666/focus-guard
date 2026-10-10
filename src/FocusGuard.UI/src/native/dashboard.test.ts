@@ -220,3 +220,30 @@ it('known control rejection requires fresh status before a new review', async ()
   f.client.observeStatus(activeControl, true); expect(f.client.getSnapshot().phase).toBe('error');
   f.client.observeStatus({ ...activeControl }, true); f.client.reviewControl('stop'); expect(f.client.getSnapshot().phase).toBe('actionReview'); f.client.stop();
 });
+it('resolves captures once a strict session has ended but not while strict is still in force', async () => {
+  const sessionId = '55555555-5555-4555-8555-555555555555';
+  const captureId = '66666666-6666-4666-8666-666666666666';
+  const summary = { sessionId, outcome: 'Completed', profileName: 'gpt test', plannedMinutes: 10, focusedMinutes: 10, blockedAttempts: 1, streakDays: 0,
+    endedAtUtc: '2026-10-10T06:51:13Z', objective: '', reflection: '', capturesTruncated: false,
+    captures: [{ id: captureId, text: 'Reply to Ana', sourceKind: 'Website', sourceLabel: 'example.com', capturedAtUtc: '2026-10-10T06:45:00Z', resolution: 'Pending', openable: true }] };
+  const strict: BridgeStatus = { ...idle, sessionState: 'Active', remainingSeconds: 60, sessionId, profileId, startUtc: '2026-10-10T06:41:13Z', endUtc: '2026-10-10T06:51:13Z', strictMode: true, enforcementConnected: true };
+  const f = fixture(); f.initialize(); f.reply(catalog); await Promise.resolve();
+  const loading = f.client.loadSessionSummary(sessionId); f.reply(summary); await loading;
+
+  for (const state of ['Active', 'RecoveryPending'] as const) {
+    f.client.observeStatus({ ...strict, sessionState: state, enforcementConnected: state === 'Active' }, true);
+    expect(await f.client.resolveCapture(sessionId, captureId, 'dismiss')).toBeNull();
+    expect(f.client.getSnapshot().captureError).toBe('CaptureUnavailable');
+  }
+  expect(f.messages.some(m => m.method === 'capture.dismiss')).toBe(false);
+
+  f.client.observeStatus({ ...strict, sessionState: 'Expired', remainingSeconds: 0, enforcementConnected: false }, true);
+  const resolving = f.client.resolveCapture(sessionId, captureId, 'dismiss');
+  const request = f.messages.at(-1)!;
+  expect(request.method).toBe('capture.dismiss');
+  f.reply({ sessionId, captureId, action: 'Dismissed' }, null, request); await Promise.resolve(); await Promise.resolve();
+  f.reply({ ...summary, captures: [] });
+  expect(await resolving).toEqual({ sessionId, captureId, action: 'Dismissed' });
+  expect(f.client.getSnapshot().captureError).toBeNull();
+  f.client.stop();
+});

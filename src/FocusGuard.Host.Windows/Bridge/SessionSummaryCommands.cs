@@ -63,7 +63,9 @@ internal sealed partial class NativeBridgeDispatcher
         var input = request.CaptureAction!;
         var status = await client.GetStatusAsync(token).ConfigureAwait(false);
         if (!BridgeLimits.IsValidStatus(status)) return ("InvalidServiceResponse", null);
-        if (status.StrictMode || !CanStart(status)) return ("SessionStateChanged", null);
+        // StrictMode stays true after a strict session ends; the terminal-state check alone keeps
+        // captures locked while strict is in force (Active, Activating, RecoveryPending).
+        if (!CanStart(status)) return ("SessionStateChanged", null);
         if (_profileOperationIds.Count >= 128) return ("OperationLimitReached", null);
         if (!_profileOperationIds.Add(input.OperationId)) return ("DuplicateOperation", null);
         token.ThrowIfCancellationRequested();

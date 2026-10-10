@@ -362,7 +362,9 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
     async resolveCapture(sessionId: string, captureId: string, action: 'open' | 'dismiss') {
       const summary = snapshot.sessionSummary;
       if (pending || snapshot.capturePhase === 'writing' || snapshot.capturePhase === 'unknown' || !statusReady
-        || !snapshot.catalog?.pilotEnabled || !latestStatus || latestStatus.strictMode
+        // strictMode lingers after a strict session ends; the terminal-state list alone keeps
+        // captures locked while strict is in force.
+        || !snapshot.catalog?.pilotEnabled || !latestStatus
         || !['Inactive', 'Expired', 'Stopped', 'Recovered', 'Failed'].includes(latestStatus.sessionState)
         || !summary || summary.sessionId.toLowerCase() !== sessionId.toLowerCase()
         || !summary.captures.some(capture => capture.id.toLowerCase() === captureId.toLowerCase() && capture.resolution === 'Pending' && (action !== 'open' || capture.openable))) {
