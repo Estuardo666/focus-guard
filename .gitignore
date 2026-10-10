@@ -25,3 +25,6 @@ src/FocusGuard.UI/dist/
 graphify-out/cache/
 graphify-out/.graphify_root
 graphify-out/manifest.json
+
+# Graphify incremental cache (machine-local)
+.graphify_incremental.json
