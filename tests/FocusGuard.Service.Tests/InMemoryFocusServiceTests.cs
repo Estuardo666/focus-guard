@@ -19,6 +19,45 @@ public sealed class InMemoryFocusServiceTests
     }
 
     [Fact]
+    public async Task RepeatedConcurrentStatusQueriesRecoverStrictStateOnlyOnce()
+    {
+        var strictStore = new RecordingStrictSessionStore();
+        var service = new InMemoryFocusService(strictSessionStore: strictStore);
+
+        await Task.WhenAll(Enumerable.Range(0, 24).Select(
+            _ => service.GetStatusAsync(CancellationToken.None).AsTask()));
+        await service.GetStatusAsync(CancellationToken.None);
+
+        Assert.Equal(1, strictStore.LoadCount);
+    }
+
+    [Fact]
+    public async Task ActiveStrictSessionReconcilesPersistenceAtBoundedInterval()
+    {
+        var clock = new TestTimeProvider(DateTimeOffset.UtcNow);
+        var strictStore = new RecordingStrictSessionStore();
+        var service = new InMemoryFocusService(clock, strictStore);
+        var recovery = RecoveryCodeService.Generate();
+        await service.ActivateAsync(
+            new ActivateSessionRequest(
+                Guid.NewGuid(),
+                60,
+                true,
+                900,
+                recovery.Credential),
+            CancellationToken.None);
+
+        await service.GetStatusAsync(CancellationToken.None);
+        await service.GetStatusAsync(CancellationToken.None);
+        Assert.Equal(1, strictStore.LoadCount);
+
+        clock.Advance(TimeSpan.FromSeconds(1));
+        await service.GetStatusAsync(CancellationToken.None);
+
+        Assert.Equal(2, strictStore.LoadCount);
+    }
+
+    [Fact]
     public async Task ActivateOwnsActiveSessionAndRejectsSecondActivation()
     {
         var service = new InMemoryFocusService();
@@ -114,6 +153,21 @@ public sealed class InMemoryFocusServiceTests
         Assert.False((policy.ApplicationRules as ApplicationRule[]) is not null);
     }
 
+    [Fact]
+    public async Task ShutdownInterruptionLeavesStrictSessionToItsSnapshot()
+    {
+        var strictStore = new RecordingStrictSessionStore();
+        var strict = new InMemoryFocusService(strictSessionStore: strictStore);
+        var generated = RecoveryCodeService.Generate();
+        await strict.ActivateAsync(
+            new ActivateSessionRequest(Guid.NewGuid(), 60, true, 900, generated.Credential),
+            CancellationToken.None);
+
+        await strict.InterruptNormalSessionForShutdownAsync(CancellationToken.None);
+
+        Assert.Equal("Active", (await strict.GetStatusAsync(CancellationToken.None)).SessionState);
+    }
+
     private static ActivateSessionRequest NormalRequest(int durationSeconds) =>
         new(Guid.NewGuid(), durationSeconds, false, 0);
 
@@ -122,6 +176,8 @@ public sealed class InMemoryFocusServiceTests
         private StrictPolicySnapshot? _snapshot;
 
         public bool Activated { get; private set; }
+
+        public int LoadCount { get; private set; }
 
         public ValueTask ActivateAsync(
             Session session,
@@ -146,6 +202,7 @@ public sealed class InMemoryFocusServiceTests
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            LoadCount++;
             return ValueTask.FromResult(_snapshot is null
                 ? new StrictPolicyLoadResult(StrictPolicyLoadStatus.Absent, null, "Absent")
                 : new StrictPolicyLoadResult(StrictPolicyLoadStatus.Active, _snapshot, "Active"));

@@ -9,6 +9,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 var builder = Host.CreateApplicationBuilder(args);
+#if FOCUSGUARD_PRODUCTION
+if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException();
+builder.Services.AddSingleton<FocusGuard.Contracts.IIpcServerSecurity>(
+    new FocusGuard.Ipc.Windows.AuthenticatedIpcServer(AppContext.BaseDirectory));
+#endif
 builder.Services.AddWindowsService(options =>
 {
     options.ServiceName = DevelopmentServiceConstants.ServiceName;
@@ -57,6 +62,8 @@ builder.Services.AddSingleton<IFocusService>(services =>
 });
 builder.Services.AddHostedService<DevelopmentServiceWorker>();
 builder.Services.AddHostedService<FocusSessionExpirationWorker>();
+builder.Services.AddSingleton<DesktopWorkflowService>();
+builder.Services.AddHostedService<WeeklyScheduleWorker>();
 builder.Services.AddHostedService<ExtensionHealthPipeService>();
 builder.Services.AddHostedService<ProcessAgentPipeService>();
 builder.Services.AddHostedService<FocusControlPipeService>();
@@ -64,5 +71,9 @@ builder.Services.AddHostedService<FocusControlPipeService>();
 builder.Services.AddHostedService<RebootExpirationDrillWorker>();
 #endif
 builder.Services.AddHostedService<StrictPolicyPersistenceWorker>();
+builder.Services.AddSingleton(_ => new NormalSessionJournal(NormalSessionJournal.DefaultPath));
+builder.Services.AddHostedService<NormalSessionJournalWorker>();
+// Registered last: hosted services stop in reverse order, so this runs first on shutdown.
+builder.Services.AddHostedService<NormalSessionShutdownRecorder>();
 
 await builder.Build().RunAsync();

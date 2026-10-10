@@ -89,6 +89,19 @@ The extension must not transmit unrelated browsing history. Query parameters are
 - Activation occurs only after required components acknowledge the policy
 - State transitions are idempotent
 
+Focus cycle sessions are finite plans composed of focus, short-break, and
+long-break phases. Built-in configurations are 25/5/15 every 4 cycles,
+50/10/20 every 3 cycles, and 90/20/30 every 2 cycles. Custom configurations
+are bounded to 1–180 minutes of focus, 1–60 minutes of short break, 1–120
+minutes of long break, and a long-break frequency of 2–12 cycles.
+
+Plans terminate either after 1–24 focus cycles or at an exact total duration
+within the global one-minute to 30-day limit. A cycle-count plan ends at the
+end of its final focus phase and never appends a final break. A duration plan
+may truncate only its final phase and must expose that partial phase in its
+preview. The domain builder is deterministic and platform-independent; the
+service remains the authority that advances the active phase.
+
 ## Strict mode
 
 Strict mode is opt-in and finite.
@@ -144,13 +157,77 @@ Recovery:
 ## Storage and IPC
 
 - SQLite for structured local data
+- cycle presets are stored separately from profiles; the three built-in presets
+  are seeded and immutable, while custom presets are user-owned
+- per-profile cycle settings store one default preset and separate Block-only
+  application and website exceptions that stay blocked during authorized breaks
+- the profile schema migrates additively from existing simple-session databases
 - `%ProgramData%\FocusGuard` for machine state
 - `%LocalAppData%\FocusGuard` for user state
 - atomic policy snapshots
 - DPAPI for secrets
 - named pipes with restrictive ACLs
-- versioned JSON messages
+- version 2 JSON messages for prepared-session activation, phase status, and
+  normal-mode break skipping; unknown fields are rejected
 - bounded payload sizes and timeouts
+
+Cycle policy snapshots include the complete phase plan, normal enforcement
+rules, Block-only break exception rules, the authorized phase index, and the authorized
+phase end. Integrity validation covers every field. During a current
+service-authorized short or long break, consumers suspend the normal focus
+rules and select only the break exception set, keeping those configured targets
+blocked. At the exact break end they select
+the normal focus rules again without user action. Consumers retain focus rules
+when break authorization is absent or stale. After restart, the service restores the plan and reauthorizes only
+the phase that is valid at the current UTC time. Invalid snapshots fail open,
+are quarantined, and are logged.
+
+Cycle activation uses a prepare/activate handshake. Preparation compiles the
+plan without applying restrictions, returns the exact UTC phase boundaries,
+expires after two minutes, and may be activated once. In normal mode the
+service accepts a skip only for the current break and shifts the remaining
+plan earlier. Strict mode rejects skip and normal stop requests.
+
+## Desktop workflows and weekly schedules (FG-163)
+
+Desktop remembers the last accepted profile, duration, timer/cycle mode and cycle preset.
+Optional objectives and end-of-session reflections stay in a bounded local user journal;
+they are never sent to enforcement consumers. Session history stores actual UTC phase
+spans additively, excluding breaks from focus totals and retaining elapsed portions of
+skipped normal-mode breaks. Legacy rows retain their recorded minutes without invented
+phase spans. Today reads up to 2,000 recent sessions overlapping a validated UTC interval
+of at most two days, with at most 128 recent timeline spans in bounded control IPC.
+
+Weekly schedules are explicit, initially disabled, finite normal timer sessions only.
+The service owns execution independently of Desktop, using a persisted rule/enforcement
+snapshot, local weekday/time and a validated Windows time zone. The client shows exact
+next start/end and blocking consequences before enable. Maximums: 12 schedules, 720
+minutes per occurrence. Enabled overlapping schedules are rejected. Editing a profile
+does not silently change an existing scheduled snapshot; it must be saved again explicitly.
+
+Every occurrence is durably claimed before activation and never replaces an active
+session. A late service wake-up may start a still-valid occurrence with at least one
+second remaining. The scheduled session is clipped to the original deadline and can
+therefore last less than one minute; occurrences with less than one second remaining
+are skipped. The one-minute minimum remains for manually started sessions. Enabling
+mid-occurrence waits for the next occurrence. Claims survive restart, stop and clock
+rollback; normal sessions are not restored after reboot. Invalid persistence starts no
+scheduled sessions. DST gaps are skipped, ambiguous times use the standard offset once.
+See ADR 0013 for persistence and failure semantics.
+
+Normal sessions are never restored after a service restart or reboot. When the service
+stops gracefully (restart, update, Windows shutdown) an active normal session is closed as
+interrupted: it is written to session history as not completed, a `SessionInterrupted`
+audit event is recorded and enforcement is released. If the desktop UI observed the
+session running and the service later reports no session, it shows a persistent,
+dismissable notice pointing to Activity. While a normal session runs, the service also
+refreshes a bounded journal (`normal-session-journal.json` beside history.db) every 10 s;
+if the process crashes or is killed, the next start records the journaled session as
+interrupted, ending at its last heartbeat, with a `ServiceTerminated` audit outcome, and
+removes the journal. Replays are idempotent and corrupt journals are quarantined, never
+recorded. The installer configures bounded service recovery (restart after 5 s and 30 s,
+no action on a third failure within a day). Strict sessions are unaffected and keep their
+persisted snapshot.
 
 ## Non-functional requirements
 
