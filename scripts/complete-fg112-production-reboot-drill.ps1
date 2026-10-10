@@ -74,8 +74,10 @@ if ([DateTimeOffset]::UtcNow -lt $endUtc) {
         if ($statusAfterChannels.sessionState -eq 'Expired') { break }
     }
 
+    # status.strictMode describes the session type and stays true once a strict session has
+    # expired; release is proven by enforcement disconnecting and the snapshot being removed.
     if ($statusAfterChannels.sessionState -eq 'Expired') {
-        if ($statusAfterChannels.strictMode -or (Test-Path -LiteralPath $activePolicyPath)) {
+        if ($statusAfterChannels.enforcementConnected -or (Test-Path -LiteralPath $activePolicyPath)) {
             throw 'Expired post-reboot strict policy was not released.'
         }
     } elseif (-not $statusAfterChannels.enforcementConnected) {
@@ -85,7 +87,7 @@ if ([DateTimeOffset]::UtcNow -lt $endUtc) {
         throw 'Recovered strict state is inconsistent with service or extension readiness.'
     }
 } else {
-    if ($statusBeforeChannels.sessionState -ne 'Expired' -or $statusBeforeChannels.strictMode -or
+    if ($statusBeforeChannels.sessionState -ne 'Expired' -or
         $statusBeforeChannels.enforcementConnected -or (Test-Path -LiteralPath $activePolicyPath)) {
         throw 'Expired post-reboot policy was not released.'
     }
