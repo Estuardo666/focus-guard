@@ -42,6 +42,9 @@ function fixture() {
 }
 const render = async (connection = idle, replay?: SessionReplayIntent) => act(async () => root.render(<DashboardStart dashboard={dashboard} connection={connection} language="es" t={key => es[key]} refresh={refresh} replay={replay ?? null}/>));
 const button = (text: string) => Array.from(container.querySelectorAll<HTMLButtonElement>('button')).find(b => b.textContent === text)!;
+// The strict review panel is lazy and the cycle fixture is imported inside tests; transforming
+// them on first use under a busy parallel run used to eat each test's 5 s budget.
+beforeAll(async () => { await Promise.all([import('./StrictReviewPanel'), import('./native/cycle-fixture')]); }, 30_000);
 beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); };

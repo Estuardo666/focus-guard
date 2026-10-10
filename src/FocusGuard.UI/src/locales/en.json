@@ -78,6 +78,8 @@
   "RecoveryPending": "Recovery pending",
   "Recovered": "Session recovered",
   "Failed": "Session could not activate",
+  "strictEndedBadge": "Strict ended",
+  "strictEndedDetail": "The strict session ended and blocking was released. You can start another session whenever you like.",
   "strict": "Strict mode",
   "normal": "Normal mode",
   "timer": "Timer",

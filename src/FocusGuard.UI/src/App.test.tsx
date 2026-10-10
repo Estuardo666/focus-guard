@@ -373,6 +373,22 @@ it('does not report an interruption for stops, expiries or an already idle servi
   expect(container.querySelector('.interruption-notice')).toBeNull();
 });
 
+it('says plainly that blocking was released once a strict session has ended', async () => {
+  const strictActive: ConnectionSnapshot = { ...active, status: { ...active.status!, strictMode: true } };
+  const test = fixture(strictActive);
+  await act(async () => root.render(<App client={test.client}/>));
+  const badge = () => container.querySelector<HTMLElement>('.session-heading .badge');
+  expect(badge()?.textContent).toBe(es.strict);
+  expect(badge()?.classList.contains('strict')).toBe(true);
+  expect(container.textContent).not.toContain(es.strictEndedDetail);
+
+  await act(async () => test.update({ ...strictActive, status: { ...strictActive.status!, sessionState: 'Expired', remainingSeconds: 0, enforcementConnected: false } }));
+  expect(badge()?.textContent).toBe(es.strictEndedBadge);
+  expect(badge()?.classList.contains('strict')).toBe(false);
+  expect(container.textContent).toContain(es.strictEndedDetail);
+  expect(container.querySelector('.strict-recovery-inline')).toBeNull();
+});
+
 it('returns the page to its header when the current session expires', async () => {
   const originalDescriptor = Object.getOwnPropertyDescriptor(document, 'scrollingElement');
   const scrollingElement = { scrollTop: 0 } as HTMLElement;

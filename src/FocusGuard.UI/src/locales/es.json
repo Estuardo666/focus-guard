@@ -78,6 +78,8 @@
   "RecoveryPending": "Recuperación pendiente",
   "Recovered": "Sesión recuperada",
   "Failed": "La sesión no se pudo activar",
+  "strictEndedBadge": "Estricto finalizado",
+  "strictEndedDetail": "La sesión estricta terminó y el bloqueo se liberó. Puedes iniciar otra sesión cuando quieras.",
   "strict": "Modo estricto",
   "normal": "Modo normal",
   "timer": "Temporizador",

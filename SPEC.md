@@ -128,10 +128,11 @@ Before activation, show the profile, impacted apps/sites, exact end time, browse
 
 Required confirmation:
 
-- generate a random two-word English phrase from the reviewed focus/calm word
-  dictionary each time the strict review opens
-- display the phrase plainly and require an exact ordinal match
-- treat the phrase as a deliberate-action gate, not as authentication or a
+- require typing the exact saved profile name (ordinal match), shown plainly in
+  the review, together with the unsaved-work acknowledgement; owner decision
+  2026-10-10 (FG-413) replaces the earlier random two-word English phrase, which
+  the classic Avalonia UI keeps only until it is retired in Phase 10
+- treat the typed name as a deliberate-action gate, not as authentication or a
   replacement for the recovery credential
 
 First-run strict sessions are limited to four hours.

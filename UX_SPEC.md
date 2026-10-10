@@ -122,7 +122,8 @@ It must show:
 - browser-extension health
 - recovery-code workflow
 - unsaved-work warning
-- a visible random two-word English phrase that must be typed exactly
+- the exact saved profile name, visible in the review, typed exactly (owner
+  decision 2026-10-10, FG-413; replaces the earlier random two-word English phrase)
 
 Cancel and Escape dismiss the review without activation and clear its one-time
 recovery code and typed state. Keyboard focus enters the modal on open and
