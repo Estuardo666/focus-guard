@@ -13,9 +13,19 @@ export function useLiveRemaining(snapshot: ConnectionSnapshot): number | null {
   const [, setTick] = useState(0);
   useEffect(() => {
     if (!ticking) return;
-    const timer = window.setInterval(() => setTick(value => value + 1), 250);
-    return () => window.clearInterval(timer);
-  }, [ticking]);
+    let timer = 0;
+    const schedule = () => {
+      window.clearTimeout(timer);
+      if (document.hidden) return;
+      // Align to the next displayed second, even when a service poll arrived between second boundaries.
+      const elapsed = performance.now() - base.current.at;
+      timer = window.setTimeout(() => { setTick(value => value + 1); schedule(); }, 1000 - elapsed % 1000);
+    };
+    const visible = () => { setTick(value => value + 1); schedule(); };
+    schedule();
+    document.addEventListener('visibilitychange', visible);
+    return () => { window.clearTimeout(timer); document.removeEventListener('visibilitychange', visible); };
+  }, [ticking, status]);
   if (!status) return null;
   if (!ticking) return status.remainingSeconds;
   const elapsed = Math.floor((performance.now() - base.current.at) / 1000);

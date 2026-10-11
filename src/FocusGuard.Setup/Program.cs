@@ -45,6 +45,14 @@ internal static class Program
             return 0;
         }
 
+        if (args.Contains("--smoke-open-installed", StringComparer.Ordinal))
+        {
+            var operations = new SetupOperations(package.PackageDirectory, Console.WriteLine);
+            var open = operations.OpenInstalledFocusGuardAsync();
+            RunWithMessagePump(open);
+            return open.GetAwaiter().GetResult() ? 0 : 5;
+        }
+
         if (args.Contains("--smoke-test", StringComparer.Ordinal))
         {
             using var form = new SetupForm(package.PackageDirectory);
@@ -622,7 +630,7 @@ internal sealed class SetupForm : Form
 
     private async Task OpenInstalledFocusGuardAsync()
     {
-        if (_operations.OpenInstalledFocusGuard())
+        if (await _operations.OpenInstalledFocusGuardAsync())
         {
             Close();
             return;

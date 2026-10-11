@@ -26,7 +26,8 @@ internal sealed class SurfaceForm : Form
     private readonly Func<DocumentLifetime, NativeBridgeDispatcher> _bridgeFactory;
     private readonly DocumentLifetime _documentLifetime = new();
     private readonly bool _dark;
-    private WebView2? _webView;
+    private ResourceWebView2? _webView;
+    private WebViewResourceController? _resources;
     private NativeBridgeDispatcher? _bridge;
     private ulong _navigationId;
     private bool _closing;
@@ -150,6 +151,8 @@ internal sealed class SurfaceForm : Form
         _revealFallback.Stop();
         _revealFallback.Dispose();
         _documentLifetime.Dispose();
+        _resources?.Dispose();
+        _resources = null;
         if (_webView?.CoreWebView2 is { } core)
         {
             core.WebMessageReceived -= OnWebMessageReceived;
@@ -170,13 +173,14 @@ internal sealed class SurfaceForm : Form
     {
         var uiFolder = Path.Combine(AppContext.BaseDirectory, "ui");
         if (!File.Exists(Path.Combine(uiFolder, "index.html"))) { Close(); return; }
-        var webView = new WebView2 { Dock = DockStyle.Fill, DefaultBackgroundColor = BackColor };
+        var webView = new ResourceWebView2 { Dock = DockStyle.Fill, DefaultBackgroundColor = BackColor };
         _webView = webView;
         Controls.Add(webView);
         await webView.EnsureCoreWebView2Async(_environment);
         if (_closing) return;
         var core = webView.CoreWebView2;
         WebViewHardening.Apply(core, uiFolder, _environment);
+        _resources = new WebViewResourceController(this, webView);
         _bridge = _bridgeFactory(_documentLifetime);
         core.NavigationStarting += OnNavigationStarting;
         core.NavigationCompleted += OnNavigationCompleted;
@@ -195,6 +199,7 @@ internal sealed class SurfaceForm : Form
     {
         if (e.NavigationId != _navigationId || _webView?.CoreWebView2 is not { } core) return;
         if (!e.IsSuccess) { Close(); return; }
+        _resources?.RefreshPage();
         if (!_revealed) _revealFallback.Start();
         var lease = _documentLifetime.BeginDocument();
         // The surface goes first: the page decides what to render the moment host.initialize arrives, without a flash

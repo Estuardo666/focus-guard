@@ -94,7 +94,8 @@ internal enum HostSmokeScenario
     RuntimeMissing,
     RendererRecovery,
     RendererCrash,
-    WindowDpiContract
+    WindowDpiContract,
+    WindowPresentation
 }
 
 internal enum HostControlOperation

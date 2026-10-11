@@ -3,6 +3,8 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { ActivityLogIcon, CalendarIcon, GearIcon, GlobeIcon, Link2Icon, LockClosedIcon, MoonIcon, PersonIcon, QuestionMarkCircledIcon, ReloadIcon, SunIcon, TimerIcon } from '@radix-ui/react-icons';
 import { flushSync } from 'react-dom';
 import { useLiveRemaining } from './live-remaining';
+import { readStartupViews, useStartupPresentation } from './startup-presentation';
+import { StartupScreen } from './StartupScreen';
 import { BlockedStack } from './BlockedStack';
 import { ringSegments } from './cycle-schedule';
 import { createNativeStatusClient } from './native/client';
@@ -46,10 +48,10 @@ const paletteLabels: Record<Palette, CopyKey> = { aurora: 'paletteAurora', mist:
 const PreferencesPanel = lazy(() => import('./PreferencesPanel').then(module => ({ default: module.PreferencesPanel })));
 const ProfileEditor = lazy(() => import('./ProfileEditor').then(module => ({ default: module.ProfileEditor })));
 const RecoveryAccess = lazy(() => import('./StrictReviewPanel').then(module => ({ default: module.RecoveryAccess })));
-const DashboardStart = lazy(() => import('./DashboardStart').then(module => ({ default: module.DashboardStart })));
+const LazyDashboardStart = lazy(() => import('./DashboardStart').then(module => ({ default: module.DashboardStart })));
 const WorkflowViews = lazy(() => import('./WorkflowViews').then(module => ({ default: module.WorkflowViews })));
 const SessionEndExperience = lazy(() => import('./SessionEndExperience').then(module => ({ default: module.SessionEndExperience })));
-const CompactFocus = lazy(() => import('./CompactFocus').then(module => ({ default: module.CompactFocus })));
+const LazyCompactFocus = lazy(() => import('./CompactFocus').then(module => ({ default: module.CompactFocus })));
 
 export function protectionFactFor(status: BridgeStatus | null | undefined, current: boolean,
   intent: SessionReplayIntent | null): { value: CopyKey; detail: CopyKey; ok: boolean } {
@@ -81,9 +83,12 @@ function Mark({ small = false }: { small?: boolean }) {
 export function App({ client, dashboard, profiles, applications, windowControls, shell }: {
   client: StatusClient; dashboard?: DashboardClient; profiles?: ProfilesClient; applications?: ApplicationsClient; windowControls?: WindowControlsClient; shell?: ShellClient;
 }) {
-  const [language, setLanguage] = useState<Language>('es');
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const preparedViews = readStartupViews();
+  const DashboardStart = preparedViews.dashboard ?? LazyDashboardStart;
+  const CompactFocus = preparedViews.compact ?? LazyCompactFocus;
+  const [language, setLanguage] = useState<Language>(() => shell && document.documentElement.lang === 'en' ? 'en' : 'es');
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => shell && document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+  const [reduceMotion, setReduceMotion] = useState(() => !!shell && document.documentElement.dataset.reduceMotion === 'true');
   const [palette, setPalette] = useState<Palette>(loadPalette);
   const [orbStyle, setOrbStyle] = useState<OrbStyle>(loadOrbStyle);
   const [reviewBeforeStart, setReviewBeforeStart] = useState(loadReviewBeforeStart);
@@ -114,6 +119,8 @@ export function App({ client, dashboard, profiles, applications, windowControls,
   );
   const windowState = useSyncExternalStore(windowControls?.subscribe ?? subscribeNoWindowControls,
     windowControls?.getSnapshot ?? getNoWindowControlSnapshot);
+  const startupComplete = useStartupPresentation(!!shell, preferencesReady && snapshot.phase !== 'waiting' && snapshot.phase !== 'loading'
+    && (!dashboard || !!dashboardSnapshot?.catalog || !!dashboardSnapshot?.catalogError));
   const refresh = useCallback(async () => {
     await client.refresh();
     await dashboard?.loadProfiles(dashboard.getSnapshot().catalog?.offset ?? 0);
@@ -334,9 +341,9 @@ export function App({ client, dashboard, profiles, applications, windowControls,
     if (cabinShown === immersive) return;
     const doc = document as Document & { startViewTransition?(update: () => void): unknown };
     const still = reduceMotion || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (doc.startViewTransition && !still) doc.startViewTransition(() => flushSync(() => setCabinShown(immersive)));
+    if (startupComplete && doc.startViewTransition && !still) doc.startViewTransition(() => flushSync(() => setCabinShown(immersive)));
     else setCabinShown(immersive);
-  }, [immersive, cabinShown, reduceMotion]);
+  }, [immersive, cabinShown, reduceMotion, startupComplete]);
   useEffect(() => {
     if (!immersive) return;
     const leave = (event: KeyboardEvent) => {
@@ -346,6 +353,7 @@ export function App({ client, dashboard, profiles, applications, windowControls,
     window.addEventListener('keydown', leave);
     return () => window.removeEventListener('keydown', leave);
   }, [immersive, sessionKey]);
+  if (!startupComplete) return <StartupScreen language={language}/>;
   return <MotionConfig reducedMotion={reduceMotion ? 'always' : 'user'}><Tabs.Root className="app-shell" data-immersive={cabinShown ? 'true' : 'false'} data-window-mode={compactAvailable && windowState.compact ? 'compact' : 'full'} orientation="vertical" value={tab} onValueChange={setTab}>
     <a className="skip-link" href="#main">{t('skip')}</a>
     <aside className="sidebar" aria-label="FocusGuard">

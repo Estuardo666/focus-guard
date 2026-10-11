@@ -1,4 +1,5 @@
 {
+  "startupLoading": "Preparing your focus space…",
   "pendingDetail": "The service still needs to confirm this session. Refresh status before taking action.",
   "renderError": "We cannot display this view",
   "renderErrorDetail": "The session remains in the service. You can reload this view or use FocusGuard Classic.",

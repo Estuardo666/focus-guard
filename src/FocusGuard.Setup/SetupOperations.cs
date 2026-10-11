@@ -115,7 +115,7 @@ internal sealed class SetupOperations(string packageDirectory, Action<string?> l
     }
 
     /// <summary>Opens the installed app at the signed-in user's integrity level, even though Setup itself runs elevated.</summary>
-    internal bool OpenInstalledFocusGuard()
+    internal async Task<bool> OpenInstalledFocusGuardAsync()
     {
         var executable = Path.Combine(InstallRoot, "FocusGuard.UI.exe");
         if (!File.Exists(executable))
@@ -126,13 +126,12 @@ internal sealed class SetupOperations(string packageDirectory, Action<string?> l
 
         try
         {
-            // FocusGuard refuses to run elevated; launching through the user's shell (explorer.exe) starts it at the
-            // signed-in user's medium integrity so a fresh install opens on the first click.
-            var shell = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
-            Process.Start(new ProcessStartInfo(shell) { ArgumentList = { executable }, UseShellExecute = false });
-            return true;
+            var activation = new InstalledAppActivation(() => InteractiveAppLauncher.Open(executable), () => InteractiveAppLauncher.IsPresented(executable));
+            var opened = await activation.OpenAsync(TimeSpan.FromSeconds(5));
+            if (!opened) log("FocusGuard did not present its window; Setup remains open so opening can be retried.");
+            return opened;
         }
-        catch (Exception exception) when (exception is InvalidOperationException or System.ComponentModel.Win32Exception)
+        catch (Exception exception) when (exception is InvalidOperationException or System.ComponentModel.Win32Exception or System.Runtime.InteropServices.COMException or Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
         {
             log($"No se pudo abrir FocusGuard: {exception.Message}");
             return false;

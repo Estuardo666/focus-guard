@@ -154,7 +154,15 @@ internal sealed class WebSetupForm : Form
                 _blockerAnswer?.TrySetResult(request.Close);
                 break;
             case SetupRequestKind.Open:
-                if (_operations.OpenInstalledFocusGuard()) Close();
+                if (_busy) break;
+                _busy = true;
+                Post(new { type = "setup.openState", opening = true, failed = false });
+                try
+                {
+                    if (await _operations.OpenInstalledFocusGuardAsync()) Close();
+                    else Post(new { type = "setup.openState", opening = false, failed = true });
+                }
+                finally { _busy = false; }
                 break;
             case SetupRequestKind.Close when !_busy:
                 Close();

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { AddEquation, Color, CustomBlending, OneFactor, ZeroFactor, Mesh, NormalBlending, PerspectiveCamera, Quaternion, Scene, ShaderMaterial, SphereGeometry, Vector3, WebGLRenderer, type IUniform } from 'three';
+import { createDecorativeFrameLoop } from './decorative-frame-loop';
 import type { OrbStyle } from './design-system/palettes';
 
 export type OrbPointer = { x: number; y: number; inside: boolean };
@@ -194,7 +195,7 @@ export default function FocusOrbScene({ colors, pointer, breathSeconds, energy, 
       onFailure();
       return;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setClearColor(0x000000, 0);
     const canvas = renderer.domElement;
     canvas.setAttribute('aria-hidden', 'true');
@@ -203,7 +204,7 @@ export default function FocusOrbScene({ colors, pointer, breathSeconds, energy, 
     const scene = new Scene();
     const camera = new PerspectiveCamera(34, 1, 0.1, 10);
     camera.position.z = 4.05;
-    const geometry = new SphereGeometry(1, 160, 160);
+    const geometry = new SphereGeometry(1, 64, 64);
     const shared: Record<string, IUniform> = {
       uTime: { value: 0 }, uBreath: { value: 0 }, uPointer: { value: new Vector3(0, 0, 1) }, uHover: { value: 0 },
       uEnergy: { value: settings.current.energy }, uLight: { value: light ? 1 : 0 },
@@ -253,8 +254,6 @@ export default function FocusOrbScene({ colors, pointer, breathSeconds, energy, 
     const inverse = new Quaternion();
     const rotation = { x: 0, y: 0 };
     let hover = 0;
-    let frame = 0;
-    let last = performance.now();
     let elapsed = 0;
     const draw = (delta: number) => {
       const { breathSeconds: period, energy: currentEnergy, still: isStill } = settings.current;
@@ -276,32 +275,24 @@ export default function FocusOrbScene({ colors, pointer, breathSeconds, energy, 
       shared.uBreath!.value = isStill ? 0 : Math.sin((elapsed / (period * breathScale)) * Math.PI * 2);
       renderer.render(scene, camera);
     };
-    renderOnce.current = () => draw(0);
+    const frames = createDecorativeFrameLoop(draw, () => !settings.current.still && !document.hidden);
+    renderOnce.current = () => { if (!document.hidden) draw(0); frames.sync(); };
     applyStyle.current(settings.current.style);
-    let stillFrameDrawn = false;
-    const loop = (now: number) => {
-      const delta = Math.min((now - last) / 1000, 0.05);
-      last = now;
-      // A still orb (reduced motion) is drawn once per change instead of every frame.
-      if (settings.current.still) {
-        if (!stillFrameDrawn && !document.hidden) { draw(1); stillFrameDrawn = true; }
-      } else {
-        stillFrameDrawn = false;
-        if (!document.hidden) draw(delta);
-      }
-      frame = requestAnimationFrame(loop);
-    };
-    const lost = (event: Event) => { event.preventDefault(); cancelAnimationFrame(frame); onFailure(); };
+    const visibilityChanged = () => renderOnce.current();
+    document.addEventListener('visibilitychange', visibilityChanged);
+    const lost = (event: Event) => { event.preventDefault(); frames.dispose(); onFailure(); };
     canvas.addEventListener('webglcontextlost', lost);
     resize();
-    frame = requestAnimationFrame(loop);
+    frames.sync();
     return () => {
-      cancelAnimationFrame(frame);
+      frames.dispose();
+      document.removeEventListener('visibilitychange', visibilityChanged);
       observer?.disconnect();
       canvas.removeEventListener('webglcontextlost', lost);
       geometry.dispose();
       for (const material of materials) material.dispose();
       renderer.dispose();
+      renderer.forceContextLoss();
       canvas.remove();
       uniforms.current = null;
       renderOnce.current = () => undefined;
@@ -311,6 +302,7 @@ export default function FocusOrbScene({ colors, pointer, breathSeconds, energy, 
   }, []);
 
   useEffect(() => { applyStyle.current(orbStyle); }, [orbStyle]);
+  useEffect(() => { renderOnce.current(); }, [still]);
 
   useEffect(() => {
     const shared = uniforms.current;

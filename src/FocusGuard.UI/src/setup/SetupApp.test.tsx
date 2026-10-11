@@ -32,6 +32,9 @@ beforeEach(() => {
 afterEach(() => { act(() => root.unmount()); container.remove(); });
 
 it('accepts only the exact host messages', () => {
+  expect(parseHostMessage({ type: 'setup.openState', opening: true, failed: false })).not.toBeNull();
+  expect(parseHostMessage({ type: 'setup.openState', opening: true, failed: true })).toBeNull();
+  expect(parseHostMessage({ type: 'setup.openState', opening: false, failed: false, command: 'x' })).toBeNull();
   expect(parseHostMessage({ type: 'setup.state', version: '0.1.142', installed: true })).not.toBeNull();
   expect(parseHostMessage({ type: 'setup.state', version: '<b>', installed: true })).toBeNull();
   expect(parseHostMessage({ type: 'setup.state', version: '0.1.142', installed: true, extra: 1 })).toBeNull();
@@ -87,6 +90,19 @@ it('explains a failure with its code and offers the details and a retry', () => 
   expect(container.querySelector('pre')?.textContent).toContain('active session');
   act(() => { button(t.retry)!.click(); });
   expect(container.querySelector('h1')?.textContent).toBe(t.installTitle);
+});
+
+it('keeps the completed installer available when the app window failed to open and allows retry', () => {
+  render();
+  host({ type: 'setup.done', operation: 'install', ok: true, exitCode: 0 });
+  act(() => button(t.open)!.click());
+  expect(button(t.opening)!.disabled).toBe(true);
+  host({ type: 'setup.openState', opening: false, failed: true });
+  expect(container.querySelector('[role=alert]')?.textContent).toBe(t.openFailed);
+  expect(button(t.open)!.disabled).toBe(false);
+  expect(container.querySelector('h1')?.textContent).toBe(t.doneTitle);
+  act(() => button(t.open)!.click());
+  expect(sent.at(-1)).toEqual({ type: 'setup.open' });
 });
 
 it('confirms uninstall with its consequences before asking the host', () => {

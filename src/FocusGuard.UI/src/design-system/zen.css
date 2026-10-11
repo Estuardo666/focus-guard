@@ -28,15 +28,24 @@
 :root[data-theme=light][data-palette=ocean]{--accent:#1f55b8;--accent-text:#fff}
 
 body{background:var(--bg)}
+.startup-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);color:var(--secondary);font-size:13px;animation:zen-fade-in .16s var(--ease-out)}
+.startup-screen strong{color:var(--text);font-size:20px;font-weight:600;letter-spacing:-.5px}
+.startup-pearl{width:64px;height:64px;border-radius:50%;margin-bottom:8px;background:radial-gradient(circle at 32% 26%,#fff,transparent 40%),linear-gradient(145deg,var(--orb-a),var(--orb-b) 65%,var(--orb-c));box-shadow:0 12px 40px -16px var(--orb-b)}
+@media(prefers-reduced-motion:reduce){.startup-screen{animation:none}}
 ::selection{background:color-mix(in srgb,var(--orb-a) 45%,transparent)}
 
 /* Atmosphere: three slow, blurred colour fields behind everything. */
 .atmosphere{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.atmosphere span{position:absolute;width:62vmax;height:62vmax;border-radius:50%;opacity:var(--atmosphere-opacity);filter:blur(var(--atmosphere-blur));animation:atmosphere-drift 52s var(--ease-in-out) infinite alternate;will-change:transform}
+.atmosphere span{position:absolute;width:62vmax;height:62vmax;border-radius:50%;opacity:var(--atmosphere-opacity);filter:blur(var(--atmosphere-blur));animation:atmosphere-drift 52s var(--ease-in-out) infinite alternate}
 .atmosphere span:nth-child(1){top:-24vmax;left:-14vmax;background:var(--orb-a)}
 .atmosphere span:nth-child(2){right:-18vmax;bottom:-28vmax;background:var(--orb-b);animation-duration:64s;animation-delay:-18s}
 .atmosphere span:nth-child(3){top:28%;left:42%;width:42vmax;height:42vmax;background:var(--orb-c);animation-duration:58s;animation-delay:-30s}
 @keyframes atmosphere-drift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(9vmax,7vmax,0) scale(1.14)}100%{transform:translate3d(-7vmax,11vmax,0) scale(.9)}}
+/* RAM pressure changes decoration only. Keep palette, typography, controls, warnings and layout intact. */
+:root[data-resource-constrained=true] .atmosphere{background:radial-gradient(ellipse at 12% 12%,var(--orb-a),transparent 62%),radial-gradient(ellipse at 90% 90%,var(--orb-b),transparent 62%),radial-gradient(ellipse at 60% 45%,var(--orb-c),transparent 55%);opacity:var(--atmosphere-opacity)}
+:root[data-resource-constrained=true] .atmosphere span{display:none}
+:root:is([data-resource-constrained=true],[data-host-hidden=true],[data-host-inactive=true]) :is(.atmosphere span,.orb-fallback,.medal-core){animation-play-state:paused;will-change:auto}
+:root[data-resource-constrained=true] .orb-fallback{box-shadow:inset -12px -18px 32px color-mix(in srgb,var(--orb-c) 55%,transparent),inset 10px 14px 24px rgb(255 255 255 / .55)}
 .app-shell>.main{position:relative;z-index:1;overflow-x:clip}
 @media(prefers-reduced-transparency:reduce){.atmosphere{display:none}}
 

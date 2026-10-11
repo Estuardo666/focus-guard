@@ -43,6 +43,7 @@ internal sealed class HostShell : ApplicationContext, IHostShellController
         _ui = SynchronizationContext.Current ?? new WindowsFormsSynchronizationContext();
         _main.CloseToTray = true;
         _main.ShellController = this;
+        _main.FormClosed += (_, _) => Quit(closeMain: false);
         MainForm = null;
 
         _tray = new NotifyIcon
@@ -62,7 +63,7 @@ internal sealed class HostShell : ApplicationContext, IHostShellController
         _monitor.Start();
 
         instance?.StartListening(() => Post(ShowMain));
-        if (!startMinimized) _main.Show();
+        if (!startMinimized) _main.PresentToUser();
         else _ = _main.Handle; // Create the window (and its page) hidden, so opening it later is instant.
     }
 
@@ -115,10 +116,7 @@ internal sealed class HostShell : ApplicationContext, IHostShellController
     private void ShowMain()
     {
         CloseTrayPanel();
-        if (!_main.Visible) _main.Show();
-        if (_main.WindowState == FormWindowState.Minimized) _main.WindowState = FormWindowState.Normal;
-        _main.Activate();
-        _main.BringToFront();
+        _main.PresentToUser();
     }
 
     private void OpenCompact()
@@ -127,7 +125,7 @@ internal sealed class HostShell : ApplicationContext, IHostShellController
         _ = _main.SetCompactModeAsync(true, CancellationToken.None);
     }
 
-    private void Quit()
+    private void Quit(bool closeMain = true)
     {
         if (_quitting) return;
         _quitting = true;
@@ -136,8 +134,11 @@ internal sealed class HostShell : ApplicationContext, IHostShellController
         foreach (var scrim in _scrims.ToArray()) scrim.Close();
         _tray.Visible = false;
         _tray.Dispose();
-        _main.CloseToTray = false;
-        _main.Close();
+        if (closeMain)
+        {
+            _main.CloseToTray = false;
+            _main.Close();
+        }
         ExitThread();
     }
 

@@ -9,6 +9,29 @@ namespace FocusGuard.Host.Windows.Tests;
 
 public sealed class HostShellTests
 {
+    [Fact]
+    public async Task An_actual_main_window_closure_exits_the_shell_instead_of_leaving_an_unopenable_tray()
+    {
+        var done = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                using var main = new MainForm(new ScriptedClient(), new Phase4AuthorizationNotIntegrated(), HostSmokeScenario.None);
+                using var shell = new HostShell(main, new ScriptedClient(), new Phase4AuthorizationNotIntegrated(), null,
+                    (_, _) => null!, startMinimized: true, instance: null);
+                using var close = new System.Windows.Forms.Timer { Interval = 100 };
+                close.Tick += (_, _) => { close.Stop(); main.CloseToTray = false; main.Close(); };
+                close.Start();
+                System.Windows.Forms.Application.Run(shell);
+                done.SetResult();
+            }
+            catch (Exception exception) { done.SetException(exception); }
+        }) { IsBackground = true };
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        await done.Task.WaitAsync(TimeSpan.FromSeconds(5));
+    }
     private const string TrustedSource = "https://focusguard.app/index.html";
     private static readonly Guid SessionA = Guid.Parse("11111111-1111-4111-8111-111111111111");
     private static readonly DateTimeOffset Start = new(2026, 10, 10, 9, 0, 0, TimeSpan.Zero);

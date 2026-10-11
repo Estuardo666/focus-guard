@@ -241,7 +241,8 @@ public static class FocusGuardInteractiveShell
             dynamic document = documentObject;
             applicationObject = document.Application;
             dynamic application = applicationObject;
-            application.ShellExecute(executablePath, arguments, workingDirectory, "open", 0);
+            // --minimized controls the tray-only startup in the app. SW_HIDE would swallow its first requested Show.
+            application.ShellExecute(executablePath, arguments, workingDirectory, "open", 1);
         }
         finally
         {

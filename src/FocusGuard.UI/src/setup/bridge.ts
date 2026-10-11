@@ -4,6 +4,7 @@
  */
 export type SetupOperation = 'install' | 'uninstall';
 export type HostMessage =
+  | Readonly<{ type: 'setup.openState'; opening: boolean; failed: boolean }>
   | Readonly<{ type: 'setup.state'; version: string; installed: boolean }>
   | Readonly<{ type: 'setup.blockers'; apps: readonly string[] }>
   | Readonly<{ type: 'setup.log'; line: string }>
@@ -24,10 +25,13 @@ const isRecord = (value: unknown): value is Record<string, unknown> => typeof va
 const exact = (value: Record<string, unknown>, keys: readonly string[]) => Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value, key));
 const text = (value: unknown, max: number): value is string => typeof value === 'string' && value.length <= max;
 
-/** Accepts only the four host messages, with exact fields and bounded text. */
+/** Accepts only fixed host messages, with exact fields and bounded text. */
 export function parseHostMessage(value: unknown): HostMessage | null {
   if (!isRecord(value)) return null;
   switch (value.type) {
+    case 'setup.openState':
+      return exact(value, ['type', 'opening', 'failed']) && typeof value.opening === 'boolean' && typeof value.failed === 'boolean' && !(value.opening && value.failed)
+        ? { type: 'setup.openState', opening: value.opening, failed: value.failed } : null;
     case 'setup.state':
       return exact(value, ['type', 'version', 'installed']) && text(value.version, 32) && /^\d+(\.\d+){1,3}$/.test(value.version) && typeof value.installed === 'boolean'
         ? { type: 'setup.state', version: value.version, installed: value.installed } : null;

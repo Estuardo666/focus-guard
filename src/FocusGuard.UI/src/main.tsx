@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
+import { StartupScreen } from './StartupScreen';
 import { ErrorBoundary } from './ErrorBoundary';
 import { SurfaceApp } from './Surfaces';
 import { createNativeStatusClient } from './native/client';
@@ -34,7 +35,7 @@ windowControls.start();
 function Root() {
   const state = useSyncExternalStore(shell.subscribe, shell.getSnapshot);
   if (state.mode === 'surface' && state.surface) return <SurfaceApp surface={state.surface} shell={shell} client={client} dashboard={dashboard}/>;
-  if (state.mode === 'unknown') return <div className="boot" aria-hidden="true"/>;
+  if (state.mode === 'unknown') return <StartupScreen/>;
   return <App client={client} dashboard={dashboard} profiles={profiles} applications={applications} windowControls={windowControls} shell={shell}/>;
 }
 

@@ -16,13 +16,8 @@ const idleBreathSeconds = 10;
 const focusBreathSeconds = 12;
 
 export function supportsWebGL(): boolean {
-  if (typeof window === 'undefined' || typeof WebGLRenderingContext === 'undefined') return false;
-  try {
-    const canvas = document.createElement('canvas');
-    return !!(canvas.getContext('webgl2') ?? canvas.getContext('webgl'));
-  } catch {
-    return false;
-  }
+  // Creating a probe context leaves a second GPU context alive until GC. The scene itself handles creation failure.
+  return typeof window !== 'undefined' && typeof WebGL2RenderingContext !== 'undefined';
 }
 
 /** Converts a ring angle (0 at the top, clockwise, radians) into a 5-minute step. */
@@ -42,6 +37,9 @@ function useDocumentLook() {
       colors: readOrbColors(root),
       light: root.dataset.theme === 'light',
       reduce: root.dataset.reduceMotion === 'true',
+      constrained: root.dataset.resourceConstrained === 'true',
+      hidden: document.hidden || root.dataset.hostHidden === 'true',
+      inactive: root.dataset.hostInactive === 'true',
       orb: isOrbStyle(root.dataset.orb) ? root.dataset.orb : 'pearl' as const,
     };
   };
@@ -50,12 +48,13 @@ function useDocumentLook() {
     const root = document.documentElement;
     const update = () => setLook(current => {
       const next = read();
-      return next.light === current.light && next.reduce === current.reduce && next.orb === current.orb && next.colors.join() === current.colors.join() ? current : next;
+      return next.light === current.light && next.reduce === current.reduce && next.constrained === current.constrained && next.hidden === current.hidden && next.inactive === current.inactive && next.orb === current.orb && next.colors.join() === current.colors.join() ? current : next;
     });
     update();
     const observer = new MutationObserver(update);
-    observer.observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-palette', 'data-reduce-motion', 'data-orb'] });
-    return () => observer.disconnect();
+    observer.observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-palette', 'data-reduce-motion', 'data-orb', 'data-resource-constrained', 'data-host-hidden', 'data-host-inactive'] });
+    document.addEventListener('visibilitychange', update);
+    return () => { observer.disconnect(); document.removeEventListener('visibilitychange', update); };
   }, []);
   return look;
 }
@@ -70,7 +69,7 @@ type CountdownProps = { mode: 'countdown'; progress: number; segments?: readonly
 export function FocusOrb(props: (DialProps | CountdownProps) & { children?: ReactNode; className?: string }) {
   const look = useDocumentLook();
   const systemReduce = useReducedMotion();
-  const still = look.reduce || !!systemReduce;
+  const still = look.reduce || !!systemReduce || look.constrained || look.hidden || look.inactive;
   const [webgl, setWebgl] = useState(false);
   const pointer = useRef<OrbPointer>({ x: 0, y: 0, inside: false });
   const root = useRef<HTMLDivElement>(null);
@@ -152,7 +151,7 @@ export function FocusOrb(props: (DialProps | CountdownProps) & { children?: Reac
       animate={still ? { opacity: 0.7 } : { opacity: [0.55, 0.85, 0.55], scale: [0.96, 1.05, 0.96] }}
       transition={still ? { duration: 0.2 } : { duration: breathSeconds, repeat: Infinity, ease: 'easeInOut' }}/>
     <div className="orb-body" aria-hidden="true">
-      {webgl ? <Suspense fallback={<div className="orb-fallback"/>}>
+      {webgl && !look.constrained && !look.hidden ? <Suspense fallback={<div className="orb-fallback"/>}>
         <FocusOrbScene colors={look.colors} light={look.light} orbStyle={look.orb} pointer={pointer} breathSeconds={breathSeconds}
           energy={props.mode === 'countdown' ? 0.35 : isDragging ? 1.1 : 0.6} still={still} onFailure={() => setWebgl(false)}/>
       </Suspense> : <div className="orb-fallback"/>}

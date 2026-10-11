@@ -1,4 +1,5 @@
 {
+  "startupLoading": "Preparando tu espacio de enfoque…",
   "pendingDetail": "El servicio aún debe confirmar esta sesión. Actualiza el estado antes de actuar.",
   "renderError": "No podemos mostrar esta vista",
   "renderErrorDetail": "La sesión sigue en el servicio. Puedes recargar la vista o usar FocusGuard clásico.",

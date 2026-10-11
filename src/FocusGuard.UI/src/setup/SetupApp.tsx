@@ -23,6 +23,8 @@ export function SetupApp({ transport, language }: { transport: SetupTransport | 
   const [consent, setConsent] = useState(false);
   const [log, setLog] = useState<string[]>([]);
   const [showLog, setShowLog] = useState(false);
+  const [opening, setOpening] = useState(false);
+  const [openFailed, setOpenFailed] = useState(false);
   const operation = useRef<SetupOperation>('install');
   const send = (message: PageMessage) => { try { transport?.postMessage(message); } catch { /* the host window is closing */ } };
 
@@ -32,6 +34,7 @@ export function SetupApp({ transport, language }: { transport: SetupTransport | 
       const message = parseHostMessage((event as MessageEvent<unknown>).data);
       if (!message) return;
       switch (message.type) {
+        case 'setup.openState': setOpening(message.opening); setOpenFailed(message.failed); break;
         case 'setup.state': setVersion(message.version); setInstalled(message.installed); break;
         case 'setup.blockers': setScreen({ name: 'blockers', apps: message.apps }); break;
         case 'setup.log': setLog(lines => [...lines.slice(-399), message.line]); break;
@@ -61,7 +64,7 @@ export function SetupApp({ transport, language }: { transport: SetupTransport | 
       <span className="setup-brand"><span className="setup-brand-orb" aria-hidden="true"/>FocusGuard</span>
       <span className="setup-window-buttons">
         <button type="button" aria-label={t.minimize} onClick={() => send({ type: 'setup.minimize' })}><MinusIcon aria-hidden="true"/></button>
-        <button type="button" aria-label={t.close} disabled={screen.name === 'working'} onClick={() => send({ type: 'setup.close' })}><Cross2Icon aria-hidden="true"/></button>
+        <button type="button" aria-label={t.close} disabled={screen.name === 'working' || opening} onClick={() => send({ type: 'setup.close' })}><Cross2Icon aria-hidden="true"/></button>
       </span>
     </header>
     <main className="setup-stage" key={screen.name}>
@@ -115,9 +118,10 @@ export function SetupApp({ transport, language }: { transport: SetupTransport | 
         <h1 id="setup-title">{screen.operation === 'install' ? t.doneTitle : t.removedTitle}</h1>
         <p className="setup-lead">{screen.operation === 'install' ? t.doneLead : t.removedLead}</p>
         <div className="setup-actions">
-          {screen.operation === 'install' && <button type="button" className="setup-primary" autoFocus onClick={() => send({ type: 'setup.open' })}>{t.open}</button>}
-          <button type="button" className={screen.operation === 'install' ? 'setup-secondary' : 'setup-primary'} onClick={() => send({ type: 'setup.close' })}>{t.exit}</button>
+          {screen.operation === 'install' && <button type="button" className="setup-primary" autoFocus disabled={opening} onClick={() => { setOpening(true); setOpenFailed(false); send({ type: 'setup.open' }); }}>{opening ? t.opening : t.open}</button>}
+          <button type="button" disabled={opening} className={screen.operation === 'install' ? 'setup-secondary' : 'setup-primary'} onClick={() => send({ type: 'setup.close' })}>{t.exit}</button>
         </div>
+        {openFailed && <p className="setup-note" role="alert">{t.openFailed}</p>}
       </section>}
 
       {screen.name === 'failed' && <section className="setup-card" aria-labelledby="setup-title">

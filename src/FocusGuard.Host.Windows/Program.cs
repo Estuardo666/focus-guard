@@ -53,6 +53,13 @@ internal static class Program
             {
                 return SatisfiesWindowDpiContract(smokeForm) ? 0 : 4;
             }
+            if (smokeScenario == HostSmokeScenario.WindowPresentation)
+            {
+                var presented = smokeForm.PresentToUser();
+                Application.DoEvents();
+                smokeForm.Close();
+                return presented ? 0 : 4;
+            }
 
             Application.Run(smokeForm);
             return smokeForm.SmokeSucceeded ? 0 : 3;
@@ -139,6 +146,7 @@ internal static class Program
             1 when string.Equals(args[0], "--smoke-renderer-failure", StringComparison.Ordinal) => HostSmokeScenario.RendererRecovery,
             1 when string.Equals(args[0], "--smoke-renderer-crash", StringComparison.Ordinal) => HostSmokeScenario.RendererCrash,
             1 when string.Equals(args[0], "--smoke-window-dpi", StringComparison.Ordinal) => HostSmokeScenario.WindowDpiContract,
+            1 when string.Equals(args[0], "--smoke-window-presentation", StringComparison.Ordinal) => HostSmokeScenario.WindowPresentation,
             _ => (HostSmokeScenario)(-1)
         };
 

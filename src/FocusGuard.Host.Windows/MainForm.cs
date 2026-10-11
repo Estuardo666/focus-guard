@@ -35,7 +35,8 @@ internal sealed class MainForm : Form, IHostWindowController
     private readonly Label _errorDescription = new() { AutoSize = true, MaximumSize = new Size(640, 0) };
     private readonly Button _retryButton = new() { AutoSize = true };
     private readonly Button _closeButton = new() { AutoSize = true };
-    private WebView2? _webView;
+    private ResourceWebView2? _webView;
+    private WebViewResourceController? _resources;
     private CoreWebView2Environment? _environment;
     private NativeBridgeDispatcher? _bridge;
     private string? _currentDocumentToken;
@@ -69,6 +70,10 @@ internal sealed class MainForm : Form, IHostWindowController
         _desktopSettingsStore = desktopSettingsStore;
         _sessionJournalStore = sessionJournalStore;
         _smokeScenario = smokeScenario;
+        var initialSettings = desktopSettingsStore?.Load() ?? FocusGuard.Client.Preferences.DesktopSettings.Default;
+        BackColor = initialSettings.Theme == FocusGuard.Client.Preferences.AppTheme.Light
+            ? Color.FromArgb(245, 244, 250) : Color.FromArgb(12, 11, 18);
+        _browserPanel.BackColor = BackColor;
 
         Text = HostWindowStrings.Get("WindowTitle");
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? Icon;
@@ -89,6 +94,23 @@ internal sealed class MainForm : Form, IHostWindowController
     }
 
     internal bool SmokeSucceeded { get; private set; }
+
+    /// <summary>The first WinForms Show can be overridden by the launcher's SW_HIDE startup information.</summary>
+    internal bool PresentToUser()
+    {
+        if (_closed || IsDisposed || Disposing) return false;
+        if (!Visible) Show();
+        if (WindowState == FormWindowState.Minimized) WindowState = FormWindowState.Normal;
+        // The managed Visible flag can already be true while the native window is still hidden.
+        // A second explicit SW_SHOW preserves bounds/maximized state and honors this user-requested opening.
+        _ = ShowWindow(Handle, 5);
+        Activate();
+        BringToFront();
+        return IsWindowVisible(Handle);
+    }
+
+    [DllImport("user32.dll")] private static extern bool ShowWindow(IntPtr window, int command);
+    [DllImport("user32.dll")] private static extern bool IsWindowVisible(IntPtr window);
 
     /// <summary>When the shell owns a tray icon, closing the window only hides it; quitting goes through the tray.</summary>
     [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
@@ -209,7 +231,7 @@ internal sealed class MainForm : Form, IHostWindowController
             }
 
             _environment = environment;
-            var webView = new WebView2 { Dock = DockStyle.Fill, Visible = true };
+            var webView = new ResourceWebView2 { Dock = DockStyle.Fill, Visible = true, DefaultBackgroundColor = BackColor };
             _webView = webView;
             _browserPanel.Controls.Add(webView);
             await webView.EnsureCoreWebView2Async(environment);
@@ -219,6 +241,13 @@ internal sealed class MainForm : Form, IHostWindowController
             }
 
             ConfigureCoreWebView(webView.CoreWebView2, uiFolder);
+            var settings = _desktopSettingsStore?.Load() ?? FocusGuard.Client.Preferences.DesktopSettings.Default;
+            var theme = settings.Theme == FocusGuard.Client.Preferences.AppTheme.Light ? "light" : "dark";
+            var reduce = settings.ReduceMotion ? "true" : "false";
+            await webView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(
+                $"(()=>{{const apply=()=>{{document.documentElement.dataset.theme='{theme}';document.documentElement.lang='{settings.UiLanguage}';document.documentElement.dataset.reduceMotion='{reduce}';}};if(document.documentElement)apply();else document.addEventListener('DOMContentLoaded',apply,{{once:true}});}})();");
+            if (_closed) return;
+            _resources = new WebViewResourceController(this, webView);
             webView.CoreWebView2.Navigate(WebViewSecurityPolicy.EntryUri.AbsoluteUri);
         }
         catch (Exception exception) when (IsRuntimeMissing(exception))
@@ -324,6 +353,7 @@ internal sealed class MainForm : Form, IHostWindowController
         {
             core.PostWebMessageAsJson(JsonSerializer.Serialize(initialization, BridgeJson));
             PostWindowState();
+            _resources?.RefreshPage();
         }
     }
 
@@ -738,6 +768,8 @@ internal sealed class MainForm : Form, IHostWindowController
 
     private void TearDownWebView()
     {
+        _resources?.Dispose();
+        _resources = null;
         if (_webView is null)
         {
             return;

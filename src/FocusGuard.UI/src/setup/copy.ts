@@ -1,5 +1,7 @@
 /** Installer strings. The installer shows consequences in plain words before anything changes on the machine. */
 const es = {
+  opening: 'Abriendo FocusGuard…',
+  openFailed: 'No pudimos mostrar la ventana. Intenta abrirla de nuevo; la instalación está completa.',
   installTitle: 'Instala FocusGuard',
   updateTitle: 'Actualiza FocusGuard',
   installLead: 'El servicio que protege tus sesiones, la app y la integración con el navegador, listos en un minuto.',
@@ -40,6 +42,8 @@ const es = {
 };
 
 const en: typeof es = {
+  opening: 'Opening FocusGuard…',
+  openFailed: 'We could not show the window. Try opening it again; installation is complete.',
   installTitle: 'Install FocusGuard',
   updateTitle: 'Update FocusGuard',
   installLead: 'The service that protects your sessions, the app and the browser integration, ready in a minute.',

@@ -21,12 +21,12 @@ export function DashboardStart({ dashboard, connection, language, t, refresh, re
   renderBlockedPreview?(profileId: string, blockedApps: number, blockedSites: number): ReactNode;
 }) {
   const state = useSyncExternalStore(dashboard.subscribe, dashboard.getSnapshot);
-  const [profileId, setProfileId] = useState('');
-  const [minutes, setMinutes] = useState('25');
-  const [blocking, setBlocking] = useState(false);
+  const [profileId, setProfileId] = useState(() => state.catalog?.items[0]?.id ?? '');
+  const [minutes, setMinutes] = useState(() => String(state.preferences?.lastDurationMinutes ?? 25));
+  const [blocking, setBlocking] = useState(() => state.preferences?.enforcementEnabled ?? false);
   const [strictMode, setStrictMode] = useState(false);
   const [objective, setObjective] = useState('');
-  const [sessionType, setSessionType] = useState<'timer' | 'cycle'>('timer');
+  const [sessionType, setSessionType] = useState<'timer' | 'cycle'>(() => state.preferences?.lastSessionMode === 'FocusCycle' ? 'cycle' : 'timer');
   const [cycleInput, setCycleInput] = useState<CycleInput | null>(null);
   const [replayProfile, setReplayProfile] = useState<ProfileSummary | null>(null);
   const [replayConfiguration, setReplayConfiguration] = useState<CycleConfiguration | null>(null);
@@ -109,11 +109,11 @@ export function DashboardStart({ dashboard, connection, language, t, refresh, re
     preferencesApplied.current = true;
     if (replaySessionId) return;
     setMinutes(String(state.preferences.lastDurationMinutes));
-    setBlocking(state.preferences.enforcementEnabled);
+    setBlocking(state.preferences.enforcementEnabled && (!selected || selected.blockedApplicationCount + selected.blockedWebsiteCount > 0));
     const cycleMode = state.preferences.lastSessionMode === 'FocusCycle';
     setSessionType(cycleMode ? 'cycle' : 'timer');
     if (cycleMode && !state.cycles && !state.cyclesLoading) void dashboard.loadCycles();
-  }, [dashboard, state.preferences, state.cycles, state.cyclesLoading, replaySessionId]);
+  }, [dashboard, state.preferences, state.cycles, state.cyclesLoading, replaySessionId, selected]);
   useEffect(() => {
     if (!replay || replay.sessionId === replaySessionId || !replay.replayable || !replay.profile
       || replay.durationMinutes === null || replay.mode === null || replay.enforcementEnabled === null
