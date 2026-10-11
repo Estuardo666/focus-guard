@@ -3,28 +3,32 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
     <title>FocusGuard</title>
     <link rel="stylesheet" href="src/status-page.css">
   </head>
   <body>
     <!-- The block screen is not a punishment: no red, no padlock, no "access denied".
-         It states what is left, what has been earned, and offers the two honest exits. -->
+         It states what is left, what has been earned, and offers the two honest exits.
+         Same zen language as the desktop app: slow atmosphere, a breathing orb, pill actions. -->
+    <div class="atmosphere" aria-hidden="true"><span></span><span></span><span></span></div>
     <main class="stage" role="main">
+      <p class="brand"><span class="brand__orb" aria-hidden="true"></span>FocusGuard</p>
       <section class="panel" aria-live="polite">
         <div class="ring" id="ringRegion" role="img">
-          <div class="ring__glow ring__glow--outer"></div>
-          <div class="ring__glow ring__glow--near"></div>
+          <div class="ring__halo" aria-hidden="true"></div>
           <svg class="ring__svg" viewBox="0 0 120 120" aria-hidden="true">
             <defs>
               <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#63B7B0" />
-                <stop offset="52%" stop-color="#6F8CFF" />
-                <stop offset="100%" stop-color="#A174E8" />
+                <stop offset="0%" stop-color="#c7a6ff" />
+                <stop offset="55%" stop-color="#8ea6ff" />
+                <stop offset="100%" stop-color="#ff9fd0" />
               </linearGradient>
             </defs>
             <circle class="ring__track" cx="60" cy="60" r="50" />
             <circle class="ring__progress" cx="60" cy="60" r="50" id="ringProgress" />
           </svg>
+          <div class="orb" aria-hidden="true"></div>
           <div class="ring__label">
             <span class="ring__value" id="ringValue">--</span>
             <span class="ring__unit" id="ringUnit">min</span>

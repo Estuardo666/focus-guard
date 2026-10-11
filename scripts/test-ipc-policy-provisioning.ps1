@@ -29,7 +29,7 @@ function Add-FakeRoleFiles {
     [void](New-Item -ItemType Directory -Path $Directory -Force)
     $names = @(
         'FocusGuard.Service.exe', 'FocusGuard.Service.dll',
-        'FocusGuard.Desktop.exe', 'FocusGuard.Desktop.dll',
+        'FocusGuard.UI.exe', 'FocusGuard.UI.dll',
         'FocusGuard.ProcessAgent.exe', 'FocusGuard.ProcessAgent.dll'
     )
     if (-not $OmitNativeMessaging) {
@@ -56,7 +56,7 @@ try {
     Assert-TestCondition ($manifest.service.fileName -eq 'FocusGuard.Service.exe') 'Manifest service executable was incorrect.'
     Assert-TestCondition ($manifest.service.managedFileName -eq 'FocusGuard.Service.dll') 'Manifest omitted the service managed assembly.'
     Assert-TestCondition ($manifest.binaries.Count -eq 3) 'Manifest did not contain exactly the three required binary roles.'
-    Assert-TestCondition ((@($manifest.binaries | ForEach-Object role) -join ',') -eq 'Desktop,ProcessAgent,NativeMessaging') 'Required role ordering or values changed.'
+    Assert-TestCondition ((@($manifest.binaries | ForEach-Object role) -join ',') -eq 'WebViewHost,ProcessAgent,NativeMessaging') 'Required role ordering or values changed.'
     $aadSidManifest = New-FocusGuardIpcPolicyManifest -OwnerSid 'S-1-12-1-123-456-789-1001' -InstallRoot $fixtureRoot -OutputPath $outputPath
     Assert-TestCondition ($aadSidManifest.ownerUserSid -eq 'S-1-12-1-123-456-789-1001') 'A valid Azure AD user SID was not retained.'
 
@@ -72,7 +72,7 @@ try {
 
     $optionalRoot = Join-Path $tempRoot 'optional'
     Add-FakeRoleFiles -Directory $optionalRoot
-    foreach ($name in @('FocusGuard.UI.exe', 'FocusGuard.UI.dll', 'FocusGuard.Diagnostic.exe', 'FocusGuard.Diagnostic.dll')) {
+    foreach ($name in @('FocusGuard.Diagnostic.exe', 'FocusGuard.Diagnostic.dll')) {
         [IO.File]::WriteAllBytes((Join-Path $optionalRoot $name), [Text.Encoding]::UTF8.GetBytes("fixture:$name"))
     }
     $optionalManifest = New-FocusGuardIpcPolicyManifest -OwnerSid $testOwnerSid -InstallRoot $optionalRoot `
@@ -80,9 +80,9 @@ try {
             WebViewHost = $true
             Diagnostic = @{ fileName = 'FocusGuard.Diagnostic.exe'; managedFileName = 'FocusGuard.Diagnostic.dll' }
         })
-    Assert-TestCondition ($optionalManifest.binaries.Count -eq 5) 'Explicit optional roles were not included.'
-    Assert-TestCondition ($optionalManifest.binaries[3].role -eq 'WebViewHost' -and $optionalManifest.binaries[3].fileName -eq 'FocusGuard.UI.exe') 'WebViewHost was not provisioned with the fixed host executable.'
-    Assert-TestCondition ($optionalManifest.binaries[4].role -eq 'Diagnostic') 'Explicit diagnostic role was not included.'
+    Assert-TestCondition ($optionalManifest.binaries.Count -eq 4) 'Explicit optional roles were not included.'
+    Assert-TestCondition ($optionalManifest.binaries[0].role -eq 'WebViewHost' -and $optionalManifest.binaries[0].fileName -eq 'FocusGuard.UI.exe') 'WebViewHost was not provisioned with the fixed host executable.'
+    Assert-TestCondition ($optionalManifest.binaries[3].role -eq 'Diagnostic') 'Explicit diagnostic role was not included.'
 
     Assert-Throws {
         New-FocusGuardIpcPolicyManifest -OwnerSid 'S-1-5-18' -InstallRoot $fixtureRoot -OutputPath $outputPath | Out-Null
@@ -107,7 +107,7 @@ try {
     } 'An output path outside InstallRoot was accepted.'
     Assert-Throws {
         New-FocusGuardIpcPolicyManifest -OwnerSid $testOwnerSid -InstallRoot $fixtureRoot -OutputPath $outputPath `
-            -OptionalBinaries @{ Diagnostic = @{ fileName = 'FocusGuard.Desktop.exe'; managedFileName = 'FocusGuard.Desktop.dll' } } | Out-Null
+            -OptionalBinaries @{ Diagnostic = @{ fileName = 'FocusGuard.ProcessAgent.exe'; managedFileName = 'FocusGuard.ProcessAgent.dll' } } | Out-Null
     } 'An optional role aliasing a required executable and assembly was accepted.'
     Assert-Throws {
         New-FocusGuardIpcPolicyManifest -OwnerSid $testOwnerSid -InstallRoot $optionalRoot -OutputPath (Join-Path $optionalRoot 'ipc-policy.json') `
@@ -141,10 +141,10 @@ try {
     Assert-TestCondition ($writtenManifest.ownerUserSid -eq $testOwnerSid) 'The writer did not return the generated schema.'
     Assert-TestCondition (@(Get-ChildItem -LiteralPath $fixtureRoot -Force -Filter '.ipc-policy.*.tmp').Count -eq 0) 'Atomic output left a temporary file behind.'
 
-    [IO.File]::WriteAllBytes((Join-Path $fixtureRoot 'FocusGuard.Desktop.dll'), [Text.Encoding]::UTF8.GetBytes('fixture:changed Desktop assembly'))
+    [IO.File]::WriteAllBytes((Join-Path $fixtureRoot 'FocusGuard.UI.dll'), [Text.Encoding]::UTF8.GetBytes('fixture:changed UI assembly'))
     $null = & $helperPath -OwnerSid $testOwnerSid -InstallRoot $fixtureRoot -OutputPath $outputPath
     $replacedJson = Get-Content -Raw -LiteralPath $outputPath | ConvertFrom-Json
-    $expectedUpdatedHash = (Get-FileHash -LiteralPath (Join-Path $fixtureRoot 'FocusGuard.Desktop.dll') -Algorithm SHA256).Hash.ToUpperInvariant()
+    $expectedUpdatedHash = (Get-FileHash -LiteralPath (Join-Path $fixtureRoot 'FocusGuard.UI.dll') -Algorithm SHA256).Hash.ToUpperInvariant()
     Assert-TestCondition ($replacedJson.binaries[0].managedSha256 -eq $expectedUpdatedHash) 'Atomic replacement retained a stale managed assembly hash.'
 
     Write-Output 'IPC policy provisioning fixture tests passed. Fake fixture hashes and temporary junction only; no installation, process, service, ACL, registry, or deployed identity changes.'

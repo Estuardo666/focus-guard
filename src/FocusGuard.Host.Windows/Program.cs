@@ -11,8 +11,13 @@ internal static class Program
     private static int Main(string[] args)
     {
         ApplicationConfiguration.Initialize();
-        var pilotEnabled = args.Length == 1 && args[0] == "--pilot";
-        if (!TryGetSmokeScenario(pilotEnabled ? [] : args, out var smokeScenario))
+        if (args.Contains(ServiceHealthProbe.Argument, StringComparer.Ordinal)) return RunServiceHealthCheck(args);
+
+        // The React host is FocusGuard's only interface: editing is always on. "--pilot" is still accepted from old
+        // shortcuts; "--minimized" starts in the notification area (sign-in autostart).
+        var startMinimized = args.Contains("--minimized", StringComparer.OrdinalIgnoreCase);
+        var shellArguments = args.Where(argument => argument is not "--pilot" && !string.Equals(argument, "--minimized", StringComparison.OrdinalIgnoreCase)).ToArray();
+        if (!TryGetSmokeScenario(shellArguments, out var smokeScenario))
         {
             return 2;
         }
@@ -21,6 +26,8 @@ internal static class Program
 
         if (!IsRunningAtMediumIntegrity())
         {
+            // Setup's "Open FocusGuard" runs elevated: bring the signed-in user's running FocusGuard forward instead.
+            if (!smokeMode && FocusGuard.Platform.Windows.DesktopSingleInstance.TrySignalExisting()) return 0;
             if (!smokeMode)
             {
                 MessageBox.Show(
@@ -39,14 +46,62 @@ internal static class Program
             ? null
             : new ProcessAgentSupervisorLifetime(
                 new ProcessAgentSupervisor(AppContext.BaseDirectory));
-        using var form = HostComposition.CreateDefault(smokeScenario, pilotEnabled);
-        if (smokeScenario == HostSmokeScenario.WindowDpiContract)
+        if (smokeMode)
         {
-            return SatisfiesWindowDpiContract(form) ? 0 : 4;
+            using var smokeForm = HostComposition.CreateDefault(smokeScenario, pilotEnabled: true);
+            if (smokeScenario == HostSmokeScenario.WindowDpiContract)
+            {
+                return SatisfiesWindowDpiContract(smokeForm) ? 0 : 4;
+            }
+
+            Application.Run(smokeForm);
+            return smokeForm.SmokeSucceeded ? 0 : 3;
         }
 
-        Application.Run(form);
-        return smokeMode ? (form.SmokeSucceeded ? 0 : 3) : 0;
+        // One FocusGuard per signed-in user: a second launch (shortcut, autostart) only brings the first one forward.
+        if (!DesktopSingleInstance.TryAcquire(out var instance)) return 0;
+        using (instance)
+        using (var services = HostComposition.CreateServices(smokeScenario, pilotEnabled: true))
+        {
+            ProcessAgentStartup.EnsureRunning(AppContext.BaseDirectory);
+            using var form = HostComposition.CreateMainForm(services, smokeScenario);
+            if (Environment.ProcessPath is { } executable)
+                form.StartupRegistration = new FocusGuard.Platform.Windows.WindowsStartupRegistration(executable);
+            using var shell = new HostShell(form, services.Client, services.Authorization, services.Settings,
+                (lifetime, controller) => HostComposition.CreateSurfaceBridge(services, lifetime, controller), startMinimized, instance);
+            Application.Run(shell);
+        }
+
+        return 0;
+    }
+
+    private static int RunServiceHealthCheck(string[] args)
+    {
+#if FOCUSGUARD_PRODUCTION
+        FocusGuard.Ipc.Windows.VerifiedPipeConnectionFactory? pipes = null;
+#endif
+        try
+        {
+            var result = ServiceHealthProbe.RunAsync(() =>
+            {
+#if FOCUSGUARD_PRODUCTION
+                pipes = new(AppContext.BaseDirectory, FocusGuard.Ipc.Windows.IpcClientRole.WebViewHost);
+                return new FocusGuard.Client.NamedPipeFocusControlClient(connectionFactory: pipes);
+#else
+                return new FocusGuard.Client.NamedPipeFocusControlClient();
+#endif
+            }, CancellationToken.None).GetAwaiter().GetResult();
+            ServiceHealthProbe.WriteDiagnostic(result);
+            return result.ExitCode;
+        }
+        finally
+        {
+            // Keep every outcome observable to the installer's exact-process probe.
+            if (args.Contains(ServiceHealthProbe.OwnerProbeArgument, StringComparer.Ordinal)) Thread.Sleep(2000);
+#if FOCUSGUARD_PRODUCTION
+            pipes?.Dispose();
+#endif
+        }
     }
 
     private static bool SatisfiesWindowDpiContract(MainForm form)

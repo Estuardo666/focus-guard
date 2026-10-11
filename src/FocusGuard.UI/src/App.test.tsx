@@ -54,12 +54,12 @@ it('keeps keyboard skip navigation before the sidebar and targets focusable main
 it('renders only authoritative remaining time and keeps last reading marked stale', async () => {
   const test = fixture(active);
   await act(async () => root.render(<App client={test.client}/>));
-  expect(container.textContent).toContain('00:25:00');
+  expect(container.textContent).toContain('25:00');
   expect(container.textContent).toContain(es.unknown);
   expect(container.querySelector('.activation-pending')).toBeNull();
   await act(async () => test.update({ ...active, phase: 'stale', error: 'ServiceUnavailable' }));
   expect(container.textContent).toContain('Estado desactualizado');
-  expect(container.textContent).toContain('00:25:00');
+  expect(container.textContent).toContain('25:00');
   expect(container.textContent).not.toContain('Confirmada');
   expect(container.textContent).not.toContain('Desconocido');
   expect(container.querySelectorAll('.fact')).toHaveLength(0);
@@ -245,7 +245,7 @@ it('identifies an existing focus cycle without exposing cycle activation command
   const test = fixture({ ...active, status: { ...active.status!, mode: 'FocusCycle' } });
   await act(async () => root.render(<App client={test.client}/>));
   expect(container.textContent).toContain('Ciclo de enfoque');
-  expect(container.textContent).toContain('00:25:00');
+  expect(container.textContent).toContain('25:00');
 });
 
 it('language selection and refresh are meaningful without exposing mutation buttons', async () => {

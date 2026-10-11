@@ -71,6 +71,7 @@ internal sealed class MainForm : Form, IHostWindowController
         _smokeScenario = smokeScenario;
 
         Text = HostWindowStrings.Get("WindowTitle");
+        Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? Icon;
         StartPosition = FormStartPosition.CenterScreen;
         FormBorderStyle = FormBorderStyle.Sizable;
         MinimizeBox = true;
@@ -88,6 +89,25 @@ internal sealed class MainForm : Form, IHostWindowController
     }
 
     internal bool SmokeSucceeded { get; private set; }
+
+    /// <summary>When the shell owns a tray icon, closing the window only hides it; quitting goes through the tray.</summary>
+    [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+    internal bool CloseToTray { get; set; }
+
+    [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+    internal IHostShellController? ShellController { get; set; }
+
+    /// <summary>The signed-in user's "start with Windows" value; absent in smoke runs so tests never touch the registry.</summary>
+    [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+    internal IStartupRegistration? StartupRegistration { get; set; }
+
+    /// <summary>Asks the page to show a section (from the tray panel or a notice). The page validates the message.</summary>
+    internal void Navigate(string section)
+    {
+        var core = _webView?.CoreWebView2;
+        if (core is null || _currentDocumentToken is not { } documentToken || !WebViewSecurityPolicy.IsTrustedBridgeSource(core.Source)) return;
+        core.PostWebMessageAsJson(JsonSerializer.Serialize(new HostNavigateMessage("host.navigate", BridgeLimits.ProtocolVersion, documentToken, section), BridgeJson));
+    }
 
     private void BuildErrorPanel()
     {
@@ -247,7 +267,8 @@ internal sealed class MainForm : Form, IHostWindowController
             sessionJournalStore: _sessionJournalStore,
             recoveryCodeSaver: SaveRecoveryCodeAsync,
             applicationCatalog: _applicationCatalog, iconProvider: _iconProvider,
-            windowController: this);
+            windowController: this, shellController: ShellController,
+            startupRegistration: StartupRegistration);
         core.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
         core.NavigationStarting += OnNavigationStarting;
         core.NavigationCompleted += OnNavigationCompleted;
@@ -746,6 +767,14 @@ internal sealed class MainForm : Form, IHostWindowController
 
     private void OnFormClosing(object? sender, FormClosingEventArgs eventArgs)
     {
+        if (CloseToTray && eventArgs.CloseReason == CloseReason.UserClosing)
+        {
+            // The service keeps the session either way; the tray keeps notices and the block screen alive.
+            eventArgs.Cancel = true;
+            Hide();
+            return;
+        }
+
         _closed = true;
         _smokeTimeout.Cancel();
         _smokeTimeout.Dispose();

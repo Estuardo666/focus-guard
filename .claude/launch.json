@@ -1,0 +1,33 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ui-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "src/FocusGuard.UI/node_modules/vite/bin/vite.js",
+        "src/FocusGuard.UI",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "5179",
+        "--strictPort"
+      ],
+      "port": 5179
+    },
+    {
+      "name": "ui-prod-csp",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "5180",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "C:/Users/Stuart/AppData/Local/Temp/claude/E--FocusGuard-FocusGuard-Autopilot/8eff43af-96d2-4933-a925-ccd2ee5cb978/scratchpad/prodcheck"
+      ],
+      "port": 5180
+    }
+  ]
+}

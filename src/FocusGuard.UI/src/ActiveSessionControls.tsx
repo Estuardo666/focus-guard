@@ -2,6 +2,7 @@ import { useEffect, useRef, useSyncExternalStore } from 'react';
 import type { DashboardClient } from './native/dashboard';
 import type { ConnectionSnapshot } from './native/protocol';
 import type es from './locales/es.json';
+import { exitDialog } from './ZenControls';
 
 export function ActiveSessionControls({ dashboard, connection, language, t, refresh }: { dashboard: DashboardClient; connection: ConnectionSnapshot; language: 'es' | 'en'; t(key: keyof typeof es): string; refresh(): Promise<void> }) {
   const state = useSyncExternalStore(dashboard.subscribe, dashboard.getSnapshot);
@@ -32,5 +33,5 @@ export function ActiveSessionControls({ dashboard, connection, language, t, refr
 function ActionReview({ title, confirmLabel, detail, endLabel, end, phaseEnd, t, enabled, cancel, confirm, trigger }: { title: string; confirmLabel: string; detail: string; endLabel: string; end: string; phaseEnd?: string; t(key: keyof typeof es): string; enabled: boolean; cancel(): void; confirm(): void; trigger: HTMLButtonElement | null }) {
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => { const element = dialog.current; if (element && !element.open) element.showModal(); return () => { element?.close(); if (trigger?.isConnected) { if (!trigger.disabled) trigger.focus(); else trigger.closest('section')?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus(); } }; }, [trigger]);
-  return <dialog ref={dialog} className="delete-review control-review" aria-labelledby="control-review-title" aria-describedby="control-review-detail" onCancel={event => { event.preventDefault(); cancel(); }}><h3 id="control-review-title">{title}</h3><p id="control-review-detail">{detail}</p><dl><div><dt>{endLabel}</dt><dd>{end}</dd></div>{phaseEnd && <div><dt>{t('currentBreakEnd')}</dt><dd>{phaseEnd}</dd></div>}</dl><div className="review-actions"><button type="button" autoFocus onClick={cancel}>{t('cancel')}</button><button type="button" className="primary-action" disabled={!enabled} onClick={confirm}>{confirmLabel}</button></div></dialog>;
+  return <dialog ref={dialog} className="delete-review control-review" aria-labelledby="control-review-title" aria-describedby="control-review-detail" onCancel={event => { event.preventDefault(); exitDialog(dialog.current, cancel); }}><h3 id="control-review-title">{title}</h3><p id="control-review-detail">{detail}</p><dl><div><dt>{endLabel}</dt><dd>{end}</dd></div>{phaseEnd && <div><dt>{t('currentBreakEnd')}</dt><dd>{phaseEnd}</dd></div>}</dl><div className="review-actions"><button type="button" autoFocus onClick={() => exitDialog(dialog.current, cancel)}>{t('cancel')}</button><button type="button" className="primary-action" disabled={!enabled} onClick={confirm}>{confirmLabel}</button></div></dialog>;
 }

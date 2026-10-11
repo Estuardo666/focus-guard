@@ -30,9 +30,18 @@ internal sealed record BridgeRequest(
     Guid? StrictCancelPreparationId = null,
     Guid? StrictSaveRecoveryCodeId = null,
     bool RecoveryInfo = false,
-    HostWindowCommand? WindowCommand = null);
+    HostWindowCommand? WindowCommand = null,
+    HostAppCommand? AppCommand = null);
 
 internal sealed record HostWindowCommand(bool? Compact = null, bool? AlwaysOnTop = null, bool? DetailsExpanded = null);
+
+internal enum HostAppAction { Open, Compact, Quit, CloseSurface, StartupGet, StartupSet, SurfaceReady }
+
+/// <summary>Shell-level commands from the tray panel and popups: show a section, the compact view, close the popup, or quit.</summary>
+internal sealed record HostAppCommand(HostAppAction Action, string? Section = null, Guid? SessionId = null, bool? Enabled = null);
+
+/// <summary><see cref="StartupEnabled"/> is set only for the sign-in start commands.</summary>
+internal sealed record HostAppResult(bool Accepted, bool? StartupEnabled = null);
 
 internal sealed record HostWindowStateMessage(string Type, int Version, string DocumentToken, bool Compact, bool AlwaysOnTop, bool DetailsExpanded);
 
@@ -163,3 +172,7 @@ internal static class BridgeLimits
     private static BridgePhaseStatus? ProjectPhase(PhaseStatus? phase) => phase is null ? null :
         new(phase.Index, phase.Kind.ToString(), phase.FocusCycleNumber, phase.RemainingSeconds, phase.EndUtc, phase.StartUtc);
 }
+
+internal sealed record BridgeAppResponse(int Version, string RequestId, string DocumentToken, string? Error, HostAppResult Result);
+
+internal sealed record HostNavigateMessage(string Type, int Version, string DocumentToken, string Section);

@@ -27,6 +27,27 @@ public sealed class DesktopSingleInstance : IDesktopInstance
     public static bool TryAcquire(out DesktopSingleInstance? instance) =>
         TryAcquire(CreateInstanceKey(), out instance);
 
+    /// <summary>
+    /// Asks an already running FocusGuard of this user and session to come forward, without ever becoming one. Used
+    /// when a launch cannot run itself (for example from the elevated Setup), so it never creates the mutex.
+    /// </summary>
+    [SupportedOSPlatform("windows")]
+    public static bool TrySignalExisting()
+    {
+        var instanceKey = CreateInstanceKey();
+        try
+        {
+            if (!Mutex.TryOpenExisting($@"Local\FocusGuard.Desktop.Mutex.{instanceKey}", out var existing)) return false;
+            existing.Dispose();
+            SignalExistingInstance($@"Local\FocusGuard.Desktop.Activate.{instanceKey}");
+            return true;
+        }
+        catch (Exception exception) when (exception is UnauthorizedAccessException or IOException)
+        {
+            return false;
+        }
+    }
+
     [SupportedOSPlatform("windows")]
     internal static bool TryAcquire(string instanceKey, out DesktopSingleInstance? instance)
     {

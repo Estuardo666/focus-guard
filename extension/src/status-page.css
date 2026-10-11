@@ -1,64 +1,132 @@
 /*
- * Dark Zen block page. Deliberately no pure black and no red: the user already made the
- * decision to block this, and the screen is only reminding them of it.
+ * Zen block page, matching the FocusGuard desktop app (Aurora palette, pearl orb, glass and pill actions).
+ * Deliberately no pure black and no red: the user already made the decision to block this, and the
+ * screen is only reminding them of it. Follows the system light/dark setting.
  */
+
+@font-face { font-family: Geist; src: url("../fonts/Geist-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: Geist; src: url("../fonts/Geist-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
 
 :root {
   color-scheme: dark;
-
-  --surface-0: #0e1318;
-  --surface-1: #151c24;
-  --surface-2: #19212b;
-  --surface-3: #1d2631;
-  --field: #111820;
-
-  --border: #2a3542;
-  --border-strong: #344150;
-  --border-focus: #7188ff;
-
-  --text-primary: #edf2f5;
-  --text-secondary: #aeb9c4;
-  --text-tertiary: #7f8c99;
-
-  --accent: #667dff;
-  --accent-hover: #788cff;
-  --accent-pressed: #5269e8;
-
-  --ring-track: #29333d;
-
-  --ease-hover: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-focus: cubic-bezier(0.16, 1, 0.3, 1);
-
-  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --bg: #0c0b12;
+  --text: #f3f1fa;
+  --secondary: #c0bbd2;
+  --muted: #a49fb8;
+  --line: rgb(255 255 255 / 0.08);
+  --glass: rgb(24 21 34 / 0.58);
+  --glass-strong: rgb(31 28 43 / 0.86);
+  --field: rgb(12 11 18 / 0.6);
+  --accent: #cdb8ff;
+  --accent-text: #1a1030;
+  --orb-a: #c7a6ff;
+  --orb-b: #8ea6ff;
+  --orb-c: #ff9fd0;
+  --orb-ink: #17142a;
+  --ring-track: rgb(255 255 255 / 0.08);
+  --ok: #5ad69a;
+  --error: #f2b8c6;
+  --atmosphere-opacity: 0.2;
+  --shadow-tint: rgb(6 4 14 / 0.45);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  font-family: Geist, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  font-synthesis: none;
 }
 
-* {
-  box-sizing: border-box;
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f5f4fa;
+    --text: #1b1830;
+    --secondary: #4a4560;
+    --muted: #575170;
+    --line: rgb(40 30 80 / 0.1);
+    --glass: rgb(255 255 255 / 0.62);
+    --glass-strong: rgb(255 255 255 / 0.9);
+    --field: rgb(255 255 255 / 0.8);
+    --accent: #5a3fc0;
+    --accent-text: #ffffff;
+    --ring-track: rgb(40 30 80 / 0.1);
+    --ok: #14784a;
+    --error: #9c2d4a;
+    --atmosphere-opacity: 0.32;
+    --shadow-tint: rgb(70 50 140 / 0.14);
+  }
 }
+
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--surface-0);
-  color: var(--text-primary);
+  background: var(--bg);
+  color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px 20px;
+  padding: 40px 16px;
+  overflow-x: hidden;
 }
 
-/* The central block fades in and settles upward. Without it the appearance is abrupt,
-   and abrupt is what makes a block screen feel like a slap. */
+::selection { background: color-mix(in srgb, var(--orb-a) 45%, transparent); }
+
+/* ---------- Atmosphere: three slow, blurred colour fields ---------- */
+
+.atmosphere { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+.atmosphere span {
+  position: absolute;
+  width: 62vmax;
+  height: 62vmax;
+  border-radius: 50%;
+  opacity: var(--atmosphere-opacity);
+  filter: blur(90px);
+  animation: drift 52s var(--ease-in-out) infinite alternate;
+}
+.atmosphere span:nth-child(1) { top: -24vmax; left: -14vmax; background: var(--orb-a); }
+.atmosphere span:nth-child(2) { right: -18vmax; bottom: -28vmax; background: var(--orb-b); animation-duration: 64s; animation-delay: -18s; }
+.atmosphere span:nth-child(3) { top: 28%; left: 42%; width: 42vmax; height: 42vmax; background: var(--orb-c); animation-duration: 58s; animation-delay: -30s; }
+
+@keyframes drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(9vmax, 7vmax, 0) scale(1.14); }
+  100% { transform: translate3d(-7vmax, 11vmax, 0) scale(0.9); }
+}
+
+/* ---------- Layout ---------- */
+
 .stage {
+  position: relative;
+  z-index: 1;
   width: 100%;
   display: flex;
-  justify-content: center;
-  animation: enter 180ms var(--ease-focus) both;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
 }
 
-@keyframes enter {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
+.brand {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  color: var(--secondary);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  animation: rise 0.5s var(--ease-out) both;
+}
+
+.brand__orb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #fff 0, color-mix(in srgb, var(--orb-a) 70%, #fff) 28%, var(--orb-b) 66%, var(--orb-c) 100%);
 }
 
 .panel {
@@ -70,120 +138,119 @@ body {
   gap: 18px;
 }
 
-/* ---------- Ring ---------- */
+/* ---------- Orb and progress ring ---------- */
 
 .ring {
   position: relative;
-  width: 132px;
-  height: 132px;
+  width: min(220px, 56vw);
+  aspect-ratio: 1;
   display: grid;
   place-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  animation: orb-in 0.9s var(--ease-out) both;
 }
 
-.ring__svg {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
+.ring > * { grid-area: 1 / 1; }
+
+.ring__halo {
+  width: 92%;
+  height: 92%;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--orb-b) 55%, transparent) 0, transparent 68%);
+  filter: blur(26px);
+  opacity: 0.55;
+  animation: breathe 3.6s ease-in-out infinite;
 }
 
-.ring__track {
-  fill: none;
-  stroke: var(--ring-track);
-  stroke-width: 10;
-}
+.ring__svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+
+.ring__track { fill: none; stroke: var(--ring-track); stroke-width: 2.5; }
 
 .ring__progress {
   fill: none;
   stroke: url(#ringGradient);
-  stroke-width: 10;
+  stroke-width: 3.5;
   stroke-linecap: round;
   stroke-dasharray: 314.159;
   stroke-dashoffset: 314.159;
-  transition: stroke-dashoffset 600ms var(--ease-focus);
+  transition: stroke-dashoffset 600ms var(--ease-out);
 }
 
-/*
- * Two halo layers rather than one. The near layer hugs the stroke; the outer layer is
- * inset negatively so the light spills past the ring instead of being trapped inside it.
- * They breathe together on a 5.6s round trip — slow enough to read as calm rather than
- * as a pulse rate.
- */
-.ring__glow {
-  position: absolute;
+/* The pearl orb of the app, painted with gradients (no WebGL in an extension page). */
+.orb {
+  width: 70%;
+  height: 70%;
   border-radius: 50%;
-  border-style: solid;
-  border-color: transparent;
-  background: conic-gradient(from 180deg, #63b7b0, #6f8cff, #a174e8, #63b7b0);
-  mask: radial-gradient(circle, transparent 58%, #000 60%, #000 78%, transparent 82%);
-  pointer-events: none;
+  background:
+    radial-gradient(circle at 34% 26%, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0) 34%),
+    radial-gradient(circle at 34% 28%, #fff 0, color-mix(in srgb, var(--orb-a) 70%, #fff) 30%, var(--orb-b) 68%, var(--orb-c) 100%);
+  box-shadow:
+    inset -10px -14px 28px color-mix(in srgb, var(--orb-c) 45%, transparent),
+    inset 6px 8px 18px rgb(255 255 255 / 0.35),
+    0 24px 60px -24px var(--orb-b);
+  animation: breathe 3.6s ease-in-out infinite;
 }
 
-.ring__glow--near {
-  inset: 2px;
-  filter: blur(14px);
-  opacity: 0.34;
-  animation: breathe-near 5.6s ease-in-out infinite;
+@keyframes breathe {
+  0%, 100% { transform: scale(0.98); }
+  50% { transform: scale(1.02); }
 }
 
-.ring__glow--outer {
-  inset: -18px;
-  filter: blur(30px);
-  opacity: 0.16;
-  animation: breathe-outer 5.6s ease-in-out infinite;
+@keyframes orb-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: none; }
 }
 
-@keyframes breathe-near {
-  0%, 100% { opacity: 0.26; transform: scale(1); }
-  50% { opacity: 0.46; transform: scale(1.02); }
-}
-
-@keyframes breathe-outer {
-  0%, 100% { opacity: 0.1; transform: scale(1); }
-  50% { opacity: 0.28; transform: scale(1.035); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stage { animation: none; }
-  .ring__glow { animation: none; }
-  .ring__progress { transition: none; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
 }
 
 .ring__label {
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  line-height: 1.1;
+  line-height: 1;
+  color: var(--orb-ink);
 }
 
 .ring__value {
-  font-size: 26px;
-  font-weight: 600;
-  color: #f0f4f6;
+  font-size: clamp(40px, 11vw, 56px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
 }
 
 .ring__unit {
-  font-size: 11px;
-  color: #8f9ca8;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
 }
 
 /* ---------- Copy ---------- */
 
 .headline {
   margin: 0;
-  font-size: 28px;
+  max-width: 22ch;
+  font-size: clamp(26px, 4.2vw, 40px);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+  animation: rise 0.5s 0.15s var(--ease-out) both;
 }
 
 .context {
   margin: 0;
   max-width: 42ch;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.55;
-  color: var(--text-secondary);
+  color: var(--secondary);
+  animation: rise 0.5s 0.25s var(--ease-out) both;
 }
 
 /* ---------- Buttons ---------- */
@@ -193,154 +260,112 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
-  margin-top: 6px;
+  margin-top: 8px;
+  animation: rise 0.5s 0.35s var(--ease-out) both;
 }
 
 .button {
-  min-height: 42px;
-  padding: 0 22px;
-  border-radius: 12px;
+  min-height: 52px;
+  padding: 0 28px;
+  border-radius: 999px;
   border: 1px solid transparent;
   font: inherit;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  transition:
-    background-color 160ms var(--ease-hover),
-    border-color 160ms var(--ease-hover),
-    transform 160ms var(--ease-hover),
-    box-shadow 160ms var(--ease-hover);
+  transition: background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out), color 160ms var(--ease-out);
 }
 
-.button--compact {
-  min-height: 36px;
-  padding: 0 16px;
-}
+.button--compact { min-height: 40px; padding: 0 20px; font-size: 14px; }
 
-/* Hover does not brighten the button, it brings it slightly closer. */
 .button--primary {
-  background: linear-gradient(135deg, #667dff 0%, #766ff2 52%, #9073e8 100%);
-  color: #f8faff;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 88%, #fff), var(--accent));
+  color: var(--accent-text);
+  box-shadow: 0 14px 40px -14px color-mix(in srgb, var(--accent) 70%, transparent), inset 0 1px 0 rgb(255 255 255 / 0.35);
 }
 
-.button--primary:hover {
-  background: linear-gradient(135deg, #7489ff 0%, #9a7cef 100%);
-  transform: scale(1.015);
-}
-
-.button--primary:active {
-  background: linear-gradient(135deg, #566deb 0%, #7d61d3 100%);
-  transform: scale(0.985);
-  transition-duration: 90ms;
-}
+.button--primary:hover { transform: translateY(-1px); }
+.button--primary:active { transform: scale(0.97); transition-duration: 90ms; }
+.button--primary:disabled { opacity: 0.6; cursor: default; transform: none; }
 
 .button--secondary {
-  background: #202934;
-  border-color: #354250;
-  color: #d9e0e6;
+  background: var(--glass);
+  border-color: var(--line);
+  color: var(--text);
+  backdrop-filter: blur(16px);
 }
 
-.button--secondary:hover {
-  background: #27323e;
-  border-color: #455363;
-  color: #f0f3f6;
-}
+.button--secondary:hover { background: var(--glass-strong); }
+.button--secondary:active { transform: scale(0.97); transition-duration: 90ms; }
 
-.button--secondary:active {
-  background: #192129;
-  transform: scale(0.985);
-  transition-duration: 90ms;
-}
+.button--ghost { background: transparent; color: var(--secondary); }
+.button--ghost:hover { color: var(--text); }
 
-.button--ghost {
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-.button--ghost:hover {
-  color: var(--text-primary);
-}
-
-.button:focus-visible {
-  outline: none;
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 4px rgba(102, 125, 255, 0.12);
-}
+/* Same rule as the app: no thick focus ring, a 1px halo for keyboard users (forced colours keep the system ring). */
+.button:focus-visible { outline: none; box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 75%, transparent); }
+.capture__input:focus { outline: none; border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
+@media (forced-colors: active) { .button:focus-visible, .capture__input:focus { outline: 2px solid Highlight; } }
 
 /* ---------- Capture ---------- */
 
 .capture {
-  width: min(420px, 100%);
+  width: min(440px, 100%);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  animation: capture-in 200ms var(--ease-focus) both;
-}
-
-@keyframes capture-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: none; }
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 24px 60px -32px var(--shadow-tint);
+  animation: rise 220ms var(--ease-out) both;
 }
 
 .capture__input {
   width: 100%;
-  min-height: 42px;
-  padding: 0 14px;
-  border-radius: 12px;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
   background: var(--field);
-  border: 1px solid #303c48;
-  color: #e7ecef;
+  border: 1px solid var(--line);
+  color: var(--text);
   font: inherit;
-  font-size: 14px;
-  transition:
-    border-color 200ms var(--ease-focus),
-    box-shadow 200ms var(--ease-focus);
+  font-size: 15px;
 }
 
-.capture__input::placeholder {
-  color: #677481;
-}
+.capture__input::placeholder { color: var(--muted); }
 
-.capture__input:hover {
-  border-color: #3b4856;
-}
+.capture__actions { display: flex; justify-content: center; gap: 8px; }
 
-.capture__input:focus {
-  outline: none;
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 4px rgba(102, 125, 255, 0.14);
-}
-
-.capture__actions {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-
-.capture__feedback {
-  margin: 0;
-  font-size: 13px;
-  color: #a7d8c3;
-}
-
-.capture__feedback[data-state="error"] {
-  color: #eab0b5;
-}
+.capture__feedback { margin: 0; font-size: 14px; color: var(--ok); }
+.capture__feedback[data-state="error"] { color: var(--error); }
 
 /* ---------- Footer ---------- */
 
 .footer {
-  margin-top: 10px;
+  margin-top: 12px;
   padding-top: 18px;
   width: min(460px, 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   gap: 4px;
+  animation: rise 0.5s 0.45s var(--ease-out) both;
 }
 
-.footer p {
-  margin: 0;
-  font-size: 13px;
-  color: var(--text-tertiary);
+.footer p { margin: 0; font-size: 13px; color: var(--muted); }
+.footer p:empty { display: none; }
+
+[hidden] { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .atmosphere span, .ring, .ring__halo, .orb, .brand, .headline, .context, .actions, .capture, .footer { animation: none; }
+  .ring__progress, .button { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .atmosphere, .ring__halo { display: none; }
+  .orb { forced-color-adjust: none; }
+  .button { border: 1px solid ButtonText; }
 }

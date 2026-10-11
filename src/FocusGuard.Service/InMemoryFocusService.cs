@@ -686,9 +686,13 @@ public sealed class InMemoryFocusService : IFocusService
                         or StrictPolicyLoadStatus.FailedOpen
                         or StrictPolicyLoadStatus.Absent)
                 {
+                    // The persistence worker may drop an expired snapshot just before this
+                    // refresh sees the end time; a session that reached its end is Expired.
+                    // Recovered is only an early release (recovery or fail-open).
                     _activeSession = _activeSession with
                     {
                         State = persisted.Status == StrictPolicyLoadStatus.Expired
+                            || nowUtc >= _activeSession.EndUtc
                             ? SessionState.Expired
                             : SessionState.Recovered
                     };

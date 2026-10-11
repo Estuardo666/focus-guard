@@ -19,4 +19,16 @@
   <data name="ShellReady" xml:space="preserve"><value>La interfaz local está cargada.</value></data>
   <data name="BridgeUnavailable" xml:space="preserve"><value>El acceso al servicio está desactivado hasta integrar la autorización de la Fase 4.</value></data>
   <data name="RecoveryCodeFileTitle" xml:space="preserve"><value>Guardar código de recuperación de FocusGuard</value></data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>Abrir FocusGuard</value>
+  </data>
+  <data name="TrayCompact" xml:space="preserve">
+    <value>Vista compacta</value>
+  </data>
+  <data name="TrayQuit" xml:space="preserve">
+    <value>Salir de FocusGuard</value>
+  </data>
+  <data name="TrayRemaining" xml:space="preserve">
+    <value>quedan {minutes} min</value>
+  </data>
 </root>

@@ -10,10 +10,25 @@
     <ApplicationIcon>focusguard.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="../../assets/branding/fonts/Geist-Regular.ttf" Link="Fonts/Geist-Regular.ttf" />
-    <EmbeddedResource Include="../../assets/branding/fonts/Geist-SemiBold.ttf" Link="Fonts/Geist-SemiBold.ttf" />
+    <EmbeddedResource Include="../../assets/branding/fonts/Geist-Regular.ttf" Link="Fonts/Geist-Regular.ttf" LogicalName="SetupFonts/Geist-Regular.ttf" />
+    <EmbeddedResource Include="../../assets/branding/fonts/Geist-SemiBold.ttf" Link="Fonts/Geist-SemiBold.ttf" LogicalName="SetupFonts/Geist-SemiBold.ttf" />
+    <PackageReference Include="Microsoft.Web.WebView2" />
     <EmbeddedResource Include="$(FocusGuardPayloadArchive)"
                       LogicalName="FocusGuard.Payload.zip"
                       Condition="'$(FocusGuardPayloadArchive)' != '' and Exists('$(FocusGuardPayloadArchive)')" />
   </ItemGroup>
+  <!-- The React installer page: built from FocusGuard.UI and embedded, so the elevated Setup never loads UI files from disk. -->
+  <Target Name="BuildSetupUi" BeforeTargets="PrepareForBuild">
+    <Exec Command="npm run build:setup" WorkingDirectory="$(MSBuildThisFileDirectory)../FocusGuard.UI" />
+    <ItemGroup>
+      <EmbeddedResource Include="../FocusGuard.UI/dist-setup/setup.html" LogicalName="SetupUi/setup.html" />
+      <EmbeddedResource Include="../FocusGuard.UI/dist-setup/setup.js" LogicalName="SetupUi/setup.js" />
+      <EmbeddedResource Include="../FocusGuard.UI/dist-setup/setup.css" LogicalName="SetupUi/setup.css" />
+    </ItemGroup>
+  </Target>
+  <Target Name="RemoveUnusedWebView2WpfReference" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Remove="@(Reference)" Condition="'%(Reference.Filename)' == 'Microsoft.Web.WebView2.Wpf'" />
+    </ItemGroup>
+  </Target>
 </Project>

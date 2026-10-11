@@ -6,6 +6,7 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>../FocusGuard.Setup/focusguard.ico</ApplicationIcon>
     <AssemblyName>FocusGuard.UI</AssemblyName>
     <RootNamespace>FocusGuard.Host.Windows</RootNamespace>
     <Nullable>enable</Nullable>
@@ -28,9 +29,10 @@
       <Content Include="../FocusGuard.UI/dist/chunks/ProfileEditor.js" Link="ui/chunks/ProfileEditor.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="../FocusGuard.UI/dist/chunks/SessionHistoryDetail.js" Link="ui/chunks/SessionHistoryDetail.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="../FocusGuard.UI/dist/chunks/DashboardStart.js" Link="ui/chunks/DashboardStart.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/FocusOrbScene.js" Link="ui/chunks/FocusOrbScene.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="../FocusGuard.UI/dist/chunks/jsx-runtime.js" Link="ui/chunks/jsx-runtime.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="../FocusGuard.UI/dist/chunks/CompactFocus.js" Link="ui/chunks/CompactFocus.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="../FocusGuard.UI/dist/chunks/SessionEndExperience.js" Link="ui/chunks/SessionEndExperience.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-      <Content Include="../FocusGuard.UI/dist/chunks/focus-time.js" Link="ui/chunks/focus-time.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="../FocusGuard.UI/dist/chunks/WorkflowViews.js" Link="ui/chunks/WorkflowViews.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="../FocusGuard.UI/dist/chunks/StrictReviewPanel.js" Link="ui/chunks/StrictReviewPanel.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
       <Content Include="../FocusGuard.UI/dist/chunks/strict.js" Link="ui/chunks/strict.js" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />

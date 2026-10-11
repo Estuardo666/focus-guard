@@ -140,3 +140,24 @@ it('keeps capture actions available after a strict session has ended even though
   expect(Array.from(container.querySelectorAll<HTMLButtonElement>('.capture-actions button')).every(button => button.disabled)).toBe(true);
   expect(container.textContent).toContain(en.historyControlsStrict);
 });
+
+it('celebrates a completed session with badges earned only from recorded facts', async () => {
+  snapshot = { ...snapshot, sessionSummary: { ...summary, streakDays: 3, blockedAttempts: 4, focusedMinutes: 50, plannedMinutes: 50 } } as DashboardSnapshot;
+  await act(async () => root.render(<SessionHistoryDetail dashboard={dashboard} connection={connection} sessionId={sessionId}
+    language="en" t={key => en[key]} close={vi.fn()} onRepeat={vi.fn()}/>));
+  expect(container.querySelector('#history-detail-title')?.textContent).toBe(en.achievementCompletedTitle);
+  const badges = Array.from(container.querySelectorAll('.achievement-badges li')).map(item => item.textContent);
+  expect(badges).toEqual([en.badgeComplete, en.badgeStreak.replace('{days}', '3'), en.badgeShield.replace('{count}', '4'), en.badgeDeep, en.badgeIntent]);
+  expect(container.querySelector('.achievement-burst')).not.toBeNull();
+});
+
+it('does not hand out completion badges for a session ended early and shows the share of the plan reached', async () => {
+  snapshot = { ...snapshot, sessionSummary: { ...summary, outcome: 'Stopped', focusedMinutes: 10, plannedMinutes: 40, blockedAttempts: 0, objective: '', streakDays: 6 } } as DashboardSnapshot;
+  await act(async () => root.render(<SessionHistoryDetail dashboard={dashboard} connection={connection} sessionId={sessionId}
+    language="en" t={key => en[key]} close={vi.fn()} onRepeat={vi.fn()}/>));
+  expect(container.querySelector('#history-detail-title')?.textContent).toBe(en.achievementEndedTitle);
+  expect(container.querySelector('.achievement-subtitle')?.textContent).toBe(en.achievementEndedBody.replace('{percent}', '25'));
+  expect(container.querySelector('.achievement-badges')).toBeNull();
+  expect(container.querySelector('.achievement-burst')).toBeNull();
+  expect(container.querySelector('.fact-streak')).toBeNull();
+});

@@ -280,3 +280,88 @@ it('explains why the review action is disabled when the duration or the cycle va
   expect(button(es.reviewSession).disabled).toBe(false);
   expect(container.querySelector('#start-review-hint')).toBeNull();
 });
+it('sends the duration chosen on the focus dial to the service when preparing the review', async () => {
+  const f = fixture(); f.reply(catalog); await render();
+  const slider = container.querySelector<HTMLElement>('[role=slider]')!;
+  expect(slider.getAttribute('aria-valuenow')).toBe('25');
+  await act(async () => button(`50 ${es.minutesShort}`).click());
+  expect(container.querySelector<HTMLInputElement>('input[type=number]')!.value).toBe('50');
+  expect(slider.getAttribute('aria-valuenow')).toBe('50');
+  expect(button(`50 ${es.minutesShort}`).getAttribute('aria-pressed')).toBe('true');
+  await act(async () => { slider.dispatchEvent(new KeyboardEvent('keydown', { key: 'PageUp', bubbles: true })); });
+  await act(async () => button(es.reviewSession).click());
+  expect(f.sent.at(-1)?.method).toBe('session.prepareNormal');
+  expect(f.sent.at(-1)?.params).toMatchObject({ durationSeconds: 55 * 60 });
+});
+it('disables the dial and quick durations while the session cannot be started', async () => {
+  const f = fixture(); f.reply({ ...catalog, pilotEnabled: false }); await render();
+  expect(container.querySelector('[role=slider]')?.getAttribute('aria-disabled')).toBe('true');
+  expect(button(`25 ${es.minutesShort}`).disabled).toBe(true);
+});
+it('offers a five-minute start first so a procrastinating person can begin with the smallest commitment', async () => {
+  const f = fixture(); f.reply(catalog); await render();
+  const chips = Array.from(container.querySelectorAll<HTMLButtonElement>('.quick-durations button')).map(chip => chip.textContent);
+  expect(chips[0]).toBe(`5 ${es.minutesShort}`);
+  await act(async () => button(`5 ${es.minutesShort}`).click());
+  await act(async () => button(es.reviewSession).click());
+  expect(f.sent.at(-1)?.params).toMatchObject({ durationSeconds: 300 });
+});
+it('picks the profile from cards that show what each profile blocks', async () => {
+  const second = { ...catalog.items[0]!, id: '88888888-8888-4888-8888-888888888888', name: 'Reading', applicationRuleCount: 4, websiteRuleCount: 9, blockedApplicationCount: 4, blockedWebsiteCount: 9 };
+  const f = fixture(); f.reply({ ...catalog, items: [catalog.items[0]!, second], total: 2 }); await render();
+  const cards = Array.from(container.querySelectorAll<HTMLLabelElement>('.choice-cards .choice-card'));
+  expect(cards.map(card => card.querySelector('.choice-card-name')?.textContent)).toEqual(['My saved profile', 'Reading']);
+  expect(cards[1]!.querySelector('.choice-card-meta')?.textContent).toBe('49');
+  expect(container.querySelector('[role=radiogroup][aria-labelledby=setup-profile-label]')).not.toBeNull();
+  await act(async () => cards[1]!.querySelector<HTMLInputElement>('input')!.click());
+  await act(async () => button(es.reviewSession).click());
+  expect(f.sent.at(-1)?.params).toMatchObject({ profileId: second.id.replaceAll('-', '') });
+});
+it('keeps blocking and strict mode side by side with their consequences behind info tips', async () => {
+  const f = fixture(); f.reply(catalog); await render();
+  const toggles = container.querySelector('.setup-toggles')!;
+  expect(toggles.querySelectorAll('input[type=checkbox]')).toHaveLength(2);
+  expect(container.querySelector<HTMLLabelElement>('label[for=setup-strict]')?.textContent).toBe(es.strictMode);
+  const strictTip = toggles.querySelector('.strict-mode-option [role=tooltip]')!;
+  expect(strictTip.textContent).toBe(es.strictModeDetail.replace('{minutes}', '15'));
+  await act(async () => toggles.querySelector<HTMLButtonElement>('.strict-mode-option .info-tip-trigger')!.click());
+  expect(container.querySelector<HTMLInputElement>('#setup-strict')!.checked).toBe(false);
+});
+it('builds a custom cycle with steppers and sends the configuration they show', async () => {
+  const f = fixture(); f.reply(catalog); await render();
+  await act(async () => container.querySelectorAll<HTMLInputElement>('input[type=radio]')[1]!.click());
+  const { configuration } = await import('./native/cycle-fixture');
+  await act(async () => f.reply({ items: [{ id: profileId, name: 'Saved', isBuiltIn: false, configuration }], offset: 0, total: 1 }));
+  expect(container.querySelectorAll('.cycle-cards .choice-card')).toHaveLength(1);
+  const details = container.querySelector<HTMLDetailsElement>('.cycle-custom')!;
+  await act(async () => { details.open = true; details.dispatchEvent(new Event('toggle')); });
+  const focusTile = container.querySelector('.cycle-tile[data-tone=focus]')!;
+  await act(async () => focusTile.querySelectorAll<HTMLButtonElement>('.stepper-button')[1]!.click());
+  expect(container.querySelector('.cycle-custom .cycle-total')?.textContent).toBe('2 h 15 min');
+  await act(async () => container.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+  expect(f.sent.at(-1)?.params).toMatchObject({ presetId: null, configuration: { focusSeconds: 1800, shortBreakSeconds: 300, cycleCount: 4 } });
+});
+
+const renderNoReview = async () => act(async () => root.render(<DashboardStart dashboard={dashboard} connection={idle} language="es" t={key => es[key]} refresh={refresh} replay={null} reviewBeforeStart={false}/>));
+it('starts a normal session straight after the service prepares it when the review step is off', async () => {
+  const f = fixture(); f.reply(catalog); await renderNoReview();
+  expect(button(es.startNow)).toBeDefined();
+  await act(async () => container.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+  expect(f.sent.at(-1)?.method).toBe('session.prepareNormal');
+  await act(async () => f.reply(review));
+  expect(f.sent.filter(m => m.method === 'session.startNormal')).toHaveLength(1);
+  expect(f.sent.find(m => m.method === 'session.startNormal')?.params).toMatchObject({ preparationId: review.preparationId });
+  expect(container.querySelector('.normal-review')).toBeNull();
+});
+it('still shows the review when it carries a warning, and always for strict sessions', async () => {
+  const f = fixture(); f.reply(catalog); await renderNoReview();
+  await act(async () => container.querySelector<HTMLInputElement>('#setup-blocking')!.click());
+  await act(async () => container.querySelector('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+  await act(async () => f.reply({ ...review, enforcementEnabled: true, extensionReady: false }));
+  expect(f.sent.filter(m => m.method === 'session.startNormal')).toHaveLength(0);
+  expect(container.querySelector('.normal-review')).not.toBeNull();
+  await act(async () => button(es.cancel).click());
+  await act(async () => container.querySelector<HTMLInputElement>('#setup-strict')!.click());
+  expect(button(es.reviewStrictSession)).toBeDefined();
+  expect(Array.from(container.querySelectorAll('button')).some(b => b.textContent === es.startNow)).toBe(false);
+});

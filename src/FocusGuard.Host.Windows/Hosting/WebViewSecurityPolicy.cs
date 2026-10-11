@@ -21,9 +21,9 @@ public static class WebViewSecurityPolicy
         TryGetUri(candidate, out var uri)
         && IsTrustedOrigin(uri)
         && uri.AbsolutePath is "/index.html" or "/host.js" or "/host.css"
-            or "/chunks/CompactFocus.js" or "/chunks/DashboardStart.js" or "/chunks/PreferencesPanel.js" or "/chunks/ProfileEditor.js"
+            or "/chunks/CompactFocus.js" or "/chunks/DashboardStart.js" or "/chunks/FocusOrbScene.js" or "/chunks/PreferencesPanel.js" or "/chunks/ProfileEditor.js"
             or "/chunks/ScheduleEditor.js" or "/chunks/SessionEndExperience.js" or "/chunks/SessionHistoryDetail.js"
-            or "/chunks/StrictReviewPanel.js" or "/chunks/WorkflowViews.js" or "/chunks/count-label.js" or "/chunks/focus-time.js" or "/chunks/strict.js"
+            or "/chunks/StrictReviewPanel.js" or "/chunks/WorkflowViews.js" or "/chunks/count-label.js" or "/chunks/jsx-runtime.js" or "/chunks/strict.js"
             or "/fonts/Geist-Regular.ttf" or "/fonts/Geist-SemiBold.ttf"
         && string.IsNullOrEmpty(uri.Query)
         && string.IsNullOrEmpty(uri.Fragment)

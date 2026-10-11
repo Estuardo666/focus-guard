@@ -30,6 +30,9 @@ $relativeFiles = @(
     'src/policy-integrity.js',
     'src/status-page.js',
     'src/status-page.css',
+    'fonts/Geist-Regular.ttf',
+    'fonts/Geist-SemiBold.ttf',
+    'fonts/OFL-Geist.txt',
     '_locales/en/messages.json',
     '_locales/es/messages.json'
     'icons/icon-16.png'

@@ -27,7 +27,7 @@ foreach ($package in $distribution.packages) {
     $archive = [IO.Compression.ZipFile]::OpenRead($archivePath)
     try {
         $names = @($archive.Entries | ForEach-Object FullName)
-        foreach ($required in @('manifest.json', '_locales/en/messages.json', '_locales/es/messages.json', 'src/navigation-enforcement.js', 'icons/icon-16.png', 'icons/icon-32.png', 'icons/icon-48.png', 'icons/icon-128.png')) {
+        foreach ($required in @('manifest.json', '_locales/en/messages.json', '_locales/es/messages.json', 'src/navigation-enforcement.js', 'icons/icon-16.png', 'icons/icon-32.png', 'icons/icon-48.png', 'icons/icon-128.png', 'status.html', 'src/status-page.css', 'fonts/Geist-Regular.ttf', 'fonts/Geist-SemiBold.ttf')) {
             if ($names -cnotcontains $required) { throw "$($package.file) is missing $required" }
         }
         if ($names | Where-Object { $_ -match 'node_modules|test/|package-lock|\.pem$|\.key$' }) {

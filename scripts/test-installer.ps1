@@ -13,7 +13,7 @@ foreach ($scriptName in $scripts) {
 $rollbackDrill = Get-Content (Join-Path $PSScriptRoot 'invoke-installer-rollback-drill.ps1') -Raw
 foreach ($contract in @('PackageDirectory', 'PreflightOnly', 'OwnerPresent', 'MachineStateChanged = $false',
     'already elevated PowerShell process', '$drillClient status', 'ipc-policy.json', 'ownerUserSid',
-    'GetOwnerSid', 'exactly one installed Desktop process in the configured owner session',
+    'GetOwnerSid', 'exactly one installed FocusGuard UI process in the configured owner session',
     'ClientMetadataQueryConsent', 'previously recorded client-metadata consent',
     'Injected rollback verification failure after binary replacement.', 'TreeDifferences=$($differences.Count)')) {
     if ($rollbackDrill -notmatch [regex]::Escape($contract)) {
@@ -93,8 +93,10 @@ foreach ($contract in @('--smoke-window-dpi', 'WindowDpiContract', 'GetWindowDpi
     if ($hostProgram -notmatch [regex]::Escape($contract)) { throw "Host DPI smoke contract missing: $contract" }
 }
 $windowDpiSmokeIndex = $hostProgram.IndexOf('if (smokeScenario == HostSmokeScenario.WindowDpiContract)', [StringComparison]::Ordinal)
-$applicationRunIndex = $hostProgram.IndexOf('Application.Run(form)', [StringComparison]::Ordinal)
-if ($windowDpiSmokeIndex -lt 0 -or $applicationRunIndex -lt 0 -or $windowDpiSmokeIndex -gt $applicationRunIndex) {
+$applicationRunIndex = $hostProgram.IndexOf('Application.Run(smokeForm)', [StringComparison]::Ordinal)
+$shellRunIndex = $hostProgram.IndexOf('Application.Run(shell)', [StringComparison]::Ordinal)
+if ($windowDpiSmokeIndex -lt 0 -or $applicationRunIndex -lt 0 -or $shellRunIndex -lt 0 -or
+    $windowDpiSmokeIndex -gt $applicationRunIndex -or $windowDpiSmokeIndex -gt $shellRunIndex) {
     throw 'Window DPI smoke must validate before running the interactive window or starting its services.'
 }
 foreach ($required in @(
@@ -111,6 +113,9 @@ foreach ($required in @(
     'Set-Acl',
     'Rollback also failed',
     'Get-Process -Name ''FocusGuard.Desktop''',
+    'Get-Process -Name ''FocusGuard.UI''',
+    'Stop-Process -Id $hostProcess.Id',
+    'Remove-FocusGuardLegacyDesktopEntry',
     'Get-Process -Name ''FocusGuard.ProcessAgent''',
     'CloseMainWindow',
     'minimized to the notification area',
@@ -131,7 +136,7 @@ foreach ($required in @(
     '--service-health-check'
     'failed the authoritative IPC health check'
     'expected exactly one process'
-    'FocusGuard service passed authoritative IPC health checks; one supervised ProcessAgent and Desktop are running with the verified payload.'
+    'FocusGuard service passed authoritative IPC health checks; one supervised ProcessAgent and the FocusGuard UI are running with the verified payload.'
     'FocusGuard.ProcessAgent'
     'FocusGuard.Desktop'
     '--minimized'
@@ -145,15 +150,22 @@ foreach ($required in @(
     'startMenuShortcut'
     'FocusGuard.lnk'
     'WScript.Shell'
-    '$shortcut.IconLocation = Join-Path $installRoot ''FocusGuard.Desktop.exe'''
+    '$shortcut.IconLocation = Join-Path $installRoot $uiExecutable'
+    '$uiExecutable = ''FocusGuard.UI.exe'''
 )) {
     if ($install -notmatch [regex]::Escape($required)) { throw "Installer is missing required contract: $required" }
+}
+if ($install.Contains('publish\FocusGuard.Desktop') -or $install.Contains("-ExecutablePath (Join-Path `$installRoot 'FocusGuard.Desktop.exe')")) {
+    throw 'Installer still ships or starts the retired Avalonia Desktop app.'
+}
+if ($build -match "'FocusGuard\.Desktop'") {
+    throw 'Build script still publishes the retired Avalonia Desktop app.'
 }
 if ($install -match 'Start-Process -FilePath \$explorer') {
     throw 'Installer still uses explorer.exe command-line launching, which opens Documents instead of FocusGuard.'
 }
 if ($install -match "Start-FocusGuardInteractiveProcess\s+[\s\S]{0,200}-ExecutablePath \(Join-Path \$installRoot 'FocusGuard\.ProcessAgent\.exe'\)") {
-    throw 'Installer still starts ProcessAgent directly instead of letting Desktop supervise one instance.'
+    throw 'Installer still starts ProcessAgent directly instead of letting the UI host supervise one instance.'
 }
 if ($install -notmatch [regex]::Escape('sc.exe failure $serviceName reset= 86400 actions= restart/5000/restart/30000//')) {
     throw 'Installer does not configure bounded service restart after a crash.'
@@ -161,7 +173,7 @@ if ($install -notmatch [regex]::Escape('sc.exe failure $serviceName reset= 86400
 if ($build -notmatch 'FocusGuard.Setup.exe' -or $build -notmatch 'PublishSingleFile=true') {
     throw 'Build script does not publish the graphical FocusGuard.Setup executable.'
 }
-foreach ($required in @('FocusGuard.Payload.zip', 'FocusGuardPayloadArchive', 'Compress-Archive', 'FocusGuard-$Version-Setup.exe', '--package-file-hash', 'stale Desktop payload')) {
+foreach ($required in @('FocusGuard.Payload.zip', 'FocusGuardPayloadArchive', 'Compress-Archive', 'FocusGuard-$Version-Setup.exe', '--package-file-hash', 'stale UI payload')) {
     if ($build -notmatch [regex]::Escape($required)) {
         throw "Build script does not create the standalone Setup payload: $required"
     }
@@ -180,7 +192,8 @@ $setupManifest = Get-Content (Join-Path $repositoryRoot 'src\FocusGuard.Setup\ap
 if ($setupManifest -notmatch 'requireAdministrator') {
     throw 'Graphical setup executable is not configured for UAC elevation.'
 }
-$setupSource = Get-Content (Join-Path $repositoryRoot 'src\FocusGuard.Setup\Program.cs') -Raw
+# The installer operations (PowerShell launch, process closing) are shared by the React and classic windows.
+$setupSource = (Get-Content (Join-Path $repositoryRoot 'src\FocusGuard.Setup\Program.cs') -Raw) + (Get-Content (Join-Path $repositoryRoot 'src\FocusGuard.Setup\SetupOperations.cs') -Raw)
 $embeddedPackageSource = Get-Content (Join-Path $repositoryRoot 'src\FocusGuard.Setup\EmbeddedPackage.cs') -Raw
 $setupProjectSource = Get-Content (Join-Path $repositoryRoot 'src\FocusGuard.Setup\FocusGuard.Setup.csproj') -Raw
 if ($setupSource -notmatch 'TrimEnd\(Path\.DirectorySeparatorChar, Path\.AltDirectorySeparatorChar\)') {
@@ -411,7 +424,7 @@ try {
     foreach ($source in @('chrome.json', 'edge.json', 'focusguard.native.json')) {
         [IO.File]::WriteAllText((Join-Path (Join-Path $packageRoot 'native-messaging') $source), '{}', [Text.UTF8Encoding]::new($false))
     }
-    foreach ($component in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.Desktop', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
+    foreach ($component in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
         $directory = Join-Path $packageRoot "publish\$component"
         New-Item -ItemType Directory -Path $directory -Force | Out-Null
         $executableName = if ($component -eq 'FocusGuard.Host.Windows') { 'FocusGuard.UI.exe' } else { "$component.exe" }
@@ -422,7 +435,7 @@ try {
             [IO.File]::WriteAllText((Join-Path (Join-Path $directory 'ui') 'index.html'), 'host html', [Text.UTF8Encoding]::new($false))
         }
     }
-    foreach ($component in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.Desktop', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
+    foreach ($component in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
         Get-ChildItem -LiteralPath (Join-Path $packageRoot "publish\$component") -File -Force | Copy-Item -Destination $installRoot -Force
     }
     Copy-Item -LiteralPath (Join-Path $packageRoot 'publish\FocusGuard.Host.Windows\ui') -Destination $installRoot -Recurse -Force

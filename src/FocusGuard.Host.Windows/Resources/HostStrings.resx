@@ -19,4 +19,16 @@
   <data name="ShellReady" xml:space="preserve"><value>Local interface loaded.</value></data>
   <data name="BridgeUnavailable" xml:space="preserve"><value>Service access is disabled until Phase 4 authorization is integrated.</value></data>
   <data name="RecoveryCodeFileTitle" xml:space="preserve"><value>Save FocusGuard recovery code</value></data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>Open FocusGuard</value>
+  </data>
+  <data name="TrayCompact" xml:space="preserve">
+    <value>Compact view</value>
+  </data>
+  <data name="TrayQuit" xml:space="preserve">
+    <value>Quit FocusGuard</value>
+  </data>
+  <data name="TrayRemaining" xml:space="preserve">
+    <value>{minutes} min left</value>
+  </data>
 </root>

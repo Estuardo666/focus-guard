@@ -21,6 +21,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/FocusGuard.Host.Windows.Tests/FocusGuard.Host.Windows.Tests.csproj" />
+    <Project Path="tests/FocusGuard.Setup.Tests/FocusGuard.Setup.Tests.csproj" />
     <Project Path="tests/FocusGuard.Ipc.Windows.Tests/FocusGuard.Ipc.Windows.Tests.csproj" />
     <Project Path="tests/FocusGuard.ProcessAgent.Tests/FocusGuard.ProcessAgent.Tests.csproj" />
     <Project Path="tests/FocusGuard.Client.Tests/FocusGuard.Client.Tests.csproj" />

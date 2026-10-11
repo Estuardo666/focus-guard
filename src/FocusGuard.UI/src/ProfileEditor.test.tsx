@@ -30,6 +30,7 @@ beforeEach(() => {
 });
 afterEach(async () => { await act(async () => root.unmount()); profiles.stop(); dashboard.stop(); container.remove(); });
 async function loaded(pilot = true) { const f = fixture(pilot); await render(); await act(async () => f.reply({ ...detail, editingEnabled: pilot })); return f; }
+async function openBreaks() { await act(async () => container.querySelector<HTMLButtonElement>('#break-settings-title')!.click()); return container.querySelector<HTMLElement>('.break-settings')!; }
 async function openProfileSettings() { const panel = container.querySelector<HTMLDetailsElement>('.profile-identity-settings')!; await act(async () => { panel.open = true; }); return panel; }
 it('names profile reload separately from service status refresh', async () => {
   const f = await loaded();
@@ -50,7 +51,7 @@ it('does not duplicate an unresolved application label when it equals the saved 
     presentation: { name: value, path: null, icon: null, resolution: 'Unresolved' }
   };
   await act(async () => f.reply({ ...detail, applications: [rule], applicationTotal: 1 }));
-  const saved = container.querySelector('.saved-rules li')!;
+  const saved = container.querySelector('[aria-labelledby="app-rules-title"] .saved-rules li')!;
   expect(saved.querySelector('strong')?.textContent).toBe(value);
   expect(saved.querySelectorAll('small.rule-target')).toHaveLength(0);
   expect(saved.textContent).toContain(es.Unresolved);
@@ -63,7 +64,7 @@ it('retains the exact stored target when the friendly presentation label differs
     presentation: { name: 'Work app', path: value, icon: null, resolution: 'ExactMatch' }
   };
   await act(async () => f.reply({ ...detail, applications: [rule], applicationTotal: 1 }));
-  const saved = container.querySelector('.saved-rules li')!;
+  const saved = container.querySelector('[aria-labelledby="app-rules-title"] .saved-rules li')!;
   expect(saved.querySelector('strong')?.textContent).toBe('Work app');
   expect(Array.from(saved.querySelectorAll('small.rule-target')).map(node => node.textContent)).toEqual([value]);
 });it('shows saved rule actions and matching kind and never invents installed application entries', async () => {
@@ -74,7 +75,7 @@ it('keeps rule editors before compact profile settings and opens metadata throug
   const settings = container.querySelector<HTMLDetailsElement>('.profile-identity-settings')!;
   expect(settings.open).toBe(false);
   expect(settings.querySelector('summary')?.textContent).toContain('Saved profile');
-  expect(settings.querySelector('summary')?.textContent).toContain(es.profileSettingsSummary);
+  expect(settings.querySelector('summary')?.textContent).toContain(es.customizeProfile);
   const workspace = container.querySelector('.profile-workspace')!;
   expect(Array.from(workspace.children).indexOf(settings)).toBeLessThan(Array.from(workspace.children).findIndex(child => child.matches('.rule-editors')));
   expect(container.querySelector('.profile-identity #profile-name')).not.toBeNull();
@@ -102,13 +103,17 @@ it('explains empty application and website rules before offering more rules', as
   expect(container.textContent).toContain(es.noWebsiteRules);
   expect(container.querySelectorAll('.saved-rule-section h3')).toHaveLength(2);
 });
-it('explains break-only blocks in a collapsed panel and lists their exact targets when opened', async () => {
+it('keeps break-only blocks in their own tab and lists their exact targets when opened', async () => {
   await loaded();
-  const panel = container.querySelector<HTMLDetailsElement>('.break-settings')!;
-  expect(panel.open).toBe(false);
-  expect(panel.querySelector('summary')?.textContent).toContain(es.breakSettingsTitle);
-  expect(panel.querySelector('summary')?.textContent).toContain(`${es.breakApplicationsLabel}: 1`);
-  await act(async () => { panel.open = true; panel.dispatchEvent(new Event('toggle')); });
+  const tab = container.querySelector<HTMLButtonElement>('#break-settings-title')!;
+  expect(tab.getAttribute('role')).toBe('tab');
+  expect(tab.getAttribute('aria-selected')).toBe('false');
+  expect(tab.textContent).toContain(es.breaksTab);
+  expect(tab.querySelector('.rule-tab-count')?.textContent).toBe('2');
+  expect(container.querySelector<HTMLElement>('.break-settings')!.hidden).toBe(true);
+  const panel = await openBreaks();
+  expect(panel.hidden).toBe(false);
+  expect(tab.getAttribute('aria-selected')).toBe('true');
   expect(panel.textContent).toContain(es.breakSettingsDetail);
   expect(panel.textContent).toContain('game.exe');
   expect(panel.textContent).toContain('games.example');
@@ -118,8 +123,7 @@ it('explains break-only blocks in a collapsed panel and lists their exact target
 });
 it('writes break exceptions with their own cycle-settings revision and does not retry conflicts', async () => {
   const f = await loaded();
-  const panel = container.querySelector<HTMLDetailsElement>('.break-settings')!;
-  await act(async () => { panel.open = true; panel.dispatchEvent(new Event('toggle')); });
+  await openBreaks();
   const value = container.querySelector<HTMLInputElement>('#break-application-value')!;
   await act(async () => { const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!; setter.call(value, 'later.exe'); value.dispatchEvent(new Event('input', { bubbles: true })); });
   await act(async () => value.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
@@ -133,8 +137,7 @@ it('writes break exceptions with their own cycle-settings revision and does not 
 });
 it('shows the per-profile default cycle preset and saves it with the cycle-settings revision', async () => {
   const f = await loaded();
-  const panel = container.querySelector<HTMLDetailsElement>('.break-settings')!;
-  await act(async () => { panel.open = true; panel.dispatchEvent(new Event('toggle')); });
+  await openBreaks();
   const presetId = 'a2af4f65-2de8-4e89-a0bc-4c4db6e24a01';
   await act(async () => f.reply({ items: [{ id: presetId, name: 'Pomodoro clásico', isBuiltIn: true,
     configuration: { focusSeconds: 1500, shortBreakSeconds: 300, longBreakSeconds: 900, cyclesBeforeLongBreak: 4,
@@ -184,4 +187,61 @@ it('readonly, stale and pending recovery disable all mutations while retaining r
 it('shows an edit conflict and prevents more writes until the current profile is reloaded', async () => {
   const f = await loaded(); await openProfileSettings(); await act(async () => button('Duplicar perfil').click()); await act(async () => f.reply(null, 'ProfileConflict'));
   expect(container.textContent).toContain('Este perfil cambió en otra ventana'); expect(button('Duplicar perfil').disabled).toBe(true);
+});
+
+it('groups saved rules by effect so blocked and always-allowed targets read separately', async () => {
+  await loaded();
+  const sites = container.querySelector('[aria-labelledby="site-rules-title"]')!;
+  const apps = container.querySelector('[aria-labelledby="app-rules-title"]')!;
+  expect(sites.querySelector('.rule-group:not(.allowed) h4')?.textContent).toBe(es.blockedGroup);
+  expect(sites.querySelector('.rule-group:not(.allowed) .saved-rules')?.textContent).toContain('*.example.com');
+  expect(apps.querySelector('.rule-group.allowed h4')?.textContent).toBe(es.allowedGroup);
+  expect(apps.querySelector('.rule-group.allowed .saved-rules')?.textContent).toContain('C:\\Work');
+  expect(apps.querySelector('.rule-group:not(.allowed)')).toBeNull();
+});
+it('adds a website with the action picked on the segmented control and the displayed revision', async () => {
+  const f = await loaded();
+  const input = container.querySelector<HTMLInputElement>('#website-pattern')!;
+  await act(async () => { const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!; setter.call(input, 'docs.example.com'); input.dispatchEvent(new Event('input', { bubbles: true })); });
+  const allow = container.querySelector<HTMLInputElement>('.rule-quick-add input[type=radio][value=Allow]')!;
+  expect(allow.closest('[role=radiogroup]')?.getAttribute('aria-label')).toBe(es.ruleAction);
+  await act(async () => allow.click());
+  expect(allow.checked).toBe(true);
+  await act(async () => input.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+  expect(f.sent.at(-1)?.method).toBe('profile.website.add');
+  expect(f.sent.at(-1)?.params).toMatchObject({ action: 'Allow', pattern: 'docs.example.com', revision: detail.revision });
+});
+it('summarises what the selected profile blocks in its header', async () => {
+  await loaded();
+  const summary = container.querySelector('.profile-hero summary')!;
+  expect(summary.querySelector('.profile-blocked-line')?.textContent).toContain('1');
+  expect(summary.textContent).toContain('Saved profile');
+});
+
+it('shows one rule kind at a time and moves between tabs with the arrow keys', async () => {
+  await loaded();
+  const sites = container.querySelector<HTMLElement>('#site-rules-title-panel')!;
+  const apps = container.querySelector<HTMLElement>('#app-rules-title-panel')!;
+  expect(sites.hidden).toBe(false); expect(apps.hidden).toBe(true);
+  expect(container.querySelector('[role=tablist]')?.getAttribute('aria-label')).toBe(es.profileRulesLabel);
+  const sitesTab = container.querySelector<HTMLButtonElement>('#site-rules-title')!;
+  expect(sitesTab.querySelector('.rule-tab-count')?.textContent).toBe('1');
+  await act(async () => sitesTab.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })));
+  expect(sites.hidden).toBe(true); expect(apps.hidden).toBe(false);
+  expect(document.activeElement?.id).toBe('app-rules-title');
+  await act(async () => container.querySelector<HTMLButtonElement>('#app-rules-title')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })));
+  expect(sites.hidden).toBe(false);
+});
+it('lists every profile as a card with its rule counts and creates a new one from the last card', async () => {
+  const f = await loaded();
+  const cards = container.querySelectorAll<HTMLButtonElement>('button.profile-card');
+  expect(cards).toHaveLength(1);
+  expect(cards[0]!.getAttribute('aria-pressed')).toBe('true');
+  expect(cards[0]!.querySelector('.profile-card-name')?.textContent).toBe('Saved profile');
+  const name = container.querySelector<HTMLInputElement>('#new-profile-name')!;
+  expect(name.closest('.profile-card.new')).not.toBeNull();
+  await act(async () => { const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!; setter.call(name, 'Lectura'); name.dispatchEvent(new Event('input', { bubbles: true })); });
+  await act(async () => name.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+  expect(f.sent.at(-1)?.method).toBe('profile.create');
+  expect(f.sent.at(-1)?.params).toMatchObject({ name: 'Lectura' });
 });

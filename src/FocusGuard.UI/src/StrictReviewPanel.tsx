@@ -3,6 +3,7 @@ import type { DashboardClient } from './native/dashboard';
 import type { StrictReview } from './native/strict';
 import type es from './locales/es.json';
 import { countLabel } from './locales/count-label';
+import { exitDialog } from './ZenControls';
 
 type Copy = (key: keyof typeof es) => string;
 
@@ -89,14 +90,14 @@ export function StrictReviewPanel({ dashboard, review, language, t, close, objec
   ];
 
   return <dialog ref={dialog} className="strict-review-dialog" aria-labelledby="strict-review-title"
-    onClose={() => { if (!closingForUnmount.current) close(); }}>
+    onCancel={event => { event.preventDefault(); exitDialog(dialog.current, () => dialog.current?.close()); }} onClose={() => { if (!closingForUnmount.current) close(); }}>
     <section className="strict-review-panel">
       <header className="strict-review-heading">
         <div><p className="eyebrow">{t('strictReview')} · {step}/2</p>
           <h2 id="strict-review-title" ref={heading} tabIndex={-1}>{step === 1 ? t('strictSaveRecoveryCode') : t('strictLockUntil').replace('{time}', endText)}</h2>
           <p>{step === 1 ? t('strictRecoveryCodeDetail') : t('strictReviewDetail')}</p>
         </div>
-        <button type="button" className="strict-review-close" disabled={busy} onClick={() => dialog.current?.close()}>{t('cancel')}</button>
+        <button type="button" className="strict-review-close" disabled={busy} onClick={() => exitDialog(dialog.current, () => dialog.current?.close())}>{t('cancel')}</button>
       </header>
 
       {step === 1 ? <div className="strict-review-step">
@@ -110,7 +111,7 @@ export function StrictReviewPanel({ dashboard, review, language, t, close, objec
           <small>{t('strictRecoveryManualUse').replace('{minutes}', String(review.recoveryDelaySeconds / 60))}</small>
         </div>
         <div className="review-actions">
-          <button type="button" disabled={savingCode} onClick={() => dialog.current?.close()}>{t('cancel')}</button>
+          <button type="button" disabled={savingCode} onClick={() => exitDialog(dialog.current, () => dialog.current?.close())}>{t('cancel')}</button>
           <button type="button" disabled={savingCode} onClick={() => void (async () => {
             setSavingCode(true);
             const saved = await dashboard.saveStrictRecoveryCode();
@@ -164,7 +165,7 @@ export function StrictReviewPanel({ dashboard, review, language, t, close, objec
         <ReviewExpiry expiresUtc={review.expiresUtc} t={t}/>
         <div className="review-actions">
           <button type="button" disabled={busy} onClick={() => { setStep(1); setTypedConfirmation(''); setUnsavedWorkConfirmed(false); }}>{t('strictBackToCode')}</button>
-          <button type="button" disabled={busy} onClick={() => dialog.current?.close()}>{t('cancel')}</button>
+          <button type="button" disabled={busy} onClick={() => exitDialog(dialog.current, () => dialog.current?.close())}>{t('cancel')}</button>
           <button type="button" className="danger-action" aria-describedby="strict-confirm-requirements" disabled={busy || !recoverySaved || !unsavedWorkConfirmed || !exactTarget}
             onClick={() => void dashboard.confirmStrict(typedConfirmation, recoverySaved, unsavedWorkConfirmed, objective)}>{busy ? t('strictStarting') : t('strictConfirmButton').replace('{time}', new Intl.DateTimeFormat(language === 'es' ? 'es-EC' : 'en-US', { timeStyle: 'short' }).format(ends))}</button>
         </div>

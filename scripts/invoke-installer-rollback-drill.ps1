@@ -124,7 +124,7 @@ function Get-TreeFingerprint([string]$Root) {
 
 try {
     $before = Get-TreeFingerprint $installRoot
-    $desktopPath = Join-Path $installRoot 'FocusGuard.Desktop.exe'
+    $desktopPath = Join-Path $installRoot 'FocusGuard.UI.exe'
     $ipcPolicyPath = Join-Path $installRoot 'ipc-policy.json'
     if (-not (Test-Path -LiteralPath $ipcPolicyPath -PathType Leaf)) {
         throw 'Rollback drill requires the installed owner-scoped IPC policy.'
@@ -136,7 +136,7 @@ try {
     $expectedSessionId = [Diagnostics.Process]::GetCurrentProcess().SessionId
     $desktopCandidates = @(
         foreach ($candidate in @(Get-CimInstance -ClassName Win32_Process `
-            -Filter "Name = 'FocusGuard.Desktop.exe'" -ErrorAction Stop)) {
+            -Filter "Name = 'FocusGuard.UI.exe'" -ErrorAction Stop)) {
             if ([string]::IsNullOrWhiteSpace([string]$candidate.ExecutablePath) -or
                 -not [IO.Path]::GetFullPath($candidate.ExecutablePath).Equals(
                     [IO.Path]::GetFullPath($desktopPath), [StringComparison]::OrdinalIgnoreCase) -or
@@ -153,11 +153,11 @@ try {
         }
     )
     if ($desktopCandidates.Count -ne 1) {
-        throw 'Rollback drill requires exactly one installed Desktop process in the configured owner session.'
+        throw 'Rollback drill requires exactly one installed FocusGuard UI process in the configured owner session.'
     }
     $desktop = $desktopCandidates[0]
     $desktop.Refresh()
-    if ($desktop.HasExited) { throw 'Installed Desktop exited before installer drill.' }
+    if ($desktop.HasExited) { throw 'Installed FocusGuard UI exited before installer drill.' }
 
     $expectedFailure = $null
     try {
@@ -177,9 +177,9 @@ try {
     $after = Get-TreeFingerprint $installRoot
     $differences = @(Compare-Object $before $after)
     $service = Get-CimInstance Win32_Service -Filter "Name='FocusGuard'"
-    $desktopStillRunning = @(Get-Process -Name 'FocusGuard.Desktop' -ErrorAction SilentlyContinue |
+    $desktopStillRunning = @(Get-Process -Name 'FocusGuard.UI' -ErrorAction SilentlyContinue |
         Where-Object {
-            $_.Path -eq (Join-Path $installRoot 'FocusGuard.Desktop.exe')
+            $_.Path -eq (Join-Path $installRoot 'FocusGuard.UI.exe')
         }).Count -gt 0
     $agentRunning = @(Get-Process -Name 'FocusGuard.ProcessAgent' -ErrorAction SilentlyContinue |
         Where-Object { $_.Path -eq (Join-Path $installRoot 'FocusGuard.ProcessAgent.exe') }).Count -gt 0

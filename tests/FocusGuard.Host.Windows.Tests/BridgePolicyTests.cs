@@ -32,6 +32,9 @@ public sealed class BridgePolicyTests
     [InlineData("https://focusguard.app/host.css", true)]
     [InlineData("https://focusguard.app/chunks/count-label.js", true)]
     [InlineData("https://focusguard.app/chunks/CompactFocus.js", true)]
+    [InlineData("https://focusguard.app/chunks/FocusOrbScene.js", true)]
+    [InlineData("https://focusguard.app/chunks/jsx-runtime.js", true)]
+    [InlineData("https://focusguard.app/chunks/FocusOrbScene.js?x=1", false)]
     [InlineData("https://focusguard.app/index.html", true)]
     [InlineData("https://focusguard.app/assets/app-a1b2.js", false)]
     [InlineData("https://focusguard.app/fonts/Geist-Regular.ttf", true)]
@@ -222,7 +225,14 @@ public sealed class BridgePolicyTests
             {
                 using var form = new MainForm(client,
                     new TestAuthorization(HostAuthorizationState.Authorized), HostSmokeScenario.None);
+                _ = form.Handle;
                 var fullClientSize = form.ClientSize;
+                // Restore returns to the pre-compact bounds kept inside the work area (KeepWindowOnScreen); on a screen
+                // larger than the window this is exactly the original size.
+                var workingArea = System.Windows.Forms.Screen.FromRectangle(form.Bounds).WorkingArea;
+                var restoredClientSize = new System.Drawing.Size(
+                    Math.Min(form.Width, workingArea.Width) - (form.Width - fullClientSize.Width),
+                    Math.Min(form.Height, workingArea.Height) - (form.Height - fullClientSize.Height));
                 var nonClientHeight = Math.Max(0, form.Height - fullClientSize.Height);
                 var compact = form.SetCompactModeAsync(true, CancellationToken.None).GetAwaiter().GetResult();
                 Assert.True(compact.Compact);
@@ -245,7 +255,7 @@ public sealed class BridgePolicyTests
                 Assert.False(restored.Compact);
                 Assert.True(restored.AlwaysOnTop);
                 Assert.True(form.MaximizeBox);
-                Assert.Equal(fullClientSize, form.ClientSize);
+                Assert.Equal(restoredClientSize, form.ClientSize);
                 Assert.Equal(0, client.StatusCalls);
             }
             catch (Exception exception)

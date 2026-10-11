@@ -76,7 +76,6 @@ $browserPackageEntries = @(Get-FocusGuardBrowserPackageEntries -PackageDirectory
 $required = @(
     (Join-Path $packageRoot 'publish\FocusGuard.Service\FocusGuard.Service.exe'),
     (Join-Path $packageRoot 'publish\FocusGuard.Recovery\FocusGuard.Recovery.exe'),
-    (Join-Path $packageRoot 'publish\FocusGuard.Desktop\FocusGuard.Desktop.exe'),
     (Join-Path $packageRoot 'publish\FocusGuard.ProcessAgent\FocusGuard.ProcessAgent.exe'),
     (Join-Path $packageRoot 'publish\FocusGuard.NativeMessaging\FocusGuard.NativeMessaging.exe'),
     (Join-Path $packageRoot 'publish\FocusGuard.Host.Windows\FocusGuard.UI.exe'),
@@ -100,7 +99,9 @@ $ownerHive = 'Registry::HKEY_USERS\' + $ownerIdentity.Value
 $chromeHostRegistry = $ownerHive + '\Software\Google\Chrome\NativeMessagingHosts\com.focusguard.native'
 $edgeHostRegistry = $ownerHive + '\Software\Microsoft\Edge\NativeMessagingHosts\com.focusguard.native'
 $runKey = $ownerHive + '\Software\Microsoft\Windows\CurrentVersion\Run'
+# The sign-in value keeps its historical name so an existing on/off choice carries over; it now starts the React host.
 $desktopRunName = 'FocusGuard.Desktop'
+$uiExecutable = 'FocusGuard.UI.exe'
 $agentRunName = 'FocusGuard.ProcessAgent'
 $startMenuDirectory = Join-Path ${env:ProgramData} 'Microsoft\Windows\Start Menu\Programs'
 $startMenuShortcut = Join-Path $startMenuDirectory 'FocusGuard.lnk'
@@ -437,8 +438,8 @@ function Stop-FocusGuardRuntimeProcesses {
         }
     }
 
-    # Desktop supervises ProcessAgent. Finish closing Desktop before enumerating
-    # agents so the supervisor cannot replace one after this sweep has passed it.
+    # Earlier versions installed the Avalonia Desktop app, which is closed above for upgrades. The UI host supervises
+    # ProcessAgent: finish closing it before enumerating agents so it cannot replace one after this sweep has passed.
     $hostProcesses = @(Get-Process -Name 'FocusGuard.UI' -ErrorAction SilentlyContinue |
         Where-Object {
             try {
@@ -450,7 +451,15 @@ function Stop-FocusGuardRuntimeProcesses {
         $foundAny = $true
         Write-Output "Closing FocusGuard UI process $($hostProcess.Id) before update."
         $null = $hostProcess.CloseMainWindow()
-        try { $hostProcess.WaitForExit(15000) } catch { }
+    }
+    foreach ($hostProcess in $hostProcesses) {
+        try { $hostProcess.WaitForExit(2000) } catch { }
+        if (-not $hostProcess.HasExited) {
+            # Closing the window only hides it to the notification area; the service keeps any session running.
+            Write-Output "FocusGuard UI is in the notification area; stopping its UI process for the update."
+            Stop-Process -Id $hostProcess.Id
+            try { $hostProcess.WaitForExit(15000) } catch { }
+        }
         if (-not $hostProcess.HasExited) {
             throw "FocusGuard UI process $($hostProcess.Id) did not close; no files were replaced."
         }
@@ -534,7 +543,7 @@ function Protect-FocusGuardInstallationTree {
 
 function Copy-FocusGuardComponentsWithRetry {
     # A browser can respawn FocusGuard.NativeMessaging.exe (or the desktop shortcut
-    # can relaunch FocusGuard.Desktop.exe) in the gap between the process sweep above
+    # can relaunch FocusGuard.UI.exe) in the gap between the process sweep above
     # and this copy actually running -- that race is what used to make the first
     # install attempt fail with a locked-file error and force a second, separate
     # "Instalar" click. Retrying the sweep-then-copy pair in one place means that
@@ -542,7 +551,7 @@ function Copy-FocusGuardComponentsWithRetry {
     $maxAttempts = 4
     for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
         try {
-            foreach ($component in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.Desktop', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
+            foreach ($component in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
                 Get-ChildItem -LiteralPath (Join-Path $packageRoot "publish\$component") -Force |
                     Copy-Item -Destination $installRoot -Recurse -Force
             }
@@ -558,10 +567,19 @@ function Copy-FocusGuardComponentsWithRetry {
     }
 }
 
+function Remove-FocusGuardLegacyDesktopEntry {
+    # The Avalonia app is no longer shipped. Remove only its own entry files so nothing can start it again; the backup
+    # taken above still holds them for rollback.
+    foreach ($legacy in @(Get-ChildItem -LiteralPath $installRoot -File -Force -Filter 'FocusGuard.Desktop.*')) {
+        if (($legacy.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'Legacy Desktop reparse entry denied.' }
+        Remove-Item -LiteralPath $legacy.FullName -Force
+    }
+}
+
 function Assert-FocusGuardInstalledPayload {
     $comparisons = @()
     $browserPackageEntries = @(Get-FocusGuardBrowserPackageEntries -PackageDirectory $packageRoot)
-    foreach ($component in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.Desktop', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
+    foreach ($component in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
         $sourceDirectory = Join-Path $packageRoot "publish\$component"
         $comparisons += @(Get-ChildItem -LiteralPath $sourceDirectory -File -Force |
             Where-Object { $_.Name.StartsWith($(if ($component -eq 'FocusGuard.Host.Windows') { 'FocusGuard.UI.' } else { $component + '.' }), [StringComparison]::OrdinalIgnoreCase) } |
@@ -640,7 +658,7 @@ function Wait-FocusGuardSingleInteractiveProcess(
 }
 
 function Assert-FocusGuardServiceResponsive {
-    $binary = Join-Path $installRoot 'FocusGuard.Desktop.exe'
+    $binary = Join-Path $installRoot $uiExecutable
     $expectedSessionId = Get-FocusGuardInteractiveSessionId
     $startedAt = [DateTime]::UtcNow
     [FocusGuardInteractiveShell]::ExecuteFromDesktop(
@@ -648,7 +666,7 @@ function Assert-FocusGuardServiceResponsive {
     $deadline = [DateTime]::UtcNow.AddSeconds(15)
     $probe = $null
     while ($null -eq $probe -and [DateTime]::UtcNow -lt $deadline) {
-        $probe = Get-Process -Name 'FocusGuard.Desktop' -ErrorAction SilentlyContinue | Where-Object {
+        $probe = Get-Process -Name 'FocusGuard.UI' -ErrorAction SilentlyContinue | Where-Object {
             try {
                 $_.StartTime.ToUniversalTime() -ge $startedAt.AddSeconds(-1) -and
                     [IO.Path]::GetFullPath($_.Path).Equals($binary, [StringComparison]::OrdinalIgnoreCase)
@@ -787,6 +805,7 @@ if ($PSCmdlet.ShouldProcess($installRoot, 'Stage FocusGuard binaries and registe
 
         New-Item -ItemType Directory -Path $installRoot, $dataRoot -Force | Out-Null
         Copy-FocusGuardComponentsWithRetry
+        Remove-FocusGuardLegacyDesktopEntry
         $installedNativeManifests = Join-Path $installRoot 'native-messaging'
         $installedBrowserPackages = Join-Path $installRoot 'browser-extension'
         New-Item -ItemType Directory -Path $installedNativeManifests, $installedBrowserPackages -Force | Out-Null
@@ -797,9 +816,9 @@ if ($PSCmdlet.ShouldProcess($installRoot, 'Stage FocusGuard binaries and registe
         New-Item -ItemType Directory -Path $startMenuDirectory -Force | Out-Null
         if (Test-Path -LiteralPath $startMenuShortcut -PathType Leaf) {
             $existingShortcut = (New-Object -ComObject WScript.Shell).CreateShortcut($startMenuShortcut)
-            if (-not [IO.Path]::GetFullPath($existingShortcut.TargetPath).Equals(
-                (Join-Path $installRoot 'FocusGuard.Desktop.exe'),
-                [StringComparison]::OrdinalIgnoreCase)) {
+            $existingTarget = [IO.Path]::GetFullPath($existingShortcut.TargetPath)
+            if (-not ($existingTarget.Equals((Join-Path $installRoot $uiExecutable), [StringComparison]::OrdinalIgnoreCase) -or
+                      $existingTarget.Equals((Join-Path $installRoot 'FocusGuard.Desktop.exe'), [StringComparison]::OrdinalIgnoreCase))) {
                 throw "Refusing to overwrite an unrelated Start Menu shortcut: $startMenuShortcut"
             }
         } else {
@@ -807,15 +826,15 @@ if ($PSCmdlet.ShouldProcess($installRoot, 'Stage FocusGuard binaries and registe
         }
         $shell = New-Object -ComObject WScript.Shell
         $shortcut = $shell.CreateShortcut($startMenuShortcut)
-        $shortcut.TargetPath = Join-Path $installRoot 'FocusGuard.Desktop.exe'
+        $shortcut.TargetPath = Join-Path $installRoot $uiExecutable
         $shortcut.WorkingDirectory = $installRoot
-        $shortcut.IconLocation = Join-Path $installRoot 'FocusGuard.Desktop.exe'
+        $shortcut.IconLocation = Join-Path $installRoot $uiExecutable
         $shortcut.Description = 'Open FocusGuard'
         $shortcut.Save()
         New-Item -Path $runKey -Force | Out-Null
         Set-ItemProperty -Path $runKey -Name $agentRunName -Value ('"' + (Join-Path $installRoot 'FocusGuard.ProcessAgent.exe') + '"')
         if (-not $installExisted -or $null -ne $previousRunRegistrations[$desktopRunName]) {
-            Set-ItemProperty -Path $runKey -Name $desktopRunName -Value ('"' + (Join-Path $installRoot 'FocusGuard.Desktop.exe') + '" --minimized')
+            Set-ItemProperty -Path $runKey -Name $desktopRunName -Value ('"' + (Join-Path $installRoot $uiExecutable) + '" --minimized')
         }
 
         if ($InjectFailureAfterCopyForRollbackTest) {
@@ -883,20 +902,20 @@ if ($PSCmdlet.ShouldProcess($installRoot, 'Stage FocusGuard binaries and registe
         Set-Item -LiteralPath $chromeHostRegistry -Value (Join-Path $installedNativeManifests 'chrome.json')
         Set-Item -LiteralPath $edgeHostRegistry -Value (Join-Path $installedNativeManifests 'edge.json')
         Start-FocusGuardInteractiveProcess `
-            -ExecutablePath (Join-Path $installRoot 'FocusGuard.Desktop.exe') `
-            -ProcessName 'FocusGuard.Desktop' `
+            -ExecutablePath (Join-Path $installRoot $uiExecutable) `
+            -ProcessName 'FocusGuard.UI' `
             -Arguments '--minimized'
         Wait-FocusGuardSingleInteractiveProcess `
             -ExecutablePath (Join-Path $installRoot 'FocusGuard.ProcessAgent.exe') `
             -ProcessName 'FocusGuard.ProcessAgent'
-        Write-Output 'FocusGuard service passed authoritative IPC health checks; one supervised ProcessAgent and Desktop are running with the verified payload.'
+        Write-Output 'FocusGuard service passed authoritative IPC health checks; one supervised ProcessAgent and the FocusGuard UI are running with the verified payload.'
     }
     catch {
         $installationError = $_
         Write-FocusGuardIpcRejectionDiagnostic
         Write-Warning "Installation failed; restoring the previous FocusGuard state."
         try {
-            # A failure can occur after the new registration and Desktop have
+            # A failure can occur after the new registration and the UI have
             # started. Quiesce every respawn source before touching the tree.
             Suspend-FocusGuardNativeHostRegistration
             $null = Stop-FocusGuardRuntimeProcesses

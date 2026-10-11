@@ -105,3 +105,27 @@ it('labels a positive sub-minute total as less than one minute', async () => {
   await act(async () => f.reply(summary(55), null, request));
   expect(container.querySelector('.today-summary article')?.textContent).toContain(en.lessThanOneMinute);
 });
+
+it('groups a session\'s phases into one card, shows the day strip and opens the summary as a sheet', async () => {
+  const f = fixture();
+  await act(async () => f.initialize());
+  await act(async () => f.reply(catalog));
+  await render();
+  const session = '33333333-3333-4333-8333-333333333333', other = '44444444-4444-4444-8444-444444444444';
+  const at = (h: number, m: number) => new Date(2026, 9, 6, h, m).toISOString();
+  const span = (sessionId: string, kind: string, a: string, b: string, completed = true) => ({ sessionId, profileName: 'Saved profile', kind, startUtc: a, endUtc: b, completed });
+  await act(async () => f.reply({ focusSeconds: 3000, completedSessions: 1, timelineTruncated: false, timeline: [
+    span(session, 'Focus', at(9, 0), at(9, 25)), span(session, 'ShortBreak', at(9, 25), at(9, 30)), span(session, 'Focus', at(9, 30), at(9, 55)),
+    span(other, 'Focus', at(11, 0), at(11, 20), false),
+  ] }, null, latestRequest(f.messages)));
+  const cards = container.querySelectorAll('.activity-session');
+  expect(cards).toHaveLength(2);
+  expect(cards[0]!.getAttribute('data-completed')).toBe('true');
+  expect(cards[0]!.textContent).toContain('50 min');
+  expect(cards[0]!.querySelectorAll('.phase-bar > span')).toHaveLength(3);
+  expect(cards[1]!.textContent).toContain(en.sessionEndedEarly);
+  expect(container.querySelectorAll('.day-strip-span')).toHaveLength(4);
+  await act(async () => cards[0]!.querySelector<HTMLButtonElement>('.history-open')!.click());
+  expect(latestRequest(f.messages).method).toBe('session.summary');
+  expect(container.querySelector('dialog.history-sheet')?.getAttribute('aria-label')).toBe(en.sessionSummary);
+});

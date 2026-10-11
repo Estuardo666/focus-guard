@@ -15,6 +15,7 @@ artifacts/
 .codex/
 node_modules/
 src/FocusGuard.UI/dist/
+src/FocusGuard.UI/dist-setup/
 
 # Local application data
 *.db

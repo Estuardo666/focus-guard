@@ -33,3 +33,26 @@ it('shows name/path and adds an opaque catalog entry with the chosen Allow actio
     await act(async () => root.render(<ApplicationsPicker applications={client} enabled={false} t={key => es[key]} add={add}/>)); expect(container.querySelector<HTMLButtonElement>('.catalog-apps button')!.disabled).toBe(true);
   } finally { await act(async () => root.unmount()); client.stop(); container.remove(); vi.useRealTimers(); }
 });
+
+it('searches straight away inline and marks applications that are already rules instead of offering them again', async () => {
+  vi.useFakeTimers(); Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  const target = new EventTarget(); const sent: Record<string, unknown>[] = []; const add = vi.fn(async () => undefined);
+  const transport: WebViewTransport = { addEventListener: target.addEventListener.bind(target), removeEventListener: target.removeEventListener.bind(target), postMessage(v) { sent.push(v as Record<string, unknown>); } };
+  const client = createApplicationsClient(transport); client.start(); const token = '22222222222242228222222222222222';
+  target.dispatchEvent(new MessageEvent('message', { data: { type: 'host.initialize', version: 1, documentToken: token, title: 'FocusGuard', description: 'Local', readyLabel: 'Ready', bridgeUnavailableLabel: 'Unavailable' } }));
+  const container = document.createElement('div'); document.body.append(container); const root = createRoot(container);
+  try {
+    const known = { id: '11111111111141118111111111111111', name: 'Known app', path: 'C:\\Apps\\known.exe', icon: null };
+    const other = { id: '33333333333343338333333333333333', name: 'Other app', path: 'C:\\Apps\\other.exe', icon: null };
+    await act(async () => root.render(<ApplicationsPicker applications={client} enabled inline isAdded={app => app.id === known.id} t={key => es[key]} add={add}/>));
+    expect(container.querySelector('details')).toBeNull();
+    await act(async () => vi.advanceTimersByTime(251));
+    expect(sent).toHaveLength(1);
+    await act(async () => target.dispatchEvent(new MessageEvent('message', { data: { version: 1, requestId: sent.at(-1)!.requestId, documentToken: token, error: null, result: { items: [known, other], offset: 0, total: 2, query: '' } } })));
+    const rows = container.querySelectorAll('.catalog-apps li');
+    expect(rows[0]!.querySelector('button')).toBeNull();
+    expect(rows[0]!.textContent).toContain(es.catalogAdded);
+    await act(async () => rows[1]!.querySelector<HTMLButtonElement>('button')!.click());
+    expect(add).toHaveBeenCalledWith(other, 'Block');
+  } finally { await act(async () => root.unmount()); client.stop(); container.remove(); vi.useRealTimers(); }
+});

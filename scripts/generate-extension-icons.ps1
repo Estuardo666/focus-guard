@@ -6,14 +6,6 @@ if (-not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) { throw "Brand ico
 New-Item -ItemType Directory -Path $iconDirectory -Force | Out-Null
 
 Add-Type -AssemblyName System.Drawing
-Add-Type @'
-using System;
-using System.Runtime.InteropServices;
-public static class IconNative {
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern bool DestroyIcon(IntPtr handle);
-}
-'@
 $source = [Drawing.Bitmap]::new($sourcePath)
 try {
 foreach ($size in @(16, 32, 48, 128)) {
@@ -28,19 +20,36 @@ foreach ($size in @(16, 32, 48, 128)) {
         $bitmap.Save((Join-Path $iconDirectory "icon-$size.png"), [Drawing.Imaging.ImageFormat]::Png)
     } finally { $graphics.Dispose(); $bitmap.Dispose() }
 }
-    $icoBitmap = [Drawing.Bitmap]::new(256, 256, [Drawing.Imaging.PixelFormat]::Format32bppArgb)
-    $icoGraphics = [Drawing.Graphics]::FromImage($icoBitmap)
-    try {
-        $icoGraphics.InterpolationMode = [Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
-        $icoGraphics.DrawImage($source, [Drawing.Rectangle]::new(0, 0, 256, 256))
-        $iconHandle = $icoBitmap.GetHicon()
+    # Multi-resolution .ico with PNG-encoded frames so Windows picks a crisp image at every size.
+    $frameSizes = @(16, 20, 24, 32, 40, 48, 64, 128, 256)
+    $frames = foreach ($frameSize in $frameSizes) {
+        $frame = [Drawing.Bitmap]::new($frameSize, $frameSize, [Drawing.Imaging.PixelFormat]::Format32bppArgb)
+        $frameGraphics = [Drawing.Graphics]::FromImage($frame)
         try {
-            $icon = [Drawing.Icon]::FromHandle($iconHandle)
-            $iconPath = Join-Path $repositoryRoot 'src\FocusGuard.Setup\focusguard.ico'
-            $iconStream = [IO.File]::Open($iconPath, [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::None)
-            try { $icon.Save($iconStream) } finally { $iconStream.Dispose(); $icon.Dispose() }
-        } finally { [IconNative]::DestroyIcon($iconHandle) | Out-Null }
-    } finally { $icoGraphics.Dispose(); $icoBitmap.Dispose() }
+            $frameGraphics.Clear([Drawing.Color]::Transparent)
+            $frameGraphics.InterpolationMode = [Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+            $frameGraphics.PixelOffsetMode = [Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+            $frameGraphics.DrawImage($source, [Drawing.Rectangle]::new(0, 0, $frameSize, $frameSize))
+            $buffer = [IO.MemoryStream]::new()
+            $frame.Save($buffer, [Drawing.Imaging.ImageFormat]::Png)
+            ,$buffer.ToArray()
+        } finally { $frameGraphics.Dispose(); $frame.Dispose() }
+    }
+    $iconPath = Join-Path $repositoryRoot 'src\FocusGuard.Setup\focusguard.ico'
+    $iconStream = [IO.File]::Open($iconPath, [IO.FileMode]::Create, [IO.FileAccess]::Write, [IO.FileShare]::None)
+    $writer = [IO.BinaryWriter]::new($iconStream)
+    try {
+        $writer.Write([uint16]0); $writer.Write([uint16]1); $writer.Write([uint16]$frameSizes.Count)
+        $offset = 6 + 16 * $frameSizes.Count
+        for ($index = 0; $index -lt $frameSizes.Count; $index++) {
+            $dimension = if ($frameSizes[$index] -ge 256) { 0 } else { $frameSizes[$index] }
+            $writer.Write([byte]$dimension); $writer.Write([byte]$dimension); $writer.Write([byte]0); $writer.Write([byte]0)
+            $writer.Write([uint16]1); $writer.Write([uint16]32)
+            $writer.Write([uint32]$frames[$index].Length); $writer.Write([uint32]$offset)
+            $offset += $frames[$index].Length
+        }
+        foreach ($bytes in $frames) { $writer.Write($bytes) }
+    } finally { $writer.Dispose() }
 } finally { $source.Dispose() }
 
 Write-Output "Generated deterministic extension icons in $iconDirectory"

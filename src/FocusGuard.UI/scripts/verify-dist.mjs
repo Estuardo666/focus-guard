@@ -10,7 +10,12 @@ const css = await readFile(resolve(root, 'host.css'), 'utf8');
 const directives = ["default-src 'self'", "script-src 'self'", "style-src 'self'", "img-src 'self'", "font-src 'self'", "connect-src 'none'", "frame-src 'none'", "object-src 'none'", "base-uri 'none'", "form-action 'none'", "worker-src 'none'", "media-src 'none'"];
 const policy = /http-equiv="Content-Security-Policy" content="([^"]+)"/.exec(html)?.[1];
 const chunks = await readdir(resolve(root, 'chunks'));
-if (chunks.sort().join(',') !== 'CompactFocus.js,DashboardStart.js,PreferencesPanel.js,ProfileEditor.js,ScheduleEditor.js,SessionEndExperience.js,SessionHistoryDetail.js,StrictReviewPanel.js,WorkflowViews.js,count-label.js,focus-time.js,strict.js') throw new Error('Unexpected local UI chunks');
+if (chunks.sort().join(',') !== 'CompactFocus.js,DashboardStart.js,FocusOrbScene.js,PreferencesPanel.js,ProfileEditor.js,ScheduleEditor.js,SessionEndExperience.js,SessionHistoryDetail.js,StrictReviewPanel.js,WorkflowViews.js,count-label.js,jsx-runtime.js,strict.js') throw new Error('Unexpected local UI chunks');
+// Every emitted chunk must also be packaged and served by the Windows host, or lazy imports fail only after install.
+const hostSources = await Promise.all(['../FocusGuard.Host.Windows/FocusGuard.Host.Windows.csproj', '../FocusGuard.Host.Windows/Hosting/WebViewSecurityPolicy.cs', '../FocusGuard.Setup/EmbeddedPackage.cs', '../../scripts/build-installer.ps1']
+  .map(path => readFile(resolve(path), 'utf8')));
+const unpackaged = chunks.filter(chunk => hostSources.some(source => !source.includes(chunk)));
+if (unpackaged.length) throw new Error(`UI chunks missing from the host package or resource policy: ${unpackaged.join(', ')}`);
 const chunkScripts = await Promise.all(chunks.map(file => readFile(resolve(root, 'chunks', file), 'utf8')));
 if (!policy || policy.split(';').map(value => value.trim()).filter(Boolean).sort().join(';') !== directives.sort().join(';')
   || !html.includes('/host.js') || !html.includes('/host.css')
@@ -152,9 +157,10 @@ const minimumWindowRules = [
 if (minimumWindowRules.some(rule => !css.includes(rule))) {
   throw new Error('Minimum-window mobile navigation and visible session-action layout rules are missing.');
 }
-if (!css.includes('.session-overview-active{grid-template-columns:minmax(0,1fr) minmax(220px,.38fr)}')
-  || !/@media\s*\(\s*(?:max-width:\s*1000px|width\s*<=\s*1000px)\s*\)\{[^}]*\.session-overview-active(?:,\.session-overview-active>\.facts)?\{grid-template-columns:minmax\(0,1fr\)\}/.test(css)) {
-  throw new Error('Active session channel health must sit beside the session on desktop and stack at narrower widths.');
+// Owner decision (FG-414): channel health sits below the running session at every width.
+if (!css.includes('.session-overview-active{grid-template-columns:minmax(0,1fr)}')
+  || css.includes('.session-overview-active{grid-template-columns:minmax(0,1fr) minmax(220px,.38fr)}')) {
+  throw new Error('Active session channel health must sit below the running session at every width.');
 }
 const forcedSkipFocus = /@media\s*\(\s*forced-colors:\s*active\s*\)\s*\{[^}]*\.skip-link:focus-visible\s*\{([^}]*)\}/i.exec(css)?.[1] ?? '';
 if (!/\.app-shell\s*>\s*\.skip-link:focus\s*~\s*\.main\s*\{\s*padding-top:\s*100px\s*;?\s*\}/.test(css)
@@ -165,10 +171,18 @@ if (!/\.app-shell\s*>\s*\.skip-link:focus\s*~\s*\.main\s*\{\s*padding-top:\s*100
   throw new Error('The visible keyboard skip link must clear the page heading at desktop and compact widths and remain visible in forced colors.');
 }
 console.log('Minimum-window navigation and session-action layout contract verified');
-console.log('Active session channel health layout contract verified');
+console.log('Active session channel health below-session layout contract verified');
 console.log('Keyboard skip-link spacing and forced-colors contract verified');
 console.log('Stored/system reduced-motion contract verified');
 console.log('Strict review dialog centering and motion contract verified');
 console.log('Profile catalog disclosure and accessibility styling verified');
+if (!/@media\s*\(\s*prefers-reduced-transparency:\s*reduce\s*\)\s*\{[^@]*--glass:var\(--surface\)[^@]*backdrop-filter:none!important/.test(css)) {
+  throw new Error('Reduce Transparency must turn glass surfaces into opaque materials (Apple HIG materials).');
+}
+console.log('Reduced-transparency glass fallback verified');
+if (!/@media\s*\(\s*prefers-contrast:\s*more\s*\)\s*\{[^@]*--glass:var\(--surface\)[^@]*backdrop-filter:none!important/.test(css)) {
+  throw new Error('Increased contrast must turn glass into near-solid surfaces with defined borders (apple-design #44).');
+}
+console.log('Increased-contrast surface fallback verified');
 console.log('Local production UI assets and CSP verified');
 

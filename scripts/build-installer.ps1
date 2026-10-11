@@ -22,7 +22,8 @@ if (Test-Path -LiteralPath $outputRoot) {
 }
 New-Item -ItemType Directory -Path $publishRoot -Force | Out-Null
 
-foreach ($project in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.Desktop', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
+# The Avalonia Desktop app is no longer shipped; FocusGuard.UI (FocusGuard.Host.Windows) is the only interface.
+foreach ($project in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.ProcessAgent', 'FocusGuard.NativeMessaging', 'FocusGuard.Host.Windows', 'FocusGuard.DrillClient')) {
     $projectPath = Join-Path $repositoryRoot "src\$project\$project.csproj"
     $destination = Join-Path $publishRoot $project
     & dotnet publish $projectPath --configuration $Configuration --runtime $RuntimeIdentifier `
@@ -74,8 +75,7 @@ $manifest = [ordered]@{
         'uninstall-focusguard.ps1',
         'publish\FocusGuard.Service\FocusGuard.Service.exe',
         'publish\FocusGuard.Recovery\FocusGuard.Recovery.exe',
-        'publish\FocusGuard.Desktop\FocusGuard.Desktop.exe'
-        ,'publish\FocusGuard.ProcessAgent\FocusGuard.ProcessAgent.exe'
+        'publish\FocusGuard.ProcessAgent\FocusGuard.ProcessAgent.exe'
         ,'publish\FocusGuard.NativeMessaging\FocusGuard.NativeMessaging.exe'
         ,'publish\FocusGuard.Host.Windows\FocusGuard.UI.exe'
         ,'publish\FocusGuard.Host.Windows\FocusGuard.UI.dll'
@@ -87,9 +87,10 @@ $manifest = [ordered]@{
         ,'publish\FocusGuard.Host.Windows\ui\chunks\ProfileEditor.js'
         ,'publish\FocusGuard.Host.Windows\ui\chunks\SessionHistoryDetail.js'
         ,'publish\FocusGuard.Host.Windows\ui\chunks\DashboardStart.js'
+        ,'publish\FocusGuard.Host.Windows\ui\chunks\FocusOrbScene.js'
+        ,'publish\FocusGuard.Host.Windows\ui\chunks\jsx-runtime.js'
         ,'publish\FocusGuard.Host.Windows\ui\chunks\CompactFocus.js'
         ,'publish\FocusGuard.Host.Windows\ui\chunks\SessionEndExperience.js'
-        ,'publish\FocusGuard.Host.Windows\ui\chunks\focus-time.js'
         ,'publish\FocusGuard.Host.Windows\ui\chunks\StrictReviewPanel.js'
         ,'publish\FocusGuard.Host.Windows\ui\chunks\WorkflowViews.js'
         ,'publish\FocusGuard.Host.Windows\ui\chunks\strict.js'
@@ -138,24 +139,24 @@ if (Test-Path -LiteralPath $setupPublishRoot) { Remove-Item -LiteralPath $setupP
     "--property:FocusGuardPayloadArchive=$payloadArchive" `
     --output $setupPublishRoot
 if ($LASTEXITCODE -ne 0) { throw "Publishing FocusGuard.Setup failed with exit code $LASTEXITCODE." }
-$embeddedHashReceipt = Join-Path $setupPublishRoot 'embedded-desktop.sha256'
+$embeddedHashReceipt = Join-Path $setupPublishRoot 'embedded-ui.sha256'
 $hashProcess = Start-Process `
     -FilePath (Join-Path $setupPublishRoot 'FocusGuard.Setup.exe') `
     -ArgumentList @(
         '--package-file-hash',
-        '"publish\FocusGuard.Desktop\FocusGuard.Desktop.dll"',
+        '"publish\FocusGuard.Host.Windows\FocusGuard.UI.dll"',
         ('"{0}"' -f $embeddedHashReceipt)) `
     -Wait `
     -PassThru `
     -WindowStyle Hidden
-if ($hashProcess.ExitCode -ne 0) { throw "Reading the embedded Desktop payload failed with exit code $($hashProcess.ExitCode)." }
-if (-not (Test-Path -LiteralPath $embeddedHashReceipt)) { throw 'Standalone Setup did not produce the embedded Desktop hash receipt.' }
-$expectedDesktopHash = (Get-FileHash `
-    -LiteralPath (Join-Path $publishRoot 'FocusGuard.Desktop\FocusGuard.Desktop.dll') `
+if ($hashProcess.ExitCode -ne 0) { throw "Reading the embedded UI payload failed with exit code $($hashProcess.ExitCode)." }
+if (-not (Test-Path -LiteralPath $embeddedHashReceipt)) { throw 'Standalone Setup did not produce the embedded UI hash receipt.' }
+$expectedUiHash = (Get-FileHash `
+    -LiteralPath (Join-Path $publishRoot 'FocusGuard.Host.Windows\FocusGuard.UI.dll') `
     -Algorithm SHA256).Hash
-$embeddedDesktopHash = (Get-Content -LiteralPath $embeddedHashReceipt -Raw).Trim()
-if ($embeddedDesktopHash -ne $expectedDesktopHash) {
-    throw "Standalone Setup embedded a stale Desktop payload. Expected $expectedDesktopHash but found $embeddedDesktopHash."
+$embeddedUiHash = (Get-Content -LiteralPath $embeddedHashReceipt -Raw).Trim()
+if ($embeddedUiHash -ne $expectedUiHash) {
+    throw "Standalone Setup embedded a stale UI payload. Expected $expectedUiHash but found $embeddedUiHash."
 }
 Remove-Item -LiteralPath $embeddedHashReceipt -Force
 foreach ($relative in @(
@@ -168,9 +169,10 @@ foreach ($relative in @(
     'publish\FocusGuard.Host.Windows\ui\chunks\ProfileEditor.js',
     'publish\FocusGuard.Host.Windows\ui\chunks\SessionHistoryDetail.js',
     'publish\FocusGuard.Host.Windows\ui\chunks\DashboardStart.js',
+    'publish\FocusGuard.Host.Windows\ui\chunks\FocusOrbScene.js',
+    'publish\FocusGuard.Host.Windows\ui\chunks\jsx-runtime.js',
     'publish\FocusGuard.Host.Windows\ui\chunks\CompactFocus.js',
     'publish\FocusGuard.Host.Windows\ui\chunks\SessionEndExperience.js',
-    'publish\FocusGuard.Host.Windows\ui\chunks\focus-time.js',
     'publish\FocusGuard.Host.Windows\ui\chunks\StrictReviewPanel.js',
     'publish\FocusGuard.Host.Windows\ui\chunks\WorkflowViews.js',
     'publish\FocusGuard.Host.Windows\ui\chunks\strict.js',

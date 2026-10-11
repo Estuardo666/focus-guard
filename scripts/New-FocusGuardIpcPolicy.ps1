@@ -225,14 +225,17 @@ function New-FocusGuardIpcPolicyManifest {
 
     $binarySpecs = [System.Collections.Generic.List[object]]::new()
     foreach ($required in @(
-        [ordered]@{ role = 'Desktop'; fileName = 'FocusGuard.Desktop.exe'; managedFileName = 'FocusGuard.Desktop.dll' },
+        # The React host is FocusGuard's interface; the Avalonia Desktop app is no longer installed or trusted.
+        [ordered]@{ role = 'WebViewHost'; fileName = 'FocusGuard.UI.exe'; managedFileName = 'FocusGuard.UI.dll' },
         [ordered]@{ role = 'ProcessAgent'; fileName = 'FocusGuard.ProcessAgent.exe'; managedFileName = 'FocusGuard.ProcessAgent.dll' },
         [ordered]@{ role = 'NativeMessaging'; fileName = 'FocusGuard.NativeMessaging.exe'; managedFileName = 'FocusGuard.NativeMessaging.dll' }
     )) {
         $binarySpecs.Add($required)
     }
 
-    foreach ($role in @('WebViewHost', 'Diagnostic')) {
+    # WebViewHost is required now; an explicit optional entry is still validated so old callers fail closed on bad input.
+    $null = Get-FocusGuardOptionalRoleSpec -OptionalBinaries $OptionalBinaries -Role 'WebViewHost'
+    foreach ($role in @('Diagnostic')) {
         $optional = Get-FocusGuardOptionalRoleSpec -OptionalBinaries $OptionalBinaries -Role $role
         if ($null -ne $optional) {
             $binarySpecs.Add([ordered]@{

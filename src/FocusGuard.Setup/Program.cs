@@ -53,7 +53,7 @@ internal static class Program
             var controls = Descendants(form).ToArray();
             RunWithMessagePump(form.ShowSuccessForSmokeTestAsync());
             controls = Descendants(form).ToArray();
-            using var modal = new BlockingProcessesForm([new BlockingProcess(42, "FocusGuard Desktop")]);
+            using var modal = new BlockingProcessesForm([new BlockingProcess(42, "FocusGuard UI")]);
             if (controls.OfType<SetupTitleBar>().SingleOrDefault() is not { Visible: true }
                 || controls.OfType<SetupFooter>().SingleOrDefault() is not { Visible: true }
                 || controls.OfType<ShieldLockControl>().SingleOrDefault() is not { BackColor: var shieldBackground }
@@ -71,8 +71,55 @@ internal static class Program
             return 0;
         }
 
+        var version = ReadPackageVersion(package.PackageDirectory);
+        if (args.Contains("--smoke-web-ui", StringComparer.Ordinal))
+        {
+            using var smoke = new WebSetupForm(package.PackageDirectory, version, smoke: true);
+            using var timeout = new System.Windows.Forms.Timer { Interval = 30_000 };
+            timeout.Tick += (_, _) => smoke.Close();
+            timeout.Start();
+            Application.Run(smoke);
+            return smoke.SmokeSucceeded ? 0 : 3;
+        }
+
+        // The React installer is the default. Without the WebView2 runtime (or with --classic) the classic window runs
+        // the exact same operations.
+        if (!args.Contains("--classic", StringComparer.Ordinal) && WebViewRuntimeAvailable())
+        {
+            var web = new WebSetupForm(package.PackageDirectory, version);
+            Application.Run(web);
+            var fallback = web.FallbackRequested;
+            web.Dispose();
+            if (!fallback) return 0;
+        }
+
         Application.Run(new SetupForm(package.PackageDirectory));
         return 0;
+    }
+
+    private static bool WebViewRuntimeAvailable()
+    {
+        try { return !string.IsNullOrEmpty(Microsoft.Web.WebView2.Core.CoreWebView2Environment.GetAvailableBrowserVersionString()); }
+        catch (Exception exception) when (exception is Microsoft.Web.WebView2.Core.WebView2RuntimeNotFoundException
+                                           or System.Runtime.InteropServices.COMException or DllNotFoundException or BadImageFormatException)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>The version shown to the person, read from the package manifest; "0.0.0" if it cannot be read.</summary>
+    private static string ReadPackageVersion(string packageDirectory)
+    {
+        try
+        {
+            using var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(packageDirectory, "manifest.json")));
+            var version = document.RootElement.TryGetProperty("Version", out var value) ? value.GetString() : null;
+            return version is not null && System.Text.RegularExpressions.Regex.IsMatch(version, @"^\d+(\.\d+){1,3}$") ? version : "0.0.0";
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or System.Text.Json.JsonException or InvalidOperationException)
+        {
+            return "0.0.0";
+        }
     }
 
     private static IEnumerable<Control> Descendants(Control parent)
@@ -101,7 +148,6 @@ internal static class Program
 
 internal sealed class SetupForm : Form
 {
-    private const string FocusGuardServiceDisplayName = "FocusGuard Service";
     private readonly string _packageDirectory;
     private readonly Button _installButton;
     private readonly Button _uninstallButton;
@@ -113,11 +159,13 @@ internal sealed class SetupForm : Form
     private readonly SuccessCheckControl _successCheck;
     private readonly Panel _body;
     private bool _logHasAppeared;
+    private readonly SetupOperations _operations;
 
     public SetupForm(string packageDirectory)
     {
         _packageDirectory = Path.GetFullPath(packageDirectory)
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        _operations = new SetupOperations(_packageDirectory, AppendLog);
 
         SuspendLayout();
         Text = "FocusGuard Setup";
@@ -419,28 +467,14 @@ internal sealed class SetupForm : Form
 
     private async Task<bool> ClearBlockingProcessesAsync()
     {
-        var installRoot = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-            "FocusGuard");
         for (var attempt = 0; attempt < 3; attempt++)
         {
-            var detected = await Task.Run(() => RestartManagerPreflight.FindBlockingProcesses(installRoot));
-            if (detected.Any(IsFocusGuardServiceBlocker))
-            {
-                AppendLog("FocusGuard Service will be stopped gracefully before replacing installed files.");
-            }
-            if (detected.Any(IsNativeMessagingBlocker))
-            {
-                AppendLog("Native Messaging will be suspended and stopped by the installer before replacing installed files.");
-            }
-
-            var blocking = GetProcessesToClose(detected);
+            var blocking = await _operations.FindBlockersAsync();
             if (blocking.Count == 0)
             {
                 return true;
             }
 
-            AppendLog($"Programas detectados usando archivos de FocusGuard: {string.Join(", ", blocking.Select(process => process.ApplicationName))}.");
             using var dialog = new BlockingProcessesForm(blocking);
             if (dialog.ShowDialog(this) != DialogResult.Yes)
             {
@@ -449,7 +483,7 @@ internal sealed class SetupForm : Form
 
             foreach (var process in blocking)
             {
-                CloseProcess(process.ProcessId);
+                _operations.CloseProcess(process.ProcessId);
             }
 
             await Task.Delay(500);
@@ -463,43 +497,12 @@ internal sealed class SetupForm : Form
     {
         var service = new BlockingProcess(42, "FocusGuard Service");
         var nativeMessaging = new BlockingProcess(43, "FocusGuard.NativeMessaging");
-        var application = new BlockingProcess(44, "FocusGuard Desktop");
-        var mixed = GetProcessesToClose([service, nativeMessaging, application]);
-        var serviceOnly = GetProcessesToClose([service]);
-        var nativeMessagingOnly = GetProcessesToClose([nativeMessaging]);
+        var application = new BlockingProcess(44, "FocusGuard UI");
+        var mixed = SetupOperations.GetProcessesToClose([service, nativeMessaging, application]);
+        var serviceOnly = SetupOperations.GetProcessesToClose([service]);
+        var nativeMessagingOnly = SetupOperations.GetProcessesToClose([nativeMessaging]);
         return mixed.Count == 1 && mixed[0].ProcessId == application.ProcessId
             && serviceOnly.Count == 0 && nativeMessagingOnly.Count == 0 ? 0 : 1;
-    }
-
-    private static bool IsFocusGuardServiceBlocker(BlockingProcess process) =>
-        string.Equals(process.ApplicationName, FocusGuardServiceDisplayName, StringComparison.OrdinalIgnoreCase);
-
-    private static bool IsNativeMessagingBlocker(BlockingProcess process) =>
-        string.Equals(process.ApplicationName, "FocusGuard.NativeMessaging", StringComparison.OrdinalIgnoreCase)
-        || string.Equals(process.ApplicationName, "FocusGuard.NativeMessaging.exe", StringComparison.OrdinalIgnoreCase);
-
-    private static IReadOnlyList<BlockingProcess> GetProcessesToClose(IEnumerable<BlockingProcess> detected) =>
-        detected.Where(process => !IsFocusGuardServiceBlocker(process) && !IsNativeMessagingBlocker(process)).ToArray();
-
-    private void CloseProcess(int processId)
-    {
-        try
-        {
-            using var process = Process.GetProcessById(processId);
-            AppendLog($"Cerrando {process.ProcessName} (PID {processId}).");
-            if (!process.CloseMainWindow() || !process.WaitForExit(3000))
-            {
-                process.Kill(entireProcessTree: true);
-                process.WaitForExit(5000);
-            }
-        }
-        catch (Exception exception) when (
-            exception is ArgumentException
-            or InvalidOperationException
-            or System.ComponentModel.Win32Exception)
-        {
-            // The process may already have exited on its own between the scan and here.
-        }
     }
 
     private async Task RunActionAsync(Func<Task> action)
@@ -522,51 +525,7 @@ internal sealed class SetupForm : Form
         }
     }
 
-    private async Task<int> RunPowerShellAsync(string scriptName, string arguments)
-    {
-        var scriptPath = Path.Combine(_packageDirectory, scriptName);
-        if (!File.Exists(scriptPath))
-        {
-            throw new FileNotFoundException($"No se encontró el script del instalador: {scriptPath}");
-        }
-
-        var windowsPowerShellRoot = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.Windows),
-            "System32",
-            "WindowsPowerShell",
-            "v1.0");
-        AppendLog($"> {scriptName}");
-        var startInfo = new ProcessStartInfo
-        {
-            FileName = Path.Combine(windowsPowerShellRoot, "powershell.exe"),
-            Arguments = $"-NoProfile -ExecutionPolicy Bypass -File {Quote(scriptPath)} {arguments}",
-            WorkingDirectory = _packageDirectory,
-            UseShellExecute = false,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            CreateNoWindow = true,
-            StandardOutputEncoding = Encoding.UTF8,
-            StandardErrorEncoding = Encoding.UTF8
-        };
-        // An elevated installer must not auto-import a user-planted module.
-        // All cmdlets used here are available in the Windows PowerShell system modules.
-        startInfo.Environment["PSModulePath"] = Path.Combine(windowsPowerShellRoot, "Modules");
-        using var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
-        process.OutputDataReceived += (_, eventArgs) => AppendLog(eventArgs.Data);
-        process.ErrorDataReceived += (_, eventArgs) => AppendLog(eventArgs.Data);
-        if (!process.Start())
-        {
-            throw new InvalidOperationException("No se pudo iniciar el motor de instalación.");
-        }
-
-        process.BeginOutputReadLine();
-        process.BeginErrorReadLine();
-        await process.WaitForExitAsync();
-        AppendLog(process.ExitCode == 0
-            ? "Operación completada."
-            : $"La operación terminó con código {process.ExitCode}.");
-        return process.ExitCode;
-    }
+    private Task<int> RunPowerShellAsync(string scriptName, string arguments) => _operations.RunPowerShellAsync(scriptName, arguments);
 
     internal Task ShowSuccessForSmokeTestAsync() => ShowSuccessAsync();
 
@@ -663,29 +622,13 @@ internal sealed class SetupForm : Form
 
     private async Task OpenInstalledFocusGuardAsync()
     {
-        var executable = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-            "FocusGuard",
-            "FocusGuard.Desktop.exe");
-        if (!File.Exists(executable))
+        if (_operations.OpenInstalledFocusGuard())
         {
-            AppendLog($"No se encontró FocusGuard en la ruta esperada: {executable}");
-            await ReturnToMainContentAsync();
+            Close();
             return;
         }
 
-        try
-        {
-            Process.Start(new ProcessStartInfo(executable) { UseShellExecute = true });
-            Close();
-        }
-        catch (Exception exception) when (
-            exception is InvalidOperationException
-            or System.ComponentModel.Win32Exception)
-        {
-            AppendLog($"No se pudo abrir FocusGuard: {exception.Message}");
-            await ReturnToMainContentAsync();
-        }
+        await ReturnToMainContentAsync();
     }
 
     private Task ReturnToMainContentAsync() =>
@@ -725,5 +668,5 @@ internal sealed class SetupForm : Form
         }
     }
 
-    private static string Quote(string value) => $"\"{value.Replace("\"", "\\\"", StringComparison.Ordinal)}\"";
+    private static string Quote(string value) => SetupOperations.Quote(value);
 }

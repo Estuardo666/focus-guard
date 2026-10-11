@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { DashboardClient, DashboardSnapshot } from './native/dashboard';
 import { isCycleConfiguration, type CycleConfiguration, type CyclePreset } from './native/cycles';
 import type es from './locales/es.json';
+import { exitDialog } from './ZenControls';
 
 type Copy = (key: keyof typeof es) => string;
 type Draft = { id: string | null; revision: string | null; name: string; config: CycleConfiguration };
@@ -71,7 +72,7 @@ export function CyclePresetManager({ dashboard, state, allowed, t, onSelected }:
   const errorLabel = error === 'CyclePresetConflict' ? t('presetConflict') : error === 'CyclePresetNameConflict' ? t('presetNameConflict') : error === 'CyclePresetReferenced' ? t('presetReferenced') : error === 'CyclePresetBuiltIn' ? t('presetBuiltIn') : error === 'PresetEditorUnavailable' || error === 'Unauthorized' ? t('presetUnavailable') : error === 'OutcomeUnknown' ? t('presetUnknown') : error ? t('presetSaveError') : null;
   return <>
     <button type="button" className="cycle-refresh" disabled={!allowed || !state.cycles || busy} onClick={event => { trigger.current = event.currentTarget; setOpen(true); }} aria-haspopup="dialog">{t('managePresets')}</button>
-    {open && <dialog ref={dialog} className="delete-review preset-manager" aria-labelledby="preset-manager-title" onCancel={event => { event.preventDefault(); setOpen(false); setDraft(null); }}>
+    {open && <dialog ref={dialog} className="delete-review preset-manager" aria-labelledby="preset-manager-title" onCancel={event => { event.preventDefault(); exitDialog(dialog.current, () => { setOpen(false); setDraft(null); }); }}>
       <h2 id="preset-manager-title">{t('managePresets')}</h2>
       <p className="start-note">{t('presetManagerDetail')}</p>
       {!draft ? <>
@@ -110,7 +111,7 @@ export function CyclePresetManager({ dashboard, state, allowed, t, onSelected }:
       {errorLabel && <p className="notice" role="alert">{errorLabel}{error === 'OutcomeUnknown' && <button type="button" disabled={busy} onClick={() => void dashboard.loadCycles(state.cycles?.offset ?? 0)}>{t('refresh')}</button>}</p>}
       {native.presetPhase === 'unknown' && <p className="start-note">{t('presetUnknownNoRetry')}</p>}
       {state.cycles && state.cycles.editingEnabled !== true && <p className="start-note">{t('presetReadOnlyHost')}</p>}
-      <div className="review-actions"><button type="button" autoFocus={!draft} disabled={busy} onClick={() => { setOpen(false); setDraft(null); setDeleteReview(false); }}>{t('close')}</button></div>
+      <div className="review-actions"><button type="button" autoFocus={!draft} disabled={busy} onClick={() => exitDialog(dialog.current, () => { setOpen(false); setDraft(null); setDeleteReview(false); })}>{t('close')}</button></div>
     </dialog>}
   </>;
 }

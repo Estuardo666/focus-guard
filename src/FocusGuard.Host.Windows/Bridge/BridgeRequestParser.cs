@@ -113,6 +113,8 @@ internal sealed partial class BridgeRequestParser
                 request = new(requestId, token, method!, OperationId: captureCommand!.OperationId, CaptureAction: captureCommand);
             else if (TryParsePreferenceCommand(method, parameters, out var preferences))
                 request = new(requestId, token, method!, Preferences: preferences);
+            else if (TryParseAppCommand(method, parameters, out var appCommand))
+                request = new(requestId, token, method!, AppCommand: appCommand);
             else if (TryParseWindowCommand(method, parameters, out var windowCommand))
                 request = new(requestId, token, method!, WindowCommand: windowCommand);
             else if (TryParseStrictSessionCommand(method, parameters, out var strictSession, out var strictActivation,
@@ -140,6 +142,52 @@ internal sealed partial class BridgeRequestParser
     }
 
     private static readonly HashSet<string> EmptyProperties = new(StringComparer.Ordinal);
+
+/// <summary>Sections the shell may open, matching the React navigation keys; anything else is rejected.</summary>
+    internal static readonly HashSet<string> AppSections = new(StringComparer.Ordinal)
+    {
+        "summary", "profiles", "activity", "schedules", "preferences", "connection", "help"
+    };
+
+    private static bool TryParseAppCommand(string? method, JsonElement parameters, out HostAppCommand? command)
+    {
+        command = null;
+        switch (method)
+        {
+            case "app.compact" when HasExactProperties(parameters, EmptyProperties):
+                command = new(HostAppAction.Compact);
+                return true;
+            case "app.quit" when HasExactProperties(parameters, EmptyProperties):
+                command = new(HostAppAction.Quit);
+                return true;
+            case "surface.close" when HasExactProperties(parameters, EmptyProperties):
+                command = new(HostAppAction.CloseSurface);
+                return true;
+            case "surface.ready" when HasExactProperties(parameters, EmptyProperties):
+                command = new(HostAppAction.SurfaceReady);
+                return true;
+            case "app.startup.get" when HasExactProperties(parameters, EmptyProperties):
+                command = new(HostAppAction.StartupGet);
+                return true;
+            case "app.startup.set" when Exact(parameters, "enabled")
+                && parameters.GetProperty("enabled").ValueKind is JsonValueKind.True or JsonValueKind.False:
+                command = new(HostAppAction.StartupSet, Enabled: parameters.GetProperty("enabled").GetBoolean());
+                return true;
+            case "app.open" when Exact(parameters, "section")
+                && parameters.GetProperty("section").ValueKind == JsonValueKind.String
+                && AppSections.Contains(parameters.GetProperty("section").GetString()!):
+                command = new(HostAppAction.Open, parameters.GetProperty("section").GetString());
+                return true;
+            case "app.open" when Exact(parameters, "section", "sessionId")
+                && parameters.GetProperty("section").ValueKind == JsonValueKind.String
+                && parameters.GetProperty("section").GetString() == "activity"
+                && TryGuid(parameters, "sessionId", out var sessionId):
+                command = new(HostAppAction.Open, "activity", sessionId);
+                return true;
+            default:
+                return false;
+        }
+    }
 
     private static bool TryParseWindowCommand(string? method, JsonElement parameters, out HostWindowCommand? command)
     {

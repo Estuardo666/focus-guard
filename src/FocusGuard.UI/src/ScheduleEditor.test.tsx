@@ -209,3 +209,48 @@ it('labels row actions and explains how one-minute schedules keep their schedule
   expect(es.scheduleReviewDetail).toContain('solo el tiempo restante');
   expect(f.messages.some(message => message.method === 'schedule.save')).toBe(false);
 });
+
+it('shows the week at a glance and makes enabling a schedule a reviewed switch', async () => {
+  const f = fixture();
+  await act(async () => f.initialize());
+  await act(async () => f.reply(catalog, null, latestRequest(f.messages)));
+  let load!: Promise<void>;
+  await act(async () => { load = dashboard.loadSchedules(); });
+  const item = { id: '33333333-3333-4333-8333-333333333333', name: 'Weekdays', days: 62, startMinute: 510, timeZoneId: 'SA Pacific Standard Time', enabled: false,
+    profileName: profile.name, durationMinutes: 90, enforcementEnabled: true, nextStartUtc: null, lastOccurrenceUtc: null, lastResult: '',
+    profileId, applicationRuleCount: 1, websiteRuleCount: 1, blockedApplicationRuleCount: 1, blockedWebsiteRuleCount: 0, revision: 'A'.repeat(64) };
+  await act(async () => { f.reply({ items: [item], editingEnabled: true, timeZoneId: 'SA Pacific Standard Time' }, null, latestRequest(f.messages)); await load; });
+  await act(async () => root.render(<ScheduleEditor dashboard={dashboard} connection={connection} language="en" t={key => en[key]}/>));
+  const days = container.querySelectorAll('.week-day');
+  expect(days).toHaveLength(7);
+  expect([...days].map(day => day.querySelectorAll('.week-pill').length)).toEqual([1, 1, 1, 1, 1, 0, 0]);
+  expect(container.querySelector('.schedule-time strong')?.textContent).toBe('08:30');
+  expect([...container.querySelectorAll('.schedule-day-dots span')].map(dot => dot.getAttribute('data-on'))).toEqual(['true', 'true', 'true', 'true', 'true', 'false', 'false']);
+  const toggle = container.querySelector<HTMLButtonElement>('button[role=switch]')!;
+  expect(toggle.getAttribute('aria-checked')).toBe('false');
+  await act(async () => toggle.click());
+  expect(container.querySelector('dialog .schedule-dialog-actions button:last-child')?.textContent).toBe(en.scheduleEnable);
+  expect(container.querySelector('dialog')?.textContent).toContain(en.scheduleEnableConsequence);
+  expect(f.messages.some(message => message.method === 'schedule.enable')).toBe(false);
+});
+
+it('edits days as toggles and picks the profile from cards in the schedule editor', async () => {
+  const f = fixture();
+  await act(async () => f.initialize());
+  await act(async () => f.reply({ ...catalog, items: [profile, { ...profile, id: '55555555-5555-4555-8555-555555555555', name: 'Reading' }], total: 2 }, null, latestRequest(f.messages)));
+  let load!: Promise<void>;
+  await act(async () => { load = dashboard.loadSchedules(); });
+  await act(async () => { f.reply({ items: [], editingEnabled: true, timeZoneId: 'SA Pacific Standard Time' }, null, latestRequest(f.messages)); await load; });
+  await act(async () => root.render(<ScheduleEditor dashboard={dashboard} connection={connection} language="en" t={key => en[key]}/>));
+  await act(async () => [...container.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent?.trim() === en.newSchedule)!.click());
+  const dayToggles = container.querySelectorAll<HTMLLabelElement>('dialog .schedule-days label');
+  expect([...dayToggles].map(label => label.getAttribute('data-on'))).toEqual(['true', 'true', 'true', 'true', 'true', 'false', 'false']);
+  await act(async () => dayToggles[5]!.querySelector('input')!.click());
+  expect(dayToggles[5]!.getAttribute('data-on')).toBe('true');
+  const options = container.querySelectorAll<HTMLInputElement>('dialog input[name=schedule-profile]');
+  expect(options).toHaveLength(2);
+  expect(options[0]!.checked).toBe(true);
+  await act(async () => options[1]!.click());
+  expect(options[1]!.checked).toBe(true);
+  expect(options[1]!.closest('label')?.getAttribute('data-checked')).toBe('true');
+});

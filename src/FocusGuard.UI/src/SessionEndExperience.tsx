@@ -6,6 +6,7 @@ import type { SessionReplayIntent } from './native/replay';
 import type es from './locales/es.json';
 import { SessionHistoryDetailLazy } from './SessionHistoryDetailLazy';
 import { formatSummaryFocusedMinutes } from './focus-time';
+import { exitDialog } from './ZenControls';
 
 type Copy = (key: keyof typeof es) => string;
 
@@ -52,9 +53,9 @@ export function SessionEndExperience({ dashboard, connection, sessionId, mode, l
       <button type="button" className="session-end-open" onClick={() => setShowSummary(true)}>{t('viewSessionSummary')}</button>
       <button type="button" className="session-end-dismiss" aria-label={t('close')} onClick={onClose}>{t('close')}</button>
     </aside>}
-    {showSummary && <dialog ref={dialog} className="session-end-dialog" data-presentation={mode} aria-label={t('sessionSummary')} onClose={() => { if (!closingForUnmount.current) onClose(); }}>
+    {showSummary && <dialog ref={dialog} className="session-end-dialog" data-presentation={mode} aria-label={t('sessionSummary')} onCancel={event => { event.preventDefault(); exitDialog(dialog.current, () => dialog.current?.close()); }} onClose={() => { if (!closingForUnmount.current) onClose(); }}>
       <Suspense fallback={<p role="status">{t('summaryLoading')}</p>}><SessionHistoryDetailLazy dashboard={dashboard} connection={connection} sessionId={sessionId} language={language} t={t}
-        close={() => dialog.current?.close()}
+        close={() => exitDialog(dialog.current, () => dialog.current?.close())}
         onRepeat={replay => { dialog.current?.close(); onRepeat(replay); }}/></Suspense>
     </dialog>}
   </>;

@@ -20,7 +20,9 @@ internal sealed partial class NativeBridgeDispatcher(
     FocusGuard.Client.Preferences.DesktopSettingsStore? settingsStore = null,
     SessionJournalStore? sessionJournalStore = null,
     Func<string, CancellationToken, ValueTask<bool>>? recoveryCodeSaver = null,
-    IHostWindowController? windowController = null)
+    IHostWindowController? windowController = null,
+    IHostShellController? shellController = null,
+    IStartupRegistration? startupRegistration = null)
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly BridgeRequestParser _parser = new();
@@ -51,6 +53,32 @@ internal sealed partial class NativeBridgeDispatcher(
         if (!TryAcceptRequest(request))
         {
             return SerializeError(request, "DuplicateOrRateLimited");
+        }
+
+        if (request.AppCommand is { Action: HostAppAction.StartupGet or HostAppAction.StartupSet } startupCommand)
+        {
+            // Only the main window offers this; the registration writes the signed-in user's Run value, nothing machine-wide.
+            if (startupRegistration is null) return SerializeError(request, "WindowUnavailable");
+            var stored = startupCommand.Action == HostAppAction.StartupGet || startupRegistration.TrySetEnabled(startupCommand.Enabled == true);
+            return JsonSerializer.Serialize(new BridgeAppResponse(BridgeLimits.ProtocolVersion, request.RequestId.ToString("N"),
+                request.DocumentToken, stored ? null : "StartupUnavailable", new HostAppResult(stored, startupRegistration.IsEnabled)), JsonOptions);
+        }
+
+        if (request.AppCommand is { } appCommand)
+        {
+            if (shellController is null) return SerializeError(request, "WindowUnavailable");
+            try
+            {
+                var accepted = await shellController.ExecuteAsync(appCommand, cancellationToken).ConfigureAwait(false);
+                if (!documentLifetime.IsCurrent(lease)) return null;
+                return JsonSerializer.Serialize(new BridgeAppResponse(BridgeLimits.ProtocolVersion, request.RequestId.ToString("N"),
+                    request.DocumentToken, accepted ? null : "WindowUnavailable", new HostAppResult(accepted)), JsonOptions);
+            }
+            catch (Exception exception) when (exception is OperationCanceledException or InvalidOperationException
+                                               or ObjectDisposedException or System.ComponentModel.Win32Exception)
+            {
+                return documentLifetime.IsCurrent(lease) ? SerializeError(request, "WindowUnavailable") : null;
+            }
         }
 
         if (request.WindowCommand is { } windowCommand)
