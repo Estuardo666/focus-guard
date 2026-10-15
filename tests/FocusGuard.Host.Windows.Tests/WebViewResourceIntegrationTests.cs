@@ -152,6 +152,20 @@ public sealed class WebViewResourceIntegrationTests
                         await UntilAsync(async () => await core.ExecuteScriptAsync("!!document.querySelector('.focus-orb canvas')") == "true");
                         if (!idleUi) await UntilAsync(async () => await core.ExecuteScriptAsync("document.querySelector('.app-shell')?.dataset.immersive==='true'") == "true");
                         await CaptureAsync(core, idleUi ? "idle-recovered" : "recovered");
+
+                        var preferencesSelected = await core.ExecuteScriptAsync(
+                            "(()=>{const nav=document.querySelector('#mobile-navigation');if(!nav)return false;nav.value='preferences';nav.dispatchEvent(new Event('change',{bubbles:true}));return true})()");
+                        Assert.Equal("true", preferencesSelected);
+                        await UntilAsync(async () => await core.ExecuteScriptAsync("!!document.querySelector(\"input[name='pref-theme']\")") == "true");
+                        var preferencesCopy = await core.ExecuteScriptAsync(
+                            "JSON.stringify({mode:document.querySelector(\"input[name='pref-theme']\")?.closest('.pref-row')?.querySelector('.pref-copy > span')?.textContent,footnote:document.querySelector('.pref-footnote')?.textContent})");
+                        var preferencesJson = JsonSerializer.Deserialize<string>(preferencesCopy)
+                            ?? throw new InvalidOperationException("WebView returned no preferences copy.");
+                        using var preferencesCopyDocument = JsonDocument.Parse(preferencesJson);
+                        Assert.Equal("Modo claro/oscuro", preferencesCopyDocument.RootElement.GetProperty("mode").GetString());
+                        var preferencesFootnote = preferencesCopyDocument.RootElement.GetProperty("footnote").GetString();
+                        Assert.Contains("paleta de color", preferencesFootnote, StringComparison.Ordinal);
+                        Assert.Contains("estilo del orbe", preferencesFootnote, StringComparison.Ordinal);
                     }
                     complete.TrySetResult();
                 }
