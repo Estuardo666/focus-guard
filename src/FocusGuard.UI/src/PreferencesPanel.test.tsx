@@ -3,6 +3,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { PreferencesPanel } from './PreferencesPanel';
 import type { DashboardClient, DashboardSnapshot } from './native/dashboard';
 import es from './locales/es.json';
+import en from './locales/en.json';
 
 function makeDashboard(state: Partial<DashboardSnapshot>) {
   const snapshot = Object.freeze({ preferences: null, preferencesLoading: false, preferencesError: null, preferencesPhase: 'idle', ...state }) as unknown as DashboardSnapshot;
@@ -99,6 +100,12 @@ describe('PreferencesPanel', () => {
     const dashboard = makeDashboard({ preferences, preferencesPhase: 'idle' } as Partial<DashboardSnapshot>);
     const change = vi.fn();
     await act(async () => root.render(<PreferencesPanel dashboard={dashboard} t={key => es[key]} onSaved={vi.fn()} palette="aurora" onPaletteChange={change}/>));
+    const modeRow = [...container.querySelectorAll('.pref-row')].find(row => row.querySelector('input[name="pref-theme"]'))!;
+    expect(modeRow.querySelector('.pref-copy > span')?.textContent).toBe(es.themeLabel);
+    expect(es.themeLabel).toBe('Modo claro/oscuro');
+    expect(en.themeLabel).toBe('Light/dark mode');
+    expect(container.querySelector('.pref-footnote')?.textContent).toContain('paleta de color');
+    expect(container.querySelector('.pref-footnote')?.textContent).toContain('estilo del orbe');
     const ember = container.querySelector('.pref-ambience [data-swatch=ember]')!;
     expect(ember.textContent).toBe(es.paletteEmber);
     await click(ember);

@@ -4,21 +4,21 @@
 
 ## Paquete candidato
 
-- Setup autónomo: `artifacts/installer/FocusGuard-0.1.182-Setup.exe`
-- SHA-256 del Setup: `0A390D45ED48B036FAFD25FE3A9A6F9205F47D64E17716B07DC29DC45438BAA8`
-- ZIP del menú: `artifacts/installer/FocusGuard-0.1.182-win-x64-menu.zip`
-- SHA-256 del ZIP: `46600F7E5263E6AE434524ADADAE5AFCF57EF0FE3937065ACAB312D47B44C84C`
-- Verificación actual: UI254/254, Host263/263, TypeScript/build, formato, guard de producción, `scripts/test-installer.ps1`, `--package-self-test` y graphify pasan. `.182` aclara que el campo compartido es el modo claro/oscuro; paleta, estilo del orbe y otras preferencias quedan locales. No se ha instalado. La prueba física sigue pendiente.
+- Setup autónomo: `artifacts/installer/FocusGuard-0.1.183-Setup.exe`
+- SHA-256 del Setup: `D4F497C16AE1CE7C0D30A05D527264B9312DEF0C902DBCB54E97FF7949B18F6D`
+- ZIP del menú: `artifacts/installer/FocusGuard-0.1.183-win-x64-menu.zip`
+- SHA-256 del ZIP: `AF74587E8E26BA03B730E990B38860F2D1F00A3279BB2A0CD7264C4636D6B7B0`
+- Verificación actual: UI254/254, TypeScript/build, guard de producción, `scripts/test-installer.ps1`, `--package-self-test` y graphify pasan. Host263/263 y Sync162/162 son las últimas suites verdes de `.182`; `.183` solo cambia textos de UI. Este candidato llama «Modo claro/oscuro» al control de Preferencias y aclara que paleta/orbe quedan locales. No se ha instalado. La prueba física sigue pendiente.
 
 El cursor es opcional mientras el backend no haya sido actualizado. La aceptación física puede validar convergencia automática contra el API actual; no debe registrar como fallo que el servidor aún no devuelva `X-FG-Cursor`. La verificación del cursor contra un backend desplegado queda después del gate físico.
 
-Antes de usarlo en cada PC, comparar el hash del Setup y ZIP con los SHA-256 indicados y anotar la versión observada después de la actualización. Instalar el mismo `.182` en ambas. Mantener la misma cuenta y los vínculos existentes; no cerrar sesión, desvincular ni volver a emparejar.
+Antes de usarlo en cada PC, comparar el hash del Setup y ZIP con los SHA-256 indicados y anotar la versión observada después de la actualización. Instalar el mismo `.183` en ambas. Mantener la misma cuenta y los vínculos existentes; no cerrar sesión, desvincular ni volver a emparejar.
 
 Para comparar los archivos en cada PC, abre PowerShell en la carpeta donde copiaste el paquete y ejecuta:
 
 ```powershell
-Get-FileHash .\FocusGuard-0.1.182-Setup.exe -Algorithm SHA256
-Get-FileHash .\FocusGuard-0.1.182-win-x64-menu.zip -Algorithm SHA256
+Get-FileHash .\FocusGuard-0.1.183-Setup.exe -Algorithm SHA256
+Get-FileHash .\FocusGuard-0.1.183-win-x64-menu.zip -Algorithm SHA256
 ```
 
 Los dos valores deben coincidir exactamente con los SHA-256 de arriba antes de instalar.
@@ -48,18 +48,18 @@ Los dos valores deben coincidir exactamente con los SHA-256 de arriba antes de i
 1. Cuando la sincronización esté estable, pulsar **Reset shared settings… / Restablecer ajustes compartidos…** en el propietario. Revisar en el diálogo nativo los valores actuales y el destino antes de aceptar. Confirmar solo si el preview indica los tres campos esperados.
 2. Esperar a que el hermano reciba el tombstone y aplique los valores predeterminados del modo claro/oscuro, idioma y duración. Comprobar que no cambian la paleta, el estilo del orbe, ninguna sesión de enfoque activa ni los datos locales anotados.
 3. Antes del conflicto de reset, volver a crear un documento compartido activo: en el propietario cambia el idioma a **English** con ambas PCs online y espera a que el hermano también lo muestre. Confirma que sync esté estable y no haya Pending/Conflict. Sin documento activo, el botón de reset se oculta y no se puede generar un nuevo tombstone.
-4. Para cubrir precedencia local en este mismo conflicto, en el propietario activa overrides locales para tema, idioma y duración (por ejemplo, `dark/es/90`) y comprueba que el hermano conserva los valores compartidos. Anota esos valores y deja activos los overrides hasta el paso 7. Si también quieres ejecutar el flujo básico sin overrides, hazlo primero y registra ambos ensayos por separado.
+4. Para cubrir precedencia local en este mismo conflicto, en el propietario activa overrides locales para modo claro/oscuro, idioma y duración (por ejemplo, `dark/es/90`) y comprueba que el hermano conserva los valores compartidos. Anota esos valores y deja activos los overrides hasta el paso 7. Si también quieres ejecutar el flujo básico sin overrides, hazlo primero y registra ambos ensayos por separado.
 5. Desconecta solo el Wi‑Fi del propietario. Allí solicita y confirma **Restablecer ajustes compartidos…** mientras sync está estable, y déjalo offline. En el hermano, cambia el idioma de **English** a **Español**; espera a que se sincronice en línea y comprueba que el propietario siga offline con su reset pendiente.
 6. Reconecta el propietario y espera la revisión que explica que esta PC solicitó un reset mientras otro dispositivo guardó valores nuevos («This PC requested a shared-settings reset while another device saved new values…» / «Esta PC solicitó restablecer los ajustes compartidos mientras otro dispositivo guardó valores nuevos…»). El backoff/Retry-After puede retrasar la revisión.
 7. Elegir **Keep this PC’s reset / Mantener el reset de esta PC** y aplicar. Comprobar que se publica sobre la revisión nueva y que el hermano recibe el tombstone final. Los valores compartidos son defaults. Sin overrides, ambas interfaces los muestran; con overrides activos, el propietario conserva los valores locales anotados y el hermano muestra defaults. Luego, quitar los overrides del propietario y comprobar que adopta los defaults sin otro POST ni nueva revisión. Reglas, perfiles, permisos, historial y preferencias locales deben seguir iguales a la referencia.
 
 ## Cerrar la prueba y restaurar
 
-Antes de cerrar, ejecutar también la aceptación de las integraciones y aclaraciones de UX incluidas hasta `.182`:
+Antes de cerrar, ejecutar también la aceptación de las integraciones y aclaraciones de UX incluidas hasta `.183`:
 
 1. Con sync estable, abrir el diálogo de ajustes exclusivos de esta PC y marcar solo modo claro/oscuro. Cambiarlo localmente; comprobar que el otro equipo conserva su modo compartido. Cambiar idioma/duración y verificar que continúan sincronizándose. Confirmar que paleta y orbe no cambian entre PCs.
-2. Cerrar y reabrir: la excepción de tema debe conservarse. Quitarla y comprobar que esta PC vuelve al último tema compartido sin publicarlo como un cambio nuevo. Cancelar el diálogo debe conservar la selección previa.
-3. Exportar un archivo desde la tarjeta de ajustes portátiles. Revisar que contiene exclusivamente tema, idioma y duración, sin credenciales, identidad, políticas ni rutas. Importarlo en el otro equipo seleccionando solo un campo; comprobar que los otros dos y las preferencias locales se conservan. Si sync está activa, la importación del campo compartido debe converger automáticamente.
+2. Cerrar y reabrir: la excepción de modo claro/oscuro debe conservarse. Quitarla y comprobar que esta PC vuelve al último modo compartido sin publicarlo como un cambio nuevo. Cancelar el diálogo debe conservar la selección previa.
+3. Exportar un archivo desde la tarjeta de ajustes portátiles. Revisar que contiene exclusivamente modo claro/oscuro, idioma y duración, sin credenciales, identidad, paleta, estilo del orbe, políticas ni rutas. Importarlo en el otro equipo seleccionando solo un campo; comprobar que los otros dos y las preferencias locales se conservan. Si sync está activa, la importación del campo compartido debe converger automáticamente.
 4. Repetir la importación sobre un campo con excepción local: debe actualizar solo ese valor en esa PC. El resto de dispositivos conserva el valor global.
 5. En el receptor, conserva una excepción local activa para un campo y desactiva sync. Importa desde el archivo únicamente ese campo; confirma que el nuevo valor local se aplica, el override existente se actualiza, el consentimiento sigue apagado y el otro equipo no recibe el valor. Al reactivar sync, el valor local importado debe seguir conservándose; los otros campos y reglas/perfiles/permisos permanecen intactos.
 
@@ -72,7 +72,7 @@ Registrar estos resultados por separado de la transferencia manual E2EE y de la 
 
 ## Evidencia y recuperación
 
-El estado DPAPI de `.182` incorpora las excepciones locales. Después de que esta versión guarde el outbox, `.174` rechazará ese archivo por el campo nuevo y detendrá sync conservando los datos. Para recuperar sync, volver a `.182` o `.179`; no borrar el archivo ni quitar campos a mano. Esta limitación de downgrade no cambia las preferencias locales ni la fecha de fin de sesiones existentes.
+El estado DPAPI de `.183` incorpora las excepciones locales. Después de que esta versión guarde el outbox, `.174` rechazará ese archivo por el campo nuevo y detendrá sync conservando los datos. Para recuperar sync, volver a `.183` o `.179`; no borrar el archivo ni quitar campos a mano. Esta limitación de downgrade no cambia las preferencias locales ni la fecha de fin de sesiones existentes.
 
 Registrar por cada checkpoint: versión instalada en ambas PCs, estado de cuenta/vínculo, consentimiento sync, valores compartidos antes/después, estado **Pending/Conflict/Enabled**, valores locales que se conservaron y si el reset produjo la revisión esperada. No incluir contraseñas, códigos MFA, recovery kit, access tokens ni claves.
 
@@ -86,7 +86,7 @@ Completar una fila por equipo y checkpoint. Se pueden anotar los valores observa
 
 | Checkpoint | PC propietario | PC hermano | Observación |
 | --- | --- | --- | --- |
-| Setup `.182` y SHA-256 correctos | Pendiente | Pendiente | |
+| Setup `.183` y SHA-256 correctos | Pendiente | Pendiente | |
 | Cuenta iniciada y dispositivo vinculado | Pendiente | Pendiente | |
 | Consentimiento sync activo después de aceptar | Pendiente | Pendiente | |
 | Cambio de modo claro/oscuro convergió automáticamente en ventana abierta | Reportado PASS | Reportado PASS | 30–45 s según propietario |

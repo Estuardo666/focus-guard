@@ -994,13 +994,15 @@ El candidato `.180` añadió texto de consecuencias EN/ES a la confirmación nat
 
 El candidato `.182` aclara en EN/ES que el campo compartido llamado tema es modo claro/oscuro; la paleta (Bruma/Mist u Océano/Ocean) y el estilo del orbe permanecen locales. La precisión aparece en UI, consentimiento nativo, transferencia, exportación, reset e overrides. La regresión del refresco conserva paleta/orbe y el codec global rechaza ambos campos. UI254/254, Host263/263, Sync162/162, build, formato, guard, `test-installer`, self-test y graphify pasan. Setup/ZIP generados y hasheados, no instalados; las últimas suites y pruebas fueron solo de cobertura, no requirieron regenerar el paquete. [Checkpoint](progress/20261015-phase3-settings-scope-clarity.md).
 
+`.183` extiende esa precisión a Preferencias: el selector ahora se llama «Modo claro/oscuro / Light/dark mode» y la nota de compatibilidad con FocusGuard clásico deja claro que paleta y orbe siguen locales a esta app. UI254/254, build/verificaciones de assets, guard, installer tests, self-test y graphify pasan. Host263/263 y Sync162/162 permanecen como suites previas porque no se modificaron esas capas. Setup/ZIP generados y hasheados; no instalados. [Checkpoint](progress/20261015-phase3-preferences-theme-label.md).
+
 1. Documentos cifrados CAS/ETag.
 2. Snapshot/cursor, outbox y avisos.
 3. Edición offline, conflictos y tombstones.
 4. Overrides locales y visualización «Pendiente».
 5. Exportar/restablecer ajustes de forma explícita.
 
-Aceptación: tema, idioma y duración convergen entre dos Windows; las rutas de apps y permisos no se copian.
+Aceptación: modo claro/oscuro, idioma y duración convergen entre dos Windows; las rutas de apps y permisos no se copian.
 
 ### Fase 4 — Bloqueo global normal Windows (8–12 días)
 
@@ -1219,7 +1221,7 @@ Es el primer incremento de validación, no la entrega final del alcance. Despué
 
 Se completa cuando:
 1. Dos Windows se vinculan con aprobación y recuperación E2EE documentada.
-2. Tema, idioma y duración convergen sin copiar permisos ni rutas.
+2. Modo claro/oscuro, idioma y duración convergen sin copiar permisos ni rutas.
 3. Una sesión normal finita se aplica en ambos con ACK de canales reales.
 4. Un equipo offline se muestra pendiente y una orden vencida nunca se aplica.
 5. Cerrar UI o perder cloud no impide expiración.
