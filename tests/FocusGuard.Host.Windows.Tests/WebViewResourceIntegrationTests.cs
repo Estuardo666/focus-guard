@@ -166,6 +166,26 @@ public sealed class WebViewResourceIntegrationTests
                         var preferencesFootnote = preferencesCopyDocument.RootElement.GetProperty("footnote").GetString();
                         Assert.Contains("paleta de color", preferencesFootnote, StringComparison.Ordinal);
                         Assert.Contains("estilo del orbe", preferencesFootnote, StringComparison.Ordinal);
+
+                        form.Width = 720;
+                        form.Height = 480;
+                        await Task.Delay(150);
+                        await core.ExecuteScriptAsync(
+                            "(()=>document.querySelector(\"input[name='pref-theme']\")?.closest('.pref-row')?.querySelector('.pref-copy > span')?.scrollIntoView({block:'center'}))()");
+                        await Task.Delay(100);
+                        var layoutResult = await core.ExecuteScriptAsync(
+                            "JSON.stringify((()=>{const label=document.querySelector(\"input[name='pref-theme']\")?.closest('.pref-row')?.querySelector('.pref-copy > span');const rect=label?.getBoundingClientRect();return {viewport:document.documentElement.clientWidth,left:rect?.left,right:rect?.right,label:label?.textContent}})())");
+                        var layoutJson = JsonSerializer.Deserialize<string>(layoutResult)
+                            ?? throw new InvalidOperationException("WebView returned no Preferences layout.");
+                        using var layoutDocument = JsonDocument.Parse(layoutJson);
+                        var layout = layoutDocument.RootElement;
+                        var viewportWidth = layout.GetProperty("viewport").GetInt32();
+                        var labelLeft = layout.GetProperty("left").GetDouble();
+                        var labelRight = layout.GetProperty("right").GetDouble();
+                        Assert.True(viewportWidth <= 720, $"Unexpected Preferences viewport width: {viewportWidth}.");
+                        Assert.True(labelLeft >= 0 && labelRight <= viewportWidth,
+                            $"Mode label exceeded the Preferences viewport: left={labelLeft}, right={labelRight}, viewport={viewportWidth}.");
+                        Assert.Equal("Modo claro/oscuro", layout.GetProperty("label").GetString());
                     }
                     complete.TrySetResult();
                 }
