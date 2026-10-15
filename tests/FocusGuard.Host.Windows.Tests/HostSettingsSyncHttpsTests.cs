@@ -410,6 +410,21 @@ public sealed class HostSettingsSyncHttpsTests
             Assert.Equal(2, beforeOwnerConflict.Confirmed.Revision);
             Assert.Equal(beforeOwnerConflict.Confirmed, beforeJoinedConflict.Confirmed);
 
+            var ownerConflictOverrides = new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es");
+            var joinedConflictOverrides = new LocalSettingsOverrides(Theme: "light", UiLanguage: "es");
+            var postsBeforeConflictOverrides = Volatile.Read(ref httpPostCount);
+            await ownerSession.Edits.UpdateOverridesAsync(beforeOwnerConflict.Confirmed.Revision,
+                beforeOwnerConflict.LocalOverrides, ownerConflictOverrides, CancellationToken.None,
+                beforeOwnerConflict.Confirmed.EffectiveValues);
+            await joinedSyncSession.Edits.UpdateOverridesAsync(beforeJoinedConflict.Confirmed.Revision,
+                beforeJoinedConflict.LocalOverrides, joinedConflictOverrides, CancellationToken.None,
+                beforeJoinedConflict.Confirmed.EffectiveValues);
+            Assert.Equal(postsBeforeConflictOverrides, Volatile.Read(ref httpPostCount));
+            Assert.Equal(new GlobalSettings(35, "dark", "es"),
+                DesktopSettingsProjection.Extract(ownerPreferences.Load()));
+            Assert.Equal(new GlobalSettings(35, "light", "es"),
+                DesktopSettingsProjection.Extract(joinedPreferences.Load()));
+
             Volatile.Write(ref conflictReadBarrierEnabled, 1);
             await ownerSession.Edits.EditSelectedAsync(
                 beforeOwnerConflict.Confirmed.Values with { DefaultDurationMinutes = 40 },
@@ -475,14 +490,39 @@ public sealed class HostSettingsSyncHttpsTests
             _ = await WaitForStateAsync(winningSession.Outbox,
                 state => state.Confirmed.Revision == 3 && state.Confirmed.Values.DefaultDurationMinutes == winningDuration &&
                     state.Conflicts == SettingsFields.None && !state.Pending, resolvedStop.Token);
-            var ownerAfterConflict = ownerPreferences.Load();
-            var joinedAfterConflict = joinedPreferences.Load();
+            var ownerAfterConflict = await WaitForPreferencesAsync(ownerPreferences,
+                settings => DesktopSettingsProjection.Extract(settings) == new GlobalSettings(winningDuration, "dark", "es"),
+                resolvedStop.Token);
+            var joinedAfterConflict = await WaitForPreferencesAsync(joinedPreferences,
+                settings => DesktopSettingsProjection.Extract(settings) == new GlobalSettings(winningDuration, "light", "es"),
+                resolvedStop.Token);
             Assert.Equal(winningDuration, ownerAfterConflict.LastDurationMinutes);
             Assert.Equal(winningDuration, joinedAfterConflict.LastDurationMinutes);
+            Assert.Equal(AppTheme.Dark, ownerAfterConflict.Theme);
+            Assert.Equal("es", ownerAfterConflict.UiLanguage);
+            Assert.Equal(AppTheme.Light, joinedAfterConflict.Theme);
+            Assert.Equal("es", joinedAfterConflict.UiLanguage);
             Assert.True(ownerAfterConflict.ReduceMotion);
             Assert.False(joinedAfterConflict.ReduceMotion);
             Assert.False(ownerAfterConflict.CyclePhaseNotifications);
             Assert.True(joinedAfterConflict.CyclePhaseNotifications);
+            var ownerResolvedOverrides = await ownerSession.Outbox.LoadAsync();
+            var joinedResolvedOverrides = await joinedSyncSession.Outbox.LoadAsync();
+            Assert.Equal(ownerConflictOverrides, ownerResolvedOverrides!.LocalOverrides);
+            Assert.Equal(joinedConflictOverrides, joinedResolvedOverrides!.LocalOverrides);
+
+            var postsBeforeConflictOverrideRemoval = Volatile.Read(ref httpPostCount);
+            await ownerSession.Edits.UpdateOverridesAsync(ownerResolvedOverrides.Confirmed.Revision,
+                ownerResolvedOverrides.LocalOverrides, new LocalSettingsOverrides(), CancellationToken.None,
+                new GlobalSettings(winningDuration, "dark", "es"));
+            await joinedSyncSession.Edits.UpdateOverridesAsync(joinedResolvedOverrides.Confirmed.Revision,
+                joinedResolvedOverrides.LocalOverrides, new LocalSettingsOverrides(), CancellationToken.None,
+                new GlobalSettings(winningDuration, "light", "es"));
+            Assert.Equal(postsBeforeConflictOverrideRemoval, Volatile.Read(ref httpPostCount));
+            Assert.Equal(new GlobalSettings(winningDuration, "light", "en"),
+                DesktopSettingsProjection.Extract(ownerPreferences.Load()));
+            Assert.Equal(new GlobalSettings(winningDuration, "light", "en"),
+                DesktopSettingsProjection.Extract(joinedPreferences.Load()));
 
             var beforeReset = await ownerSession.Outbox.LoadAsync() ??
                 throw new InvalidOperationException("The owner outbox disappeared before resetting shared settings.");

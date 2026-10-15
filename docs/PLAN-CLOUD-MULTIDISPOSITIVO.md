@@ -986,6 +986,8 @@ Los overrides locales y la exportación portátil se integraron en Windows `.175
 
 La integración HTTPS dual Host también cubre los tres overrides: tema/idioma/duración prevalecen ante una revisión compartida distinta, sobreviven a reconstruir ambas sesiones y a un reset/tombstone global; también permanecen al rebasar el reset tras una edición concurrente del peer. Un test Host adicional cambia una excepción durante la revisión del conflicto antes de aceptar; la rebase conserva el último valor local y no lo publica. El peer recibe el tombstone; al retirar los overrides, el propietario aplica los defaults sin publicar. Reglas, enforcement, movimiento reducido y notificaciones permanecen locales. Es evidencia local; no reemplaza el gate físico pendiente.
 
+El conflicto CAS normal de duración también se probó con tema/idioma overridden en ambos Hosts: ambos mantienen sus valores de presentación mientras converge la duración; retirar las excepciones no genera otro POST.
+
 1. Documentos cifrados CAS/ETag.
 2. Snapshot/cursor, outbox y avisos.
 3. Edición offline, conflictos y tombstones.
