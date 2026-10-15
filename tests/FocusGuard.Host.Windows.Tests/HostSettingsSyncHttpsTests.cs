@@ -696,16 +696,20 @@ public sealed class HostSettingsSyncHttpsTests
             Assert.True(ownerBeforeOverride.Confirmed.Deleted);
             var postsBeforeOverride = Volatile.Read(ref httpPostCount);
             await ownerSession.Edits.UpdateOverridesAsync(ownerBeforeOverride.Confirmed.Revision,
-                ownerBeforeOverride.LocalOverrides, new LocalSettingsOverrides(Theme: "dark"),
+                ownerBeforeOverride.LocalOverrides,
+                new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es", DefaultDurationMinutes: 90),
                 CancellationToken.None, ownerBeforeOverride.LocalOverrides.Apply(ownerBeforeOverride.Confirmed.EffectiveValues));
             var ownerAfterOverride = await ownerSession.Outbox.LoadAsync();
             Assert.NotNull(ownerAfterOverride);
             Assert.Equal(7, ownerAfterOverride.Confirmed.Revision);
-            Assert.Equal(new LocalSettingsOverrides(Theme: "dark"), ownerAfterOverride.LocalOverrides);
+            Assert.Equal(new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es", DefaultDurationMinutes: 90),
+                ownerAfterOverride.LocalOverrides);
             Assert.Null(ownerAfterOverride.Draft);
             Assert.False(ownerAfterOverride.Pending);
             Assert.Equal(postsBeforeOverride, Volatile.Read(ref httpPostCount));
             Assert.Equal(AppTheme.Dark, ownerPreferences.Load().Theme);
+            Assert.Equal("es", ownerPreferences.Load().UiLanguage);
+            Assert.Equal(90, ownerPreferences.Load().LastDurationMinutes);
             Assert.True(ownerPreferences.Load().ReduceMotion);
             Assert.False(ownerPreferences.Load().CyclePhaseNotifications);
             Assert.True(ownerPreferences.Load().EnforcementEnabled);
@@ -758,19 +762,23 @@ public sealed class HostSettingsSyncHttpsTests
                 joinedOverrideReady.Task.WaitAsync(TimeSpan.FromSeconds(5)));
             var ownerAfterOverrideRestart = await ownerSession.Outbox.LoadAsync();
             Assert.NotNull(ownerAfterOverrideRestart);
-            Assert.Equal(new LocalSettingsOverrides(Theme: "dark"), ownerAfterOverrideRestart.LocalOverrides);
+            Assert.Equal(new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es", DefaultDurationMinutes: 90),
+                ownerAfterOverrideRestart.LocalOverrides);
             Assert.Equal(AppTheme.Dark, ownerPreferences.Load().Theme);
+            Assert.Equal("es", ownerPreferences.Load().UiLanguage);
+            Assert.Equal(90, ownerPreferences.Load().LastDurationMinutes);
 
-            // Recreate the shared document from the peer. The owner's local override keeps Dark
-            // while the joined device publishes and applies the new shared Light value.
-            await joinedSyncSession.Edits.EditSelectedAsync(new GlobalSettings(50, "light", "es"),
-                SettingsFields.Theme, new LocalSettingsOverrides(), overrideDeliveryStop.Token);
+            // Recreate the shared document from the peer with different values for all shared fields.
+            // The owner's three local overrides stay effective while the peer applies these globals.
+            var latestSharedValues = new GlobalSettings(35, "light", "en");
+            await joinedSyncSession.Edits.EditSelectedAsync(latestSharedValues,
+                SettingsFields.Theme | SettingsFields.Language | SettingsFields.Duration,
+                new LocalSettingsOverrides(), overrideDeliveryStop.Token);
             Assert.True(ownerSession.NotifyConnectivityRestored());
-            var latestSharedValues = new GlobalSettings(50, "light", "es");
-            SettingsOutbox ownerAfterRemoteTheme;
+            SettingsOutbox ownerAfterRemoteSettings;
             try
             {
-                ownerAfterRemoteTheme = await WaitForStateAsync(ownerSession.Outbox,
+                ownerAfterRemoteSettings = await WaitForStateAsync(ownerSession.Outbox,
                     state => state.Confirmed.Revision == 8 && !state.Confirmed.Deleted &&
                         state.Confirmed.Values == latestSharedValues && !state.Pending, overrideDeliveryStop.Token);
             }
@@ -785,17 +793,24 @@ public sealed class HostSettingsSyncHttpsTests
                     $"joined={Describe(joinedState)}; owner reports=[{string.Join(';', ownerReports)}]; " +
                     $"joined reports=[{string.Join(';', joinedReports)}]; cause={error.Message}");
             }
-            var joinedAfterRemoteTheme = await WaitForStateAsync(joinedSyncSession.Outbox,
+            var joinedAfterRemoteSettings = await WaitForStateAsync(joinedSyncSession.Outbox,
                 state => state.Confirmed.Revision == 8 && !state.Confirmed.Deleted &&
                     state.Confirmed.Values == latestSharedValues && !state.Pending, overrideDeliveryStop.Token);
-            _ = await WaitForPreferencesAsync(ownerPreferences, settings => settings.Theme == AppTheme.Dark,
+            _ = await WaitForPreferencesAsync(ownerPreferences, settings =>
+                    DesktopSettingsProjection.Extract(settings) == new GlobalSettings(90, "dark", "es"),
                 overrideDeliveryStop.Token);
-            _ = await WaitForPreferencesAsync(joinedPreferences, settings => settings.Theme == AppTheme.Light,
+            _ = await WaitForPreferencesAsync(joinedPreferences, settings =>
+                    DesktopSettingsProjection.Extract(settings) == latestSharedValues,
                 overrideDeliveryStop.Token);
-            Assert.Equal(new LocalSettingsOverrides(Theme: "dark"), ownerAfterRemoteTheme.LocalOverrides);
-            Assert.Equal(new LocalSettingsOverrides(), joinedAfterRemoteTheme.LocalOverrides);
+            Assert.Equal(new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es", DefaultDurationMinutes: 90),
+                ownerAfterRemoteSettings.LocalOverrides);
+            Assert.Equal(new LocalSettingsOverrides(), joinedAfterRemoteSettings.LocalOverrides);
             Assert.Equal(AppTheme.Dark, ownerPreferences.Load().Theme);
+            Assert.Equal("es", ownerPreferences.Load().UiLanguage);
+            Assert.Equal(90, ownerPreferences.Load().LastDurationMinutes);
             Assert.Equal(AppTheme.Light, joinedPreferences.Load().Theme);
+            Assert.Equal("en", joinedPreferences.Load().UiLanguage);
+            Assert.Equal(35, joinedPreferences.Load().LastDurationMinutes);
             Assert.True(ownerPreferences.Load().ReduceMotion);
             Assert.False(ownerPreferences.Load().CyclePhaseNotifications);
             Assert.True(ownerPreferences.Load().EnforcementEnabled);
@@ -808,7 +823,7 @@ public sealed class HostSettingsSyncHttpsTests
                 throw new InvalidOperationException("The owner outbox disappeared before clearing its override.");
             await ownerSession.Edits.UpdateOverridesAsync(ownerBeforeClearingOverride.Confirmed.Revision,
                 ownerBeforeClearingOverride.LocalOverrides, new LocalSettingsOverrides(), CancellationToken.None,
-                new GlobalSettings(50, "dark", "es"));
+                new GlobalSettings(90, "dark", "es"));
             var ownerAfterClearingOverride = await ownerSession.Outbox.LoadAsync();
             Assert.NotNull(ownerAfterClearingOverride);
             Assert.Equal(8, ownerAfterClearingOverride.Confirmed.Revision);
@@ -817,8 +832,8 @@ public sealed class HostSettingsSyncHttpsTests
             Assert.Null(ownerAfterClearingOverride.Draft);
             Assert.Null(ownerAfterClearingOverride.InFlight);
             Assert.False(ownerAfterClearingOverride.Pending);
-            Assert.Equal(AppTheme.Light, ownerPreferences.Load().Theme);
-            Assert.Equal(AppTheme.Light, joinedPreferences.Load().Theme);
+            Assert.Equal(latestSharedValues, DesktopSettingsProjection.Extract(ownerPreferences.Load()));
+            Assert.Equal(latestSharedValues, DesktopSettingsProjection.Extract(joinedPreferences.Load()));
             Assert.Equal(postsAfterRemoteTheme, Volatile.Read(ref httpPostCount));
 
             lock (ledgerLock)
