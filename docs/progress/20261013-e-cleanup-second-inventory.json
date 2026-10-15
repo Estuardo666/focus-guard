@@ -1,0 +1,362 @@
+[
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\artifacts\\cloud-phase0\\android-vm\\downloads",
+    "Directory": true,
+    "Bytes": 1720264906.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\artifacts\\cloud-phase0\\android-vm\\emulator-backup-37.2.12-20261013",
+    "Directory": true,
+    "Bytes": 518036902.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\artifacts\\installer\\FocusGuard-0.1.156",
+    "Directory": true,
+    "Bytes": 962798047.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\artifacts\\installer\\FocusGuard-0.1.156-Setup.exe",
+    "Directory": false,
+    "Bytes": 379712424.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\artifacts\\installer\\FocusGuard-0.1.156-win-x64.zip",
+    "Directory": false,
+    "Bytes": 570735799.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\artifacts\\setup-payload\\0.1.156",
+    "Directory": true,
+    "Bytes": 261741649.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\artifacts\\setup-publish\\0.1.156",
+    "Directory": true,
+    "Bytes": 380400152.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Application\\bin",
+    "Directory": true,
+    "Bytes": 29128.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Application\\obj",
+    "Directory": true,
+    "Bytes": 152107.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Client\\bin",
+    "Directory": true,
+    "Bytes": 693000.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Client\\obj",
+    "Directory": true,
+    "Bytes": 399530.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Contracts\\bin",
+    "Directory": true,
+    "Bytes": 309897.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Contracts\\obj",
+    "Directory": true,
+    "Bytes": 782164.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Domain\\bin",
+    "Directory": true,
+    "Bytes": 92361.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Domain\\obj",
+    "Directory": true,
+    "Bytes": 194399.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.DrillClient\\bin",
+    "Directory": true,
+    "Bytes": 83642090.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.DrillClient\\obj",
+    "Directory": true,
+    "Bytes": 480628.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Host.Windows\\bin",
+    "Directory": true,
+    "Bytes": 217975872.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Host.Windows\\obj",
+    "Directory": true,
+    "Bytes": 3614803.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Infrastructure.Windows\\bin",
+    "Directory": true,
+    "Bytes": 66148.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Infrastructure.Windows\\obj",
+    "Directory": true,
+    "Bytes": 134419.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Ipc.Windows\\bin",
+    "Directory": true,
+    "Bytes": 397202.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Ipc.Windows\\obj",
+    "Directory": true,
+    "Bytes": 232390.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Monitoring\\bin",
+    "Directory": true,
+    "Bytes": 127080.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Monitoring\\obj",
+    "Directory": true,
+    "Bytes": 130690.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.NativeMessaging\\bin",
+    "Directory": true,
+    "Bytes": 80793990.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.NativeMessaging\\obj",
+    "Directory": true,
+    "Bytes": 410082.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Platform.Windows\\bin",
+    "Directory": true,
+    "Bytes": 730529.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Platform.Windows\\obj",
+    "Directory": true,
+    "Bytes": 238763.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.ProcessAgent\\bin",
+    "Directory": true,
+    "Bytes": 86197242.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.ProcessAgent\\obj",
+    "Directory": true,
+    "Bytes": 717151.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Recovery\\bin",
+    "Directory": true,
+    "Bytes": 86182055.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Recovery\\obj",
+    "Directory": true,
+    "Bytes": 690829.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Service\\bin",
+    "Directory": true,
+    "Bytes": 123733133.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Service\\obj",
+    "Directory": true,
+    "Bytes": 1642771.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Setup\\bin",
+    "Directory": true,
+    "Bytes": 387073945.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Setup\\obj",
+    "Directory": true,
+    "Bytes": 273164301.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Storage\\bin",
+    "Directory": true,
+    "Bytes": 321971.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.Storage\\obj",
+    "Directory": true,
+    "Bytes": 411783.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\src\\FocusGuard.UI\\node_modules",
+    "Directory": true,
+    "Bytes": 168307422.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Application.Tests\\bin",
+    "Directory": true,
+    "Bytes": 10672658.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Application.Tests\\obj",
+    "Directory": true,
+    "Bytes": 318629.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Client.Tests\\bin",
+    "Directory": true,
+    "Bytes": 87136336.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Client.Tests\\obj",
+    "Directory": true,
+    "Bytes": 1360266.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Contracts.Tests\\bin",
+    "Directory": true,
+    "Bytes": 11304252.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Contracts.Tests\\obj",
+    "Directory": true,
+    "Bytes": 437832.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Desktop.Tests\\bin",
+    "Directory": true,
+    "Bytes": 1269109522.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Desktop.Tests\\obj",
+    "Directory": true,
+    "Bytes": 1824354.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Desktop.UiTests\\bin",
+    "Directory": true,
+    "Bytes": 1281035588.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Desktop.UiTests\\obj",
+    "Directory": true,
+    "Bytes": 1637234.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Domain.Tests\\bin",
+    "Directory": true,
+    "Bytes": 10844356.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Domain.Tests\\obj",
+    "Directory": true,
+    "Bytes": 386444.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Host.Windows.Tests\\bin",
+    "Directory": true,
+    "Bytes": 114135740.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Host.Windows.Tests\\obj",
+    "Directory": true,
+    "Bytes": 1915603.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Infrastructure.Windows.Tests\\bin",
+    "Directory": true,
+    "Bytes": 11133756.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Infrastructure.Windows.Tests\\obj",
+    "Directory": true,
+    "Bytes": 441968.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Ipc.ColdIdentityProbe\\bin",
+    "Directory": true,
+    "Bytes": 1166710.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Ipc.ColdIdentityProbe\\obj",
+    "Directory": true,
+    "Bytes": 534295.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Ipc.Windows.Tests\\bin",
+    "Directory": true,
+    "Bytes": 13058634.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Ipc.Windows.Tests\\obj",
+    "Directory": true,
+    "Bytes": 537496.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Monitoring.Tests\\bin",
+    "Directory": true,
+    "Bytes": 10910046.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Monitoring.Tests\\obj",
+    "Directory": true,
+    "Bytes": 401867.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.NativeMessaging.Tests\\bin",
+    "Directory": true,
+    "Bytes": 86888294.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.NativeMessaging.Tests\\obj",
+    "Directory": true,
+    "Bytes": 871215.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.ProcessAgent.Tests\\bin",
+    "Directory": true,
+    "Bytes": 86976914.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.ProcessAgent.Tests\\obj",
+    "Directory": true,
+    "Bytes": 884263.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Service.Tests\\bin",
+    "Directory": true,
+    "Bytes": 87440822.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Service.Tests\\obj",
+    "Directory": true,
+    "Bytes": 1645663.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Setup.Tests\\bin",
+    "Directory": true,
+    "Bytes": 16437158.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Setup.Tests\\obj",
+    "Directory": true,
+    "Bytes": 344619.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Storage.Tests\\bin",
+    "Directory": true,
+    "Bytes": 79941664.0
+  },
+  {
+    "Path": "E:\\FocusGuard\\FocusGuard-Autopilot\\tests\\FocusGuard.Storage.Tests\\obj",
+    "Directory": true,
+    "Bytes": 698151.0
+  }
+]

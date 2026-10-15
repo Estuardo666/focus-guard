@@ -4,6 +4,7 @@ param(
     [string]$RuntimeIdentifier = 'win-x64',
     [string]$Version = '0.1.7',
     [string]$OutputDirectory = '',
+    [string]$BrowserExtensionOutputDirectory = '',
     [string]$PayloadSuffix = '',
     [string]$SetupPublishSuffix = ''
 )
@@ -16,6 +17,11 @@ $outputRoot = if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
     [IO.Path]::GetFullPath($OutputDirectory)
 }
 $publishRoot = Join-Path $outputRoot 'publish'
+$extensionOutputRoot = if ([string]::IsNullOrWhiteSpace($BrowserExtensionOutputDirectory)) {
+    [IO.Path]::GetFullPath((Join-Path $repositoryRoot 'artifacts\browser-extension'))
+} else {
+    [IO.Path]::GetFullPath($BrowserExtensionOutputDirectory)
+}
 
 if (Test-Path -LiteralPath $outputRoot) {
     Remove-Item -LiteralPath $outputRoot -Recurse -Force
@@ -27,14 +33,15 @@ foreach ($project in @('FocusGuard.Service', 'FocusGuard.Recovery', 'FocusGuard.
     $projectPath = Join-Path $repositoryRoot "src\$project\$project.csproj"
     $destination = Join-Path $publishRoot $project
     & dotnet publish $projectPath --configuration $Configuration --runtime $RuntimeIdentifier `
-        --self-contained true --property:FocusGuardProduction=true --output $destination
+        --self-contained true --property:FocusGuardProduction=true --property:BuildInParallel=false -m:1 --output $destination
     if ($LASTEXITCODE -ne 0) {
         throw "Publishing $project failed with exit code $LASTEXITCODE."
     }
 }
 
-& (Join-Path $PSScriptRoot 'build-browser-extension.ps1') -Version $Version | Out-Null
-$browserSource = Join-Path $repositoryRoot "artifacts\browser-extension\$Version"
+& (Join-Path $PSScriptRoot 'Assert-FocusGuardProductionClient.ps1') -PackageDirectory $outputRoot
+& (Join-Path $PSScriptRoot 'build-browser-extension.ps1') -Version $Version -OutputDirectory $extensionOutputRoot | Out-Null
+$browserSource = Join-Path $extensionOutputRoot $Version
 $browserDestination = Join-Path $outputRoot 'browser-extension'
 Copy-Item -LiteralPath $browserSource -Destination $browserDestination -Recurse
 

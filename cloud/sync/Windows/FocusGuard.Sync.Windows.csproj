@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net10.0-windows</TargetFramework></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Core/FocusGuard.Sync.Core.csproj" />
+    <ProjectReference Include="../../../src/FocusGuard.Client/FocusGuard.Client.csproj" />
+    <ProjectReference Include="../../identity/Native/FocusGuard.Identity.csproj" />
+    <ProjectReference Include="../../devices/Windows/FocusGuard.Devices.Windows.csproj" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" />
+  </ItemGroup>
+</Project>

@@ -1,5 +1,6 @@
 using FocusGuard.Contracts;
 using FocusGuard.Domain;
+using FocusGuard.Host.Windows.Hosting;
 
 namespace FocusGuard.Host.Windows.Bridge;
 
@@ -31,7 +32,12 @@ internal sealed record BridgeRequest(
     Guid? StrictSaveRecoveryCodeId = null,
     bool RecoveryInfo = false,
     HostWindowCommand? WindowCommand = null,
-    HostAppCommand? AppCommand = null);
+    HostAppCommand? AppCommand = null,
+    HostAccountAction? AccountAction = null,
+    string? AccountPairingId = null,
+    string? AccountFingerprint = null,
+    HostSettingsSyncConflictResolution? SettingsSyncResolution = null,
+    HostSettingsSyncResetResolution? SettingsSyncResetResolution = null);
 
 internal sealed record HostWindowCommand(bool? Compact = null, bool? AlwaysOnTop = null, bool? DetailsExpanded = null);
 
@@ -42,6 +48,9 @@ internal sealed record HostAppCommand(HostAppAction Action, string? Section = nu
 
 /// <summary><see cref="StartupEnabled"/> is set only for the sign-in start commands.</summary>
 internal sealed record HostAppResult(bool Accepted, bool? StartupEnabled = null);
+
+internal sealed record BridgeAccountResponse(int Version, string RequestId, string DocumentToken,
+    string? Error, HostAccountSnapshot Result);
 
 internal sealed record HostWindowStateMessage(string Type, int Version, string DocumentToken, bool Compact, bool AlwaysOnTop, bool DetailsExpanded);
 

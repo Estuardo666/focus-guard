@@ -2,6 +2,7 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { Root } from 'react-dom/client';
 import { App, protectionFactFor, type StatusClient } from './App';
+import { DashboardStart } from './DashboardStart';
 import { createDashboardClient } from './native/dashboard';
 import type { ConnectionSnapshot, WebViewTransport } from './native/protocol';
 import type { SessionReplayIntent } from './native/replay';
@@ -299,6 +300,98 @@ it('uses one accessible vector icon family for navigation and theme controls', a
   const themeButton = container.querySelector<HTMLButtonElement>('.icon-button');
   expect(themeButton?.getAttribute('aria-label')).toContain(es.appearance);
   expect(themeButton?.querySelector('svg.theme-icon[aria-hidden="true"][focusable="false"]')).not.toBeNull();
+});
+it('applies externally refreshed preferences to the mounted header and default duration', async () => {
+  vi.useFakeTimers();
+  const target = new EventTarget();
+  const messages: Record<string, unknown>[] = [];
+  const transport: WebViewTransport = {
+    addEventListener: target.addEventListener.bind(target), removeEventListener: target.removeEventListener.bind(target),
+    postMessage(message) { messages.push(message as Record<string, unknown>); },
+  };
+  const dashboard = createDashboardClient(transport);
+  const inactive: ConnectionSnapshot = { ...active, status: { ...active.status!, sessionState: 'Inactive', remainingSeconds: 0,
+    sessionId: null, profileId: null, startUtc: null, endUtc: null, strictMode: false, enforcementConnected: false } };
+  const test = fixture(inactive);
+  const initial: UserPreferences = { uiLanguage: 'es', theme: 'Dark', reduceMotion: false, sessionEnd: 'Window',
+    cyclePhaseNotifications: true, enforcementEnabled: false, lastDurationMinutes: 13, lastSessionMode: 'SimpleTimer', lastCyclePresetId: null };
+  const remote: UserPreferences = { ...initial, uiLanguage: 'en', theme: 'Light', lastDurationMinutes: 50 };
+  const catalog = { items: [{ id: '22222222-2222-4222-8222-222222222222', name: 'Saved profile', applicationRuleCount: 1, websiteRuleCount: 0, blockedApplicationCount: 1, blockedWebsiteCount: 0 }], offset: 0, total: 1, pilotEnabled: true };
+  const emit = (value: unknown) => target.dispatchEvent(new MessageEvent('message', { data: value }));
+  const reply = (request: Record<string, unknown>, result: unknown) => emit({ version: 1, requestId: request.requestId, documentToken: request.documentToken, error: null, result });
+  try {
+    await act(async () => { root.render(<><App client={test.client} dashboard={dashboard}/><DashboardStart dashboard={dashboard} connection={inactive} language="es" t={key => es[key]} refresh={async () => undefined}/></>); await Promise.resolve(); });
+    const token = '11111111111141118111111111111111';
+    await act(async () => {
+      emit({ type: 'host.initialize', version: 1, documentToken: token, title: 'FocusGuard', description: 'Local', readyLabel: 'Ready', bridgeUnavailableLabel: 'Unavailable' });
+      reply(messages.at(-1)!, catalog);
+      await vi.advanceTimersByTimeAsync(300);
+    });
+    const initialRead = messages.find(request => request.method === 'preferences.get')!;
+    await act(async () => { reply(initialRead, initial); await Promise.resolve(); });
+    await act(async () => { await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); });
+    expect(document.documentElement.lang).toBe('es');
+    expect(document.documentElement.dataset.theme).toBe('dark');
+    expect(container.querySelector<HTMLInputElement>('#setup-duration')?.value).toBe('13');
+
+    await act(async () => { await vi.advanceTimersByTimeAsync(2000); });
+    const refresh = messages.filter(request => request.method === 'preferences.get').at(-1)!;
+    expect(refresh).toBeDefined();
+    await act(async () => { reply(refresh, remote); await Promise.resolve(); });
+
+    expect(document.documentElement.lang).toBe('en');
+    expect(document.documentElement.dataset.theme).toBe('light');
+    expect(container.querySelector<HTMLInputElement>('#setup-duration')?.value).toBe('50');
+    expect(messages.some(request => request.method === 'preferences.set')).toBe(false);
+    const readsBeforeStop = messages.filter(request => request.method === 'preferences.get').length;
+    dashboard.stop();
+    await act(async () => { await vi.advanceTimersByTimeAsync(10000); });
+    expect(messages.filter(request => request.method === 'preferences.get')).toHaveLength(readsBeforeStop);
+  } finally {
+    await act(async () => root.unmount());
+    vi.useRealTimers();
+  }
+});
+it('recovers preferences on the mounted dashboard after the initial read has exhausted retries', async () => {
+  vi.useFakeTimers();
+  const target = new EventTarget();
+  const messages: Record<string, unknown>[] = [];
+  const transport: WebViewTransport = {
+    addEventListener: target.addEventListener.bind(target), removeEventListener: target.removeEventListener.bind(target),
+    postMessage(message) { messages.push(message as Record<string, unknown>); },
+  };
+  const dashboard = createDashboardClient(transport);
+  const inactive: ConnectionSnapshot = { ...active, status: { ...active.status!, sessionState: 'Inactive', remainingSeconds: 0,
+    sessionId: null, profileId: null, startUtc: null, endUtc: null, strictMode: false, enforcementConnected: false } };
+  const test = fixture(inactive);
+  const remote: UserPreferences = { uiLanguage: 'en', theme: 'Light', reduceMotion: true, sessionEnd: 'None',
+    cyclePhaseNotifications: false, enforcementEnabled: false, lastDurationMinutes: 42, lastSessionMode: 'SimpleTimer', lastCyclePresetId: null };
+  const catalog = { items: [], offset: 0, total: 0, pilotEnabled: false };
+  const emit = (value: unknown) => target.dispatchEvent(new MessageEvent('message', { data: value }));
+  const reply = (request: Record<string, unknown>, result: unknown) => emit({ version: 1, requestId: request.requestId, documentToken: request.documentToken, error: null, result });
+  try {
+    await act(async () => root.render(<App client={test.client} dashboard={dashboard}/>));
+    await act(async () => { await vi.advanceTimersByTimeAsync(4000); });
+    expect(dashboard.getSnapshot()).toMatchObject({ preferences: null, preferencesLoading: false });
+
+    await act(async () => {
+      emit({ type: 'host.initialize', version: 1, documentToken: '11111111111141118111111111111111', title: 'FocusGuard', description: 'Local', readyLabel: 'Ready', bridgeUnavailableLabel: 'Unavailable' });
+      reply(messages.at(-1)!, catalog);
+      await Promise.resolve();
+      await vi.advanceTimersByTimeAsync(2000);
+    });
+    const recoveredRead = messages.filter(request => request.method === 'preferences.get').at(-1)!;
+    expect(recoveredRead).toBeDefined();
+    await act(async () => { reply(recoveredRead, remote); await Promise.resolve(); await Promise.resolve(); });
+
+    expect(document.documentElement.lang).toBe('en');
+    expect(document.documentElement.dataset.theme).toBe('light');
+    expect(document.documentElement.dataset.reduceMotion).toBe('true');
+    expect(messages.some(request => request.method === 'preferences.set')).toBe(false);
+  } finally {
+    await act(async () => root.unmount());
+    vi.useRealTimers();
+  }
 });
 it('translations have matching keys and formatting supports service durations up to thirty days', () => {
   expect(Object.keys(es).sort()).toEqual(Object.keys(en).sort());

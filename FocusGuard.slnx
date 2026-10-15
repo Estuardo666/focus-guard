@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/cloud-sync-preparation/">
+    <Project Path="cloud/sync/Core/FocusGuard.Sync.Core.csproj" />
+    <Project Path="cloud/sync/Windows/FocusGuard.Sync.Windows.csproj" />
+    <Project Path="cloud/sync/Tests/FocusGuard.Sync.Tests.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/FocusGuard.Host.Windows/FocusGuard.Host.Windows.csproj" />
     <Project Path="src/FocusGuard.Ipc.Windows/FocusGuard.Ipc.Windows.csproj" />

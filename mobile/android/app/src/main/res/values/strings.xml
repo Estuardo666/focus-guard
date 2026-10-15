@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">FocusGuard</string>
+    <string name="screen_title">Tu cuenta FocusGuard</string>
+    <string name="screen_description">Conecta tu cuenta para preparar este teléfono. El inicio de sesión se abre en el navegador seguro del sistema.</string>
+    <string name="connect_account">Conectar cuenta</string>
+    <string name="retry">Reintentar</string>
+    <string name="sign_out">Cerrar sesión</string>
+    <string name="status_loading">Comprobando tu cuenta…</string>
+    <string name="status_signed_out">Tu cuenta no está conectada.</string>
+    <string name="status_account_connected">Tu cuenta está conectada y verificada.</string>
+    <string name="status_identity_unavailable">No se pudo comprobar la identidad. Inténtalo de nuevo.</string>
+    <string name="status_account_unavailable">La cuenta está conectada, pero el servicio no respondió. Inténtalo de nuevo.</string>
+    <string name="status_first_device">Cuenta verificada. Aún no hay un dispositivo vinculado.</string>
+    <string name="status_account_exists">La cuenta ya tiene un dispositivo FocusGuard; este teléfono aún no está vinculado.</string>
+    <string name="status_pairing_device">Este teléfono aún no terminó de vincularse.</string>
+    <string name="request_pairing">Solicitar aprobación desde otro dispositivo</string>
+    <string name="refresh_pairing">Actualizar estado de aprobación</string>
+    <string name="refresh_linked">Actualizar vínculo</string>
+    <string name="device_fingerprint">Huella de este teléfono: %1$s</string>
+    <string name="pairing_request_code">Código de solicitud (solo identifica el emparejamiento): %1$s</string>
+    <string name="status_pairing_loading">Preparando una solicitud segura para este teléfono…</string>
+    <string name="status_pairing_pending">Solicitud enviada. Confirma la huella en un equipo FocusGuard ya vinculado.</string>
+    <string name="status_pairing_approved">El otro equipo aprobó la solicitud; todavía falta completar y verificar la vinculación segura.</string>
+    <string name="status_pairing_linked">Este teléfono está vinculado y su membresía se verificó. El bloqueo Android aún no está implementado.</string>
+    <string name="status_pairing_expired">La solicitud venció. Puedes enviar una nueva y comparar otra vez la huella.</string>
+    <string name="status_pairing_error">No se pudo comprobar la solicitud. Tu sesión y las sesiones de enfoque locales no cambiaron.</string>
+    <string name="status_signed_out_local">Sesión cerrada en este teléfono.</string>
+    <string name="status_signed_out_remote_pending">Sesión cerrada en este teléfono; no se pudo confirmar el cierre remoto.</string>
+    <string name="status_cleanup_failed">No se pudo borrar el almacenamiento de sesión local. Revisa de nuevo el cierre.</string>
+    <string name="security_note">FocusGuard nunca solicita tu contraseña dentro de esta app. Conectar la cuenta no inicia ni modifica una sesión de enfoque.</string>
+    <string name="email_unverified">Verifica tu correo en la página de identidad antes de vincular dispositivos.</string>
+    <string name="profile_email">Correo: %1$s</string>
+</resources>

@@ -1,6 +1,11 @@
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$scripts = @('build-installer.ps1', 'install-focusguard.ps1', 'uninstall-focusguard.ps1', 'build-browser-extension.ps1', 'generate-extension-icons.ps1', 'measure-focusguard-resources.ps1', 'invoke-installer-rollback-drill.ps1', 'arm-fg112-production-reboot-drill.ps1', 'complete-fg112-production-reboot-drill.ps1')
+$productionGuardPath = Join-Path $PSScriptRoot 'Assert-FocusGuardProductionClient.ps1'
+$guardTokens = $null
+$guardErrors = $null
+[System.Management.Automation.Language.Parser]::ParseFile($productionGuardPath, [ref]$guardTokens, [ref]$guardErrors) | Out-Null
+if ($guardErrors.Count -ne 0) { throw 'Production Client guard has PowerShell parse errors.' }
+$scripts = @('build-installer.ps1', 'install-focusguard.ps1', 'uninstall-focusguard.ps1', 'build-browser-extension.ps1', 'generate-extension-icons.ps1', 'measure-focusguard-resources.ps1', 'invoke-installer-rollback-drill.ps1', 'arm-fg112-production-reboot-drill.ps1', 'complete-fg112-production-reboot-drill.ps1', '..\cloud\deploy\Deploy-TncApi.ps1')
 
 foreach ($scriptName in $scripts) {
     $path = Join-Path $PSScriptRoot $scriptName
@@ -241,6 +246,24 @@ if ($transactionStart -lt 0) {
     throw 'Installer transaction entry point was not found.'
 }
 $transactionSource = $installSource.Substring($transactionStart)
+# Updates may replace machine installation files, but must never erase per-user DPAPI identity or sync consent/outbox.
+$updateCleanupCommands = [regex]::Matches(
+    $installSource,
+    '(?im)^\s*Remove-Item(?:Property)?\b[^\r\n]*')
+$ownerStatePathPattern = '(?i)(LOCALAPPDATA|LocalApplicationData|FocusGuard[\\/](?:Sync|Identity|devices))'
+foreach ($ownerStateFixture in @(
+    'Remove-Item -LiteralPath $env:LOCALAPPDATA\FocusGuard\Sync -Recurse -Force',
+    'Remove-Item -LiteralPath $profile\FocusGuard\Identity -Recurse -Force',
+    'Remove-Item -LiteralPath $profile\FocusGuard\devices -Recurse -Force')) {
+    if ($ownerStateFixture -notmatch $ownerStatePathPattern) {
+        throw "Installer state guard does not recognize per-user path: $ownerStateFixture"
+    }
+}
+foreach ($cleanupCommand in $updateCleanupCommands) {
+    if ($cleanupCommand.Value -match $ownerStatePathPattern) {
+        throw "Installer cleanup must preserve per-user identity and sync state: $($cleanupCommand.Value.Trim())"
+    }
+}
 $initialSuspend = $transactionSource.IndexOf(
     'Suspend-FocusGuardNativeHostRegistration',
     [StringComparison]::Ordinal)
@@ -296,6 +319,9 @@ foreach ($required in @('active-policy.json', 'recovery-request.json', 'PurgeDat
 if ($build -notmatch 'FocusGuardProduction=true' -or $build -notmatch 'Compress-Archive') {
     throw 'Build script does not produce a production bundle.'
 }
+if ($build -notmatch [regex]::Escape('Assert-FocusGuardProductionClient.ps1')) {
+    throw 'Build script does not verify the IPC endpoint baked into the published Client assemblies.'
+}
 if ($build -match 'utf8NoBOM' -or $build -notmatch '\[Text\.UTF8Encoding\]::new\(\$false\)') {
     throw 'Build script manifest encoding is not compatible with Windows PowerShell 5.1.'
 }
@@ -348,14 +374,15 @@ if ([FocusGuardInteractiveShell]::HasInteractiveDesktop()) {
     $launchAt = [DateTime]::UtcNow
     [FocusGuardInteractiveShell]::ExecuteFromDesktop(
         $probeExecutable,
-        '-NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "Start-Sleep -Seconds 3"',
+        '-NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "Start-Sleep -Seconds 12"',
         $env:TEMP)
     $probeDeadline = [DateTime]::UtcNow.AddSeconds(10)
     $probe = $null
     while ($null -eq $probe -and [DateTime]::UtcNow -lt $probeDeadline) {
         $probe = Get-Process -Name 'powershell' -ErrorAction SilentlyContinue | Where-Object {
             try {
-                [IO.Path]::GetFullPath($_.Path).Equals($probeExecutable, [StringComparison]::OrdinalIgnoreCase) -and
+                $_.Id -ne $PID -and
+                    [IO.Path]::GetFullPath($_.Path).Equals($probeExecutable, [StringComparison]::OrdinalIgnoreCase) -and
                     $_.StartTime.ToUniversalTime() -ge $launchAt.AddSeconds(-1)
             } catch { $false }
         } | Select-Object -First 1
@@ -366,7 +393,13 @@ if ([FocusGuardInteractiveShell]::HasInteractiveDesktop()) {
         $probeToken = [FocusGuardInteractiveShell]::GetProcessTokenFacts($probe.Id)
         $desktopRecord = Get-CimInstance -ClassName Win32_Process -Filter "ProcessId = $desktopPid" -ErrorAction Stop
         $desktopOwner = Invoke-CimMethod -InputObject $desktopRecord -MethodName GetOwnerSid -ErrorAction Stop
-        $probeRecord = Get-CimInstance -ClassName Win32_Process -Filter "ProcessId = $($probe.Id)" -ErrorAction Stop
+        $probeRecord = $null
+        $probeRecordDeadline = [DateTime]::UtcNow.AddSeconds(10)
+        while ($null -eq $probeRecord -and [DateTime]::UtcNow -lt $probeRecordDeadline) {
+            $probeRecord = Get-CimInstance -ClassName Win32_Process -Filter "ProcessId = $($probe.Id)" -ErrorAction Stop
+            if ($null -eq $probeRecord) { Start-Sleep -Milliseconds 100 }
+        }
+        if ($null -eq $probeRecord) { throw 'Explorer-launched smoke process disappeared before owner SID inspection.' }
         $probeOwner = Invoke-CimMethod -InputObject $probeRecord -MethodName GetOwnerSid -ErrorAction Stop
         if ($probeToken.IsElevated -or $probeToken.IntegrityLevelRid -ne 8192 -or
             $probeToken.SessionId -ne $desktop.SessionId -or
@@ -374,7 +407,7 @@ if ([FocusGuardInteractiveShell]::HasInteractiveDesktop()) {
             $probeOwner.Sid -cne $desktopOwner.Sid) {
             throw 'Explorer-launched smoke process did not inherit the owner medium-integrity session.'
         }
-        if (-not $probe.WaitForExit(10000)) { throw 'Explorer-launched smoke process did not exit within its test deadline.' }
+        if (-not $probe.WaitForExit(20000)) { throw 'Explorer-launched smoke process did not exit within its test deadline.' }
         Write-Output 'Interactive desktop launch/token smoke passed: owner SID/session match, elevated=false, integrity=medium.'
     }
     finally {
@@ -461,4 +494,39 @@ try {
 }
 
 Write-Output 'Installed Chrome/Edge archive parity tests passed.'
+
+$readinessFunction = $installAst.Find({
+    param($node)
+    $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and
+        $node.Name -eq 'Wait-FocusGuardAuthenticatedReadiness'
+}, $true)
+if ($null -eq $readinessFunction) { throw 'Authenticated readiness helper is missing.' }
+Invoke-Expression $readinessFunction.Extent.Text
+foreach ($case in @(
+    @{ Codes=@(0); ExpectedCalls=1; ExpectedWaits=0; Fails=$false },
+    @{ Codes=@(12,0); ExpectedCalls=2; ExpectedWaits=1; Fails=$false },
+    @{ Codes=@(14,12,0); ExpectedCalls=3; ExpectedWaits=2; Fails=$false },
+    @{ Codes=@(12,12,12); ExpectedCalls=3; ExpectedWaits=2; Fails=$true },
+    @{ Codes=@(14,14,14); ExpectedCalls=3; ExpectedWaits=2; Fails=$true },
+    @{ Codes=@(11,0); ExpectedCalls=1; ExpectedWaits=0; Fails=$true },
+    @{ Codes=@(99,0); ExpectedCalls=1; ExpectedWaits=0; Fails=$true }
+)) {
+    $testState = @{ Calls=0; Waits=0; Codes=$case.Codes }
+    $didFail = $false
+    try {
+        Wait-FocusGuardAuthenticatedReadiness -Probe {
+            $code = $testState.Codes[$testState.Calls]
+            $testState.Calls++
+            return [int]$code
+        } -Wait { $testState.Waits++ }
+    } catch { $didFail = $true }
+    if ($testState.Calls -ne $case.ExpectedCalls -or $testState.Waits -ne $case.ExpectedWaits -or $didFail -ne $case.Fails) {
+        throw "Authenticated readiness fixture failed for sequence $($case.Codes -join ',')."
+    }
+}
+$invalidResultRejected = $false
+try { Wait-FocusGuardAuthenticatedReadiness -Probe { '0' } -Wait { throw 'Must not wait on malformed output.' } }
+catch { $invalidResultRejected = $_.Exception.Message -like '*invalid result*' }
+if (-not $invalidResultRejected) { throw 'Malformed readiness result was accepted.' }
+Write-Output 'Authenticated service readiness retry tests passed (8 cases).'
 Write-Output "Installer script tests passed for $repositoryRoot."

@@ -1,0 +1,30 @@
+# Vinculación de dispositivos — Fase 2
+
+Estado: en curso. El checkpoint conecta pairing Windows, documentos E2EE y transferencia única consentida de ajustes; todavía requiere prueba física en dos PC antes de aceptar Fase 2.
+
+`Core/DeviceIdentity.cs` crea UUID y claves Ed25519/X25519 independientes con NSec 26.4.0. Las claves no se derivan del password OIDC. La huella SHA-256 usa el dominio `FG-DEVICE-1` y JCS. Los sobres `FG-SODIUM-BOX-1` usan sealed-box de libsodium y firma Ed25519; sólo el dispositivo destinado o el kit de recuperación pueden abrir su sobre.
+
+El primer vínculo usa un challenge con TTL, prueba de posesión, membresía firmada en CAS y sobres separados para el dispositivo y recovery. El diálogo WinForms muestra el kit y pide confirmación antes del alta. El vault protege identidad, kit y claves con DPAPI CurrentUser y entropía ligada a issuer, binding opaco de cuenta, accountId, generationId y deviceId.
+
+Para añadir otro Windows, la aplicación guarda primero la identidad en el vault y persiste el ID del challenge antes del POST, de modo que una respuesta de red ambigua se pueda recuperar. El solicitante muestra su huella local; el equipo ya vinculado vuelve a leer las claves públicas, verifica la huella y exige comparación explícita en un diálogo nativo antes de firmar la revisión CAS. La aprobación agrega el dispositivo y envuelve la clave de contenido existente sin rotar el epoch. El solicitante verifica que la huella del servidor coincida con sus propias claves, abre su sobre, firma la confirmación y crea una sesión aleatoria local; Neon conserva sólo su hash. React recibe IDs/huellas sanitizados, nunca claves privadas, recovery kit, bearer token ni sesión de dispositivo.
+
+El codec `FG-E2EE-1` cifra JSON JCS con XChaCha20-Poly1305 y firma Ed25519. La API almacena ciphertext opaco con revisión CAS; exige token OIDC vigente, firma de dispositivo y sesión de transporte para leer/escribir. La API comprueba que el autor estuviera activo en la revisión de membresía del documento. La prueba integrada cubre segundo dispositivo, aislamiento de cuenta, replay, documento firmado/cifrado, CAS, rechazo después de revocación y recuperación del epoch.
+
+La transferencia `preferences.initial` es explícita, de una sola vez y seleccionable en ambos equipos. Sólo incluye tema, idioma de interfaz y duración predeterminada; reglas de apps/sitios, perfiles, permisos, agenda e historial quedan locales. El diálogo de importación empieza sin campos marcados y el store conserva intactas las preferencias no elegidas. El documento se cifra y firma antes de salir del equipo; la API y React sólo observan ciphertext y estado.
+
+`WindowsDeviceVault` crea el archivo mediante escritura temporal y movimiento; la identidad del dispositivo no se reemplaza por otra cuenta. Revocar exige firma de un miembro con `ManageDevices`, avanza revisión y epoch mediante CAS, emite sobres sólo a miembros activos/recovery e invalida la sesión del dispositivo retirado. Login no implica membresía ni autoridad de bloqueo.
+
+## Validación de este checkpoint
+
+- `Test-KeycloakNeon.ps1 -NativeOnly`: 104 comprobaciones con Keycloak, Neon, tokens OIDC firmados y Windows DPAPI; incluye pairing, preferencias sólo en ciphertext, CAS/E2EE, aislamiento, revocación y limpieza de datos sintéticos. El realm sobrevive el reinicio del contenedor local.
+- `dotnet test tests/FocusGuard.Host.Windows.Tests/FocusGuard.Host.Windows.Tests.csproj -c Release -m:1`: 221/221, incluidas nueve regresiones que separan la revalidación OIDC de los resultados de dispositivo/ajustes.
+- React: 235/235; TypeScript/build .154 pasa. `cloud/devices/Tests`: 14/14. Prototipos C#/Node: 36/36.
+- Setup autónomo 0.1.154 y ZIP se construyeron; `scripts/test-installer.ps1`, Setup `--package-self-test`, lectura del ZIP (1.652 entradas y Host correcto) y paridad Chrome/Edge pasan. Aceptación instalada pendiente.
+
+## Pendiente para aceptar Fase 2
+
+La cuenta personal y el vínculo de este Windows quedaron aceptados con Host .155; el hash instalado coincide con el payload. API TNC `tnc-api-staging-00015-6tt` desplegada para renovar la sesión del dispositivo. La huella se compara manualmente; no hay QR en la UI. Aún falta probar con el segundo Windows físico, hacer transferencia real de ajustes y validar reset E2EE. El vault Android AES-GCM, la identidad Ed25519/X25519, los documentos `FG-E2EE-1` y sobres `FG-SODIUM-BOX-1` pasaron vectores C#↔Android; la cadena `FG-MEMBERSHIP-1` generada por C# se verificó en el AVD x86_64 y pasaron los gates de permisos locales. Keystore software: aquel probe no usó API real ni cuenta. El cliente OIDC Android y el primer tramo de pairing se incorporaron después; faltan probarlos con un login real, verificar la cadena de membresía, completar el sobre/sesión, probar recuperación/revocación móvil, preparar distribución auditada y validar Samsung ARM64. No afirmar aceptación multi-PC ni bloqueo remoto.
+
+**Android — avance incremental 2026-10-12:** `mobile/android` ofrece inicio OIDC nativo y crea una solicitud firmada de pairing sólo para una cuenta que ya tiene un dispositivo vinculado. La identidad se guarda en `AndroidDeviceVault`; un challenge ambiguo se recupera consultando el mismo ID con prueba firmada. Android muestra la huella local y diferencia `Pending`/`Approved` sin llamar vinculado al teléfono aprobado. Build Gradle verifica las cuatro copias ABI de libsodium1.0.22, fija JNA5.19.1, y usa wrapper Gradle8.14.6 con checksum oficial. Dos pruebas instrumentadas pasan en AVD Android15/API35: identidad/firma/vault y forma canónica de `FG-PAIRING-1`. Evidencia: [checkpoint Android](../../docs/progress/20261012-android-pairing-request.md).
+
+**Pendiente Android:** no se pudo completar el login porque Firefox Custom Tab abrió el dominio de identidad con contenido en blanco; no se ingresó contraseña ni se envió un pairing real. El nuevo cliente aún no verifica la cadena de membresía ni abre/guarda el sobre de clave, confirma la sesión del dispositivo o sincroniza documentos. Las pruebas x86_64 no equivalen a Samsung ARM64. Fase2 sigue abierta.

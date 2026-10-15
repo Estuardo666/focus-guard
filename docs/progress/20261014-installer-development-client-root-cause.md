@@ -1,0 +1,7 @@
+# Causa confirmada — hotfix Client compilado para desarrollo
+
+Los reintentos .165 no resolvieron el fallo. La DLL Client instalada restaurada contiene `FocusGuard.Control.v2` y no el canal Development. La DLL Client del payload .165 contiene `FocusGuard.Development.Control.v2` y no el canal de producción. `IpcProtocol.PipeName` es una constante condicional (`FOCUSGUARD_PRODUCTION`) que se inserta en el consumidor al compilar. El script ad hoc de hotfix compiló Client con `-c Release` pero omitió `-p:FocusGuardProduction=true`. Release no activa por sí solo el modo producción.
+
+Esto demuestra la causa del timeout sin necesidad de leer registros protegidos: el proceso pregunta a un endpoint diferente del que existe. Rollback restaura la DLL producción y la prueba real vuelve a Ready/0. La hipótesis previa de disponibilidad tardía fue insuficiente y queda reemplazada por esta evidencia.
+
+Plan .166: usar como base el payload .165 ya preservado, recompilar Client con la propiedad de producción, verificar que todas las copias Client publicadas contienen únicamente el endpoint esperado y rechazar explícitamente los canales de desarrollo antes de generar Setup. Mantener el resto de binarios/UI sin integrar los cambios Fase 3 en desarrollo. Retener rollback y prueba autenticada completa. Probar la guarda contra .165 (debe fallar) y .166 (debe pasar), empaquetar y validar hashes embebidos. No afirmar aceptación instalada hasta el ensayo del propietario.

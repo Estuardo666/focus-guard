@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using System.Globalization;
 using FocusGuard.Contracts;
+using FocusGuard.Host.Windows.Hosting;
 
 namespace FocusGuard.Host.Windows.Bridge;
 
@@ -63,6 +64,56 @@ internal sealed partial class BridgeRequestParser
             var method = methodElement.GetString();
             if (method == "status.get" && HasExactProperties(parameters, EmptyProperties))
                 request = new(requestId, token, method);
+            else if (method == "account.get" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.Get);
+            else if (method == "account.login" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.Login);
+            else if (method == "account.login.cancel" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.CancelLogin);
+            else if (method == "account.logout" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.Logout);
+            else if (method == "account.security.open" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.OpenSecurity);
+            else if (method == "account.device.link" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.LinkDevice);
+            else if (method == "account.device.pair.request" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.RequestPairing);
+            else if (method == "account.device.pair.refresh" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.RefreshPairings);
+            else if (method == "account.device.pair.complete" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.CompletePairing);
+            else if (method == "account.device.pair.approve" && Exact(parameters, "pairingId", "fingerprint") &&
+                parameters.GetProperty("pairingId").ValueKind == JsonValueKind.String &&
+                Guid.TryParseExact(parameters.GetProperty("pairingId").GetString(), "D", out var pairingId) && pairingId != Guid.Empty &&
+                parameters.GetProperty("fingerprint").ValueKind == JsonValueKind.String &&
+                parameters.GetProperty("fingerprint").GetString() is { Length: 43 } fingerprint &&
+                fingerprint.All(character => char.IsAsciiLetterOrDigit(character) || character is '-' or '_'))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.ApprovePairing,
+                    AccountPairingId: pairingId.ToString("D"), AccountFingerprint: fingerprint);
+            else if (method == "account.settings.share" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.ShareSettings);
+            else if (method == "account.settings.import" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.ImportSettings);
+            else if (method == "account.settings.portable.export" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.ExportPortableSettings);
+            else if (method == "account.settings.portable.import" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.ImportPortableSettings);
+            else if (method == "account.settings.sync.enable" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.EnableSettingsSync);
+            else if (method == "account.settings.sync.disable" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.DisableSettingsSync);
+            else if (method == "account.settings.sync.overrides" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.UpdateLocalSettingsOverrides);
+            else if (method == "account.settings.sync.reset" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.ResetSettingsSync);
+            else if (method == "account.settings.sync.resolve" && TryParseSettingsSyncResolution(parameters, out var syncResolution))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.ResolveSettingsSyncConflict,
+                    SettingsSyncResolution: syncResolution);
+            else if (method == "account.settings.sync.resolve-reset" && TryParseSettingsSyncResetResolution(parameters, out var resetResolution))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.ResolveSettingsSyncResetConflict,
+                    SettingsSyncResetResolution: resetResolution);
+            else if (method == "account.settings.sync.recover" && HasExactProperties(parameters, EmptyProperties))
+                request = new(requestId, token, method, AccountAction: HostAccountAction.RecoverSettingsSyncCheckpoint);
             else if (method == "profiles.list" && HasExactProperties(parameters, ProfileProperties)
                 && parameters.GetProperty("offset").TryGetInt32(out var offset) && offset is >= 0 and <= 10000)
                 request = new(requestId, token, method, offset);
@@ -143,7 +194,7 @@ internal sealed partial class BridgeRequestParser
 
     private static readonly HashSet<string> EmptyProperties = new(StringComparer.Ordinal);
 
-/// <summary>Sections the shell may open, matching the React navigation keys; anything else is rejected.</summary>
+    /// <summary>Sections the shell may open, matching the React navigation keys; anything else is rejected.</summary>
     internal static readonly HashSet<string> AppSections = new(StringComparer.Ordinal)
     {
         "summary", "profiles", "activity", "schedules", "preferences", "connection", "help"
@@ -220,6 +271,61 @@ internal sealed partial class BridgeRequestParser
         var candidate = new TodayRequest(start, end);
         if (!IpcProtocol.CreateTodayRequest(Guid.NewGuid(), candidate).IsValid) return false;
         today = candidate; return true;
+    }
+
+    private static bool TryParseSettingsSyncResolution(JsonElement parameters,
+        out HostSettingsSyncConflictResolution? resolution)
+    {
+        resolution = null;
+        if (!Exact(parameters, "revision", "choices") ||
+            !parameters.GetProperty("revision").TryGetInt64(out var revision) || revision is < 0 or > 9_007_199_254_740_991 ||
+            parameters.GetProperty("choices").ValueKind != JsonValueKind.Array ||
+            parameters.GetProperty("choices").GetArrayLength() is < 1 or > 3) return false;
+
+        var choices = new List<HostSettingsSyncConflictChoice>(3);
+        var fields = new HashSet<HostSettingsSyncConflictField>();
+        foreach (var item in parameters.GetProperty("choices").EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object || !Exact(item, "field", "source") ||
+                item.GetProperty("field").ValueKind != JsonValueKind.String ||
+                item.GetProperty("source").ValueKind != JsonValueKind.String) return false;
+            var field = item.GetProperty("field").GetString() switch
+            {
+                "theme" => HostSettingsSyncConflictField.Theme,
+                "language" => HostSettingsSyncConflictField.Language,
+                "duration" => HostSettingsSyncConflictField.Duration,
+                _ => (HostSettingsSyncConflictField?)null
+            };
+            var source = item.GetProperty("source").GetString() switch
+            {
+                "thisDevice" => HostSettingsSyncConflictSource.ThisDevice,
+                "otherDevices" => HostSettingsSyncConflictSource.OtherDevices,
+                _ => (HostSettingsSyncConflictSource?)null
+            };
+            if (field is null || source is null || !fields.Add(field.Value)) return false;
+            choices.Add(new(field.Value, source.Value));
+        }
+
+        resolution = new HostSettingsSyncConflictResolution(revision, choices.ToArray());
+        return true;
+    }
+
+    private static bool TryParseSettingsSyncResetResolution(JsonElement parameters,
+        out HostSettingsSyncResetResolution? resolution)
+    {
+        resolution = null;
+        if (!Exact(parameters, "revision", "choice") ||
+            !parameters.GetProperty("revision").TryGetInt64(out var revision) || revision is < 0 or > 9_007_199_254_740_991 ||
+            parameters.GetProperty("choice").ValueKind != JsonValueKind.String) return false;
+        var choice = parameters.GetProperty("choice").GetString() switch
+        {
+            "thisDeviceReset" => HostSettingsSyncResetSource.ThisDeviceReset,
+            "otherDevices" => HostSettingsSyncResetSource.OtherDevices,
+            _ => (HostSettingsSyncResetSource?)null
+        };
+        if (choice is null) return false;
+        resolution = new HostSettingsSyncResetResolution(revision, choice.Value);
+        return true;
     }
 
     private static bool TryParseActiveSession(string? method, JsonElement parameters, out ActiveSessionParameters? session, out Guid operation)

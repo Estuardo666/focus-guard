@@ -1,0 +1,45 @@
+# Replace placeholders after HTTPS identity and API URLs are known.
+# Service-specific identities receive access ONLY to their named secrets.
+# This is a reviewable deployment template, not an executed deployment.
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: tnc-identity-staging
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '0'
+        autoscaling.knative.dev/maxScale: '1'
+        run.googleapis.com/cpu-throttling: 'true'
+    spec:
+      serviceAccountName: REPLACE_IDENTITY_SERVICE_ACCOUNT
+      containerConcurrency: 10
+      timeoutSeconds: 300
+      containers:
+        - image: REPLACE_PINNED_KEYCLOAK_IMAGE_DIGEST
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: '1'
+              memory: 2Gi
+          env:
+            - name: KC_HOSTNAME
+              value: REPLACE_EXACT_HTTPS_IDENTITY_ORIGIN
+            - name: KC_DB_URL
+              value: REPLACE_JDBC_URL_VERIFY_FULL
+            - name: KC_DB_USERNAME
+              value: focusguard_keycloak
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tnc-keycloak-db-password
+                  key: '1'
+          startupProbe:
+            httpGet:
+              path: /realms/master/.well-known/openid-configuration
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 48

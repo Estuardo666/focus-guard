@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup><ProjectReference Include="../../devices/Core/FocusGuard.Devices.csproj" /></ItemGroup>
+</Project>

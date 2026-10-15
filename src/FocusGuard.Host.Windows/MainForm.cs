@@ -1,10 +1,14 @@
 using System.Runtime.InteropServices;
+using System.Globalization;
+using System.Net.NetworkInformation;
 using System.Text.Json;
 using FocusGuard.Client;
 using FocusGuard.Client.Platform;
+using FocusGuard.Client.Preferences;
 using FocusGuard.Host.Windows.Bridge;
 using FocusGuard.Host.Windows.Hosting;
 using FocusGuard.Storage;
+using FocusGuard.Sync;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.WinForms;
 
@@ -25,6 +29,7 @@ internal sealed class MainForm : Form, IHostWindowController
     private readonly IApplicationIconProvider? _iconProvider;
     private readonly FocusGuard.Client.Preferences.DesktopSettingsStore? _desktopSettingsStore;
     private readonly FocusGuard.Client.Journal.SessionJournalStore? _sessionJournalStore;
+    private readonly IHostAccountService? _accountService;
     private readonly HostSmokeScenario _smokeScenario;
     private readonly CancellationTokenSource _smokeTimeout = new();
     private readonly DocumentLifetime _documentLifetime = new();
@@ -51,6 +56,7 @@ internal sealed class MainForm : Form, IHostWindowController
     private bool _realRendererExitObserved;
     private bool _initializing;
     private bool _closed;
+    private bool _networkEventsSubscribed;
 
     internal MainForm(
         IFocusControlClient client,
@@ -60,7 +66,8 @@ internal sealed class MainForm : Form, IHostWindowController
         IApplicationCatalog? applicationCatalog = null,
         IApplicationIconProvider? iconProvider = null,
         FocusGuard.Client.Preferences.DesktopSettingsStore? desktopSettingsStore = null,
-        FocusGuard.Client.Journal.SessionJournalStore? sessionJournalStore = null)
+        FocusGuard.Client.Journal.SessionJournalStore? sessionJournalStore = null,
+        IHostAccountService? accountService = null)
     {
         _client = client;
         _authorization = authorization;
@@ -69,6 +76,22 @@ internal sealed class MainForm : Form, IHostWindowController
         _iconProvider = iconProvider;
         _desktopSettingsStore = desktopSettingsStore;
         _sessionJournalStore = sessionJournalStore;
+        _accountService = accountService;
+        _accountService?.SetRecoveryKitPresenter(PresentRecoveryKitAsync);
+        _accountService?.SetPairingApprovalPresenter(PresentPairingApprovalAsync);
+        _accountService?.SetSettingsTransferPresenters(PresentSettingsShareAsync, PresentSettingsImportAsync);
+        _accountService?.SetPortableSettingsPresenters(PresentPortableSettingsExportAsync,
+            PickPortableSettingsImportFileAsync, ConfirmPortableSettingsImportAsync);
+        _accountService?.SetSettingsSyncConsentPresenter(PresentSettingsSyncConsentAsync);
+        _accountService?.SetSettingsLocalOverridesPresenter(PresentSettingsLocalOverridesAsync);
+        _accountService?.SetSettingsSyncResetPresenter(PresentSettingsSyncResetAsync);
+        _accountService?.SetSettingsSyncRecoveryPresenter(PresentSettingsSyncRecoveryAsync);
+        if (_accountService is not null)
+        {
+            NetworkChange.NetworkAvailabilityChanged += OnNetworkAvailabilityChanged;
+            NetworkChange.NetworkAddressChanged += OnNetworkAddressChanged;
+            _networkEventsSubscribed = true;
+        }
         _smokeScenario = smokeScenario;
         var initialSettings = desktopSettingsStore?.Load() ?? FocusGuard.Client.Preferences.DesktopSettings.Default;
         BackColor = initialSettings.Theme == FocusGuard.Client.Preferences.AppTheme.Light
@@ -91,6 +114,231 @@ internal sealed class MainForm : Form, IHostWindowController
         _errorPanel.BringToFront();
         Shown += OnShown;
         FormClosing += OnFormClosing;
+    }
+
+    private Task<bool> PresentRecoveryKitAsync(string recoveryKit, CancellationToken cancellationToken)
+    {
+        var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void ShowDialog()
+        {
+            if (cancellationToken.IsCancellationRequested || _closed || IsDisposed || Disposing)
+            {
+                completion.TrySetResult(false);
+                return;
+            }
+            using var dialog = new RecoveryKitDialog(recoveryKit);
+            completion.TrySetResult(dialog.ShowDialog(this) == DialogResult.OK);
+        }
+
+        try
+        {
+            if (InvokeRequired) BeginInvoke((Action)ShowDialog);
+            else ShowDialog();
+        }
+        catch (ObjectDisposedException) { completion.TrySetResult(false); }
+        catch (InvalidOperationException) { completion.TrySetResult(false); }
+        return completion.Task;
+    }
+
+    private Task<bool> PresentPairingApprovalAsync(HostPendingPairingSummary pending,
+        CancellationToken cancellationToken)
+    {
+        var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void ShowDialog()
+        {
+            if (cancellationToken.IsCancellationRequested || _closed || IsDisposed || Disposing)
+            {
+                completion.TrySetResult(false);
+                return;
+            }
+            using var dialog = new DevicePairingApprovalDialog(pending);
+            completion.TrySetResult(dialog.ShowDialog(this) == DialogResult.OK);
+        }
+
+        try
+        {
+            if (InvokeRequired) BeginInvoke((Action)ShowDialog);
+            else ShowDialog();
+        }
+        catch (ObjectDisposedException) { completion.TrySetResult(false); }
+        catch (InvalidOperationException) { completion.TrySetResult(false); }
+        return completion.Task;
+    }
+
+    private Task<SettingsTransferSelection?> PresentSettingsShareAsync(DesktopSettings settings,
+        CancellationToken cancellationToken) => PresentSettingsTransferDialogAsync(
+            () => DeviceSettingsTransferDialog.ShowShare(this, settings), cancellationToken);
+
+    private Task<SettingsTransferSelection?> PresentSettingsImportAsync(SharedDesktopSettings shared,
+        DesktopSettings settings, CancellationToken cancellationToken) => PresentSettingsTransferDialogAsync(
+            () => DeviceSettingsTransferDialog.ShowImport(this, shared, settings), cancellationToken);
+
+    private Task<PortableSettingsFileSelection?> PresentPortableSettingsExportAsync(DesktopSettings settings,
+        CancellationToken cancellationToken) => PresentPortableSettingsDialogAsync(
+            () => PortableSettingsTransferDialog.ChooseExport(this, settings, cancellationToken), cancellationToken);
+
+    private Task<string?> PickPortableSettingsImportFileAsync(CancellationToken cancellationToken) =>
+        PresentPortableSettingsDialogAsync(() => PortableSettingsTransferDialog.ChooseImportFile(this), cancellationToken);
+
+    private Task<SettingsFields?> ConfirmPortableSettingsImportAsync(SettingsImportPreview preview,
+        CancellationToken cancellationToken) => PresentPortableSettingsDialogAsync(
+            () => PortableSettingsTransferDialog.ConfirmImport(this, preview), cancellationToken);
+
+    private Task<bool> PresentSettingsSyncConsentAsync(CancellationToken cancellationToken)
+    {
+        var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void ShowDialog()
+        {
+            if (cancellationToken.IsCancellationRequested || _closed || IsDisposed || Disposing)
+            {
+                completion.TrySetResult(false);
+                return;
+            }
+            var result = MessageBox.Show(this, HostWindowStrings.Get("SettingsSyncConsentDetail"),
+                HostWindowStrings.Get("SettingsSyncConsentTitle"), MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            completion.TrySetResult(result == DialogResult.Yes);
+        }
+
+        try
+        {
+            if (InvokeRequired) BeginInvoke((Action)ShowDialog);
+            else ShowDialog();
+        }
+        catch (ObjectDisposedException) { completion.TrySetResult(false); }
+        catch (InvalidOperationException) { completion.TrySetResult(false); }
+        return completion.Task;
+    }
+
+    private Task<LocalSettingsOverrides?> PresentSettingsLocalOverridesAsync(SettingsOutbox reviewedState,
+        CancellationToken cancellationToken) => PresentPortableSettingsDialogAsync(
+            () => SettingsLocalOverridesDialog.ShowForReview(this, reviewedState), cancellationToken);
+
+    private Task<bool> PresentSettingsSyncResetAsync(HostSettingsSyncResetPreview preview,
+        CancellationToken cancellationToken)
+    {
+        var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void ShowDialog()
+        {
+            if (cancellationToken.IsCancellationRequested || _closed || IsDisposed || Disposing)
+            {
+                completion.TrySetResult(false);
+                return;
+            }
+
+            var detail = string.Format(CultureInfo.CurrentUICulture,
+                HostWindowStrings.Get("SettingsSyncResetDetail"),
+                preview.Current.Theme, preview.Current.UiLanguage, preview.Current.DefaultDurationMinutes,
+                preview.ResetTo.Theme, preview.ResetTo.UiLanguage, preview.ResetTo.DefaultDurationMinutes);
+            var result = MessageBox.Show(this, detail, HostWindowStrings.Get("SettingsSyncResetTitle"),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            completion.TrySetResult(result == DialogResult.Yes);
+        }
+
+        try
+        {
+            if (InvokeRequired) BeginInvoke((Action)ShowDialog);
+            else ShowDialog();
+        }
+        catch (ObjectDisposedException) { completion.TrySetResult(false); }
+        catch (InvalidOperationException) { completion.TrySetResult(false); }
+        return completion.Task;
+    }
+
+    private Task<bool> PresentSettingsSyncRecoveryAsync(CancellationToken cancellationToken)
+    {
+        var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void ShowDialog()
+        {
+            if (cancellationToken.IsCancellationRequested || _closed || IsDisposed || Disposing)
+            {
+                completion.TrySetResult(false);
+                return;
+            }
+            var result = MessageBox.Show(this, HostWindowStrings.Get("SettingsSyncRecoveryDetail"),
+                HostWindowStrings.Get("SettingsSyncRecoveryTitle"), MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+            completion.TrySetResult(result == DialogResult.Yes);
+        }
+
+        try
+        {
+            if (InvokeRequired) BeginInvoke((Action)ShowDialog);
+            else ShowDialog();
+        }
+        catch (ObjectDisposedException) { completion.TrySetResult(false); }
+        catch (InvalidOperationException) { completion.TrySetResult(false); }
+        return completion.Task;
+    }
+
+    private void OnNetworkAvailabilityChanged(object? sender, NetworkAvailabilityEventArgs eventArgs)
+    {
+        if (eventArgs.IsAvailable) _ = _accountService?.NotifySettingsSyncConnectivityRestored();
+    }
+
+    private void OnNetworkAddressChanged(object? sender, EventArgs eventArgs) =>
+        _ = NetworkInterface.GetIsNetworkAvailable() &&
+            (_accountService?.NotifySettingsSyncConnectivityRestored() ?? false);
+
+    private void UnsubscribeNetworkEvents()
+    {
+        if (!_networkEventsSubscribed) return;
+        NetworkChange.NetworkAvailabilityChanged -= OnNetworkAvailabilityChanged;
+        NetworkChange.NetworkAddressChanged -= OnNetworkAddressChanged;
+        _networkEventsSubscribed = false;
+    }
+
+    private Task<SettingsTransferSelection?> PresentSettingsTransferDialogAsync(
+        Func<SettingsTransferSelection?> showDialog, CancellationToken cancellationToken)
+    {
+        var completion = new TaskCompletionSource<SettingsTransferSelection?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void ShowDialog()
+        {
+            if (cancellationToken.IsCancellationRequested || _closed || IsDisposed || Disposing)
+            {
+                completion.TrySetResult(null);
+                return;
+            }
+            completion.TrySetResult(showDialog());
+        }
+
+        try
+        {
+            if (InvokeRequired) BeginInvoke((Action)ShowDialog);
+            else ShowDialog();
+        }
+        catch (ObjectDisposedException) { completion.TrySetResult(null); }
+        catch (InvalidOperationException) { completion.TrySetResult(null); }
+        return completion.Task;
+    }
+
+    private Task<T?> PresentPortableSettingsDialogAsync<T>(Func<T?> showDialog, CancellationToken cancellationToken) where T : class
+    {
+        var completion = new TaskCompletionSource<T?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void ShowDialog()
+        {
+            if (cancellationToken.IsCancellationRequested || _closed || IsDisposed || Disposing) { completion.TrySetResult(null); return; }
+            completion.TrySetResult(showDialog());
+        }
+        try { if (InvokeRequired) BeginInvoke((Action)ShowDialog); else ShowDialog(); }
+        catch (ObjectDisposedException) { completion.TrySetResult(null); }
+        catch (InvalidOperationException) { completion.TrySetResult(null); }
+        return completion.Task;
+    }
+
+    private Task<SettingsFields?> PresentPortableSettingsDialogAsync(Func<SettingsFields?> showDialog,
+        CancellationToken cancellationToken)
+    {
+        var completion = new TaskCompletionSource<SettingsFields?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void ShowDialog()
+        {
+            if (cancellationToken.IsCancellationRequested || _closed || IsDisposed || Disposing) { completion.TrySetResult(null); return; }
+            completion.TrySetResult(showDialog());
+        }
+        try { if (InvokeRequired) BeginInvoke((Action)ShowDialog); else ShowDialog(); }
+        catch (ObjectDisposedException) { completion.TrySetResult(null); }
+        catch (InvalidOperationException) { completion.TrySetResult(null); }
+        return completion.Task;
     }
 
     internal bool SmokeSucceeded { get; private set; }
@@ -297,7 +545,7 @@ internal sealed class MainForm : Form, IHostWindowController
             recoveryCodeSaver: SaveRecoveryCodeAsync,
             applicationCatalog: _applicationCatalog, iconProvider: _iconProvider,
             windowController: this, shellController: ShellController,
-            startupRegistration: StartupRegistration);
+            startupRegistration: StartupRegistration, accountService: _accountService);
         core.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
         core.NavigationStarting += OnNavigationStarting;
         core.NavigationCompleted += OnNavigationCompleted;
@@ -808,12 +1056,19 @@ internal sealed class MainForm : Form, IHostWindowController
         }
 
         _closed = true;
+        UnsubscribeNetworkEvents();
         _smokeTimeout.Cancel();
         _smokeTimeout.Dispose();
         _documentLifetime.Dispose();
         TearDownWebView();
         // Closing the renderer never sends a session stop request. The service
         // remains the authority for any existing session.
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing) UnsubscribeNetworkEvents();
+        base.Dispose(disposing);
     }
 
     private string GetUserDataFolder()

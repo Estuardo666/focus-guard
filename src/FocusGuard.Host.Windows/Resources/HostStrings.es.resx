@@ -19,6 +19,62 @@
   <data name="ShellReady" xml:space="preserve"><value>La interfaz local está cargada.</value></data>
   <data name="BridgeUnavailable" xml:space="preserve"><value>El acceso al servicio está desactivado hasta integrar la autorización de la Fase 4.</value></data>
   <data name="RecoveryCodeFileTitle" xml:space="preserve"><value>Guardar código de recuperación de FocusGuard</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="DeviceRecoveryTitle" xml:space="preserve"><value>Guarda el kit de recuperación del dispositivo</value></data>
+  <data name="DeviceRecoveryHeading" xml:space="preserve"><value>Guarda este kit en un lugar seguro</value></data>
+  <data name="DeviceRecoveryDetail" xml:space="preserve"><value>Este kit permite recuperar la cuenta si pierdes todos los dispositivos vinculados. Guárdalo fuera de este PC, por ejemplo en papel o en un gestor de contraseñas. FocusGuard sólo envía la clave pública de recuperación a la nube. No compartas este kit.</value></data>
+  <data name="DeviceRecoveryCodeLabel" xml:space="preserve"><value>Kit de recuperación de FocusGuard</value></data>
+  <data name="DeviceRecoverySaved" xml:space="preserve"><value>Guardé este kit en un lugar seguro</value></data>
+  <data name="DeviceRecoveryContinue" xml:space="preserve"><value>Continuar y vincular</value></data>
+  <data name="DevicePairApprovalTitle" xml:space="preserve"><value>¿Vincular este equipo?</value></data>
+  <data name="DevicePairApprovalDetail" xml:space="preserve"><value>Apruébalo sólo si puedes comparar en persona esta huella con la que muestra el equipo nuevo.</value></data>
+  <data name="DevicePairFingerprint" xml:space="preserve"><value>Huella del dispositivo</value></data>
+  <data name="DevicePairRequestCode" xml:space="preserve"><value>Código de solicitud</value></data>
+  <data name="DevicePairCompared" xml:space="preserve"><value>Comparé todos los caracteres y las huellas coinciden.</value></data>
+  <data name="DevicePairApprove" xml:space="preserve"><value>Aprobar dispositivo</value></data>
+  <data name="SettingsTransferShareTitle" xml:space="preserve"><value>¿Compartir ajustes seleccionados?</value></data>
+  <data name="SettingsTransferShareDetail" xml:space="preserve"><value>Sólo el tema, idioma y duración predeterminada marcados se guardarán en un documento cifrado de la cuenta. Nunca se incluyen reglas de apps/sitios, perfiles, permisos, agenda ni historial.</value></data>
+  <data name="SettingsTransferImportTitle" xml:space="preserve"><value>¿Importar ajustes seleccionados?</value></data>
+  <data name="SettingsTransferImportDetail" xml:space="preserve"><value>Elige qué valores compartidos aplicar aquí. Los ajustes desmarcados y todas las reglas locales de apps/sitios no cambian.</value></data>
+  <data name="SettingsTransferThemeShare" xml:space="preserve"><value>Tema: {0}</value></data>
+  <data name="SettingsTransferThemeImport" xml:space="preserve"><value>Tema: {0} → {1}</value></data>
+  <data name="SettingsTransferLanguageShare" xml:space="preserve"><value>Idioma de interfaz: {0}</value></data>
+  <data name="SettingsTransferLanguageImport" xml:space="preserve"><value>Idioma de interfaz: {0} → {1}</value></data>
+  <data name="SettingsTransferDurationShare" xml:space="preserve"><value>Duración predeterminada: {0} minutos</value></data>
+  <data name="SettingsTransferDurationImport" xml:space="preserve"><value>Duración predeterminada: {0} → {1} minutos</value></data>
+  <data name="SettingsTransferShare" xml:space="preserve"><value>Compartir selección</value></data>
+  <data name="SettingsTransferImport" xml:space="preserve"><value>Aplicar selección</value></data>
+  <data name="PortableSettingsExportTitle" xml:space="preserve"><value>¿Exportar ajustes portátiles?</value></data>
+  <data name="PortableSettingsExportDetail" xml:space="preserve"><value>Esto crea un archivo JSON legible que contiene sólo el tema, el idioma de interfaz y la duración predeterminada. Mantén el archivo privado. No contiene identidad de cuenta, claves, rutas, reglas, permisos ni políticas.</value></data>
+  <data name="PortableSettingsImportTitle" xml:space="preserve"><value>Revisar ajustes para importar</value></data>
+  <data name="PortableSettingsImportDetail" xml:space="preserve"><value>Elige qué valores aplicar a esta PC. Los valores sin marcar y las demás preferencias locales quedan iguales. Los valores seleccionados se guardarán aquí y, si la sincronización está activa, seguirán su ruta habitual de edición.</value></data>
+  <data name="PortableSettingsTheme" xml:space="preserve"><value>Tema: {0} → {1}</value></data>
+  <data name="PortableSettingsLanguage" xml:space="preserve"><value>Idioma de interfaz: {0} → {1}</value></data>
+  <data name="PortableSettingsDuration" xml:space="preserve"><value>Duración predeterminada: {0} → {1} minutos</value></data>
+  <data name="PortableSettingsImport" xml:space="preserve"><value>Importar selección</value></data>
+  <data name="PortableSettingsFilter" xml:space="preserve"><value>Ajustes FocusGuard (*.json)|*.json</value></data>
+  <data name="PortableSettingsExported" xml:space="preserve"><value>Ajustes portátiles exportados.</value></data>
+  <data name="PortableSettingsImported" xml:space="preserve"><value>Se importaron los ajustes portátiles seleccionados.</value></data>
+  <data name="PortableSettingsInvalid" xml:space="preserve"><value>El archivo seleccionado no es válido o supera el límite de 8 KiB.</value></data>
+  <data name="SettingsSyncConsentTitle" xml:space="preserve"><value>¿Activar sincronización automática de ajustes?</value></data>
+  <data name="SettingsSyncConsentDetail" xml:space="preserve"><value>FocusGuard mantendrá sincronizados el tema, el idioma de interfaz y la duración predeterminada entre los dispositivos vinculados a esta cuenta. Los valores están cifrados de extremo a extremo. Las reglas de apps/sitios, perfiles, permisos, agenda, historial y sesiones activas permanecen locales. Puedes desactivar la sincronización aquí cuando quieras.</value></data>
+  <data name="SettingsSyncResetTitle" xml:space="preserve"><value>¿Restablecer los ajustes compartidos en los dispositivos vinculados?</value></data>
+  <data name="SettingsSyncResetDetail" xml:space="preserve"><value>Valores actuales — tema: {0}, idioma de interfaz: {1}, duración predeterminada: {2} minutos. Después del reset — tema: {3}, idioma de interfaz: {4}, duración predeterminada: {5} minutos. El restablecimiento cifrado se aplica cuando cada dispositivo vinculado sincronice. No modifica sesiones de enfoque activas. Las reglas de apps/sitios, perfiles, permisos, agenda e historial permanecen locales y sin cambios. ¿Continuar?</value></data>
+    <data name="SettingsSyncRecoveryTitle" xml:space="preserve"><value>¿Reparar el reintento de sincronización?</value></data>
+    <data name="SettingsSyncRecoveryDetail" xml:space="preserve"><value>Esto elimina solo el archivo local dañado del tiempo de espera y sus temporales reconocidos para este dispositivo y cuenta. No cambia el outbox cifrado, los ajustes locales ni el consentimiento. FocusGuard reintentará la sincronización con el consentimiento existente. ¿Continuar?</value></data>
+  <data name="SettingsLocalOverridesTitle" xml:space="preserve"><value>¿Mantener ajustes seleccionados en esta PC?</value></data>
+  <data name="SettingsLocalOverridesDetail" xml:space="preserve"><value>Los ajustes marcados conservan en esta PC los valores mostrados. Los desmarcados siguen el valor compartido o borrador verificado más reciente. La elección permanece local y no cambia el documento de la cuenta.</value></data>
+  <data name="SettingsLocalOverridesKeepTheme" xml:space="preserve"><value>Mantener el tema en esta PC</value></data>
+  <data name="SettingsLocalOverridesKeepLanguage" xml:space="preserve"><value>Mantener el idioma de interfaz en esta PC</value></data>
+  <data name="SettingsLocalOverridesKeepDuration" xml:space="preserve"><value>Mantener la duración predeterminada en esta PC</value></data>
+  <data name="SettingsLocalOverridesThemeValues" xml:space="preserve"><value>Esta PC: {0} · Compartido/borrador: {1}</value></data>
+  <data name="SettingsLocalOverridesLanguageValues" xml:space="preserve"><value>Esta PC: {0} · Compartido/borrador: {1}</value></data>
+  <data name="SettingsLocalOverridesDurationValues" xml:space="preserve"><value>Esta PC: {0} minutos · Compartido/borrador: {1} minutos</value></data>
+  <data name="SettingsLocalOverridesDark" xml:space="preserve"><value>Oscuro</value></data>
+  <data name="SettingsLocalOverridesLight" xml:space="preserve"><value>Claro</value></data>
+  <data name="SettingsLocalOverridesSpanish" xml:space="preserve"><value>Español</value></data>
+  <data name="SettingsLocalOverridesEnglish" xml:space="preserve"><value>Inglés</value></data>
+  <data name="SettingsLocalOverridesSave" xml:space="preserve"><value>Guardar opciones</value></data>
   <data name="TrayOpen" xml:space="preserve">
     <value>Abrir FocusGuard</value>
   </data>

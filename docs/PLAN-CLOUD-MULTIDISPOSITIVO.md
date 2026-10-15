@@ -1,9 +1,10 @@
 # Plan detallado: FocusGuard Cloud y sincronización entre dispositivos
 
 Fecha: 11 de octubre de 2026.
-Repositorio revisado: `E:\FocusGuard\FocusGuard-Autopilot`.
+Repositorio oficial actual (migrado el 13 de octubre): `D:\Users\Stuart\Documents\Portafolio\Trabajos\Totem\FocusGuard`. La referencia `E:\FocusGuard\FocusGuard-Autopilot` describe la ubicación inicial del documento.
 Referencia de lectura: commit `cb14edb`, con cambios locales preexistentes.
-Estado: propuesta de ejecución futura; no se ha implementado ni desplegado ninguna función.
+Estado actualizado el 15 de octubre de 2026: Fases 0 y 1 están implementadas para staging; la aceptación principal de Fase 2, incluida la transferencia E2EE entre dos Windows, está completada con evidencia física/reportes directos y pruebas sintéticas. Fase 3 integra en Windows la sincronización automática, opt-in persistente, reanudación DPAPI, wake-up de red consentido, recuperación segura, conflictos, tombstones y reset global con vista previa. El backoff/Retry-After mantiene prioridad al reconectar. Falta la aceptación física de sincronización automática entre dos PCs; no se afirma que el bloqueo multidispositivo esté disponible.
+Segunda revisión: 11 de octubre de 2026; correcciones de consistencia, seguridad y ejecución documentadas en la sección 22.
 Ampliación del alcance: modo estricto remoto en todos los dispositivos, solicitado por el propietario; Apple conserva bloqueo simulado.
 Autoridad del alcance: petición del propietario. Este documento propone ampliar el producto Windows actual; no sustituye automáticamente las especificaciones ni los ADR aceptados.
 
@@ -27,7 +28,7 @@ El alcance incluye **modo estricto remoto en todos los dispositivos**: una sesi�
 6. Windows confirma los canales de bloqueo disponibles; Linux y Android confirman solo capacidades habilitadas y probadas.
 7. Mac e iPhone muestran «En enfoque — modo simulado».
 8. La computadora muestra, por ejemplo: «2 dispositivos protegidos, 1 pendiente y 2 en simulación».
-9. Un Android pendiente al reconectarse consulta el estado vigente. Si aún quedan 12 minutos y está dentro de la ventana de aplicación tardía autorizada, aplica como máximo esos 12 minutos; fuera de esa ventana pide confirmación local. Nunca reinicia los 50.
+9. Un Android pendiente al reconectarse consulta el estado vigente. Si se conecta 3 minutos después, quedan como máximo 47 minutos y puede aplicarlos dentro de la ventana tardía predeterminada de 10 minutos. Si vuelve cuando solo quedan 12 minutos, requiere confirmación local, salvo que se autorizara previamente una ventana mayor. Nunca reinicia los 50.
 10. Al finalizar, cada motor libera localmente sus restricciones aunque el servidor no responda.
 
 El botón expresa la intención global. El estado agregado expresa lo que los dispositivos han confirmado. Una aceptación HTTP o un envío push nunca equivalen a bloqueo aplicado.
@@ -47,6 +48,7 @@ El botón expresa la intención global. El estado agregado expresa lo que los di
 | Sesiones globales | Temporizador normal como primer incremento; estricto remoto como entrega requerida; ciclos y agenda después |
 | Infraestructura | Arquitectura autoalojable; proveedor concreto pendiente de evaluación operativa |
 | Privacidad | Sin anuncios, venta de datos, telemetría de uso ni historial cloud por defecto |
+| Zero Data Retention (ZDR) | Aplicar a categorías excluidas y contenido privado descifrado en cloud; no prometer ZDR total del servicio |
 | Historial y reflexiones | Locales; sincronización futura solo mediante consentimiento separado |
 | Distribución Apple | Prototipo web/PWA primero; nativo de prueba opcional con acceso a Mac |
 | Entrega de esta tarea | Solo este Markdown |
@@ -267,17 +269,25 @@ El QR no contiene contraseñas, refresh tokens ni claves de cuenta. El código m
 
 Si no existe dispositivo confiable, usar el kit de recuperación E2EE. Si también se perdió, recuperar el login permite reinicializar la sincronización con claves nuevas, no descifrar el contenido anterior.
 
+La recuperación de membresía necesita una raíz de firma de recuperación separada de la clave de contenido, respaldada cifrada en el kit. La primera vinculación fija su clave pública como ancla. Una transición de recuperación exige login reciente y firma de esa raíz; solo poseer la clave compartida de cifrado no autoriza añadir dispositivos. Sin kit ni dispositivo confiable, la reinicialización crea una nueva generación de cuenta sync, revoca la membresía anterior y exige nuevo consentimiento local de recepción en todos los equipos. Nunca sustituir silenciosamente su ancla.
+
 ### 7.4 Permisos por dispositivo
 
 Opciones: «Puede iniciar sesiones globales», «Puede iniciar sesiones estrictas remotas», «Puede recibir sesiones», «Incluido por defecto», «Aceptar temporizadores normales», «Aceptar modo estricto remoto», «Duración remota máxima» y «Perfil local asignado».
 
 Recibir estricto remoto requiere habilitación local separada, inicialmente desactivada, con límites, canales autorizados, advertencias, recuperación preparada y prueba de disponibilidad. El usuario puede preautorizar futuras sesiones estrictas desde sus dispositivos confiables; no necesita confirmar cada inicio en cada equipo si sigue dentro de ese consentimiento. El cloud no puede otorgar esa preautorización ni ampliar sus límites.
 
+La preautorización es una ampliación propuesta del protocolo existente, no una capacidad actual. Antes de implementarla, actualizar SPEC/ADR para describir confirmación remota, reconocimiento de trabajo sin guardar y preparación de recovery. Propuesta inicial: credencial de recuperación local provisionada con el propietario presente, mostrada una vez, almacenada solo como hash salado y confirmada como guardada. Emitir tickets únicamente mientras siga válida; no generar en segundo plano un código que nadie pueda guardar. Reutilizarla durante su vigencia requiere decisión explícita en el ADR; si se exige código nuevo por sesión, el destino requiere preparación local interactiva antes de emitir el ticket. Nunca fingir el ACK de código guardado. Rotarla mediante revisión local, fuera de una sesión activa.
+
+El consentimiento estricto identifica iniciadores, perfiles/revisiones permitidos y canales mínimos. Un dispositivo nuevo no hereda permiso de iniciar estricto por defecto. Revocar consentimiento bloquea preparaciones/commits nuevos; no cambia el fin de una ejecución ya aplicada.
+
 La habilitación de permisos OS, recovery y recepción remota se hace localmente. Ningún ajuste cloud los activa silenciosamente. En Windows multiusuario, ligar la cuenta cloud al SID/perfil local; el servicio valida esa identidad y no aplica órdenes a sesiones de otros usuarios.
 
 ### 7.5 Revocación
 
 Reautenticar para revocar; registrar transacción, cerrar conexiones, negar tokens operativos y futuros comandos/ACK. Un ACK de un dispositivo revocado ya no cambia el agregado.
+
+La denegación de acceso es inmediata; rotar claves requiere un miembro confiable o kit disponible. Hasta completar la rotación, impedir publicaciones nuevas de contenido compartido, sin impedir expiración/recovery local.
 
 Rotar la época de cifrado para datos futuros y distribuir nuevas claves solo a los miembros autorizados. Un dispositivo revocado puede conservar contenido que ya recibió; no prometer borrado remoto comprobable.
 
@@ -346,6 +356,8 @@ La secuencia del servidor sirve para coordinación operacional. La autenticidad 
 
 ### 8.4 Política de dispositivos tardíos
 
+Esta sección regula sesiones normales. Para Strict prevalecen los tickets y reglas de la sección 8.8.
+
 Por defecto, los dispositivos que ya pertenecían al conjunto de destinos pueden aplicar el tiempo restante si todavía no aceptaron esa sesión, está vigente y su consentimiento permite recepción remota.
 
 Los dispositivos vinculados después del inicio no se incluyen automáticamente. Mostrar «Unirse a la sesión activa» con revisión local. No reiniciar una ejecución ya interrumpida o parada.
@@ -376,6 +388,8 @@ UTC en contratos, zona local en pantalla y reloj monotónico para el transcurso.
 
 Un retraso nunca añade duración. En cada destino: fin permitido = el menor entre fin global, límite local consentido y duración restante validada. No depender de heartbeats cloud para mantener una sesión válida; las leases de enforcement local siguen la semántica existente.
 
+El mínimo anterior es un límite de seguridad, no autorización para truncar silenciosamente la sesión revisada. Antes de preparar/aplicar, si el tiempo restante hasta el fin global supera el máximo local consentido, el destino rechaza y el origen debe revisar una duración menor o un conjunto diferente. Los destinos que aceptan conservan el fin absoluto revisado; Strict no convierte un ticket limitado en uno de duración distinta durante commit.
+
 Los canales liberan según expiración local, pérdida de autoridad local o integridad inválida. Un mensaje cloud corrupto se rechaza y no toca una sesión local válida. Una persistencia activa local corrupta conserva la recuperación/fail-open del proyecto.
 
 ### 8.7 Parar globalmente y recuperación
@@ -405,6 +419,10 @@ Logout, desinstalación de UI o caída del proveedor de identidad no añaden dur
 9. Cada destino verifica commit, ticket, vigencia y consentimiento de nuevo, persiste su decisión y activa exactamente una vez. Windows utiliza el flujo estricto local autorizado, sin simular confirmaciones ni eludir recovery.
 10. Los motores reales devuelven ACK del modo, snapshot, fin y canales; Apple devuelve Simulated con modo solicitado Strict. La pantalla origen muestra cualquier pendiente o activación parcial.
 
+Cada ticket vincula el digest de política lógica, digest compilado local, revisión del mapeo de apps, versión del consentimiento y canales mínimos. Cambiar mapeo/permiso/consentimiento tras preparar invalida el ticket; no recompilar una política distinta al hacer commit. El estado de recovery preparado se acredita sin enviar su secreto ni hash de credencial al cloud.
+
+Fijar el fin absoluto antes de preparar y mostrarlo en la revisión final: preparar consume tiempo de la sesión. Si hacen falta tickets nuevos, renovar la revisión visible. Los tickets deben estar vigentes tanto al aceptar el commit como al consumirlo en cada destino; nunca activar un ticket vencido porque su recibo de servidor sea antiguo y válido.
+
 **No hay atomicidad garantizada de aplicación entre sistemas.** Tener todos los tickets antes del commit reduce fallos, pero un dispositivo puede perder red o permisos después. No mostrar «estricto aplicado en todos» hasta recibir los ACK correspondientes, y seguir distinguiendo las simulaciones. No enviar una parada normal como rollback de un estricto ya aplicado; los destinos activos mantienen expiración y recuperación local.
 
 #### Desconexión y aplicación tardía
@@ -426,6 +444,15 @@ Logout, desinstalación de UI o caída del proveedor de identidad no añaden dur
 | iPhone | Modo estricto simulado dentro de la app | Mismo estado cloud; cerrar/cambiar de app sigue siendo posible |
 
 «Estricto» resiste cancelación impulsiva dentro de capacidades declaradas; conserva los límites del proyecto frente a un administrador determinado. Android/Linux no se anuncian con garantías equivalentes a Windows sin evidencia. El estricto remoto de todos los dispositivos es un requisito del plan y tiene una fase obligatoria; las limitaciones de plataforma se hacen visibles, no se ocultan mediante ACK ficticios.
+
+#### Estados de coordinación y reserva de cuenta
+
+- Preparing → Ready → Committed; Preparing/Ready también pasan a Cancelled o PreparationExpired. Toda reserva caduca en un máximo de dos minutos y se libera sin intervención del origen.
+- El commit hace compare-and-swap desde Ready y valida membresía, destinos, tickets y revisiones. Cancel y commit concurrentes tienen un solo ganador; si gana commit, cancelar devuelve conflicto y nunca genera parada.
+- Committed es una decisión, no enforcement. El agregado muestra Active, PartiallyApplied o Unknown según ACK y se vuelve Expired al llegar el fin original. Los destinos conservan sus estados locales.
+- Un commit sin ningún ACK libera la exclusión de cuenta al llegar su fin; no deja la cuenta ocupada indefinidamente. Un fallo parcial no autoriza activaciones con tickets vencidos.
+- Parar una sesión normal prohíbe inicios tardíos, pero un destino offline puede seguir bloqueado hasta su fin/reconcile. Una nueva sesión advierte ese posible solapamiento y el destino rechaza mientras siga ocupado localmente.
+- Preparar reserva el lugar de sesión global frente a inicios normal/Strict concurrentes; no reemplaza una sesión vigente ni impide recovery local.
 
 ## 9. Ajustes globales interdispositivo
 
@@ -460,7 +487,7 @@ La preferencia actual `EnforcementEnabled` no se copia como permiso remoto. El c
 ### 9.2 Protocolo de ajustes
 
 - Documento cifrado versionado por entidad, con revisión base y ETag.
-- El servidor asigna revisiones y aplica compare-and-swap; no necesita leer ajustes.
+- El servidor aplica compare-and-swap con baseRevision. El cliente cifra y firma proposedRevision = baseRevision + 1; el servidor acepta exactamente esa revisión o devuelve conflicto. El cursor global de transporte se asigna después y queda fuera del AEAD del documento. El servidor no necesita leer ajustes.
 - El cliente conserva base descifrada, borrador y nueva versión remota para merge de tres vías.
 - Si campos distintos cambiaron, merge local seguro; si el mismo campo cambió, mostrar conflicto.
 - Operaciones de política, consentimientos y borrado no se fusionan silenciosamente.
@@ -486,6 +513,7 @@ Si falta mapeo, señalar exactamente qué grupos no pueden aplicarse. No convert
 | ID cuenta/dispositivo, plataforma, versión | Cloud | Autorización y compatibilidad |
 | Claves públicas, revocaciones, épocas | Cloud | Vinculación verificable |
 | Nombre, perfiles, dominios, ajustes | Cloud cifrado E2EE | Sincronización privada |
+| Idioma/zona horaria del perfil personal, si se sincronizan | Documento cifrado | El servidor no necesita interpretar estas preferencias |
 | Sesión: ID, destinos, inicio/fin, estado básico | Cloud como metadatos | Routing, caducidad, estado agregado |
 | Detalle de perfil y reglas de sesión | Cifrado E2EE | Ejecución local |
 | ACK básico/código de resultado | Cloud, mínimo | Confirmar entrega/aplicación |
@@ -522,6 +550,8 @@ Probar que resetear contraseña no revela claves ni contenido anterior. Cuando n
 
 Cambiar contraseña conserva la clave E2EE; rotar claves E2EE no sustituye la revocación de tokens de identidad.
 
+Tras rotar contenido, publicar una envoltura de la época nueva bajo la clave pública de recuperación anclada. Así el kit vigente recupera la época nueva sin revelar su secreto al dispositivo que rota. Probar recuperación tras varias revocaciones. Ante compromiso del kit, sustituir también sus raíces/secretos mediante proceso explícito; no prometer que un kit antiguo deja de descifrar copias históricas.
+
 ### 10.4 Almacenamiento y límites
 
 Windows: almacén/DPAPI ligado al usuario con ACL correctas. Android: Keystore para proteger secretos según capacidades verificadas. Linux: Secret Service/keyring; si no está disponible, pedir desbloqueo explícito del vault o restringir sync, sin persistencia insegura silenciosa. Apple nativo futuro: Keychain.
@@ -538,6 +568,8 @@ No afirmar «ningún tercero procesa datos» si se usa infraestructura ajena. Ev
 
 ### 10.6 Retención propuesta
 
+Esta tabla describe persistencia necesaria. Las categorías excluidas por 10.7 no se incorporan a logs ni backups. Guardar ciphertext sigue siendo retener datos, aunque el servidor no pueda leerlos.
+
 | Clase | Retención inicial propuesta |
 |---|---|
 | Solicitudes de vinculación | 5 min de validez; eliminación dentro de 24 h |
@@ -553,7 +585,40 @@ Tras borrar cuenta: desactivar acceso de inmediato, eliminar datos activos dentr
 
 Exportación de contenido descifrado realizada en cliente confiable. El servidor exporta metadatos y ciphertext si no tiene las claves. La eliminación de cuenta no deja sesiones locales sin fecha de liberación.
 
+Antes del borrado mostrar ejecuciones estrictas conocidas y explicar que borrar cuenta no desbloquea. El motor conserva snapshot, fin y recovery necesarios hasta terminar; la limpieza del vault sync no puede borrar esa autoridad local. Limpiar datos locales de sync después, según consentimiento y estado real. No garantizar borrado inmediato de equipos offline.
+
 Estos tiempos son decisiones del producto, pendientes de revisión de obligaciones aplicables; no se presentan como cumplimiento legal certificado.
+
+### 10.7 Zero Data Retention: solo donde sea factible y aplicable
+
+**Decisión:** ZDR total no es compatible con el alcance actual: login, dispositivos vinculados, sincronización offline, recovery, revocación y protección contra replay requieren persistencia. Aplicar **retención cero cloud a categorías expresamente excluidas**, preferentemente sin recopilarlas, y **no recepción ni retención del contenido descifrado de documentos E2EE**. No confundir ausencia de retención, cifrado y borrado diferido.
+
+| Categoría | ¿Retención cero cloud? | Tratamiento |
+|---|---|---|
+| Navegación real, URLs visitadas, contenido web, teclado, capturas, contactos e inventario completo de apps | Sí, por no recopilación | Nunca transmitir ni incorporar a diagnósticos; un dominio configurado como regla pertenece al perfil cifrado |
+| Objetivos, reflexiones e historial detallado local | Sí, en el alcance inicial | No se envían; almacenamiento local declarado por separado |
+| Perfiles, reglas y ajustes E2EE descifrados | Sí, en backend/proveedores de sync | Cifrar en cliente; API, worker, soporte y BFF no reciben claves para descifrarlos |
+| Bodies, cookies, tokens y claves en logs/tracing | Sí, en diagnóstico | No capturar payloads, incluso cifrados; almacenes funcionales autorizados de tokens se tratan aparte |
+| Correo, hash de contraseña, estado y perfil de identidad | No | Persistencia mínima necesaria para cuenta y seguridad |
+| Documentos cifrados, snapshots y envolturas de recovery | No | Persistencia para sincronización con retención/borrado de 10.6 |
+| Sesiones, tickets, ACK, revocaciones y deduplicación | No | Metadatos mínimos con TTL para integridad y reconexión |
+| Logs técnicos/de seguridad y backups | No | Retención limitada declarada, sin contenido privado ni credenciales |
+| Correo transaccional y push opcional | No garantizado | Validar políticas del proveedor; token y aviso opaco mínimos |
+
+El correo, contraseña y nombre procesados por identidad no quedan cubiertos por una promesa de ausencia de datos en claro en todo el sistema. La garantía E2EE cubre documentos privados de sincronización. Los dispositivos descifran y almacenan políticas necesarias: no se promete retención cero local.
+
+#### Controles y criterio de aceptación
+
+1. Lista permitida de campos de log: tipo, resultado sanitizado, duración e IDs opacos necesarios. Desactivar bodies, headers sensibles, query strings y variables locales en errores; no habilitar debug con payload completo en producción.
+2. Revisar API, identidad, BFF, proxy, CDN/WAF si existen, contenedores, APM, worker, colas, soporte y backups. Sin grabación de sesiones ni captura de payloads por defecto.
+3. Evitar caché de respuestas privadas en CDN/service worker. La PWA almacena recursos estáticos; cualquier vault privado local requiere diseño y declaración propios.
+4. Revisar core dumps, swap y snapshots operativos por exposición de secretos. No prometer borrado físico instantáneo de RAM, SSD o infraestructura ajena.
+5. Probar canarios en destinos reales: contenido E2EE descifrado ausente del servidor; payloads y credenciales ausentes de logs/tracing y copias de esos logs. Verificar también purga/restore de datos retenidos.
+6. Antes de anunciar ZDR, documentar alcance y evidencia por proveedor/componente. Si no puede verificarse, declarar «retención mínima» o «no recopilamos esta categoría» según corresponda. Borrar al terminar un TTL no equivale a ZDR.
+
+Conservar eventos mínimos de seguridad y obligaciones aplicables. OWASP recomienda excluir secretos/contenido sensible y definir retención de logs; no sustituir controles de seguridad por apagar toda trazabilidad. [Guía de logging OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html).
+
+No añadir servicios de IA para obtener una modalidad ZDR: este producto no necesita procesar contenido con IA. Cualquier integración futura exigiría revisión separada de endpoints, excepciones y condiciones antes de enviar datos.
 
 ## 11. Modelo de datos y contratos
 
@@ -568,6 +633,8 @@ Estos tiempos son decisiones del producto, pendientes de revisión de obligacion
 | PairingRequests | requestId, accountId, huella, nonceHash, expiresAt, consumedAt |
 | EncryptedDocuments | accountId, entityId, tipo, schema, revision, epoch, ciphertext, firma |
 | GlobalSessions | accountId, sessionId, sequence, startAt, endAt, modo, estado |
+| StrictPreparations | accountId, preparationId, intentDigest, destinos, baseRevision, expiresAt, estado |
+| StrictPreparationTickets | preparationId, deviceId, ticketDigest, consentRevision, mappingRevision, policyDigests, expiresAt, firma |
 | SessionTargets | sessionId, deviceId congelado, snapshot cifrado o referencia exacta |
 | CommandReceipts | commandId, deviceId, estado, channelHealth, sequence, receivedAt |
 | IdempotencyRecords | accountId, key, requestDigest, responseRef, expiresAt |
@@ -585,6 +652,7 @@ Autorización por objeto siempre en servidor, con defensa adicional mediante RLS
 |---|---|
 | GET /v1/me | Perfil y estado de cuenta |
 | PATCH /v1/me | Campos permitidos de perfil personal |
+| PUT /v1/documents/account-preferences | Idioma, zona horaria y preferencias privadas, cifradas y con CAS |
 | GET /v1/devices | Dispositivos propios |
 | POST /v1/pairings | Solicitud de vinculación |
 | POST /v1/pairings/{id}/approve | Membresía firmada y entrega de claves |
@@ -596,6 +664,7 @@ Autorización por objeto siempre en servidor, con defensa adicional mediante RLS
 | DELETE /v1/documents/{id} | Tombstone versionado |
 | POST /v1/sessions | Iniciar intención global normal; no activar estricto sin preparación/commit |
 | POST /v1/sessions/strict/prepare | Preparar intención estricta y reunir tickets por destino |
+| POST /v1/sessions/{id}/strict/tickets | Publicar ticket firmado del destino, sin aplicar bloqueo |
 | POST /v1/sessions/{id}/strict/commit | Comprometer estricto con tickets y confirmación firmada |
 | POST /v1/sessions/{id}/strict/cancel-preparation | Cancelar reservas antes del commit; nunca parar una ejecución activa |
 | POST /v1/sessions/{id}/stop | Parar sesión normal |
@@ -608,6 +677,8 @@ OIDC gestiona login/logout/reset/MFA; no duplicar endpoints de contraseñas dent
 
 Límites iniciales: envelope de comando 64 KiB; documento de perfil 256 KiB; 10 dispositivos; 100 perfiles; páginas de 50 entidades; no permitir payloads ilimitados. Son límites del cloud, independientes del máximo actual de IPC local; el adaptador compila y valida antes de enviar al servicio.
 
+Los límites incluyen serialización, base64, firmas y tickets. Un perfil de 256 KiB no cabe necesariamente en un envelope de 64 KiB: el comando puede referenciar un snapshot cifrado inmutable por ID/revisión/digest. Retener el snapshot y sus envolturas mientras exista preparación/ejecución y durante los 7 días de reconciliación; borrar el perfil editable no elimina ese snapshot. El destino debe descargarlo, validar el digest y compilarlo antes de emitir Prepared; si supera límites del IPC/política local, devolver PolicyUnsupported antes de bloquear. No fragmentar ni relajar el contrato local para ocultar exceso de tamaño.
+
 El envelope incluye `schemaVersion`, `commandId`, `sessionId`, `accountId`, `originDeviceId`, `targetDeviceIds`, `membershipRevision`, `keyEpoch`, `issuedAtUtc`, `startAtUtc`, `endAtUtc`, `mode`, `ciphertext` y `originSignature`. El transporte añade `sequence` y `serverReceipt` tras el commit, separados de la intención firmada por el origen.
 
 Firmar representación canónica acordada, no JSON serializado incidentalmente. Rechazar campos desconocidos en comandos y mensajes locales con el mismo rigor del proyecto.
@@ -619,6 +690,12 @@ Errores funcionales tipados: Unauthorized, DeviceRevoked, ConsentRequired, Confl
 No devolver stack traces, secretos ni reglas privadas. Para IDs de otra cuenta responder sin revelar existencia. Cada request valida emisor, audiencia, expiración, cuenta, scope, dispositivo activo y pertenencia de objetos.
 
 Identidad de cuenta y firma de dispositivo son necesarias para mutaciones de sincronización. Nunca usar una clave API compartida incluida en instaladores. Revocaciones se consultan al mutar y al establecer conexión; las sesiones activas de eventos se cierran cuando corresponda.
+
+También las lecturas de snapshots/documentos y la conexión de eventos requieren dispositivo vinculado activo, no solo un token de cuenta válido. Emitir una sesión operativa ligada a deviceId y huella de clave tras una prueba de posesión con challenge de un solo uso. Las peticiones firman método, ruta, digest, timestamp y nonce/requestId; el servidor verifica vinculación y evita replay. No asumir que un JWT OIDC de usuario identifica la instalación.
+
+Para Strict, la reautenticación produce una autorización de operación breve, de un solo uso, ligada a digest de intención, iniciador y revisión de destinos. El backend comprueba frescura de autenticación y MFA cuando corresponda; un booleano enviado por la UI no acredita reautenticación. El origen firma commit y prueba operativa. Validar este flujo con OIDC/BFF y almacén nativo en Fase 1/4B.
+
+Un ACK firmado prueba qué cliente informó un resultado y evita alteraciones, pero no constituye atestación hardware ni prueba frente a un cliente manipulado. Applied solo se emite después de confirmación del motor y de sus canales; la evidencia de enforcement real se obtiene mediante pruebas instaladas. Renombrar «atestación» de presencia como «reporte firmado de estado» en contratos y documentación para no prometer resistencia a un administrador determinado.
 
 ## 12. UX detallada y simulaciones Apple
 
@@ -780,9 +857,11 @@ Presupuesto técnico inicial bajo/medio para piloto; esfuerzo operativo relevant
 
 ## 16. Fases de implementación futura
 
-Las tareas siguientes son backlog propuesto. No se agregan a TASKS.md en esta entrega. Cada fase requiere checkpoint, seguridad/UX/recuperación y validaciones apropiadas según AGENTS.md al implementarse.
+Las tareas siguientes son backlog propuesto. Al crear el plan no se agregaron a TASKS.md; al iniciar la Fase 0 se registró CLOUD-0 como pendiente, sin marcar los prototipos completados. Cada fase requiere checkpoint, seguridad/UX/recuperación y validaciones apropiadas según AGENTS.md al implementarse.
 
 ### Fase 0 — Contratos y decisiones (3–5 días de ingeniería)
+
+Fase0 completada el11 de octubre de2026: [auditoría de los ocho requisitos](cloud-phase0/COMPLETION-AUDIT.md), ADR0016–0021, OpenAPI31 operaciones/57schemas,33 tests, spikes Linux/Android reales en entornos de ensayo y selección de dependencias. El propietario autorizó código y Android virtual durante su ejecución. Samsung/OneUI/ARM64 y producto completo siguen en sus fases correspondientes; Windows instalado intacto. Cierre de diseño/viabilidad, no despliegue ni garantía de bloqueo interdispositivo implementado.
 
 1. Inventariar versiones actuales, rutas de activación, permisos IPC y pruebas instaladas.
 2. Formalizar ADR de autoridad cloud/local, E2EE, identidad, consentimientos y reboot.
@@ -791,6 +870,7 @@ Las tareas siguientes son backlog propuesto. No se agregan a TASKS.md en esta en
 5. Elegir bibliotecas de seguridad mantenidas, con licencias compatibles.
 6. Spike Android y shell Linux; registrar limitaciones reales.
 7. Validar acceso a dispositivos físicos y opción Apple PWA.
+8. Inventariar categorías con retención cero, persistencia necesaria y puntos de captura de proveedores según 10.7.
 
 Aceptación: ninguna ambigüedad sobre fin local, parada, revocación, simulación o restauración normal tras reboot.
 
@@ -816,7 +896,93 @@ Aceptación: login, recuperación y logout funcionan sin secretos en frontend/lo
 
 Aceptación: segundo Windows descifra un documento propio, otra cuenta no accede, QR replay falla y reset de contraseña no descifra contenido.
 
+#### Estado de implementación — 13 de octubre de 2026
+
+- Windows ya tiene identidad de instalación protegida con DPAPI, kit de recuperación mostrado por diálogo nativo, solicitud/código de vinculación, comparación de huella en ambos equipos, aprobación nativa y membresía firmada con historial, epochs, rotación y revocación. El código es un identificador de solicitud, no una credencial; aprobar sigue exigiendo comparar la huella. La solicitud firmada y la aprobación no se pueden reproducir. El flujo actual usa lista/código manual; todavía no dibuja ni escanea un QR.
+- La transferencia única de ajustes cifra sólo tema, idioma y duración predeterminada; compartir e importar muestran una selección nativa y preservan las preferencias excluidas.
+- Android usa AppAuth/PKCE, Android Keystore y vault cifrado; verifica membresía, sobres del dispositivo y recovery, confirma recepción y renueva su sesión de transporte. Fotos posteriores del propietario confirman el Samsung físico vinculado con membresía verificada. La alpha.3 corrige la pantalla de vínculo y pasa 8/8 pruebas instrumentadas más lint en AVD Android 15/API 35; esa actualización cosmética no se declara instalada en el Samsung. Android todavía no aplica bloqueo.
+- El fixture real de Keycloak 26.8 + Neon TLS + Windows DPAPI aprobó 122 comprobaciones: dos identidades emparejadas, lectura y descifrado del documento por el segundo dispositivo, aislamiento de otra cuenta, replay de solicitud rechazado, revocación/rotación, reinicio del proveedor de identidad y cambio real de contraseña sintética; esa contraseña nueva no descifra el documento. Los datos sintéticos se borraron al finalizar.
+- Host Windows: 221/221; UI React: 236/236; protocolo/interop C#/Node: 38/38; dispositivos C#: 19/19; Android alpha.3: lint y pruebas instrumentadas 8/8 en AVD.
+
+**Aceptación física de Fase 2 completada el 14 de octubre por reporte directo del propietario:** .166 instalada en la PC del hermano; tras login, reinicio y reabrir, las capturas muestran el dispositivo vinculado; el propietario confirma que tema, idioma y duración se importaron desde su PC y permanecieron guardados. Reglas, perfiles y permisos del hermano tampoco se resetearon; estos datos son locales y no se sincronizan entre PCs en esta versión. No se obtuvo hash del binario instalado en el hermano ni captura del preview. No se modificó la cuenta personal ni se desplegó una revisión nueva del API durante esta validación.
+
+Seguimiento del 13 de octubre: la API desplegada `tnc-api-staging-00016-gc7` y Android alpha.2 corrigieron la recepción Approved tras vencer el plazo Pending, con prueba de posesión, digest vigente y estado Active. Fixture124, Android7/7+lint y vectores38/38. Las fotos posteriores aceptan la recepción física en el Samsung. Alpha.3 sólo corrige la presentación del estado vinculado y no cambia API ni vault; [investigación y resultados](progress/20261013-android-pairing-api-drift.md).
+
+Aceptación posterior: fotos del propietario confirman el Samsung físico vinculado y su membresía verificada, conservando la huella original; Windows sigue vinculado y sin solicitudes pendientes. Se cierra la recepción Android. La transferencia E2EE al segundo Windows se aceptó después, el 14 de octubre, mediante importación reportada de tema/idioma/duración desde la PC del propietario; la sesión y ajustes persistieron al reiniciar y reabrir FocusGuard. Reglas, perfiles y permisos locales no se resetearon y no se sincronizan entre PCs.
+
+Ensayo anterior: el propietario compartió desde la PC del hermano hacia la suya y confirmó tema/idioma; el 14 de octubre confirmó propietario→hermano con tema/idioma/duración, persistencia tras reabrir y conservación de los valores locales de reglas/perfiles/permisos. El 14 de octubre se aceptó .166 en la PC del propietario (hash de producción, health-check 0, sesión y vínculo activos); en el hermano, login y vínculo persistieron tras reinicio. El gate físico de descifrado y la preservación local quedan aceptados por reporte directo. No hay hash del binario del hermano ni captura del preview. Las pruebas de importación parcial, cancelación, extensión y sesión normal quedan como smoke complementarios; ver [registro y pasos actualizados](cloud-phase0/PHASE2-PHYSICAL-ACCEPTANCE.md).
+
+Revalidación integrada posterior, 14 de octubre: con Docker disponible, `cloud/deploy/Test-KeycloakNeon.ps1 -NativeOnly` pasó **125 checks** contra Keycloak 26.8, Neon TLS, API y DPAPI usando solo identidades sintéticas; incluye descifrado de documento por segundo dispositivo, aislamiento, replay, revocación, renovación y cambio de contraseña. El realm sobrevivió al reinicio del contenedor, que terminó detenido. No se desplegó API ni se usó la cuenta personal. Una ejecución intermedia informó UserInfo `invalid_token`; la repetición final en el código sin instrumentación volvió a pasar 125/125, aunque el origen de aquel fallo transitorio no se estableció. Detalle en [verificación final](progress/20261014-phase2-final-check.md).
+
+Auditoría requisito por requisito del 14 de octubre: [matriz de cierre Fase 2](cloud-phase0/PHASE2-COMPLETION-AUDIT.md). La aceptación principal de Fase 2 quedó cerrada con la prueba física y su preservación local. Seguimiento posterior: los objetivos `.164` ya no aparecen en `artifacts/installer`; `.165` y `.166` se conservaron. La auditoría de `.160`–`.163` encontró inicialmente 12 carpetas (2,54 GB); una lectura posterior confirma ocho `setup-payload/setup-publish` ausentes y cuatro directorios de extensión todavía presentes (2,62 MB). El preflight de borrado fue rechazado por política. Detalles: [auditoría de artefactos antiguos](progress/20261015-old-installer-artifacts-audit.md).
+
+Tramo adicional Fase 2 — Host conserva `MembershipChain` del endpoint firmado y usa `PinnedSettingsAuthor` para resolver al autor del documento en la revisión firmante, no solo contra miembros actuales. Una historia vacía o inválida falla cerrado al leer ajustes. `HostMembershipHistoryTests` usa DPAPI real y valida la cadena completa; Host 222/222 en ese checkpoint. [Checkpoint](progress/20261014-phase2-host-membership-chain.md).
+
 ### Fase 3 — Ajustes globales (5–8 días)
+
+Preparación local iniciada el 13 de octubre: núcleo independiente `FocusGuard.Sync.Core` para los tres ajustes MVP, merge de tres vías, conflictos, guardas CAS/ACK, tombstones y overrides. El trabajo local ya está integrado al Host, UI y bridge Windows con opt-in explícito. Tras consentir, el Host ejecuta y reanuda el loop automático; no significa que el propietario ya haya validado convergencia física entre las dos PCs. La aceptación principal de Fase 2 quedó completada el 14 de octubre. Detalle histórico y límites en [checkpoint de preparación](progress/20261013-phase3-settings-preparation.md).
+
+Los hitos locales siguientes son un historial cronológico, no un checklist de trabajo vigente. Cada tramo conserva lo que faltaba en la fecha de su corte; sus pendientes de integración quedaron resueltos por los hitos posteriores. El estado vigente incluye los tramos 21–30 y la integración Windows .175 descrita debajo; quedan la aceptación física entre dos PCs y, después, la validación contra staging.
+
+Segundo tramo local: outbox con escritura en vuelo/borrador posterior, persistencia DPAPI Windows y lease OS para actualización atómica entre instancias. Conserva ID/bytes ante pérdida de ACK y exige recuperación ante corrupción o escritura no confirmada. No sustituye el transporte firmado ni habilita sincronización; [checkpoint de outbox](progress/20261013-phase3-settings-outbox.md).
+
+Tercer tramo local: scheduler caller-owned que prepara el ciclo automático ante inicio explícito, edición y reconexión, sujeto a consentimiento previo y al control de reintentos. Un checkpoint DPAPI opcional ahora conserva backoff/Retry-After por dispositivo/cuenta y restaura el delay completo con reloj monotónico tras reinicio; no está enlazado a la aplicación ni autoactiva consentimiento. Sigue pendiente integración real y aceptación en dos PCs; [scheduler](progress/20261014-phase3-settings-scheduler.md) y [checkpoint durable](progress/20261014-phase3-durable-retry.md).
+
+Cuarto tramo local: `SettingsAutomaticSyncRuntime` compone consentimiento persistente, sesión que puede cancelar un tick, reintentos/checkpoint durable y scheduler. La creación no inicia trabajo; el propietario debe invocar el loop y el consentimiento nuevo requiere opt-in deliberado. Revocar detiene el tick y conserva ajustes/outbox. Se validó localmente con 132 pruebas. No está conectado a FocusGuard Desktop ni a servicios reales; [checkpoint de integración local](progress/20261014-phase3-consent-runtime.md).
+
+Quinto tramo local: el checkpoint de backoff corrupto ya tiene recuperación deliberada bajo lease. Sin confirmación no borra; con ella elimina solo el archivo del store y temporales huérfanos de nombre exacto. El controlador continúa detenido hasta que el llamador invoque recovery explícito. No reemplaza la verificación de reautenticación en UI; [checkpoint de recuperación](progress/20261014-phase3-checkpoint-recovery.md).
+
+Sexto tramo local: `SettingsSyncLocalStorage` prepara una carpeta estable cuyo nombre es hash del scope, verifica propietario, fija DACL a usuario/SYSTEM/Administrators y rechaza reparse points. Se probó con ACL Windows reales y DPAPI, sin tocar la carpeta instalada. Sigue pendiente integrar al Host y resolver migración/rollback de los datos existentes; [checkpoint de ruta protegida](progress/20261014-phase3-private-path.md).
+
+Séptimo tramo local: una prueba de integración corre dos runtimes aislados con consentimiento/vault/checkpoint DPAPI por dispositivo. Firma y AEAD FG-E2EE-1 son reales; el server de prueba solo guarda ciphertext y verifica CAS/firma. Cambios de tema e idioma convergen tras reconexión. Cinco repeticiones consecutivas y suite 136/136. No sustituye la prueba física Fase 2 ni ejercita API/OIDC; [checkpoint de dos runtimes](progress/20261014-phase3-two-runtime.md).
+
+Octavo tramo local: el test Kestrel HTTPS con pinning ejecuta dos `SettingsAutomaticSyncRuntime` con tokens/sesiones/proofs y claves distintas. Middleware valida bearer sintético, session hash, DeviceId, anti-replay y firma; ledger valida autor FG-E2EE-1 y CAS. Tema e idioma convergen y el servidor no observa campos en claro. Cinco repeticiones y suite 136/136. No toca staging ni reemplaza dos PCs físicas; [checkpoint HTTPS de dos runtimes](progress/20261014-phase3-two-runtime-https.md).
+
+Noveno tramo local: `ConflictResolved` despierta solo tras resolución persistida; ediciones normales respetan el intervalo anti-loop y Retry-After/backoff permanecen protegidos. `SettingsConflictResolutionService` exige la revisión, máscara y borrador exactos vistos por el usuario, preserva campos no disputados y rechaza tombstones. La prueba HTTPS de dos runtimes causa conflicto concurrente por duración, resuelve y propaga el valor elegido; stale-review y reset no borran datos. Cinco repeticiones y suite 139/139. No conectado al Host/UI; [checkpoint de wake-up y resolución](progress/20261014-phase3-conflict-wakeup.md).
+
+Décimo tramo local: `SettingsSyncDesktopTick` compone worker y proyección al archivo `DesktopSettings` bajo lease, omite el archivo cuando el consentimiento está apagado y clasifica fallos locales como Storage. `SettingsConflictResolutionService` también proyecta la elección antes de despertar el runtime. La prueba HTTPS dual-runtime verifica convergencia visible en ambos archivos y conserva enforcement, perfiles y otras preferencias locales; suite 141/141. No observa aún guardados del Host ni está conectado a la aplicación; [checkpoint de proyección](progress/20261014-phase3-desktop-projection.md).
+
+Undécimo tramo local: `SettingsAutomaticSyncCoordinator` proporciona el punto para guardar una edición seleccionada por el usuario y señalizar solo después del commit durable y la proyección local. La prueba deja consentimiento apagado, edita un campo, verifica que no hay tick y luego activa consentimiento: el runtime consume el borrador persistido. Sigue pendiente dirigir las acciones reales del Host por esta entrada; [checkpoint](progress/20261014-phase3-local-edit-wakeup.md).
+
+Duodécimo tramo local: `HostSettingsSyncSession` reúne la cadena de membresía anclada al vault, transporte autenticado, E2EE, outbox/consentimiento/checkpoint DPAPI, proyección, edición, conflictos y runtime. Comprueba que sender y vault correspondan a la misma cuenta y que el dispositivo tenga `WriteSettings`; su identificador global es distinto del documento de transferencia manual. Construir la sesión no crea datos ni inicia red; el opt-in rechazado no hace I/O; solo tras confirmación prepara baseline y persiste consentimiento tras inicializarlo. Host 224/224, Sync 139/139. En ese checkpoint todavía faltaba el cableado de Host y UI; se completó en el siguiente tramo. La aceptación principal de Fase 2 ya está cerrada. [Checkpoint](progress/20261014-host-settings-sync-session.md).
+
+Decimotercer tramo local — integración y revisión de conflictos: `HostAccountService` crea la composición desde el vault y la cadena firmada actuales, presenta opt-in nativo, restaura únicamente consentimiento DPAPI existente, enruta solo tema/idioma/duración, actualiza estados desde cada tick y cancela el tick antes de completar la revocación. La UI compara valores por campo; el bridge transmite revisión y elección y el Host deriva los valores del outbox vigente. Rechaza campos ajenos, valores arbitrarios y review obsoleto. Host234/234, Sync139/139, UI240/240. Installer `.167` pasó su gate local sin instalación. [Checkpoint](progress/20261015-phase3-host-lifecycle.md).
+
+Decimocuarto tramo local — recuperación de conflicto de reset: se ofrecen dos decisiones deliberadas. “Mantener el reset” conserva el tombstone local rebasado sobre la revisión remota vigente para que el worker publique una nueva escritura CAS; “cancelar reset” adopta el snapshot remoto. Ambas rutas revalidan revisión, máscara y borrador dentro de la actualización DPAPI, proyectan solo los tres ajustes globales y despiertan el runtime tras persistir. El bridge solo recibe revisión y opción; no acepta valores. Host236/236, Sync143/143, UI243/243. Installer `.168` pasó guard de producción, verificación de renderer, `scripts/test-installer.ps1` y self-test; SHA-256 `76F22B9EA6066D7F9B6D7FFBEEC422297FB47638CE0E314557B9F67C2B9B6F4C`; no instalado ni desplegado. [Checkpoint](progress/20261015-phase3-reset-conflict-plan.md).
+
+Decimoquinto tramo local — recuperación de retry en Host: la UI ofrece «Reparar reintento» solo cuando el scheduler identifica que el propio checkpoint DPAPI falló; un error `Storage` de la proyección de preferencias no permite usar esa reparación. El cuadro Windows explica que la operación borra únicamente el checkpoint y temporales reconocidos, mantiene outbox/ajustes/consentimiento y reanuda el loop existente después de aceptar. La recuperación y el envío del siguiente tick se serializan para impedir que un reporte antiguo restaure el estado de atención. Pruebas Host 238/238, Sync 145/145 y UI 245/245; se cubre también el reinicio de sesión con consentimiento ya persistido, sin volver a habilitarlo. Setup `.169` pasó guard de producción, `scripts/test-installer.ps1` y self-test; SHA-256 `2B6C56386F339C392148ACEE61258EBCD847BD6718BA1EC7E5B899A70A6EA5B3`; no instalado ni desplegado. [Checkpoint](progress/20261015-phase3-host-retry-recovery.md).
+
+Decimosexto tramo local — dos sesiones `HostSettingsSyncSession` completas sobre HTTPS fijado de loopback. Cada sesión restaura su identidad/membresía desde un vault DPAPI separado, confirma consentimiento explícito y mantiene outbox/preferencias por dispositivo; el servidor sintético valida bearer, sesión, replay, prueba firmada y CAS, y recibe solo el documento E2EE. Un cambio de tema converge al reconectarse el segundo Host; cambios simultáneos de duración producen conflicto CAS y se resuelven por la acción real de `HostAccountService`, eligiendo el valor del otro dispositivo. Ambos outboxes y archivos locales convergen, manteniendo `ReduceMotion`, notificaciones y enforcement separados. La prueba completa pasó tres ejecuciones consecutivas; Host239/239. Solo cambió cobertura de pruebas, así que el Setup `.169` no necesitó regeneración. No despliega ni instala y no sustituye PCs físicas ni API staging. [Checkpoint](progress/20261015-phase3-host-dual-session-https.md).
+
+Decimoséptimo tramo local — reset global explícito, reanudación y conflicto de tombstone: el usuario solo ve la acción con consentimiento activo y sync estable; el diálogo Windows muestra valores actuales y destino antes de aceptar. Cancelar no escribe nada. Confirmar compara de nuevo revisión/valores dentro del lease DPAPI, publica un tombstone compartido y proyecta únicamente tema/idioma/duración predeterminada; perfiles, reglas, permisos y snapshots de sesión quedan fuera. Si cambia el outbox mientras la vista previa está abierta, el reset se rechaza y el draft nuevo se conserva. Dos sesiones Host HTTPS confirman el envío/aplicación del tombstone; después ambas se recrean desde DPAPI y reanudan sin `EnableAsync` ni nuevo POST. Una edición posterior seguida de reset offline produce conflicto de tombstone; la acción Host lo rebasea sobre la revisión remota, publica el tombstone y el peer converge. Defaults compartidos y preferencias locales persisten. Host240/240, Sync145/145, UI246/246, integración HTTPS 3/3; Setup standalone `.170`, guard, `test-installer` y self-test pasan; SHA-256 `A1FAE72E7CA0C60A3D4A97B574452602145DC8CBA399879E44533205D3A537C7`. No instalado ni desplegado. [Checkpoint](progress/20261015-phase3-global-settings-reset.md).
+
+Decimoctavo tramo local — wake-up de reconexión en Host Windows: `MainForm` escucha `NetworkAvailabilityChanged` y `NetworkAddressChanged`, coalesce señales y despierta el scheduler solo para una sesión consentida. No inicia sincronización con el consentimiento revocado ni adelanta backoff/Retry-After; los handlers se retiran al cerrar/dispose. La secuencia idle→network event→request y el no-op después de revocar están cubiertos. Host240/240 y Sync145/145; Setup `.171` pasó guard, tests y self-test; SHA-256 `5A439119DE2606B10F2B6F31A33EC6FBC90143BC1E21C1F52E534CF7983F8310`. No instalado. [Checkpoint](progress/20261015-phase3-connectivity-wakeup.md).
+
+Decimonoveno tramo local — aceptación del API real con base aislada: `Test-KeycloakNeon.ps1 -NativeOnly -LocalPostgres` ejecuta el mismo harness de OIDC/DPAPI/API contra Keycloak y PostgreSQL efímeros en Docker. Los 125 checks pasan, incluida escritura/lectura E2EE, CAS, rechazo de replay, aislamiento por cuenta y revocación; los contenedores se eliminan al terminar. El API permite conexión PostgreSQL sin TLS solo en `Development`, con `SSL Mode=Disable` explícito y una IP loopback; en cualquier otro caso fuerza `VerifyFull`. No usa Neon/staging y no reemplaza la aceptación física de dos PCs. [Checkpoint](progress/20261015-phase3-api-local-postgres.md).
+
+Vigésimo tramo local — sincronización y composición Host contra el ledger PostgreSQL real: dos dispositivos con membresía firmada, sesiones y vaults DPAPI independientes ejercitan dos `SettingsAutomaticSyncRuntime` contra `ContentDocumentLedger` y dos `HostSettingsSyncSession` contra las rutas HTTP reales `/v1/documents` en TestServer. Tema converge, un conflicto CAS de duración se resuelve al publicar la siguiente revisión y el tombstone se proyecta en el peer sin alterar preferencias locales. La subprueba Host usa bearer/userinfo sintéticos e issuer HTTPS; los 125 checks separados validan OIDC/Keycloak/JWT reales. En ese corte el harness pasó 142 checks (125 OIDC/API + 14 runtime/ledger + 3 Host/API-router); `-Phase3SyncOnly` repitió 17. [Checkpoint](progress/20261015-phase3-api-local-postgres.md).
+
+Vigésimo primer tramo local — cursor durable de cuenta: PostgreSQL mantiene un cursor monotónico separado de la revisión/ETag del documento, lo incrementa en la misma transacción CAS y lo devuelve en `X-FG-Cursor` y el snapshot JSON. El transporte verifica que header/cuerpo coincidan, detecta retrocesos y sigue siendo compatible con APIs antiguas que omiten el cursor. El outbox DPAPI guarda el último cursor aplicado; `SettingsSyncWorker` rechaza un cursor menor que el persistido. Sync147/147; el harness local pasa 143 checks y `-Phase3SyncOnly` 18. Setup candidato `.172` generado y validado localmente, no instalado ni desplegado. [Checkpoint](progress/20261015-phase3-account-cursor.md).
+
+Vigésimo segundo tramo local — reconciliación condicional por cursor: `GET /v1/sync/cursor` valida la misma membresía, sesión y proof de dispositivo que los documentos. El scheduler consulta el cursor primero; si coincide con el cursor DPAPI y no hay borrador, vuelo o conflicto, termina en `Idle` sin descargar/descifrar el documento. Si cambia, continúa con el snapshot E2EE; APIs anteriores devuelven 404 en la ruta nueva y el cliente cae al GET completo. El cursor sigue una política fail-closed ante retroceso. Sync150/150 (incluido el fallback 404→GET integrado), Host240/240 y la integración local completa 145 checks; `-Phase3SyncOnly` 20. Setup `.173` generado y validado localmente, no instalado ni desplegado. [Checkpoint](progress/20261015-phase3-cursor-poll.md).
+
+Vigésimo tercer tramo local — edición completa desde UI al peer: la prueba dual-host HTTPS invoca `preferences.set` por `NativeBridgeDispatcher`, deriva el cambio con el `HostAccountService` real y verifica que tema, idioma y duración se publican y llegan al segundo Host. Se mantienen distintos `ReduceMotion`, notificaciones de ciclo y enforcement por dispositivo. Host240/240. `cloud/deploy/Test-ApiContainerSmoke.ps1` construye y ejecuta la imagen Docker Linux/amd64 con PostgreSQL efímero; `/health/live` y `/health/ready` devuelven 200 y el cursor anónimo 401. El cambio solo amplió cobertura y `.173` no requiere regeneración. [Checkpoint](progress/20261015-phase3-bridge-two-host.md).
+
+Vigésimo cuarto tramo local — preservación de consentimiento y outbox al actualizar: `scripts/test-installer.ps1` extrae los comandos de limpieza del instalador y rechaza destinos bajo `%LOCALAPPDATA%`, `LocalApplicationData` o las rutas de identidad/sync del usuario (`FocusGuard\Identity`, `FocusGuard\devices`, `FocusGuard\Sync`). Así evita borrar accidentalmente el vault DPAPI, el consentimiento y el outbox durante una actualización. El test del instalador pasa; este guard de código no equivale a instalar/actualizar en una PC física. [Checkpoint](progress/20261015-phase3-update-preservation.md).
+
+Vigésimo quinto tramo local — estados de consentimiento/sync visibles en la cuenta: el test de `AccountPanel` verifica `Enabling` con controles bloqueados, el mensaje de cancelación, `Pending` con ajustes guardados esperando red y `Enabled` estable. UI246/246 y `npm run check` pasan; no cambió código de producto ni se regeneró `.173`. Esto prepara la lectura de estado de la prueba física, pero no demuestra convergencia real. [Checkpoint](progress/20261015-phase3-pending-ui-state.md).
+
+Vigésimo sexto tramo local — cancelación segura del opt-in: `account.settings.sync.enable` cruza el `NativeBridgeDispatcher` y el `HostAccountService` real; al cancelar el prompt nativo, Host informa `Cancelled`, conserva el JSON local y no crea ni el vault DPAPI de dispositivo ni el vault de identidad. La suite Host pasa; se añadió solo cobertura de tests y `.173` sigue vigente. [Checkpoint](progress/20261015-phase3-consent-cancel.md).
+
+Vigésimo séptimo tramo local — imagen API con TLS de producción: `Test-ApiContainerSmoke.ps1` construye la imagen del Dockerfile API y la ejecuta en `Production`, conectada a PostgreSQL efímero mediante TLS `VerifyFull` con CA efímera de prueba. Liveness/readiness son 200, la ruta nueva del cursor exige autenticación (401 sin bearer) y un SAN de PostgreSQL que no corresponde a `localhost` es rechazado durante el inicio. Imagen, contenedores, volumen y certificados se limpian; no se contacta staging ni se regenera `.173`. [Checkpoint](progress/20261015-phase3-api-prod-docker-tls.md).
+
+Vigésimo octavo tramo local — carrera de edición y cursor: mientras `SettingsSyncWorker` espera la respuesta del polling, una edición local queda confirmada en DPAPI. El cursor remoto responde igual al cursor durable; el worker vuelve a cargar el outbox y aun así lee el snapshot, publica el borrador y confirma el eco cifrado. Sync151/151; no cambió código de producto ni `.173`. [Checkpoint](progress/20261015-phase3-cursor-edit-race.md).
+
+Vigésimo noveno tramo local — opt-in aceptado desde la UI: `account.settings.sync.enable` cruza `NativeBridgeDispatcher` y `HostAccountService`; al confirmar el prompt, el servicio habilita el `HostSettingsSyncSession`, crea el baseline E2EE y persiste consentimiento en DPAPI antes de iniciar su runner. Host241/241. El fixture entrega una sesión ya compuesta y transporte de test; el endpoint real/API y dos PCs siguen en sus acceptance separados. [Checkpoint](progress/20261015-phase3-consent-enable.md).
+
+Trigésimo tramo local — creación productiva después del opt-in: el test del bridge no inyecta una sesión prearmada; `HostAccountService` carga el vault DPAPI emparejado, comprueba membresía y crea `HostSettingsSyncSession` desde la fábrica productiva. Dos casos cubren la sesión vigente y la renovación firmada, guardando el secreto nuevo en DPAPI. Una regresión impide inyectar handler HTTP con configuración normal; la DLL no expone un seeder de identidad. El harness local activa además el Host mediante el bridge con un bearer JWT real de Keycloak y el API/PostgreSQL, verifica la membresía, almacena el baseline E2EE y conserva las preferencias locales; 152 checks totales con Keycloak/PostgreSQL/DPAPI. El `TestServer` no reemplaza TLS de red y el Host no restaura aquí su sesión OIDC. Setup `.174` y ZIP pasan build, guard, `test-installer` y self-test; hashes y gate físico actualizado en el runbook. Contenedores efímeros eliminados; no se instaló ni se llamó a staging. [Checkpoint](progress/20261015-phase3-production-session-creation.md).
+
+Los overrides locales y la exportación portátil se integraron en Windows `.175`; la convergencia visual viva se corrigió y se empaquetó en `.176`. `.178` añade dos rutas de recuperación local: releer preferencias después de que el arranque agotó sus intentos y mantener actualizado un override DPAPI editado mientras sync está revocada. Host259/259, Sync160/160, UI254/254, 152 checks Keycloak/PostgreSQL, build, guard, `test-installer`, self-test, TypeScript y formato focalizado pasan. El propietario reportó convergencia de tema/idioma/duración en 30–45 s en dos Windows, sesión/vínculo/consentimiento tras cierre/reapertura, conflicto de duración offline y reset compartido normal propagados. Sigue pendiente el conflicto offline de tombstone/reset, override/portátil físico en peer y comparación de preferencias locales; la segunda PC ya no está disponible. Matriz viva y runbook en [PHASE3-ACCEPTANCE-MATRIX.md](cloud-phase0/PHASE3-ACCEPTANCE-MATRIX.md) y [runbook de aceptación física](cloud-phase0/PHASE3-PHYSICAL-ACCEPTANCE.md). No sustituir gates físicos por pruebas locales ni llamar staging antes de completar la aceptación física requerida.
 
 1. Documentos cifrados CAS/ETag.
 2. Snapshot/cursor, outbox y avisos.
@@ -863,7 +1029,7 @@ Aceptación: el origen inicia estricto real en dos Windows consentidos; no puede
 
 Aceptación: ambos aparecen como Simulated; nunca aumenta el contador de dispositivos protegidos reales.
 
-### Fase 6 — Android normal (10–20 días)
+### Fase 6 — Android normal y estricto dentro del alcance validado (10–20 días)
 
 1. Login, vinculación, vault y sync.
 2. Ejecutar decisión de viabilidad del spike; sin inventar capacidades.
@@ -877,7 +1043,7 @@ Aceptación: ambos aparecen como Simulated; nunca aumenta el contador de disposi
 
 Aceptación: protección real solo donde se comprobó; force-stop, pérdida de permisos y falta de push producen estados honestos.
 
-### Fase 7 — Linux normal (8–15 días)
+### Fase 7 — Linux normal y estricto remoto (8–15 días)
 
 1. Shell de referencia y transporte.
 2. Vault y consentimientos.
@@ -924,6 +1090,7 @@ Aceptación: los cinco clientes representan y coordinan Strict; el enforcement r
 5. Instaladores, firmados y rollback.
 6. Política de privacidad basada en tratamiento real.
 7. Piloto, métricas técnicas mínimas y feedback voluntario.
+8. Verificar ZDR parcial/no recopilación, excepciones y texto público mediante evidencia por componente/proveedor.
 
 Aceptación: gates de sección 18; ninguna capacidad pendiente se anuncia como disponible.
 
@@ -933,7 +1100,7 @@ Ruta principal: 0 → 1 → 2 → 3 → 4 → 4B → 5/6/7 → 8B → 9. Compani
 
 Estimaciones orientativas para un desarrollador con experiencia: núcleo cloud + dos Windows, aproximadamente 6–9 semanas; cobertura normal de cinco plataformas con Apple simulado, aproximadamente 12–20 semanas. Revisiones externas, políticas de distribución y falta de hardware pueden ampliar esos rangos. Los días son esfuerzo, no compromisos de calendario.
 
-El estricto remoto añade aproximadamente 18–30 días de ingeniería de protocolo, integración y validación transversal, además del esfuerzo específico de enforcement en Android/Linux. Estimación revisada del alcance completo: 16–26 semanas, condicionada a viabilidad y hardware; no es un compromiso ni presupone capacidades aún no demostradas.
+El estricto remoto añade 18–30 días de protocolo e integración transversal (4B + 8B), además del trabajo específico incluido en Android/Linux. La suma de todas las fases, incluida agenda/ciclos, es 95–167 días de ingeniería: aproximadamente 19–34 semanas de cinco días para una persona, antes de contingencias. Reservar un 15–20% adicional para interoperabilidad, auditoría y hardware: orientación de calendario de 22–40 semanas. Los rangos anteriores describen incrementos parciales; no son la estimación completa. Reestimar tras Fase 0; no asumir capacidades aún no demostradas.
 
 ## 17. Matriz de validación
 
@@ -975,9 +1142,20 @@ El estricto remoto añade aproximadamente 18–30 días de ingeniería de protoc
 | Cambio concurrente mismo campo | Conflicto visible |
 | Dispositivo revocado | No firma nuevos comandos aceptables |
 | Cuenta borrada y restore backup | Supresión reaplicada |
-| Canarios privados | Solo ciphertext en cloud/logs/backups |
+| Canarios privados | Solo ciphertext en almacenes funcionales autorizados y sus backups; ningún payload, ni cifrado, en logs/tracing |
+| ZDR/no recopilación | Categorías excluidas ausentes de todos los destinos cloud; sin promesa global sobre metadatos necesarios |
 | Cliente antiguo/schema futuro | Error compatible, sin borrar datos |
 | Paquete corrupto | No se instala/aplica |
+| Recovery estricto no provisionado/ACK inexistente | No emite ticket; preparación local explícita requerida |
+| Cancel y commit concurrentes | Un ganador; cancelar tras commit no desbloquea |
+| Preparación abandonada o commit sin ACK | Reserva caduca; cuenta no queda ocupada indefinidamente |
+| Mapeo/consentimiento cambiado tras preparar | Ticket invalidado; sin política distinta en commit |
+| Documento CAS cifrado concurrente | Revisión prevista aceptada o conflicto; nunca fallo AEAD por revisión asignada después |
+| Perfil grande referenciado por digest | Descarga/compilación antes de Prepared; rechazo temprano si excede IPC |
+| Kit utilizado tras rotar claves | Recupera época vigente y membresía mediante raíz de recuperación |
+| Login sin dispositivo vinculado | Sin acceso a snapshots/eventos ni inicio remoto |
+| Replay de prueba operativa o autorización Strict | Rechazo; autorización ligada a una sola operación |
+| Borrado cuenta durante Strict | Expiración/recovery del motor permanecen disponibles |
 | Navegador/agent local caído | Salud por canal según ADR 0009 |
 
 Pruebas de dominio con TimeProvider; integración con base/identidad reales de staging; tests de contrato entre lenguajes; E2E entre dispositivos reales para enforcement y mockup únicamente para Apple. No sustituir una prueba de bloqueo real por un temporizador visible.
@@ -991,13 +1169,14 @@ Objetivos iniciales a medir, condicionados a equipo despierto, conectado, permis
 - Cero ejecución duplicada en suite de replays.
 - Cero extensión del fin original por desconexión/retry/reboot.
 - Finalización local dentro del intervalo medido del motor; objetivo de liberar en ≤2 s cuando el equipo está despierto.
-- Todo estado Applied tiene ACK de ejecución. Mientras está conectado, el destino renueva una atestación de estado aproximadamente cada 15 s; más de 45 s sin atestación reciente implica Unknown en la vista cloud, conservando la última confirmación con su hora. Son umbrales iniciales a medir; su caducidad no detiene el motor local.
+- Todo estado Applied tiene ACK de ejecución. Mientras está conectado, el destino renueva un reporte firmado de estado aproximadamente cada 15 s; más de 45 s sin reporte reciente implica Unknown en la vista cloud, conservando la última confirmación con su hora. Son umbrales iniciales a medir; su caducidad no detiene el motor local. No se presenta ese reporte como atestación hardware.
 - 100% de dispositivos Apple etiquetados Simulated.
 - Strict remoto tiene consentimiento separado, preparación/commit y fin validado en el 100% de los destinos que lo aceptan. Ningún stop normal termina enforcement estricto y ninguna recuperación cloud sustituye recovery local.
 - La prueba integrada cubre los cinco clientes y diferencia enforcement estricto real, limitado y simulado; la aceptación completa no se declara si falta evidencia de una capacidad exigida.
 - Cero hallazgos altos/críticos abiertos de auth, claves, aislamiento o bloqueo indefinido al publicar beta.
 - Cero canarios sensibles en tablas no cifradas, logs, tracing, push y reportes de soporte.
 - Exportación y borrado pasan pruebas de restore/retención.
+- La matriz 10.7 tiene evidencia por componente/proveedor; no anunciar ZDR total ni omitir excepciones. Las categorías de retención cero están ausentes también de canales secundarios.
 - Build/tests y empaquetado correspondientes pasan antes de distribuir.
 
 Gates: no liberar si hay riesgo de bloqueo permanente, fuga entre cuentas, claves irrecuperables por flujo defectuoso, simulación presentada como real o revocación que permite comandos futuros.
@@ -1016,6 +1195,7 @@ Gates: no liberar si hay riesgo de bloqueo permanente, fuga entre cuentas, clave
 | Reboot de sesión normal | Mantener interrupción actual y tombstone persistente |
 | Persistencia/recovery estrictos Android/Linux | Fases 6/7/8B: pruebas físicas y alcance de resistencia; capacidad pendiente hasta demostrarse |
 | Aplicación parcial de un commit estricto | Tickets previos, ACK y presentación honesta; expiración/recovery locales sin rollback inseguro |
+| Cambio de política de recuperación para preautorización | Decisión SPEC/ADR en Fase 0/4B; hasta formalizar y probar, Strict exige preparación local y no se declara autónomo |
 | Semántica agenda global | Fase posterior con DST/claims; no copiar agendas sin diseño |
 | SDKs/versions/políticas futuras | Revalidar documentación al comenzar implementación |
 
@@ -1049,4 +1229,24 @@ Siguiente acción de validación: preparar, durante la implementación futura, u
 - Los cambios locales de otras tareas se consideran preexistentes/ajenos a esta entrega.
 - Las fuentes externas apoyan restricciones y patrones técnicos; objetivos de métricas, retención, fases y arquitectura son decisiones propuestas de este documento.
 - A petición del propietario, se incorporó estricto remoto en todos los dispositivos: alcance, consentimiento, protocolo, contratos, UX, tareas, riesgos y pruebas. Esta ampliación modifica únicamente este plan y conserva la simulación iOS/macOS.
+
+## 22. Resultado del segundo check
+
+Fecha: 11 de octubre de 2026. Revisión documental de arquitectura, contratos, privacidad, fallos, UX y dependencias, contrastada con SPEC y ADR 0011. No equivale a auditoría externa ni validación del software.
+
+| Hallazgo | Riesgo | Corrección aplicada |
+|---|---|---|
+| Preautorización Strict sin definir recovery guardado | Activar sin recuperación utilizable o eludir el protocolo Windows | Provisión local explícita, decisión SPEC/ADR y gate antes de tickets |
+| Revisión cifrada desconocida antes del commit | AEAD/firma inválidos después de guardar | proposedRevision determinista con CAS; cursor de transporte separado |
+| Reservas/commits parciales sin fin de coordinación | Cuenta permanentemente ocupada o cancelación que desbloquea | Estados, TTL, CAS cancel/commit y expiración de exclusión |
+| Login de cuenta confundido con dispositivo autorizado | Lectura/órdenes desde instalación no vinculada | Prueba de posesión, sesión operativa y reautenticación ligada a intención |
+| Tickets sin mapeo/consentimiento congelados | Política aplicada distinta de la revisada | Digests compilados y revisiones locales vinculados al ticket |
+| Perfil de 256 KiB frente a envelope de 64 KiB | Falla tardía después de aceptación | Referencias inmutables por digest y validación antes de Prepared |
+| Recovery E2EE sin autoridad de membresía/rotación | Kit no recupera épocas nuevas o bootstrap ambiguo | Raíz de firma separada, envolturas actualizadas y generación nueva explícita |
+| Borrado de cuenta y ACK con garantías excesivas | Perder autoridad de recovery o afirmar atestación inexistente | Motor conserva fin/recovery; reporte firmado sin garantía hardware |
+| Ejemplo tardío y estimación completa inconsistentes | Expectativa incorrecta de activación y calendario | Ejemplo dentro de TTL y suma explícita de fases con contingencia |
+
+**Resultado:** plan corregido y utilizable como diseño/backlog. Implementación aún condicionada a formalizar el consentimiento/recovery estricto en SPEC/ADR, validar capacidades Android/Linux y revisar criptografía interoperable. Esos gates tienen tareas y pruebas asignadas; no se declara que las funciones existan ni que todos los riesgos estén resueltos.
+
+Alcance del check: se modificó únicamente este Markdown. No se ejecutaron bloqueos, builds, servicios ni despliegues; las nuevas pruebas son requisitos para implementación futura.
 

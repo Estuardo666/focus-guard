@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BellIcon, ColorWheelIcon, MoonIcon, ReloadIcon, SunIcon, TimerIcon } from '@radix-ui/react-icons';
 import type { DashboardClient } from './native/dashboard';
@@ -30,10 +30,24 @@ export function PreferencesPanel({ dashboard, t, onSaved, palette, onPaletteChan
 }) {
   const state = useSyncExternalStore(dashboard.subscribe, dashboard.getSnapshot);
   const [draft, setDraft] = useState<UserPreferences | null>(null);
+  const appliedPreferences = useRef<UserPreferences | null>(null);
   const [section, setSection] = useState<Section>('appearance');
   const saving = state.preferencesPhase === 'writing';
   const locked = saving || state.preferencesPhase === 'unknown';
-  useEffect(() => { if (state.preferences) setDraft(state.preferences); }, [state.preferences]);
+  useEffect(() => {
+    const preferences = state.preferences;
+    if (!preferences) return;
+    const previous = appliedPreferences.current;
+    appliedPreferences.current = preferences;
+    setDraft(current => {
+      if (!current || !previous) return preferences;
+      const next = { ...preferences };
+      for (const key of Object.keys(preferences) as (keyof UserPreferences)[]) {
+        if (current[key] !== previous[key]) Object.assign(next, { [key]: current[key] });
+      }
+      return next;
+    });
+  }, [state.preferences]);
   const [startAtSignIn, setStartAtSignIn] = useState<boolean | null>(null);
   const [startupBusy, setStartupBusy] = useState(false);
   useEffect(() => { let live = true; void startup?.read().then(value => { if (live) setStartAtSignIn(value); }); return () => { live = false; }; }, [startup]);

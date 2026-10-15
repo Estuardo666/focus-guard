@@ -22,7 +22,8 @@ internal sealed partial class NativeBridgeDispatcher(
     Func<string, CancellationToken, ValueTask<bool>>? recoveryCodeSaver = null,
     IHostWindowController? windowController = null,
     IHostShellController? shellController = null,
-    IStartupRegistration? startupRegistration = null)
+    IStartupRegistration? startupRegistration = null,
+    IHostAccountService? accountService = null)
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly BridgeRequestParser _parser = new();
@@ -120,6 +121,37 @@ internal sealed partial class NativeBridgeDispatcher(
                                                or ObjectDisposedException or System.ComponentModel.Win32Exception)
             {
                 return documentLifetime.IsCurrent(lease) ? SerializeError(request, "WindowUnavailable") : null;
+            }
+        }
+
+        if (request.AccountAction is { } accountAction)
+        {
+            try
+            {
+                var result = accountService is null
+                    ? new HostAccountSnapshot(false, false, false, false, false, null, null, false, false, false, "AccountUnavailable", null)
+                    : await accountService.ExecuteAsync(accountAction, cancellationToken,
+                        request.AccountPairingId, request.AccountFingerprint, request.SettingsSyncResolution,
+                        request.SettingsSyncResetResolution).ConfigureAwait(false);
+                if (!documentLifetime.IsCurrent(lease)) return null;
+                var accountJson = JsonSerializer.Serialize(new BridgeAccountResponse(BridgeLimits.ProtocolVersion,
+                    request.RequestId.ToString("N"), request.DocumentToken, null, result), JsonOptions);
+                return Encoding.UTF8.GetByteCount(accountJson) <= BridgeLimits.MaximumResponseBytes
+                    ? accountJson : SerializeError(request, "ResponseTooLarge");
+            }
+            catch (OperationCanceledException) when (lease.CancellationToken.IsCancellationRequested)
+            {
+                return null;
+            }
+            catch (Exception exception) when (exception is OperationCanceledException or InvalidOperationException
+                or ObjectDisposedException or HttpRequestException or TimeoutException or IOException
+                or UnauthorizedAccessException or System.Security.SecurityException or System.ComponentModel.Win32Exception)
+            {
+                if (!documentLifetime.IsCurrent(lease)) return null;
+                var failed = new HostAccountSnapshot(false, false, false, false, false, null, null, false, false, false,
+                    "AccountConnectionUnavailable", null);
+                return JsonSerializer.Serialize(new BridgeAccountResponse(BridgeLimits.ProtocolVersion,
+                    request.RequestId.ToString("N"), request.DocumentToken, null, failed), JsonOptions);
             }
         }
 

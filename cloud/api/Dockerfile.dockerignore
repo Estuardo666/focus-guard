@@ -1,0 +1,12 @@
+**
+!Directory.Build.props
+!cloud/
+!cloud/api/
+!cloud/api/**
+!cloud/devices/
+!cloud/devices/Core/
+!cloud/devices/Core/**
+!cloud/devices/Canonical/
+!cloud/devices/Canonical/**
+**/bin/**
+**/obj/**

@@ -1,0 +1,21 @@
+# Android pairing after Windows approval — investigation
+
+User photos show successful Samsung login, a matching request/fingerprint on Windows, native approval, then failure while checking approval. Scope: cloud pairing receipt, Android state presentation, deployment and regression tests.
+
+Confirmed cause: Cloud Run `tnc-api-staging-00015-6tt` uses digest `f5588cb...`; its API/Devices DLLs contain neither MembershipChain nor CurrentMembershipChain/CurrentKeyEnvelopes. Android alpha.1 strictly requires those signed-chain fields. Local acceptance used newer source, which was not deployed.
+
+Read-only metadata for the supplied request confirms Approved, deadline elapsed, committed active member at revision 2. Pending approval expiry must continue to prevent late approval; it must not discard a grant already signed before expiry. Key receipt will remain bound to the requester key, unchanged current digest and Active membership, with a fresh bounded transport session. No personal database rows will be edited manually.
+
+Plan: first reproduce delayed-receipt failure in the synthetic fixture; preserve Approved receipt after the pending deadline; keep Pending expiry and replay rejection; align Android expiry handling and correct signed-in status text; run integration/instrumented tests; deploy updated API with rollback smoke; publish alpha.2 APK preserving existing vault identity. User verification on Samsung remains required.
+
+## Result
+
+- Backend now expires only Pending requests. Approved key receipt still requires possession of the original requester key, the unchanged current signed membership/digest and Active status; session creation remains bounded. Revoked members and late new approvals remain denied.
+- Android follows the same state distinction and uses connected/verified copy for account_exists and first_device. VersionCode 2 / 0.2.0-alpha.2 retains application ID, issuer, vault binding and signing certificate.
+- Regression evidence: Android first failed exactly two new tests (Approved incorrectly became Expired; signed-in account mapped to signed-out text), then passed 7/7 plus lint. The synthetic API first failed retrieving the approved chain after its deadline; with the fix it passed 124 checks, including expired Pending approval rejection, late Approved confirmation, HTTP403 revoked read, replay, another account isolation, password reset and cleanup. Keycloak also passed restart persistence. A fixture-only credential reset makes the password-reset acceptance repeatable.
+- Protocol/interoperability suite: 38/38. API Linux image builds successfully; metadata audit verifies all four chain/current-envelope contract fields absent in the previous deployed binary are present in the new image. Git diff whitespace check passes.
+- Deployed `tnc-api-staging-00016-gc7`, 100% traffic, digest `sha256:cf4e60011fb80a30e5277d6d3d266b63f50698ef55ee9f54a5e4f8e65fd2b2e3`. Deployment verified live/ready HTTP200 and retains the prior immutable image for rollback. No personal database records or credentials were modified manually.
+- `Test-TncStaging.ps1`: 56/56; public phone API domain /health/ready also HTTP200. Post-deployment read-only metadata confirms the owner's supplied request remains Approved with its original active membership at revision 2, ready for receipt by the updated phone.
+- APK: `artifacts/cloud-phase0/android-pairing/focusguard-android-phase2-alpha.2.apk`, SHA256 `87EC3F02195A511251967A4E07E515627C28274F5A58E7ACE433C651CE9C6B7C`; certificate SHA256 matches alpha.1 (`40c122bfc3cd1f111c976e54a8281aa8b0938cc7ac53b60b7963c92ddf7f0c9c`). Install as an update, preserving app data and the existing pending identity.
+
+Status: DONE — the owner's subsequent photos on 2026-10-13 show the physical Samsung reporting linked and membership verified with the same device fingerprint; Windows remains linked and its pending request list is empty. This accepts Android receipt after the alpha.2/cloud fix. The repeated linked-state paragraph is a presentation defect, not a second enrollment. These photos do not establish document transfer or second-Windows physical acceptance; Phase2 remains open for those gates. Windows .158 components were unchanged by this fix.

@@ -17,7 +17,7 @@ type StrictCodeSaved = Readonly<{ saved: boolean }>;
 export type DashboardSnapshot = Readonly<{ preferences: UserPreferences | null; preferencesLoading: boolean; preferencesError: string | null; preferencesPhase: 'idle' | 'writing' | 'unknown' | 'error'; sessionSummary: SessionSummary | null; summaryLoading: boolean; summaryError: string | null; sessionReplay: SessionReplayIntent | null; replayLoading: boolean; replayError: string | null; recoveryInfo: RecoveryInfo | null; recoveryInfoLoading: boolean; recoveryInfoError: string | null; strictReview: StrictReview | null; strictPhase: 'idle' | 'preparing' | 'review' | 'activating' | 'unknown' | 'started' | 'error'; strictError: string | null; capturePhase: 'idle' | 'writing' | 'unknown' | 'error'; captureError: string | null; schedulePhase: 'idle' | 'writing' | 'unknown' | 'error'; scheduleError: string | null; today: TodaySummary | null; todayLoading: boolean; todayError: string | null; schedules: ScheduleList | null; schedulesLoading: boolean; schedulesError: string | null; presetPhase: 'idle' | 'writing' | 'unknown' | 'error'; presetError: string | null; controlAction: 'stop' | 'skip' | null; controlReview: ControlReview | null; cycles: CyclePage | null; cyclesLoading: boolean; cyclesError: string | null; cycleReview: CycleReview | null; catalog: ProfilePage | null; catalogLoading: boolean; catalogError: string | null; phase: 'idle' | 'preparing' | 'review' | 'starting' | 'unknown' | 'started' | 'error' | 'actionReview' | 'controlling' | 'controlled'; review: NormalReview | null; started: StartedSession | null; error: string | null }>;
 type Method = 'profiles.list' | 'session.prepareNormal' | 'session.startNormal' | 'cycles.list' | 'session.prepareCycle' | 'session.startCycle' | 'session.stopNormal' | 'session.skipBreak' | 'cyclePreset.save' | 'cyclePreset.delete' | 'cyclePreset.duplicate' | 'today.get' | 'schedules.list' | 'schedule.save' | 'schedule.enable' | 'schedule.delete' | 'session.summary' | 'session.intent.get' | 'session.reflection.save' | 'session.strict.prepare' | 'session.strict.activate' | 'session.strict.cancel' | 'session.strict.saveRecoveryCode' | 'recovery.info' | 'capture.open' | 'capture.dismiss' | 'preferences.get' | 'preferences.set';
 type Result = ProfilePage | NormalReview | StartedSession | CyclePage | CycleReview | ControlledSession | CyclePresetMutation | TodaySummary | ScheduleList | SessionSummary | SessionReplayIntent | SessionReflectionSaved | StrictReview | StrictCancelled | StrictCodeSaved | RecoveryInfo | CaptureActionResult | UserPreferences;
-type Pending = { id: string; token: string; method: Method; validate(value: unknown): value is Result; resolve(value: Result): void; reject(error: Error): void; timer: ReturnType<typeof setTimeout> };
+type Pending = { id: string; token: string; method: Method; background?: boolean; validate(value: unknown): value is Result; resolve(value: Result): void; reject(error: Error): void; timer: ReturnType<typeof setTimeout> };
 const guidN = /^(?!0{32})[0-9a-f]{32}$/i;
 const guidD = /^(?!0{8}-0{4}-0{4}-0{4}-0{12})[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const record = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -76,6 +76,8 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
   let active = false;
   let token: string | null = null;
   let pending: Pending | null = null;
+  let preferencesWriteGeneration = 0;
+  const foregroundRequestPending = () => pending !== null && !pending.background;
   let latestStatus: BridgeStatus | null = null;
   let uncertainStatus: BridgeStatus | null = null;
   let startingStatus: BridgeStatus | null = null;
@@ -85,14 +87,17 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
   const canControl = (status: BridgeStatus | null) => statusReady && !!snapshot.catalog?.pilotEnabled && !!status && !status.strictMode && ['Active', 'Activating'].includes(status.sessionState) && !!status.sessionId && !!status.endUtc;
   const matchesControl = (review: ControlReview, status: BridgeStatus | null) => canControl(status) && status!.sessionId === review.sessionId && status!.endUtc === review.endUtc && (review.action === 'stop' || status!.mode === 'FocusCycle' && status!.currentPhase?.index === review.phaseIndex && status!.currentPhase.endUtc === review.phaseEndUtc && ['ShortBreak', 'LongBreak'].includes(status!.currentPhase.kind));
   let readRetry: ReturnType<typeof setTimeout> | null = null;
+  let preferencesRefresh: ReturnType<typeof setTimeout> | null = null;
+  let preferencesRefreshDelay = 2000;
   const publish = (patch: Partial<DashboardSnapshot>) => { snapshot = Object.freeze({ ...snapshot, ...patch }); for (const listener of listeners) listener(); };
   const cancelPending = (code: string) => { if (pending) { const p = pending; pending = null; clearTimeout(p.timer); p.reject(new Error(code)); } };
-  const request = (method: Method, params: object, validate: Pending['validate']): Promise<Result> => {
+  const request = (method: Method, params: object, validate: Pending['validate'], background = false): Promise<Result> => {
     if (!active || !token || !transport) return Promise.reject(new Error('BridgeUnavailable'));
+    if (!background && pending?.background) cancelPending('ReadSuperseded');
     if (pending) return Promise.reject(new Error('RequestInProgress'));
     const id = crypto.randomUUID().replaceAll('-', '');
     return new Promise((resolve, reject) => {
-      const p: Pending = { id, token: token!, method, validate, resolve, reject, timer: setTimeout(() => { if (pending === p) { pending = null; reject(new Error(mutation(method) ? 'OutcomeUnknown' : 'RequestTimeout')); } }, 4000) };
+      const p: Pending = { id, token: token!, method, background, validate, resolve, reject, timer: setTimeout(() => { if (pending === p) { pending = null; reject(new Error(mutation(method) ? 'OutcomeUnknown' : 'RequestTimeout')); } }, 4000) };
       pending = p;
       try { transport.postMessage({ version: 1, requestId: id, documentToken: token, method, params }); }
       catch { pending = null; clearTimeout(p.timer); reject(new Error(mutation(method) ? 'OutcomeUnknown' : 'BridgeUnavailable')); }
@@ -182,7 +187,7 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
   };
   const saveStrictRecoveryCode = async (): Promise<boolean> => {
     const review = snapshot.strictReview;
-    if (snapshot.strictPhase !== 'review' || !review || pending) return false;
+    if (snapshot.strictPhase !== 'review' || !review || foregroundRequestPending()) return false;
     publish({ strictError: null });
     try {
       const result = await request('session.strict.saveRecoveryCode',
@@ -271,11 +276,51 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
       pending = null; clearTimeout(p.timer); p.resolve(value.result);
     }
   };
+  const schedulePreferencesRefresh = () => {
+    if (!active || preferencesRefresh !== null) return;
+    preferencesRefresh = setTimeout(() => {
+      preferencesRefresh = null;
+      void refreshPreferences();
+    }, preferencesRefreshDelay);
+  };
+  const refreshPreferences = async () => {
+    if (!active) return;
+    // Keep foreground bridge work ahead of polling, and wait for the first read's bounded
+    // retries to finish before starting the independent recovery loop.
+    if (!token || !transport || pending || snapshot.preferencesLoading || snapshot.preferencesPhase !== 'idle') {
+      schedulePreferencesRefresh();
+      return;
+    }
+    const documentToken = token;
+    const writeGeneration = preferencesWriteGeneration;
+    const recovering = snapshot.preferences === null;
+    if (recovering) publish({ preferencesLoading: true, preferencesError: null });
+    let succeeded = false;
+    try {
+      const value = await request('preferences.get', {}, isUserPreferences, true) as UserPreferences;
+      if (active && token === documentToken && preferencesWriteGeneration === writeGeneration
+        && snapshot.preferencesPhase === 'idle') {
+        if (snapshot.preferences === null || snapshot.preferencesLoading || snapshot.preferencesError !== null
+          || JSON.stringify(value) !== JSON.stringify(snapshot.preferences))
+          publish({ preferences: value, preferencesLoading: false, preferencesError: null });
+        succeeded = true;
+      }
+    } catch (error) {
+      const code = error instanceof Error ? error.message : 'InvalidResponse';
+      if (active && token === documentToken && preferencesWriteGeneration === writeGeneration
+        && snapshot.preferencesPhase === 'idle' && code !== 'ReadSuperseded')
+        publish({ preferencesLoading: false, preferencesError: code });
+    } finally {
+      if (succeeded) preferencesRefreshDelay = 2000;
+      else if (active) preferencesRefreshDelay = Math.min(preferencesRefreshDelay * 2, 30000);
+      schedulePreferencesRefresh();
+    }
+  };
   return {
     subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
     getSnapshot: () => snapshot,
-    start() { if (active) return; active = true; transport?.addEventListener('message', onMessage); if (!transport) publish({ catalogError: 'BridgeUnavailable' }); },
-    stop() { active = false; token = null; statusReady = false; if (readRetry) clearTimeout(readRetry); readRetry = null; transport?.removeEventListener('message', onMessage); cancelPending('DocumentChanged'); publish({ review: null, controlReview: null, cycleReview: null, strictReview: null, strictPhase: 'idle' }); },
+    start() { if (active) return; active = true; transport?.addEventListener('message', onMessage); if (!transport) publish({ catalogError: 'BridgeUnavailable' }); schedulePreferencesRefresh(); },
+    stop() { active = false; token = null; statusReady = false; if (readRetry) clearTimeout(readRetry); readRetry = null; if (preferencesRefresh) clearTimeout(preferencesRefresh); preferencesRefresh = null; preferencesRefreshDelay = 2000; transport?.removeEventListener('message', onMessage); cancelPending('DocumentChanged'); publish({ review: null, controlReview: null, cycleReview: null, strictReview: null, strictPhase: 'idle' }); },
     loadProfiles,
     loadSessionIntent,
     prepareStrict,
@@ -316,6 +361,7 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
           return;
         } catch (error) {
           const code = error instanceof Error ? error.message : 'InvalidResponse';
+          if (code === 'ReadSuperseded') return;
           if (active && (code === 'RequestInProgress' || code === 'BridgeUnavailable') && retry < 10) {
             await new Promise<void>(resolve => setTimeout(resolve, 300));
             if (active) continue;
@@ -328,7 +374,9 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
       }
     },
     async savePreferences(value: UserPreferences): Promise<UserPreferences | null> {
+      if (pending?.method === 'preferences.get' && pending.background) cancelPending('ReadSuperseded');
       if (pending || !active) { publish({ preferencesPhase: 'error', preferencesError: 'PreferencesUnavailable' }); return null; }
+      preferencesWriteGeneration++;
       publish({ preferencesPhase: 'writing', preferencesError: null });
       try {
         const saved = await request('preferences.set', value, isUserPreferences) as UserPreferences;
@@ -345,7 +393,7 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
     async saveSessionReflection(sessionId: string, reflection: string): Promise<string | null> {
       const current = snapshot.sessionSummary;
       if (!current || current.sessionId.toLowerCase() !== sessionId.toLowerCase()
-        || reflection.length > 1000 || pending) return null;
+        || reflection.length > 1000 || foregroundRequestPending()) return null;
       try {
         const saved = await request('session.reflection.save', {
           sessionId: sessionId.replaceAll('-', ''), reflection, confirmed: true,
@@ -361,7 +409,7 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
     },
     async resolveCapture(sessionId: string, captureId: string, action: 'open' | 'dismiss') {
       const summary = snapshot.sessionSummary;
-      if (pending || snapshot.capturePhase === 'writing' || snapshot.capturePhase === 'unknown' || !statusReady
+      if (foregroundRequestPending() || snapshot.capturePhase === 'writing' || snapshot.capturePhase === 'unknown' || !statusReady
         // strictMode lingers after a strict session ends; the terminal-state list alone keeps
         // captures locked while strict is in force.
         || !snapshot.catalog?.pilotEnabled || !latestStatus
@@ -511,7 +559,7 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
   };
 
   async function mutateCyclePreset(method: 'cyclePreset.save' | 'cyclePreset.duplicate' | 'cyclePreset.delete', params: object): Promise<CyclePresetMutation | null> {
-    if (pending || snapshot.presetPhase === 'writing' || snapshot.presetPhase === 'unknown' || !active || !statusReady
+    if (foregroundRequestPending() || snapshot.presetPhase === 'writing' || snapshot.presetPhase === 'unknown' || !active || !statusReady
       || !snapshot.catalog?.pilotEnabled || !latestStatus || !['Inactive', 'Expired', 'Stopped', 'Recovered', 'Failed'].includes(latestStatus.sessionState)) {
       publish({ presetPhase: 'error', presetError: 'PresetEditorUnavailable' }); return null;
     }
@@ -529,7 +577,7 @@ export function createDashboardClient(provided?: WebViewTransport | null) {
   }
 
   async function mutateSchedule(method: 'schedule.save' | 'schedule.enable' | 'schedule.delete', params: object): Promise<ScheduleList | null> {
-    if (pending || snapshot.schedulePhase === 'writing' || snapshot.schedulePhase === 'unknown' || !active || !statusReady
+    if (foregroundRequestPending() || snapshot.schedulePhase === 'writing' || snapshot.schedulePhase === 'unknown' || !active || !statusReady
       || !snapshot.catalog?.pilotEnabled || snapshot.schedules?.editingEnabled !== true || !latestStatus
       || !['Inactive', 'Expired', 'Stopped', 'Recovered', 'Failed'].includes(latestStatus.sessionState)) {
       publish({ schedulePhase: 'error', scheduleError: 'ScheduleEditorUnavailable' }); return null;

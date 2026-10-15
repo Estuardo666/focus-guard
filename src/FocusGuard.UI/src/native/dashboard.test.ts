@@ -1,11 +1,12 @@
 import { createDashboardClient, isNormalReview, isProfilePage, type NormalReview } from './dashboard';
 import type { BridgeStatus, WebViewTransport } from './protocol';
+import type { UserPreferences } from './preferences';
 
 const token = '11111111111141118111111111111111';
 const profileId = '22222222-2222-4222-8222-222222222222';
 const profile = { id: profileId, name: 'Saved profile', applicationRuleCount: 1, websiteRuleCount: 1, blockedApplicationCount: 1, blockedWebsiteCount: 0 };
 const catalog = { items: [profile], offset: 0, total: 1, pilotEnabled: true };
-const preferences = { uiLanguage: 'es', theme: 'Light', reduceMotion: false, sessionEnd: 'Notification', cyclePhaseNotifications: true, enforcementEnabled: true, lastDurationMinutes: 2, lastSessionMode: 'SimpleTimer', lastCyclePresetId: null };
+const preferences: UserPreferences = { uiLanguage: 'es', theme: 'Light', reduceMotion: false, sessionEnd: 'Notification', cyclePhaseNotifications: true, enforcementEnabled: true, lastDurationMinutes: 2, lastSessionMode: 'SimpleTimer', lastCyclePresetId: null };
 const review: NormalReview = { preparationId: '33333333333343338333333333333333', profileId, profileName: profile.name, durationSeconds: 1500, enforcementEnabled: false, applicationRuleCount: 1, websiteRuleCount: 1, blockedApplicationCount: 1, blockedWebsiteCount: 0, startUtc: '2040-01-01T12:00:00Z', endUtc: '2040-01-01T12:25:00Z', expiresUtc: '2040-01-01T12:02:00Z', extensionReady: false };
 const idle: BridgeStatus = { serviceReady: true, extensionReady: true, sessionState: 'Inactive', remainingSeconds: 0, sessionId: null, profileId: null, startUtc: null, endUtc: null, strictMode: false, enforcementConnected: false, mode: 'SimpleTimer' };
 function fixture() {
@@ -86,6 +87,91 @@ it('reports a read failure only after the bounded retries and keeps the save pha
   await loading;
   expect(f.client.getSnapshot()).toMatchObject({ preferences: null, preferencesLoading: false, preferencesError: 'BridgeUnavailable', preferencesPhase: 'idle' });
   f.client.stop();
+});
+it('recovers an exhausted initial preferences read automatically after the bridge starts', async () => {
+  const f = fixture();
+  const loading = f.client.loadPreferences();
+  await vi.advanceTimersByTimeAsync(4000);
+  await loading;
+  expect(f.client.getSnapshot().preferences).toBeNull();
+
+  f.initialize();
+  f.reply(catalog, null, f.messages.at(-1)!);
+  await Promise.resolve();
+  await vi.advanceTimersByTimeAsync(2000);
+
+  const recoveredRead = f.messages.at(-1)!;
+  expect(recoveredRead.method).toBe('preferences.get');
+  f.reply(preferences, null, recoveredRead);
+  await Promise.resolve();
+  expect(f.client.getSnapshot()).toMatchObject({ preferences, preferencesError: null, preferencesPhase: 'idle' });
+  expect(f.messages.some(message => message.method === 'preferences.set')).toBe(false);
+  f.client.stop();
+});
+it('backs off repeated recovery reads when the bridge remains unavailable', async () => {
+  const f = fixture();
+  const loading = f.client.loadPreferences();
+  await vi.advanceTimersByTimeAsync(4000);
+  await loading;
+  f.initialize();
+  f.reply(catalog, null, f.messages.at(-1)!);
+  await Promise.resolve();
+
+  await vi.advanceTimersByTimeAsync(2000);
+  const firstRecovery = f.messages.at(-1)!;
+  expect(firstRecovery.method).toBe('preferences.get');
+  f.reply(null, 'BridgeUnavailable', firstRecovery);
+  await Promise.resolve();
+  await vi.advanceTimersByTimeAsync(3999);
+  expect(f.messages.filter(message => message.method === 'preferences.get')).toHaveLength(1);
+  await vi.advanceTimersByTimeAsync(1);
+  expect(f.messages.filter(message => message.method === 'preferences.get')).toHaveLength(2);
+
+  const readsBeforeStop = f.messages.filter(message => message.method === 'preferences.get').length;
+  f.client.stop();
+  await vi.advanceTimersByTimeAsync(60000);
+  expect(f.messages.filter(message => message.method === 'preferences.get')).toHaveLength(readsBeforeStop);
+});
+it('refreshes externally saved preferences without writes, preempts reads for saves, and stops its timer', async () => {
+  const f = fixture(); f.initialize(); f.reply(catalog); await Promise.resolve();
+  const loading = f.client.loadPreferences();
+  const initialRead = f.messages.at(-1)!;
+  f.reply(preferences, null, initialRead); await loading;
+
+  await vi.advanceTimersByTimeAsync(2000);
+  const externalRead = f.messages.at(-1)!;
+  expect(externalRead.method).toBe('preferences.get');
+  const remote = { ...preferences, uiLanguage: 'en' as const, theme: 'Dark' as const, lastDurationMinutes: 50 };
+  f.reply(remote, null, externalRead); await Promise.resolve();
+  expect(f.client.getSnapshot().preferences).toEqual(remote);
+  expect(f.messages.some(message => message.method === 'preferences.set')).toBe(false);
+
+  await vi.advanceTimersByTimeAsync(2000);
+  const pendingRefresh = f.messages.at(-1)!;
+  const updated: UserPreferences = { ...remote, uiLanguage: 'es', lastDurationMinutes: 17 };
+  const saving = f.client.savePreferences(updated);
+  expect(f.messages.at(-1)?.method).toBe('preferences.set');
+  f.reply(updated, null, f.messages.at(-1)!); await saving;
+  f.reply(remote, null, pendingRefresh);
+  await Promise.resolve();
+  expect(f.client.getSnapshot()).toMatchObject({ preferences: updated, preferencesPhase: 'idle', preferencesError: null });
+  expect(f.messages.some(message => message.method === 'preferences.set')).toBe(true);
+
+  f.client.observeStatus(idle, true);
+  await vi.advanceTimersByTimeAsync(2000);
+  const readBeforeAction = f.messages.at(-1)!;
+  const preparing = f.client.prepare(profileId, 25, false);
+  expect(f.messages.at(-1)?.method).toBe('session.prepareNormal');
+  f.reply(remote, null, readBeforeAction);
+  f.reply(review, null, f.messages.at(-1)!);
+  await preparing;
+  expect(f.client.getSnapshot().preferences).toEqual(updated);
+  f.client.cancelReview();
+
+  const readsBeforeStop = f.messages.filter(message => message.method === 'preferences.get').length;
+  f.client.stop();
+  await vi.advanceTimersByTimeAsync(10000);
+  expect(f.messages.filter(message => message.method === 'preferences.get')).toHaveLength(readsBeforeStop);
 });
 it('validates profile accent colors as optional identity metadata', () => {
   expect(isProfilePage({ ...catalog, items: [{ ...profile, accentHex: '#aabbcc' }] })).toBe(true);

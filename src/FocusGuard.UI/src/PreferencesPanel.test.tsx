@@ -58,6 +58,27 @@ describe('PreferencesPanel', () => {
     expect(container.querySelector<HTMLInputElement>('input[name="pref-theme"][value="Dark"]')!.checked).toBe(true);
   });
 
+  it('follows clean remote fields while preserving a dirty local draft', async () => {
+    let snapshot = Object.freeze({ preferences, preferencesLoading: false, preferencesError: null, preferencesPhase: 'idle' }) as unknown as DashboardSnapshot;
+    const listeners = new Set<() => void>();
+    const dashboard = {
+      subscribe(listener: () => void) { listeners.add(listener); return () => listeners.delete(listener); },
+      getSnapshot: () => snapshot, loadPreferences: vi.fn(async () => undefined), savePreferences: vi.fn(async () => null),
+    } as unknown as DashboardClient;
+    await act(async () => root.render(<PreferencesPanel dashboard={dashboard} t={key => es[key]} onSaved={vi.fn()}/>));
+    await click(container.querySelector('input[name="pref-theme"][value="Light"]'));
+
+    const remote = { ...preferences, uiLanguage: 'en' as const, lastDurationMinutes: 50 };
+    await act(async () => {
+      snapshot = Object.freeze({ ...snapshot, preferences: remote });
+      for (const listener of listeners) listener();
+    });
+    expect(container.querySelector<HTMLInputElement>('input[name="pref-theme"][value="Light"]')?.checked).toBe(true);
+    expect(container.querySelector('.pref-save-bar')).not.toBeNull();
+    await click(container.querySelector<HTMLButtonElement>('#pref-tab-sessions'));
+    expect(container.querySelector<HTMLInputElement>('.pref-number input')?.value).toBe('50');
+  });
+
   it('saves theme, duration, session-end choice and switches through the service', async () => {
     const saved = { ...preferences, theme: 'Light', lastDurationMinutes: 50, sessionEnd: 'Notification', enforcementEnabled: true };
     const dashboard = makeDashboard({ preferences, preferencesPhase: 'idle' } as Partial<DashboardSnapshot>);

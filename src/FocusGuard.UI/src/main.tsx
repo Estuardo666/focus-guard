@@ -10,6 +10,7 @@ import { createProfilesClient } from './native/profiles';
 import { createApplicationsClient } from './native/applications';
 import { createWindowControlsClient } from './native/window-controls';
 import { createShellClient } from './native/shell';
+import { createNativeAccountClient } from './native/account';
 import './design-system/tokens.css';
 import './design-system/compact-layout.css';
 import './design-system/accessibility-controls.css';
@@ -30,13 +31,15 @@ const applications = createApplicationsClient();
 applications.start();
 const windowControls = createWindowControlsClient();
 windowControls.start();
+const account = createNativeAccountClient();
+account.start();
 
 /** One page, two roles: the main window, or a popup the host announced (tray panel, notice, summary, block screen). */
 function Root() {
   const state = useSyncExternalStore(shell.subscribe, shell.getSnapshot);
   if (state.mode === 'surface' && state.surface) return <SurfaceApp surface={state.surface} shell={shell} client={client} dashboard={dashboard}/>;
   if (state.mode === 'unknown') return <StartupScreen/>;
-  return <App client={client} dashboard={dashboard} profiles={profiles} applications={applications} windowControls={windowControls} shell={shell}/>;
+  return <App client={client} dashboard={dashboard} profiles={profiles} applications={applications} windowControls={windowControls} shell={shell} accountClient={account}/>;
 }
 
 createRoot(root).render(<ErrorBoundary><Root/></ErrorBoundary>);

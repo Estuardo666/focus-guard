@@ -23,6 +23,8 @@ import type { UserPreferences } from './native/preferences';
 import type { SessionReplayIntent } from './native/replay';
 import type { BridgeStatus } from './native/protocol';
 import type { WindowControlSnapshot, WindowControlsClient } from './native/window-controls';
+import type { AccountClient, AccountSnapshot } from './native/account';
+import { AccountChip, AccountPanel } from './AccountPanel';
 
 export type StatusClient = ReturnType<typeof createNativeStatusClient>;
 type Language = 'es' | 'en';
@@ -43,6 +45,8 @@ const navigationItems = [
 const noWindowControlSnapshot: WindowControlSnapshot = Object.freeze({ compact: false, alwaysOnTop: false, detailsExpanded: true, phase: 'waiting', error: null });
 const subscribeNoWindowControls = (_listener: () => void) => () => undefined;
 const getNoWindowControlSnapshot = () => noWindowControlSnapshot;
+const noAccountSnapshot: AccountSnapshot = Object.freeze({ phase: 'unavailable', account: null, error: 'BridgeUnavailable' });
+const getNoAccountSnapshot = () => noAccountSnapshot;
 const factIcons = { service: Link2Icon, extension: GlobeIcon, protection: LockClosedIcon } as const;
 const paletteLabels: Record<Palette, CopyKey> = { aurora: 'paletteAurora', mist: 'paletteMist', ember: 'paletteEmber', ocean: 'paletteOcean' };
 const PreferencesPanel = lazy(() => import('./PreferencesPanel').then(module => ({ default: module.PreferencesPanel })));
@@ -80,8 +84,8 @@ function Mark({ small = false }: { small?: boolean }) {
   return <svg className={small ? 'mark mark-small' : 'mark'} viewBox="0 0 64 64" aria-hidden="true"><path d="M22 9H14a5 5 0 0 0-5 5v8M42 9h8a5 5 0 0 1 5 5v8M55 42v8a5 5 0 0 1-5 5h-8M22 55h-8a5 5 0 0 1-5-5v-8" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/><circle cx="32" cy="32" r="7" fill="currentColor"/></svg>;
 }
 
-export function App({ client, dashboard, profiles, applications, windowControls, shell }: {
-  client: StatusClient; dashboard?: DashboardClient; profiles?: ProfilesClient; applications?: ApplicationsClient; windowControls?: WindowControlsClient; shell?: ShellClient;
+export function App({ client, dashboard, profiles, applications, windowControls, shell, accountClient }: {
+  client: StatusClient; dashboard?: DashboardClient; profiles?: ProfilesClient; applications?: ApplicationsClient; windowControls?: WindowControlsClient; shell?: ShellClient; accountClient?: AccountClient;
 }) {
   const preparedViews = readStartupViews();
   const DashboardStart = preparedViews.dashboard ?? LazyDashboardStart;
@@ -117,8 +121,11 @@ export function App({ client, dashboard, profiles, applications, windowControls,
     dashboard?.getSnapshot ?? getNoDashboardSnapshot,
     dashboard?.getSnapshot ?? getNoDashboardSnapshot,
   );
+  const observedPreferences = dashboardSnapshot?.preferences;
   const windowState = useSyncExternalStore(windowControls?.subscribe ?? subscribeNoWindowControls,
     windowControls?.getSnapshot ?? getNoWindowControlSnapshot);
+  const accountSnapshot = useSyncExternalStore(accountClient?.subscribe ?? subscribeNoDashboard,
+    accountClient?.getSnapshot ?? getNoAccountSnapshot, accountClient?.getSnapshot ?? getNoAccountSnapshot);
   const startupComplete = useStartupPresentation(!!shell, preferencesReady && snapshot.phase !== 'waiting' && snapshot.phase !== 'loading'
     && (!dashboard || !!dashboardSnapshot?.catalog || !!dashboardSnapshot?.catalogError));
   const refresh = useCallback(async () => {
@@ -154,6 +161,9 @@ export function App({ client, dashboard, profiles, applications, windowControls,
     setCyclePhaseNotifications(value.cyclePhaseNotifications);
     setPreferencesReady(true);
   }, []);
+  useEffect(() => {
+    if (dashboard && observedPreferences) applyPreferences(observedPreferences);
+  }, [dashboard, observedPreferences, applyPreferences]);
   const persistPreferences = useCallback(async (patch: Partial<UserPreferences>) => {
     if (!dashboard) return null;
     const current = dashboard.getSnapshot().preferences;
@@ -179,7 +189,7 @@ export function App({ client, dashboard, profiles, applications, windowControls,
     if (!dashboard) return;
     void dashboard.loadPreferences().then(() => {
       const value = dashboard.getSnapshot().preferences;
-      if (value) applyPreferences(value); else setPreferencesReady(true);
+      if (!value) setPreferencesReady(true);
     });
   }, [dashboard, applyPreferences]);
   useEffect(() => { profiles?.start(); return () => profiles?.stop(); }, [profiles]);
@@ -367,6 +377,7 @@ export function App({ client, dashboard, profiles, applications, windowControls,
         {navigationItems.map(({ key, Icon }) => <Tabs.Trigger key={key} value={key} disabled={navigationDisabled(key)}><Icon className="nav-icon" aria-hidden="true" focusable="false" /><span>{t(key)}</span></Tabs.Trigger>)}
       </Tabs.List>
       <p className="sidebar-note">{t('continuity')}</p>
+      {accountClient && <AccountChip snapshot={accountSnapshot} onOpen={() => setTab('connection')} t={t} />}
       <div className={`connection-strip ${snapshot.phase}`} role="status" aria-live="polite"><span className="status-dot" aria-hidden="true"/><span className="connection-label">{phaseLabel}</span><button type="button" className="connection-refresh" title={t('refresh')} onClick={() => void refresh()} disabled={snapshot.phase === 'loading'}><ReloadIcon aria-hidden="true" focusable="false"/><span className="sr-only">{snapshot.phase === 'loading' ? t('refreshing') : t('refresh')}</span></button></div>
     </aside>
     <main id="main" tabIndex={-1} className="main">
@@ -388,7 +399,7 @@ export function App({ client, dashboard, profiles, applications, windowControls,
         {dashboard && <Suspense fallback={<p role="status">{t('startLoading')}</p>}><DashboardStart dashboard={dashboard} blockedSummary={blockedSummary} reviewBeforeStart={reviewBeforeStart} {...(profiles ? { renderBlockedPreview: (profileId: string, apps: number, sites: number) => <BlockedStack profiles={profiles} profileId={profileId} blockedApps={apps} blockedSites={sites} t={t} showSites/> } : {})} connection={snapshot} language={language} t={t} refresh={refresh} replay={replaySession} onReplayApplied={() => setReplaySession(null)}/></Suspense>}{dashboard && <ActiveSessionControls dashboard={dashboard} connection={snapshot} language={language} t={t} refresh={refresh}/>}<div className="session-footer"><span>{t('continuity')}</span><span>{snapshot.updatedAt ? `${t('lastUpdate')} · ${formatMoment(snapshot.updatedAt, language)}` : t('notYet')}</span></div>
         {status?.strictMode && active && <aside className="strict-recovery-inline" aria-label={t('strictRecoveryActiveTitle')}><strong>{t('strictRecoveryActiveTitle')}</strong><p>{t('strictRecoveryActiveDetail')}</p><code>%ProgramFiles%\FocusGuard\FocusGuard.Recovery.exe</code><button type="button" onClick={() => setTab('help')}>{t('recoveryAccessTitle')}</button></aside>}
       </section>{current && <section className="facts" aria-label={t('connectionTitle')}>{facts.map(renderFact)}</section>}</div></Tabs.Content>
-      {profiles && dashboard && <Tabs.Content value="profiles"><Suspense fallback={<p role="status">{t('profilesLoading')}</p>}><ProfileEditor {...(applications ? { applications } : {})} profiles={profiles} dashboard={dashboard} connection={snapshot} language={language} t={t}/></Suspense></Tabs.Content>}<Tabs.Content value="connection"><section className="connection-intro"><h2>{t('connectionTitle')}</h2><p>{t('connectionDetail')}</p></section>{current && <section className="facts" aria-label={t('connectionTitle')}>{facts.map(renderFact)}</section>}</Tabs.Content>
+      {profiles && dashboard && <Tabs.Content value="profiles"><Suspense fallback={<p role="status">{t('profilesLoading')}</p>}><ProfileEditor {...(applications ? { applications } : {})} profiles={profiles} dashboard={dashboard} connection={snapshot} language={language} t={t}/></Suspense></Tabs.Content>}<Tabs.Content value="connection"><section className="connection-intro"><h2>{t('connectionTitle')}</h2><p>{t('connectionDetail')}</p></section>{accountClient && <AccountPanel client={accountClient} snapshot={accountSnapshot} t={t} />}{current && <section className="facts" aria-label={t('connectionTitle')}>{facts.map(renderFact)}</section>}</Tabs.Content>
       {dashboard && <Tabs.Content value="activity"><Suspense fallback={<p role="status">{t('activityLoading')}</p>}><WorkflowViews dashboard={dashboard} connection={snapshot} language={language} t={t} view="activity" onRepeat={replay => { setReplaySession(replay); setTab('summary'); }}/></Suspense></Tabs.Content>}
       {dashboard && <Tabs.Content value="schedules"><Suspense fallback={<p role="status">{t('schedulesLoading')}</p>}><WorkflowViews dashboard={dashboard} connection={snapshot} language={language} t={t} view="schedules"/></Suspense></Tabs.Content>}
       {dashboard && <Tabs.Content value="preferences"><Suspense fallback={<p role="status">{t('preferencesLoading')}</p>}><PreferencesPanel dashboard={dashboard} t={t} onSaved={applyPreferences} palette={palette} onPaletteChange={value => { setPalette(value); savePalette(value); }} orbStyle={orbStyle} onOrbStyleChange={value => { setOrbStyle(value); saveOrbStyle(value); }} reviewBeforeStart={reviewBeforeStart} onReviewBeforeStartChange={value => { setReviewBeforeStart(value); saveReviewBeforeStart(value); }} {...(startup ? { startup } : {})}/></Suspense></Tabs.Content>}

@@ -19,6 +19,62 @@
   <data name="ShellReady" xml:space="preserve"><value>Local interface loaded.</value></data>
   <data name="BridgeUnavailable" xml:space="preserve"><value>Service access is disabled until Phase 4 authorization is integrated.</value></data>
   <data name="RecoveryCodeFileTitle" xml:space="preserve"><value>Save FocusGuard recovery code</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="DeviceRecoveryTitle" xml:space="preserve"><value>Save your device recovery kit</value></data>
+  <data name="DeviceRecoveryHeading" xml:space="preserve"><value>Keep this kit somewhere safe</value></data>
+  <data name="DeviceRecoveryDetail" xml:space="preserve"><value>This is the recovery path if you lose every linked device. Save it outside this PC, such as on paper or in a password manager. FocusGuard sends only the public recovery key to the cloud. Do not share this kit.</value></data>
+  <data name="DeviceRecoveryCodeLabel" xml:space="preserve"><value>FocusGuard recovery kit</value></data>
+  <data name="DeviceRecoverySaved" xml:space="preserve"><value>I saved this kit somewhere safe</value></data>
+  <data name="DeviceRecoveryContinue" xml:space="preserve"><value>Continue and link</value></data>
+  <data name="DevicePairApprovalTitle" xml:space="preserve"><value>Approve this device?</value></data>
+  <data name="DevicePairApprovalDetail" xml:space="preserve"><value>Only approve if you can compare this fingerprint with the one shown on the new device in person.</value></data>
+  <data name="DevicePairFingerprint" xml:space="preserve"><value>Device fingerprint</value></data>
+  <data name="DevicePairRequestCode" xml:space="preserve"><value>Pairing request code</value></data>
+  <data name="DevicePairCompared" xml:space="preserve"><value>I compared every character and the fingerprints match.</value></data>
+  <data name="DevicePairApprove" xml:space="preserve"><value>Approve device</value></data>
+  <data name="SettingsTransferShareTitle" xml:space="preserve"><value>Share selected settings?</value></data>
+  <data name="SettingsTransferShareDetail" xml:space="preserve"><value>Only the checked theme, language, and default timer duration will be added to an encrypted account document. App/site rules, profiles, permissions, schedules, and history are never included.</value></data>
+  <data name="SettingsTransferImportTitle" xml:space="preserve"><value>Import selected settings?</value></data>
+  <data name="SettingsTransferImportDetail" xml:space="preserve"><value>Choose which shared values to apply here. Every unchecked setting and all local app/site rules remain unchanged.</value></data>
+  <data name="SettingsTransferThemeShare" xml:space="preserve"><value>Theme: {0}</value></data>
+  <data name="SettingsTransferThemeImport" xml:space="preserve"><value>Theme: {0} → {1}</value></data>
+  <data name="SettingsTransferLanguageShare" xml:space="preserve"><value>Interface language: {0}</value></data>
+  <data name="SettingsTransferLanguageImport" xml:space="preserve"><value>Interface language: {0} → {1}</value></data>
+  <data name="SettingsTransferDurationShare" xml:space="preserve"><value>Default timer duration: {0} minutes</value></data>
+  <data name="SettingsTransferDurationImport" xml:space="preserve"><value>Default timer duration: {0} → {1} minutes</value></data>
+  <data name="SettingsTransferShare" xml:space="preserve"><value>Share selected</value></data>
+  <data name="SettingsTransferImport" xml:space="preserve"><value>Apply selected</value></data>
+  <data name="PortableSettingsExportTitle" xml:space="preserve"><value>Export portable settings?</value></data>
+  <data name="PortableSettingsExportDetail" xml:space="preserve"><value>This creates a readable JSON file containing only theme, interface language, and default timer duration. Keep the file private. It contains no account identity, keys, paths, rules, permissions, or policies.</value></data>
+  <data name="PortableSettingsImportTitle" xml:space="preserve"><value>Review settings to import</value></data>
+  <data name="PortableSettingsImportDetail" xml:space="preserve"><value>Choose which values to apply to this PC. Unchecked values and other local preferences stay unchanged. The selected values will be saved here and, when settings sync is active, sent through its normal edit path.</value></data>
+  <data name="PortableSettingsTheme" xml:space="preserve"><value>Theme: {0} → {1}</value></data>
+  <data name="PortableSettingsLanguage" xml:space="preserve"><value>Interface language: {0} → {1}</value></data>
+  <data name="PortableSettingsDuration" xml:space="preserve"><value>Default timer duration: {0} → {1} minutes</value></data>
+  <data name="PortableSettingsImport" xml:space="preserve"><value>Import selected</value></data>
+  <data name="PortableSettingsFilter" xml:space="preserve"><value>FocusGuard settings (*.json)|*.json</value></data>
+  <data name="PortableSettingsExported" xml:space="preserve"><value>Portable settings exported.</value></data>
+  <data name="PortableSettingsImported" xml:space="preserve"><value>Selected portable settings were imported.</value></data>
+  <data name="PortableSettingsInvalid" xml:space="preserve"><value>The selected file is invalid or exceeds the 8 KiB limit.</value></data>
+  <data name="SettingsSyncConsentTitle" xml:space="preserve"><value>Enable automatic settings sync?</value></data>
+  <data name="SettingsSyncConsentDetail" xml:space="preserve"><value>FocusGuard will keep theme, interface language, and default timer duration in sync across devices linked to this account. Values are end-to-end encrypted. App/site rules, profiles, permissions, schedules, history, and active sessions stay local. You can turn sync off here at any time.</value></data>
+  <data name="SettingsSyncResetTitle" xml:space="preserve"><value>Reset shared settings on linked devices?</value></data>
+  <data name="SettingsSyncResetDetail" xml:space="preserve"><value>Current values — theme: {0}, interface language: {1}, default duration: {2} minutes. After reset — theme: {3}, interface language: {4}, default duration: {5} minutes. The encrypted reset applies when each linked device next syncs. Active focus sessions are not changed. App/site rules, profiles, permissions, schedules, and history remain local and unchanged. Continue?</value></data>
+    <data name="SettingsSyncRecoveryTitle" xml:space="preserve"><value>Recover settings sync retry?</value></data>
+    <data name="SettingsSyncRecoveryDetail" xml:space="preserve"><value>This removes only the damaged local retry-delay file and recognized temporary files for this device and account. It does not change the encrypted outbox, local settings, or consent. FocusGuard will retry using the existing consent. Continue?</value></data>
+  <data name="SettingsLocalOverridesTitle" xml:space="preserve"><value>Keep selected settings on this PC?</value></data>
+  <data name="SettingsLocalOverridesDetail" xml:space="preserve"><value>Checked settings keep the values shown for this PC. Unchecked settings follow the latest verified shared or draft value. This choice stays local and does not change the account document.</value></data>
+  <data name="SettingsLocalOverridesKeepTheme" xml:space="preserve"><value>Keep theme on this PC</value></data>
+  <data name="SettingsLocalOverridesKeepLanguage" xml:space="preserve"><value>Keep interface language on this PC</value></data>
+  <data name="SettingsLocalOverridesKeepDuration" xml:space="preserve"><value>Keep default duration on this PC</value></data>
+  <data name="SettingsLocalOverridesThemeValues" xml:space="preserve"><value>This PC: {0} · Shared/draft: {1}</value></data>
+  <data name="SettingsLocalOverridesLanguageValues" xml:space="preserve"><value>This PC: {0} · Shared/draft: {1}</value></data>
+  <data name="SettingsLocalOverridesDurationValues" xml:space="preserve"><value>This PC: {0} minutes · Shared/draft: {1} minutes</value></data>
+  <data name="SettingsLocalOverridesDark" xml:space="preserve"><value>Dark</value></data>
+  <data name="SettingsLocalOverridesLight" xml:space="preserve"><value>Light</value></data>
+  <data name="SettingsLocalOverridesSpanish" xml:space="preserve"><value>Spanish</value></data>
+  <data name="SettingsLocalOverridesEnglish" xml:space="preserve"><value>English</value></data>
+  <data name="SettingsLocalOverridesSave" xml:space="preserve"><value>Save choices</value></data>
   <data name="TrayOpen" xml:space="preserve">
     <value>Open FocusGuard</value>
   </data>

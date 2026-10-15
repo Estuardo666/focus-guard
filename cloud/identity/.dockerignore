@@ -1,0 +1,6 @@
+Native/
+Tests/
+**/bin/
+**/obj/
+**/*.log
+**/*.env

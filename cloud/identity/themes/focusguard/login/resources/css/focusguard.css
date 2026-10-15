@@ -1,0 +1,28 @@
+/* FocusGuard identity theme — mirrors the desktop "aurora" zen tokens and the portal orb. CSS only. */
+:root{--fg-bg:#0c0b12;--fg-surface:#16141f;--fg-ink:#f3f1fa;--fg-muted:#c0bbd2;--fg-accent:#cdb8ff;--fg-accent-ink:#1a1030;
+--fg-orb-a:#c7a6ff;--fg-orb-b:#8ea6ff;--fg-orb-c:#ff9fd0;--fg-orb-ink:#17142a;--fg-glass:rgb(24 21 34/.58);--fg-line:rgb(255 255 255/.08);
+--fg-danger:#ff9f9f;--fg-ease:cubic-bezier(.23,1,.32,1);
+--pf-v5-global--primary-color--100:var(--fg-accent);--pf-v5-global--primary-color--200:#b9a0ff;
+--pf-v5-global--link--Color:var(--fg-accent);--pf-v5-global--link--Color--hover:#e4d9ff;
+--pf-v5-global--danger-color--100:var(--fg-danger);--pf-v5-global--FontFamily--text:Geist,"Segoe UI",system-ui,sans-serif}
+html,body,.pf-v5-c-login{background:var(--fg-bg)!important;color:var(--fg-ink)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 8% 10%,color-mix(in srgb,var(--fg-orb-a) 26%,transparent),transparent 70%),radial-gradient(ellipse 55% 50% at 95% 95%,color-mix(in srgb,var(--fg-orb-b) 22%,transparent),transparent 70%),radial-gradient(ellipse 40% 35% at 62% 40%,color-mix(in srgb,var(--fg-orb-c) 10%,transparent),transparent 70%)}
+.pf-v5-c-login__header,#kc-header{display:flex;justify-content:center;padding-bottom:18px}
+#kc-header-wrapper{display:flex;flex-direction:column;align-items:center;gap:18px;color:var(--fg-ink);font-size:22px;font-weight:600;letter-spacing:-.03em;text-transform:none}
+#kc-header-wrapper::before{content:"";width:76px;height:76px;border-radius:50%;background:radial-gradient(circle at 32% 26%,rgb(255 255 255/.92) 0%,var(--fg-orb-a) 24%,var(--fg-orb-b) 58%,color-mix(in srgb,var(--fg-orb-c) 60%,var(--fg-orb-ink)) 82%,var(--fg-orb-ink) 100%);box-shadow:inset -8px -10px 20px rgb(10 6 30/.55),0 0 0 14px color-mix(in srgb,var(--fg-orb-a) 8%,transparent),0 0 60px color-mix(in srgb,var(--fg-orb-a) 45%,transparent)}
+.pf-v5-c-login__main{background:linear-gradient(150deg,color-mix(in srgb,var(--fg-accent) 12%,var(--fg-glass)) 0%,var(--fg-glass) 55%)!important;border:1px solid var(--fg-line);border-radius:28px;backdrop-filter:blur(22px) saturate(150%);box-shadow:inset 0 1px 0 rgb(255 255 255/.07),0 30px 70px -40px rgb(6 4 14/.8);overflow:hidden}
+.pf-v5-c-login__main-header,.pf-v5-c-login__main-body,.pf-v5-c-login__main-footer{background:transparent}
+.pf-v5-c-title,#kc-page-title{color:var(--fg-ink);font-weight:600;letter-spacing:-.03em}
+.pf-v5-c-form__label-text,.pf-v5-c-login__main-footer-band-item,.pf-v5-c-helper-text{color:var(--fg-muted)}
+.pf-v5-c-form-control{--pf-v5-c-form-control--BackgroundColor:rgb(255 255 255/.04);border-radius:14px;color:var(--fg-ink)}
+.pf-v5-c-form-control::before,.pf-v5-c-form-control::after{border-radius:14px}
+.pf-v5-c-button{border-radius:999px;min-height:48px;font-weight:620;transition:transform 140ms var(--fg-ease),background-color 180ms ease,box-shadow 200ms ease}
+.pf-v5-c-button:active{transform:scale(.97)}
+.pf-v5-c-button.pf-m-primary{--pf-v5-c-button--m-primary--BackgroundColor:var(--fg-accent);--pf-v5-c-button--m-primary--Color:var(--fg-accent-ink);--pf-v5-c-button--m-primary--hover--BackgroundColor:#dccdff;--pf-v5-c-button--m-primary--hover--Color:var(--fg-accent-ink);box-shadow:0 14px 34px -16px color-mix(in srgb,var(--fg-accent) 90%,transparent)}
+.pf-v5-c-login__main-footer-band{border-top:1px solid var(--fg-line);background:transparent}
+.pf-v5-c-login__main{transition:opacity 420ms var(--fg-ease),transform 420ms var(--fg-ease)}
+@starting-style{.pf-v5-c-login__main{opacity:0;transform:translateY(8px)}}
+:focus-visible{outline:2px solid var(--fg-accent)!important;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.pf-v5-c-button:active{transform:none}.pf-v5-c-login__main{transition:opacity 160ms ease;transform:none}}
+@media(prefers-reduced-transparency:reduce){.pf-v5-c-login__main{backdrop-filter:none;background:var(--fg-surface)!important}body::before{display:none}}
+@media(forced-colors:active){body::before{display:none}.pf-v5-c-login__main{border:1px solid CanvasText}#kc-header-wrapper::before{background:Canvas;border:2px solid CanvasText;box-shadow:none}}

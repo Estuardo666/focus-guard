@@ -2,6 +2,8 @@
 
 ## Mission
 
+Official workspace since 2026-10-13: `D:\Users\Stuart\Documents\Portafolio\Trabajos\Totem\FocusGuard`. Paths in older progress reports describe historical runs; do not use them as current workspace defaults. Resolve operational paths relative to the repository when possible.
+
 Build FocusGuard according to `SPEC.md`, `UX_SPEC.md`, `THREAT_MODEL.md`, `AUTOPILOT.md`, and the ADRs under `docs/adr`.
 
 Written specifications are the source of truth. Do not silently broaden scope.
@@ -87,6 +89,10 @@ Every strict feature must:
 
 ## Architecture boundaries
 
+### Google Cloud infrastructure naming
+
+The owner selected `tnc-staging-2026` under `transcitynorwalk@gmail.com` as the current staging project. New Google Cloud project IDs and infrastructure identifiers (Cloud Run services, runtime service accounts, secrets, Artifact Registry repositories) use the `tnc-` prefix. Shared deployment defaults are in `cloud/deploy/gcp-staging.json`. Do not grant project Owner/Editor, billing administration, or IAM administration to collaborators without a specific request. Product/OIDC realm, database, and DNS domain names remain separate contracts; do not rename them implicitly. The previous `focusguard-staging-2026` project was retired with explicit owner authorization on 2026-10-14; its confirmed state is DELETE_REQUESTED. Do not use it as a provisioning target or require it for current staging validation.
+
 ### FocusGuard.Domain
 
 Pure business rules. No Avalonia, database, or Win32 references.
@@ -134,3 +140,4 @@ Rules:
 - If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
 - For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
 - After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)
+

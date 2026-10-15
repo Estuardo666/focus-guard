@@ -658,7 +658,7 @@ function Wait-FocusGuardSingleInteractiveProcess(
         -ProcessName $ProcessName
 }
 
-function Assert-FocusGuardServiceResponsive {
+function Invoke-FocusGuardServiceHealthProbe {
     $binary = Join-Path $installRoot $uiExecutable
     $expectedSessionId = Get-FocusGuardInteractiveSessionId
     $startedAt = [DateTime]::UtcNow
@@ -686,9 +686,28 @@ function Assert-FocusGuardServiceResponsive {
     if (-not $probe.WaitForExit(15000)) {
         throw 'FocusGuard authoritative IPC health probe timed out; inspect owner LocalAppData\FocusGuard\diagnostics\health-check.json and ProgramData\FocusGuard\diagnostics\ipc-control-rejection.json.'
     }
-    if ($probe.ExitCode -ne 0) {
-        throw "FocusGuard service is running but failed the authoritative IPC health check (exit $($probe.ExitCode): 11=bootstrap, 12=exchange, 14=not ready). Inspect owner LocalAppData\FocusGuard\diagnostics\health-check.json and ProgramData\FocusGuard\diagnostics\ipc-control-rejection.json."
+    return [int]$probe.ExitCode
+}
+
+function Wait-FocusGuardAuthenticatedReadiness(
+    [scriptblock]$Probe,
+    [scriptblock]$Wait = { Start-Sleep -Milliseconds 1000 }) {
+    # Windows SCM Running precedes availability of background pipe listeners.
+    # Each attempt must pass the complete owner-context authenticated probe.
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+        $exitCode = & $Probe
+        if ($exitCode -isnot [int]) { throw 'Authoritative IPC health probe returned an invalid result.' }
+        if ($exitCode -eq 0) { return }
+        if ($exitCode -notin @(12, 14) -or $attempt -eq 3) {
+            throw "FocusGuard service failed the authoritative IPC health check (exit ${exitCode}: 11=bootstrap, 12=exchange, 14=not ready; attempt $attempt of 3). Inspect owner LocalAppData\FocusGuard\diagnostics\health-check.json and ProgramData\FocusGuard\diagnostics\ipc-control-rejection.json."
+        }
+        Write-Host "FocusGuard is starting; repeating the complete authenticated health check ($attempt of 3)."
+        & $Wait
     }
+}
+
+function Assert-FocusGuardServiceResponsive {
+    Wait-FocusGuardAuthenticatedReadiness -Probe { Invoke-FocusGuardServiceHealthProbe }
 }
 
 function Write-FocusGuardIpcRejectionDiagnostic {

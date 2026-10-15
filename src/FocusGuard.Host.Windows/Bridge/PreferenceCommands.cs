@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Security.Cryptography;
 using FocusGuard.Client.Preferences;
 using FocusGuard.Contracts;
 using FocusGuard.Domain;
@@ -64,7 +65,29 @@ internal sealed partial class NativeBridgeDispatcher
             LastSessionMode = Enum.Parse<SessionMode>(update.LastSessionMode!, false),
             LastCyclePresetId = update.LastCyclePresetId
         };
-        settingsStore.Save(saved);
+        var synchronized = false;
+        try
+        {
+            synchronized = accountService is not null &&
+                await accountService.TrySyncSharedSettingsEditAsync(current, saved, token).ConfigureAwait(false);
+        }
+        catch (Exception error) when (error is IOException or InvalidDataException or InvalidOperationException
+            or CryptographicException or UnauthorizedAccessException or System.Security.SecurityException
+            or HttpRequestException or TimeoutException or ArgumentException)
+        {
+            // Local preferences remain usable if the optional cloud journal needs attention.
+            synchronized = false;
+        }
+        try
+        {
+            if (synchronized) settingsStore.SaveVerified(saved);
+            else settingsStore.Save(saved);
+        }
+        catch (Exception error) when (error is IOException or InvalidDataException or InvalidOperationException
+            or UnauthorizedAccessException or System.Security.SecurityException)
+        {
+            return ("PreferencesSaveFailed", null);
+        }
         token.ThrowIfCancellationRequested();
         if (!documentLifetime.TryGetCurrent(request.DocumentToken, out _)) return ("StaleDocument", null);
         var observed = settingsStore.Load();

@@ -31,7 +31,7 @@ export function DashboardStart({ dashboard, connection, language, t, refresh, re
   const [replayProfile, setReplayProfile] = useState<ProfileSummary | null>(null);
   const [replayConfiguration, setReplayConfiguration] = useState<CycleConfiguration | null>(null);
   const [replaySessionId, setReplaySessionId] = useState<string | null>(null);
-  const preferencesApplied = useRef(false);
+  const appliedPreferences = useRef<typeof state.preferences>(null);
   const reviewHeading = useRef<HTMLHeadingElement>(null);
   const reviewAction = useRef<HTMLButtonElement>(null);
   const hadReview = useRef(false);
@@ -105,15 +105,24 @@ export function DashboardStart({ dashboard, connection, language, t, refresh, re
   useEffect(() => { if (state.phase === 'started') void refresh(); }, [state.phase, refresh]);
   useEffect(() => { if (state.strictPhase === 'started') void refresh(); }, [state.strictPhase, refresh]);
   useEffect(() => {
-    if (preferencesApplied.current || !state.preferences) return;
-    preferencesApplied.current = true;
-    if (replaySessionId) return;
-    setMinutes(String(state.preferences.lastDurationMinutes));
-    setBlocking(state.preferences.enforcementEnabled && (!selected || selected.blockedApplicationCount + selected.blockedWebsiteCount > 0));
-    const cycleMode = state.preferences.lastSessionMode === 'FocusCycle';
-    setSessionType(cycleMode ? 'cycle' : 'timer');
+    const preferences = state.preferences;
+    const previous = appliedPreferences.current;
+    if (!preferences || replaySessionId || busy || review) return;
+    appliedPreferences.current = preferences;
+    if (previous) {
+      setMinutes(current => current === String(previous.lastDurationMinutes) ? String(preferences.lastDurationMinutes) : current);
+      setBlocking(current => current === previous.enforcementEnabled
+        ? preferences.enforcementEnabled && (!selected || selected.blockedApplicationCount + selected.blockedWebsiteCount > 0) : current);
+      setSessionType(current => current === (previous.lastSessionMode === 'FocusCycle' ? 'cycle' : 'timer')
+        ? preferences.lastSessionMode === 'FocusCycle' ? 'cycle' : 'timer' : current);
+    } else {
+      setMinutes(String(preferences.lastDurationMinutes));
+      setBlocking(preferences.enforcementEnabled && (!selected || selected.blockedApplicationCount + selected.blockedWebsiteCount > 0));
+      setSessionType(preferences.lastSessionMode === 'FocusCycle' ? 'cycle' : 'timer');
+    }
+    const cycleMode = preferences.lastSessionMode === 'FocusCycle';
     if (cycleMode && !state.cycles && !state.cyclesLoading) void dashboard.loadCycles();
-  }, [dashboard, state.preferences, state.cycles, state.cyclesLoading, replaySessionId, selected]);
+  }, [dashboard, state.preferences, state.cycles, state.cyclesLoading, replaySessionId, selected, busy, review]);
   useEffect(() => {
     if (!replay || replay.sessionId === replaySessionId || !replay.replayable || !replay.profile
       || replay.durationMinutes === null || replay.mode === null || replay.enforcementEnabled === null

@@ -15,9 +15,14 @@ internal sealed record HostServices(
     IApplicationIconProvider? Icons = null,
     FocusGuard.Client.Preferences.DesktopSettingsStore? Settings = null,
     SessionJournalStore? Journal = null,
-    IDisposable? Pipes = null) : IDisposable
+    IDisposable? Pipes = null,
+    IHostAccountService? Account = null) : IDisposable
 {
-    public void Dispose() => Pipes?.Dispose();
+    public void Dispose()
+    {
+        Account?.Dispose();
+        Pipes?.Dispose();
+    }
 }
 
 internal static class HostComposition
@@ -35,13 +40,24 @@ internal static class HostComposition
 #if FOCUSGUARD_PRODUCTION
         if (smokeScenario == HostSmokeScenario.None)
         {
+            var identityConfiguration = new FocusGuard.Identity.IdentityConfiguration(
+                new Uri("https://auth.focusguard.totemmassmedia.com/realms/focusguard"),
+                "focusguard-native", new Uri("http://127.0.0.1:18444/callback/"),
+                ApiOrigin: new Uri("https://api.focusguard.totemmassmedia.com/"));
+            var identity = new FocusGuard.Identity.IdentitySession(identityConfiguration, TimeProvider.System);
+            var tokenVault = new FocusGuard.Identity.UserTokenVault(Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "FocusGuard", "identity-tokens.dpapi"));
+            var settingsStore = new FocusGuard.Client.Preferences.DesktopSettingsStore();
+            var deviceVaultDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "FocusGuard", "devices");
+            var account = new HostAccountService(identity, tokenVault, identityConfiguration, deviceVaultDirectory, settingsStore);
             try
             {
                 var factory = new FocusGuard.Ipc.Windows.VerifiedPipeConnectionFactory(AppContext.BaseDirectory,
                     FocusGuard.Ipc.Windows.IpcClientRole.WebViewHost);
                 try
                 {
-                    var settingsStore = new FocusGuard.Client.Preferences.DesktopSettingsStore();
                     var journalStore = new SessionJournalStore(settingsStore.Persists
                         ? Path.Combine(settingsStore.DataDirectory, "session-journal.json") : null);
                     return new HostServices(new NamedPipeFocusControlClient(connectionFactory: factory),
@@ -49,7 +65,7 @@ internal static class HostComposition
                         new SqliteProfileStore(Path.Combine(Environment.GetFolderPath(
                             Environment.SpecialFolder.LocalApplicationData), "FocusGuard", "profiles.db")),
                         new WindowsApplicationCatalog(), new WindowsApplicationIconProvider(),
-                        settingsStore, journalStore, factory);
+                        settingsStore, journalStore, factory, account);
                 }
                 catch
                 {
@@ -60,7 +76,9 @@ internal static class HostComposition
             catch (Exception exception) when (exception is IOException or UnauthorizedAccessException
                 or InvalidDataException or System.Security.SecurityException or System.ComponentModel.Win32Exception)
             {
-                // A copied/unprovisioned host remains a local shell with no control access.
+                // Account identity remains independent of the local engine's availability.
+                return new HostServices(new NamedPipeFocusControlClient(), new Phase4AuthorizationNotIntegrated(),
+                    Settings: settingsStore, Account: account);
             }
         }
 #endif
@@ -69,7 +87,7 @@ internal static class HostComposition
 
     public static MainForm CreateMainForm(HostServices services, HostSmokeScenario smokeScenario) =>
         new(services.Client, services.Authorization, smokeScenario, services.ProfileStore, services.Catalog, services.Icons,
-            services.Settings, services.Journal);
+            services.Settings, services.Journal, services.Account);
 
     /// <summary>A popup's bridge: same client and authorization as the main window, plus the shell commands, never window commands.</summary>
     public static FocusGuard.Host.Windows.Bridge.NativeBridgeDispatcher CreateSurfaceBridge(HostServices services, DocumentLifetime lifetime,

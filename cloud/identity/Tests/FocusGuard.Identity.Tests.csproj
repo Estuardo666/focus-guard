@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../Native/FocusGuard.Identity.csproj" /></ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
+    <ProjectReference Include="../../api/FocusGuard.Cloud.Api.csproj" />
+    <ProjectReference Include="../../sync/Core/FocusGuard.Sync.Core.csproj" />
+    <ProjectReference Include="../../sync/Windows/FocusGuard.Sync.Windows.csproj" />
+    <ProjectReference Include="../../../src/FocusGuard.Host.Windows/FocusGuard.Host.Windows.csproj" />
+  </ItemGroup>
+  <Target Name="RemoveUnusedWebView2WpfReference" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Remove="@(Reference)" Condition="'%(Reference.Filename)' == 'Microsoft.Web.WebView2.Wpf'" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -1,5 +1,7 @@
 # FocusGuard
 
+Current local workspace: `D:\Users\Stuart\Documents\Portafolio\Trabajos\Totem\FocusGuard` (migrated from E: on 2026-10-13). Run commands from this folder; historical reports retain their original paths.
+
 FocusGuard is a local-first Windows productivity blocker inspired by strict focus tools.
 
 ## Stack

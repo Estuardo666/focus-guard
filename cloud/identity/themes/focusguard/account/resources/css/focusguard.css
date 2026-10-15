@@ -1,0 +1,23 @@
+/* FocusGuard account console (keycloak.v3 / PatternFly 5) — aurora tokens from the desktop app */
+:root,.pf-v5-theme-dark{--fg-accent:#cdb8ff;--fg-accent-ink:#1a1030;--fg-orb-a:#c7a6ff;--fg-orb-b:#8ea6ff;--fg-orb-c:#ff9fd0;--fg-line:rgb(255 255 255/.08);
+--pf-v5-global--primary-color--100:var(--fg-accent);--pf-v5-global--primary-color--200:#b9a0ff;--pf-v5-global--link--Color:var(--fg-accent);--pf-v5-global--link--Color--hover:#e4d9ff;
+--pf-v5-global--BackgroundColor--100:#16141f;--pf-v5-global--BackgroundColor--200:#0c0b12;--pf-v5-global--BorderColor--100:#2c2839;--pf-v5-global--FontFamily--text:Geist,"Segoe UI",system-ui,sans-serif}
+body{background:#0c0b12}
+.pf-v5-c-masthead{--pf-v5-c-masthead--BackgroundColor:#100e18;border-bottom:1px solid var(--fg-line)}
+.pf-v5-c-masthead__brand img,.pf-v5-c-brand{opacity:0;width:0}
+.pf-v5-c-masthead__brand::before{content:"";width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 32% 26%,#fff,var(--fg-orb-a) 30%,var(--fg-orb-b) 66%,#17142a);box-shadow:0 0 20px color-mix(in srgb,var(--fg-orb-a) 50%,transparent)}
+.pf-v5-c-masthead__brand::after{content:"FocusGuard";margin-left:12px;color:#f3f1fa;font-size:18px;font-weight:600;letter-spacing:-.03em}
+.pf-v5-c-masthead__brand{display:flex;align-items:center}
+.pf-v5-c-page__sidebar{--pf-v5-c-page__sidebar--BackgroundColor:#100e18;background:linear-gradient(180deg,color-mix(in srgb,var(--fg-orb-a) 22%,transparent),color-mix(in srgb,var(--fg-orb-b) 10%,transparent) 45%,transparent),#100e18;border-right:1px solid var(--fg-line)}
+.pf-v5-c-nav__link{border-radius:12px;margin:2px 10px}
+.pf-v5-c-nav__link.pf-m-current,.pf-v5-c-nav__link:hover{--pf-v5-c-nav__link--BackgroundColor:rgb(255 255 255/.06);color:#f3f1fa}
+.pf-v5-c-nav__link.pf-m-current::after,.pf-v5-c-nav__link::after{border:0}
+.pf-v5-c-page__main-section{--pf-v5-c-page__main-section--BackgroundColor:transparent}
+.pf-v5-c-page__main{background:radial-gradient(ellipse 60% 50% at 90% 0%,color-mix(in srgb,var(--fg-orb-b) 14%,transparent),transparent 70%),#0c0b12}
+.pf-v5-c-page__main-section form,.pf-v5-c-card{background:linear-gradient(150deg,color-mix(in srgb,var(--fg-accent) 10%,rgb(24 21 34/.58)),rgb(24 21 34/.58) 55%);border:1px solid var(--fg-line);border-radius:24px;padding:24px}
+.pf-v5-c-form-control{border-radius:14px}
+.pf-v5-c-button{border-radius:999px;font-weight:620;transition:transform 140ms cubic-bezier(.23,1,.32,1)}
+.pf-v5-c-button:active{transform:scale(.97)}
+.pf-v5-c-button.pf-m-primary{--pf-v5-c-button--m-primary--BackgroundColor:var(--fg-accent);--pf-v5-c-button--m-primary--Color:var(--fg-accent-ink);--pf-v5-c-button--m-primary--hover--BackgroundColor:#dccdff;--pf-v5-c-button--m-primary--hover--Color:var(--fg-accent-ink)}
+@media(prefers-reduced-motion:reduce){.pf-v5-c-button:active{transform:none}}
+@media(forced-colors:active){.pf-v5-c-masthead__brand::before{background:CanvasText;box-shadow:none}}

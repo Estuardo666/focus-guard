@@ -13,6 +13,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../cloud/identity/Native/FocusGuard.Identity.csproj" />
+    <ProjectReference Include="../../cloud/devices/Core/FocusGuard.Devices.csproj" />
+    <ProjectReference Include="../../cloud/devices/Windows/FocusGuard.Devices.Windows.csproj" />
+    <ProjectReference Include="../../cloud/sync/Core/FocusGuard.Sync.Core.csproj" />
+    <ProjectReference Include="../../cloud/sync/Windows/FocusGuard.Sync.Windows.csproj" />
     <ProjectReference Include="../FocusGuard.Ipc.Windows/FocusGuard.Ipc.Windows.csproj" />
     <ProjectReference Include="../FocusGuard.Client/FocusGuard.Client.csproj" />
     <ProjectReference Include="../FocusGuard.Platform.Windows/FocusGuard.Platform.Windows.csproj" />

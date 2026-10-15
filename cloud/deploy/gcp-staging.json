@@ -1,0 +1,12 @@
+{
+  "account": "transcitynorwalk@gmail.com",
+  "projectId": "tnc-staging-2026",
+  "displayName": "TNC-staging-2026",
+  "prefix": "tnc",
+  "region": "us-east4",
+  "identityService": "tnc-identity-staging",
+  "apiService": "tnc-api-staging",
+  "artifactRepository": "tnc-staging",
+  "identityImageDigest": "sha256:12a49a52f3e9faa29720274e5fdd4be43100e1bf4405d06317efcb8722633894",
+  "apiImageDigest": "sha256:cf4e60011fb80a30e5277d6d3d266b63f50698ef55ee9f54a5e4f8e65fd2b2e3"
+}
