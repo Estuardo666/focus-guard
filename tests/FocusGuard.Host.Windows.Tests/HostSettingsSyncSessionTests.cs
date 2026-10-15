@@ -1092,6 +1092,12 @@ public sealed class HostSettingsSyncSessionTests
             session = HostSettingsSyncSession.CreateForTesting(account.AccountBinding, transport,
                 loaded, [membership], preferences, syncRoot);
             await session.EnableAsync(ownerConfirmed: true);
+            var initialState = await session.Outbox.LoadAsync() ??
+                throw new InvalidOperationException("The reset-conflict outbox was not initialized.");
+            var initialOverrides = new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es",
+                DefaultDurationMinutes: 90);
+            await session.Edits.UpdateOverridesAsync(initialState.Confirmed.Revision, initialState.LocalOverrides,
+                initialOverrides, CancellationToken.None, initialState.LocalOverrides.Apply(initialState.Confirmed.EffectiveValues));
             var remote = new GlobalSettings(35, "light", "en");
             var conflicts = SettingsFields.Theme | SettingsFields.Language | SettingsFields.Duration;
             _ = await session.Outbox.UpdateAsync(state => state! with
@@ -1117,6 +1123,25 @@ public sealed class HostSettingsSyncSessionTests
             SetPrivateField(accountService, "settingsSyncConflictReview", review);
             SetPrivateField(accountService, "deviceLinked", true);
 
+            var localBeforeEdit = preferences.Load();
+            var localAfterEdit = localBeforeEdit with { LastDurationMinutes = 75 };
+            var readsBeforeOverrideEdit = transport.ReadCount;
+            var publishesBeforeOverrideEdit = transport.PublishCount;
+            Assert.True(await accountService.TrySyncSharedSettingsEditAsync(localBeforeEdit, localAfterEdit,
+                CancellationToken.None));
+            var reviewedOverrideEdit = await session.Outbox.LoadAsync();
+            Assert.NotNull(reviewedOverrideEdit);
+            Assert.Equal(2, reviewedOverrideEdit.Confirmed.Revision);
+            Assert.True(reviewedOverrideEdit.DraftDeleted);
+            Assert.Equal(GlobalSettings.Default, reviewedOverrideEdit.Draft);
+            Assert.Equal(conflicts, reviewedOverrideEdit.Conflicts);
+            Assert.Equal(new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es", DefaultDurationMinutes: 75),
+                reviewedOverrideEdit.LocalOverrides);
+            Assert.Equal(new GlobalSettings(75, "dark", "es"),
+                DesktopSettingsProjection.Extract(preferences.Load()));
+            Assert.Equal(readsBeforeOverrideEdit, transport.ReadCount);
+            Assert.Equal(publishesBeforeOverrideEdit, transport.PublishCount);
+
             transport.BlockReads = true;
             var queued = await accountService.ExecuteAsync(HostAccountAction.ResolveSettingsSyncResetConflict,
                 CancellationToken.None, settingsSyncResetResolution: new HostSettingsSyncResetResolution(2,
@@ -1133,10 +1158,12 @@ public sealed class HostSettingsSyncSessionTests
             Assert.Equal(GlobalSettings.Default, resolved.Draft);
             Assert.Equal(SettingsFields.None, resolved.Conflicts);
             Assert.Null(resolved.InFlight); // A new signed tombstone will be prepared at revision 2 by the worker.
+            Assert.Equal(new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es", DefaultDurationMinutes: 75),
+                resolved.LocalOverrides);
             var local = preferences.Load();
             Assert.Equal(AppTheme.Dark, local.Theme);
             Assert.Equal("es", local.UiLanguage);
-            Assert.Equal(50, local.LastDurationMinutes);
+            Assert.Equal(75, local.LastDurationMinutes);
             Assert.True(local.ReduceMotion);
             Assert.True(local.EnforcementEnabled);
             Assert.False(local.CyclePhaseNotifications);
