@@ -7,6 +7,7 @@ La pantalla Preferencias ya no llama «Tema» al control que solo cambia claro/o
 ## Cambios
 
 - Se actualizaron `themeLabel` y `preferencesSharedWithClassic` en EN/ES.
+- `docs/cloud-phase0/UX-FLOWS.md` explicita el alcance de Fase 3 para que el diseño de cuenta coincida con la UI actual.
 - `PreferencesPanel.test.tsx` verifica el rótulo renderizado y que la nota identifique paleta/orbe como locales.
 - No se modificó el contrato de preferencias, el payload global ni el comportamiento de guardar.
 

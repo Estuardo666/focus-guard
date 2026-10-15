@@ -10,7 +10,7 @@ Login/registro en dominio de identidad: correo (usuario), contraseña, mostrar/o
 
 Estados: Idle, Redirecting, AwaitingCallback, Verifying, SignedInUnlinked, SignedInLinked, Error. Callback perdido/duplicado no reintenta login con password ni crea devices duplicados. Mostrar error genérico; no anunciar existencia de correo en reset.
 
-Perfil personal: nombre visible, correo/verificación, seguridad de identidad. Idioma/zona/theme via documentos cifrados. Diferenciar «Perfil de cuenta» de «Perfil de bloqueo». Editar correo requiere identity flow, no PATCH libre en API. Desconectar cuenta no cancela Strict aplicado; mostrar fin y recovery antes de confirmar.
+Perfil personal: nombre visible, correo/verificación, seguridad de identidad. Los datos de idioma/zona y apariencia siguen el alcance de cada fase. En Fase 3 se cifran el modo claro/oscuro, el idioma de interfaz y la duración predeterminada; la paleta y el estilo del orbe permanecen locales. Diferenciar «Perfil de cuenta» de «Perfil de bloqueo». Editar correo requiere identity flow, no PATCH libre en API. Desconectar cuenta no cancela Strict aplicado; mostrar fin y recovery antes de confirmar.
 
 ## Vinculación
 
