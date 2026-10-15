@@ -33,11 +33,11 @@
   <data name="DevicePairCompared" xml:space="preserve"><value>I compared every character and the fingerprints match.</value></data>
   <data name="DevicePairApprove" xml:space="preserve"><value>Approve device</value></data>
   <data name="SettingsTransferShareTitle" xml:space="preserve"><value>Share selected settings?</value></data>
-  <data name="SettingsTransferShareDetail" xml:space="preserve"><value>Only the checked theme, language, and default timer duration will be added to an encrypted account document. App/site rules, profiles, permissions, schedules, and history are never included.</value></data>
+  <data name="SettingsTransferShareDetail" xml:space="preserve"><value>Only the checked light/dark mode, interface language, and default timer duration will be added to an encrypted account document. Color palette (such as Mist or Ocean), orb style, app/site rules, profiles, permissions, schedules, and history remain local.</value></data>
   <data name="SettingsTransferImportTitle" xml:space="preserve"><value>Import selected settings?</value></data>
-  <data name="SettingsTransferImportDetail" xml:space="preserve"><value>Choose which shared values to apply here. Every unchecked setting and all local app/site rules remain unchanged.</value></data>
-  <data name="SettingsTransferThemeShare" xml:space="preserve"><value>Theme: {0}</value></data>
-  <data name="SettingsTransferThemeImport" xml:space="preserve"><value>Theme: {0} → {1}</value></data>
+  <data name="SettingsTransferImportDetail" xml:space="preserve"><value>Choose which shared values to apply here. Every unchecked setting stays unchanged. Color palette (such as Mist or Ocean), orb style, and local app/site rules are never imported.</value></data>
+  <data name="SettingsTransferThemeShare" xml:space="preserve"><value>Light/dark mode: {0}</value></data>
+  <data name="SettingsTransferThemeImport" xml:space="preserve"><value>Light/dark mode: {0} → {1}</value></data>
   <data name="SettingsTransferLanguageShare" xml:space="preserve"><value>Interface language: {0}</value></data>
   <data name="SettingsTransferLanguageImport" xml:space="preserve"><value>Interface language: {0} → {1}</value></data>
   <data name="SettingsTransferDurationShare" xml:space="preserve"><value>Default timer duration: {0} minutes</value></data>
@@ -45,10 +45,10 @@
   <data name="SettingsTransferShare" xml:space="preserve"><value>Share selected</value></data>
   <data name="SettingsTransferImport" xml:space="preserve"><value>Apply selected</value></data>
   <data name="PortableSettingsExportTitle" xml:space="preserve"><value>Export portable settings?</value></data>
-  <data name="PortableSettingsExportDetail" xml:space="preserve"><value>This creates a readable JSON file containing only theme, interface language, and default timer duration. Keep the file private. It contains no account identity, keys, paths, rules, permissions, or policies.</value></data>
+  <data name="PortableSettingsExportDetail" xml:space="preserve"><value>This creates a readable JSON file containing only light/dark mode, interface language, and default timer duration. Color palette (such as Mist or Ocean) and orb style remain local. Keep the file private. It contains no account identity, keys, paths, rules, permissions, or policies.</value></data>
   <data name="PortableSettingsImportTitle" xml:space="preserve"><value>Review settings to import</value></data>
-  <data name="PortableSettingsImportDetail" xml:space="preserve"><value>Choose which values to apply to this PC. Unchecked values and other local preferences stay unchanged. The selected values will be saved here and, when settings sync is active, sent through its normal edit path.</value></data>
-  <data name="PortableSettingsTheme" xml:space="preserve"><value>Theme: {0} → {1}</value></data>
+  <data name="PortableSettingsImportDetail" xml:space="preserve"><value>Choose which values to apply to this PC. Unchecked values and other local preferences stay unchanged. Color palette (such as Mist or Ocean) and orb style remain local. The selected values will be saved here and, when settings sync is active, sent through its normal edit path.</value></data>
+  <data name="PortableSettingsTheme" xml:space="preserve"><value>Light/dark mode: {0} → {1}</value></data>
   <data name="PortableSettingsLanguage" xml:space="preserve"><value>Interface language: {0} → {1}</value></data>
   <data name="PortableSettingsDuration" xml:space="preserve"><value>Default timer duration: {0} → {1} minutes</value></data>
   <data name="PortableSettingsImport" xml:space="preserve"><value>Import selected</value></data>
@@ -57,14 +57,14 @@
   <data name="PortableSettingsImported" xml:space="preserve"><value>Selected portable settings were imported.</value></data>
   <data name="PortableSettingsInvalid" xml:space="preserve"><value>The selected file is invalid or exceeds the 8 KiB limit.</value></data>
   <data name="SettingsSyncConsentTitle" xml:space="preserve"><value>Enable automatic settings sync?</value></data>
-  <data name="SettingsSyncConsentDetail" xml:space="preserve"><value>FocusGuard will keep theme, interface language, and default timer duration in sync across devices linked to this account. Values are end-to-end encrypted. App/site rules, profiles, permissions, schedules, history, and active sessions stay local. You can turn sync off here at any time.</value></data>
+  <data name="SettingsSyncConsentDetail" xml:space="preserve"><value>FocusGuard will keep light/dark mode, interface language, and default timer duration in sync across devices linked to this account. Values are end-to-end encrypted. Color palette (such as Mist or Ocean), orb style, app/site rules, profiles, permissions, schedules, history, and active sessions stay local. You can turn sync off here at any time.</value></data>
   <data name="SettingsSyncResetTitle" xml:space="preserve"><value>Reset shared settings on linked devices?</value></data>
-  <data name="SettingsSyncResetDetail" xml:space="preserve"><value>Current values — theme: {0}, interface language: {1}, default duration: {2} minutes. After reset — theme: {3}, interface language: {4}, default duration: {5} minutes. The encrypted reset applies when each linked device next syncs. Overrides marked “Kept on this PC” remain active and take priority until you remove them. Active focus sessions are not changed. App/site rules, profiles, permissions, schedules, and history remain local and unchanged. Continue?</value></data>
+  <data name="SettingsSyncResetDetail" xml:space="preserve"><value>Current values — light/dark mode: {0}, interface language: {1}, default duration: {2} minutes. After reset — light/dark mode: {3}, interface language: {4}, default duration: {5} minutes. The encrypted reset applies when each linked device next syncs. Overrides marked “Kept on this PC” remain active and take priority until you remove them. Color palette, orb style, active focus sessions, app/site rules, profiles, permissions, schedules, and history remain local and unchanged. Continue?</value></data>
     <data name="SettingsSyncRecoveryTitle" xml:space="preserve"><value>Recover settings sync retry?</value></data>
     <data name="SettingsSyncRecoveryDetail" xml:space="preserve"><value>This removes only the damaged local retry-delay file and recognized temporary files for this device and account. It does not change the encrypted outbox, local settings, or consent. FocusGuard will retry using the existing consent. Continue?</value></data>
   <data name="SettingsLocalOverridesTitle" xml:space="preserve"><value>Keep selected settings on this PC?</value></data>
-  <data name="SettingsLocalOverridesDetail" xml:space="preserve"><value>Checked settings keep the values shown for this PC. Unchecked settings follow the latest verified shared or draft value. This choice stays local and does not change the account document.</value></data>
-  <data name="SettingsLocalOverridesKeepTheme" xml:space="preserve"><value>Keep theme on this PC</value></data>
+  <data name="SettingsLocalOverridesDetail" xml:space="preserve"><value>Checked shared settings keep the values shown for this PC. Unchecked settings follow the latest verified shared or draft value. This choice stays local and does not change the account document. Color palette and orb style are always local.</value></data>
+  <data name="SettingsLocalOverridesKeepTheme" xml:space="preserve"><value>Keep light/dark mode on this PC</value></data>
   <data name="SettingsLocalOverridesKeepLanguage" xml:space="preserve"><value>Keep interface language on this PC</value></data>
   <data name="SettingsLocalOverridesKeepDuration" xml:space="preserve"><value>Keep default duration on this PC</value></data>
   <data name="SettingsLocalOverridesThemeValues" xml:space="preserve"><value>This PC: {0} · Shared/draft: {1}</value></data>

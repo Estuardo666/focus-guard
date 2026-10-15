@@ -27,7 +27,7 @@ Las pruebas con Windows/S24 del hermano necesitan consentimiento de su dueño; n
 Cuenta / Perfil personal / Dispositivos / Sync global / Seguridad / Privacidad.
 Tarjeta de device: nombre cifrado mostrado localmente, plataforma, versión, lastSeen, alcance, canales, included y estado de consentimiento. Online y Protected son hechos distintos.
 
-Sync: tema/idioma/duración, campo local/global y «Guardado aquí / Pendiente / Sincronizado / Conflicto». Merge seguro de campos diferentes; conflicto mismo campo exige comparar. No actualizar política activa.
+Sync: modo claro/oscuro, idioma/duración, campo local/global y «Guardado aquí / Pendiente / Sincronizado / Conflicto». La paleta de color y el estilo del orbe permanecen locales. Merge seguro de campos diferentes; conflicto mismo campo exige comparar. No actualizar política activa.
 
 Seguridad: sesiones, MFA, revocar dispositivos y kit. Pausar recepción afecta nuevas intenciones; indicar que sesión actual conserva fin. Revocar deniega sync y rota epoch, sin prometer borrar copias offline.
 

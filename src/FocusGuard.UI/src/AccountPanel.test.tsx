@@ -169,6 +169,8 @@ describe('native account panel', () => {
     } };
     act(() => root.render(<AccountPanel client={accountClient} snapshot={snapshot} t={t}/>));
     expect(container.textContent).toContain(es.accountSettingsTransferDescription);
+    expect(es.accountSettingsTransferDescription).toContain(es.paletteMist);
+    expect(es.accountSettingsTransferDescription).toContain(es.paletteOcean);
     expect(container.textContent).toContain(es.accountSettingsShared);
     act(() => [...container.querySelectorAll('button')].find(button => button.textContent === es.accountSettingsShare)!.click());
     act(() => [...container.querySelectorAll('button')].find(button => button.textContent === es.accountSettingsImport)!.click());
@@ -189,6 +191,12 @@ describe('native account panel', () => {
     } };
     act(() => root.render(<AccountPanel client={accountClient} snapshot={snapshot} t={t}/>));
     expect(container.textContent).toContain(es.accountSettingsSyncDescription);
+    expect(es.accountSettingsSyncTheme).toBe('Modo claro/oscuro');
+    expect(es.accountSettingsSyncDescription).toContain(es.paletteMist);
+    expect(es.accountSettingsSyncDescription).toContain(es.paletteOcean);
+    expect(en.accountSettingsSyncTheme).toBe('Light/dark mode');
+    expect(en.accountSettingsSyncDescription).toContain('Color palette');
+    expect(en.accountSettingsSyncDescription).toContain('orb style');
     const enable = [...container.querySelectorAll('button')].find(button => button.textContent === es.accountSettingsSyncEnable)!;
     act(() => enable.click());
     expect(accountClient.enableSettingsSync).toHaveBeenCalledOnce();

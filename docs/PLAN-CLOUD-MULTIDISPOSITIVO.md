@@ -922,6 +922,8 @@ Tramo adicional Fase 2 — Host conserva `MembershipChain` del endpoint firmado 
 
 Preparación local iniciada el 13 de octubre: núcleo independiente `FocusGuard.Sync.Core` para los tres ajustes MVP, merge de tres vías, conflictos, guardas CAS/ACK, tombstones y overrides. El trabajo local ya está integrado al Host, UI y bridge Windows con opt-in explícito. Tras consentir, el Host ejecuta y reanuda el loop automático; no significa que el propietario ya haya validado convergencia física entre las dos PCs. La aceptación principal de Fase 2 quedó completada el 14 de octubre. Detalle histórico y límites en [checkpoint de preparación](progress/20261013-phase3-settings-preparation.md).
 
+En el contrato actual, «tema» significa modo claro/oscuro (`AppTheme.Light`/`Dark`). La paleta de color (por ejemplo Bruma/Mist u Océano/Ocean) y el estilo del orbe se guardan localmente; no forman parte de los tres campos cifrados compartidos ni de la transferencia portátil.
+
 Los hitos locales siguientes son un historial cronológico, no un checklist de trabajo vigente. Cada tramo conserva lo que faltaba en la fecha de su corte; sus pendientes de integración quedaron resueltos por los hitos posteriores. El estado vigente incluye los tramos 21–30 y la integración Windows .175 descrita debajo; quedan la aceptación física entre dos PCs y, después, la validación contra staging.
 
 Segundo tramo local: outbox con escritura en vuelo/borrador posterior, persistencia DPAPI Windows y lease OS para actualización atómica entre instancias. Conserva ID/bytes ante pérdida de ACK y exige recuperación ante corrupción o escritura no confirmada. No sustituye el transporte firmado ni habilita sincronización; [checkpoint de outbox](progress/20261013-phase3-settings-outbox.md).
@@ -989,6 +991,8 @@ La integración HTTPS dual Host también cubre los tres overrides: tema/idioma/d
 El conflicto CAS normal de duración también se probó con tema/idioma overridden en ambos Hosts: ambos mantienen sus valores de presentación mientras converge la duración; retirar las excepciones no genera otro POST.
 
 El candidato `.180` añadió texto de consecuencias EN/ES a la confirmación nativa de reset y a la revisión de conflicto. `.181` también identifica en la revisión normal o de reset qué campos mantienen un override local activo, para que la decisión de conflicto no se confunda con retirar esos valores. UI254/254, Host261/261, build, guard, `test-installer`, package-self-test y graphify pasan; Setup/ZIP `.181` generados y hasheados, no instalados. Los gates físicos y staging permanecen separados. [Checkpoint](progress/20261015-phase3-reset-override-boundary-ux.md).
+
+El candidato `.182` aclara en EN/ES que el campo compartido llamado tema es modo claro/oscuro; la paleta (Bruma/Mist u Océano/Ocean) y el estilo del orbe permanecen locales. La precisión aparece en UI, consentimiento nativo, transferencia, exportación, reset e overrides. UI254/254, Host263/263, build, formato, guard, `test-installer`, self-test y graphify pasan. Setup/ZIP generados y hasheados, no instalados. [Checkpoint](progress/20261015-phase3-settings-scope-clarity.md).
 
 1. Documentos cifrados CAS/ETag.
 2. Snapshot/cursor, outbox y avisos.
