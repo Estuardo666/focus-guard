@@ -1,16 +1,16 @@
 # Graph Report - FocusGuard  (2026-10-15)
 
 ## Corpus Check
-- 1847 files · ~8,913,385 words
+- 1847 files · ~8,915,863 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 24639 nodes · 176965 edges · 2012 communities (1648 shown, 364 thin omitted)
+- 24641 nodes · 176986 edges · 1989 communities (1631 shown, 358 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 1438 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6d685167`
+- Built from commit: `9af40e9a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -209,6 +209,7 @@
 - [[_COMMUNITY_Community 191|Community 191]]
 - [[_COMMUNITY_Community 192|Community 192]]
 - [[_COMMUNITY_Community 193|Community 193]]
+- [[_COMMUNITY_Community 194|Community 194]]
 - [[_COMMUNITY_Community 195|Community 195]]
 - [[_COMMUNITY_Community 196|Community 196]]
 - [[_COMMUNITY_Community 197|Community 197]]
@@ -313,6 +314,7 @@
 - [[_COMMUNITY_Community 296|Community 296]]
 - [[_COMMUNITY_Community 297|Community 297]]
 - [[_COMMUNITY_Community 298|Community 298]]
+- [[_COMMUNITY_Community 299|Community 299]]
 - [[_COMMUNITY_Community 300|Community 300]]
 - [[_COMMUNITY_Community 301|Community 301]]
 - [[_COMMUNITY_Community 302|Community 302]]
@@ -576,6 +578,7 @@
 - [[_COMMUNITY_Community 560|Community 560]]
 - [[_COMMUNITY_Community 561|Community 561]]
 - [[_COMMUNITY_Community 562|Community 562]]
+- [[_COMMUNITY_Community 563|Community 563]]
 - [[_COMMUNITY_Community 564|Community 564]]
 - [[_COMMUNITY_Community 565|Community 565]]
 - [[_COMMUNITY_Community 566|Community 566]]
@@ -709,7 +712,6 @@
 - [[_COMMUNITY_Community 694|Community 694]]
 - [[_COMMUNITY_Community 695|Community 695]]
 - [[_COMMUNITY_Community 696|Community 696]]
-- [[_COMMUNITY_Community 697|Community 697]]
 - [[_COMMUNITY_Community 698|Community 698]]
 - [[_COMMUNITY_Community 699|Community 699]]
 - [[_COMMUNITY_Community 700|Community 700]]
@@ -732,28 +734,28 @@
 - [[_COMMUNITY_Community 717|Community 717]]
 - [[_COMMUNITY_Community 718|Community 718]]
 - [[_COMMUNITY_Community 719|Community 719]]
-- [[_COMMUNITY_Community 720|Community 720]]
-- [[_COMMUNITY_Community 722|Community 722]]
-- [[_COMMUNITY_Community 723|Community 723]]
-- [[_COMMUNITY_Community 724|Community 724]]
-- [[_COMMUNITY_Community 725|Community 725]]
-- [[_COMMUNITY_Community 726|Community 726]]
-- [[_COMMUNITY_Community 728|Community 728]]
-- [[_COMMUNITY_Community 729|Community 729]]
-- [[_COMMUNITY_Community 730|Community 730]]
-- [[_COMMUNITY_Community 731|Community 731]]
-- [[_COMMUNITY_Community 732|Community 732]]
-- [[_COMMUNITY_Community 733|Community 733]]
-- [[_COMMUNITY_Community 734|Community 734]]
-- [[_COMMUNITY_Community 735|Community 735]]
-- [[_COMMUNITY_Community 736|Community 736]]
-- [[_COMMUNITY_Community 737|Community 737]]
-- [[_COMMUNITY_Community 738|Community 738]]
-- [[_COMMUNITY_Community 739|Community 739]]
-- [[_COMMUNITY_Community 740|Community 740]]
-- [[_COMMUNITY_Community 741|Community 741]]
-- [[_COMMUNITY_Community 742|Community 742]]
-- [[_COMMUNITY_Community 743|Community 743]]
+- [[_COMMUNITY_Community 1851|Community 1851]]
+- [[_COMMUNITY_Community 1852|Community 1852]]
+- [[_COMMUNITY_Community 1853|Community 1853]]
+- [[_COMMUNITY_Community 1854|Community 1854]]
+- [[_COMMUNITY_Community 1855|Community 1855]]
+- [[_COMMUNITY_Community 1856|Community 1856]]
+- [[_COMMUNITY_Community 1857|Community 1857]]
+- [[_COMMUNITY_Community 1858|Community 1858]]
+- [[_COMMUNITY_Community 1859|Community 1859]]
+- [[_COMMUNITY_Community 1860|Community 1860]]
+- [[_COMMUNITY_Community 1862|Community 1862]]
+- [[_COMMUNITY_Community 1863|Community 1863]]
+- [[_COMMUNITY_Community 1864|Community 1864]]
+- [[_COMMUNITY_Community 1865|Community 1865]]
+- [[_COMMUNITY_Community 1866|Community 1866]]
+- [[_COMMUNITY_Community 1867|Community 1867]]
+- [[_COMMUNITY_Community 1868|Community 1868]]
+- [[_COMMUNITY_Community 1869|Community 1869]]
+- [[_COMMUNITY_Community 1870|Community 1870]]
+- [[_COMMUNITY_Community 1871|Community 1871]]
+- [[_COMMUNITY_Community 1872|Community 1872]]
+- [[_COMMUNITY_Community 1873|Community 1873]]
 - [[_COMMUNITY_Community 1874|Community 1874]]
 - [[_COMMUNITY_Community 1875|Community 1875]]
 - [[_COMMUNITY_Community 1876|Community 1876]]
@@ -764,6 +766,7 @@
 - [[_COMMUNITY_Community 1881|Community 1881]]
 - [[_COMMUNITY_Community 1882|Community 1882]]
 - [[_COMMUNITY_Community 1883|Community 1883]]
+- [[_COMMUNITY_Community 1884|Community 1884]]
 - [[_COMMUNITY_Community 1885|Community 1885]]
 - [[_COMMUNITY_Community 1886|Community 1886]]
 - [[_COMMUNITY_Community 1887|Community 1887]]
@@ -784,12 +787,6 @@
 - [[_COMMUNITY_Community 1902|Community 1902]]
 - [[_COMMUNITY_Community 1903|Community 1903]]
 - [[_COMMUNITY_Community 1904|Community 1904]]
-- [[_COMMUNITY_Community 1905|Community 1905]]
-- [[_COMMUNITY_Community 1906|Community 1906]]
-- [[_COMMUNITY_Community 1907|Community 1907]]
-- [[_COMMUNITY_Community 1908|Community 1908]]
-- [[_COMMUNITY_Community 1909|Community 1909]]
-- [[_COMMUNITY_Community 1910|Community 1910]]
 - [[_COMMUNITY_Community 1911|Community 1911]]
 - [[_COMMUNITY_Community 1912|Community 1912]]
 - [[_COMMUNITY_Community 1913|Community 1913]]
@@ -807,6 +804,12 @@
 - [[_COMMUNITY_Community 1925|Community 1925]]
 - [[_COMMUNITY_Community 1926|Community 1926]]
 - [[_COMMUNITY_Community 1927|Community 1927]]
+- [[_COMMUNITY_Community 1928|Community 1928]]
+- [[_COMMUNITY_Community 1929|Community 1929]]
+- [[_COMMUNITY_Community 1930|Community 1930]]
+- [[_COMMUNITY_Community 1931|Community 1931]]
+- [[_COMMUNITY_Community 1932|Community 1932]]
+- [[_COMMUNITY_Community 1933|Community 1933]]
 - [[_COMMUNITY_Community 1934|Community 1934]]
 - [[_COMMUNITY_Community 1935|Community 1935]]
 - [[_COMMUNITY_Community 1936|Community 1936]]
@@ -862,29 +865,6 @@
 - [[_COMMUNITY_Community 1986|Community 1986]]
 - [[_COMMUNITY_Community 1987|Community 1987]]
 - [[_COMMUNITY_Community 1988|Community 1988]]
-- [[_COMMUNITY_Community 1989|Community 1989]]
-- [[_COMMUNITY_Community 1990|Community 1990]]
-- [[_COMMUNITY_Community 1991|Community 1991]]
-- [[_COMMUNITY_Community 1992|Community 1992]]
-- [[_COMMUNITY_Community 1993|Community 1993]]
-- [[_COMMUNITY_Community 1994|Community 1994]]
-- [[_COMMUNITY_Community 1995|Community 1995]]
-- [[_COMMUNITY_Community 1996|Community 1996]]
-- [[_COMMUNITY_Community 1997|Community 1997]]
-- [[_COMMUNITY_Community 1998|Community 1998]]
-- [[_COMMUNITY_Community 1999|Community 1999]]
-- [[_COMMUNITY_Community 2000|Community 2000]]
-- [[_COMMUNITY_Community 2001|Community 2001]]
-- [[_COMMUNITY_Community 2002|Community 2002]]
-- [[_COMMUNITY_Community 2003|Community 2003]]
-- [[_COMMUNITY_Community 2004|Community 2004]]
-- [[_COMMUNITY_Community 2005|Community 2005]]
-- [[_COMMUNITY_Community 2006|Community 2006]]
-- [[_COMMUNITY_Community 2007|Community 2007]]
-- [[_COMMUNITY_Community 2008|Community 2008]]
-- [[_COMMUNITY_Community 2009|Community 2009]]
-- [[_COMMUNITY_Community 2010|Community 2010]]
-- [[_COMMUNITY_Community 2011|Community 2011]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `verifyPolicy()` - 1008 edges
@@ -903,14 +883,14 @@
   src/FocusGuard.Desktop/FocusViewModel.cs → E:/FocusGuard/FocusGuard-Autopilot/src/FocusGuard.Desktop/FocusViewModel.cs
 - `t()` --calls--> `gg()`  [INFERRED]
   tests/FocusGuard.Host.Windows.Tests/bin/Release/net10.0-windows/ui/host.js → E:/FocusGuard/FocusGuard-Autopilot/tests/FocusGuard.Host.Windows.Tests/bin/Debug/net10.0-windows/ui/host.js
+- `t()` --calls--> `Hg()`  [INFERRED]
+  tests/FocusGuard.Host.Windows.Tests/bin/Release/net10.0-windows/ui/host.js → cloud/identity/Tests/bin/Release/net10.0-windows/ui/host.js
 - `l()` --calls--> `n()`  [INFERRED]
   artifacts/fg408-output/publish/FocusGuard.Host.Windows/ui/chunks/ProfileEditor.js → tests/FocusGuard.Host.Windows.Tests/bin/Release/net10.0-windows/ui/host.js
 - `f()` --calls--> `n()`  [INFERRED]
   artifacts/fg408-output/publish/FocusGuard.Host.Windows/ui/chunks/ProfileEditor.js → tests/FocusGuard.Host.Windows.Tests/bin/Release/net10.0-windows/ui/host.js
-- `u()` --calls--> `n()`  [INFERRED]
-  artifacts/fg408-output/publish/FocusGuard.Host.Windows/ui/chunks/DashboardStart.js → tests/FocusGuard.Host.Windows.Tests/bin/Release/net10.0-windows/ui/host.js
 
-## Communities (2012 total, 364 thin omitted)
+## Communities (1989 total, 358 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.01
@@ -918,7 +898,7 @@ Nodes (810): _mm256_broadcast_f32x4(), _mm256_broadcast_i32x4(), _mm256_cmpeq_ep
 
 ### Community 1 - "Community 1"
 Cohesion: 0.23
-Nodes (631): isnan(), _(), aa(), ac(), ad(), add(), addChild(), addDependent() (+623 more)
+Nodes (628): aa(), ac(), ad(), add(), addChild(), addDependent(), addListeners(), addValue() (+620 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.01
@@ -933,888 +913,892 @@ Cohesion: 0.18
 Nodes (540): $a(), aa(), add(), addColors(), addEventListener(), addGroup(), addLayerUpdate(), addScalar() (+532 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.02
-Nodes (125): CancellationToken, Guid, ValueTask, IFocusControlClient, CancellationToken, ValueTask, IReviewedSessionControlClient, NamedPipeFocusControlClient (+117 more)
-
-### Community 6 - "Community 6"
 Cohesion: 0.05
 Nodes (9): blockedUrl(), formatClock(), formatMinutes(), loadSession(), message(), releaseIfAllowed(), render(), renderSessionOver() (+1 more)
+
+### Community 6 - "Community 6"
+Cohesion: 0.01
+Nodes (4): computePolicyHash(), verifyPolicy(), stored(), delivery()
 
 ### Community 7 - "Community 7"
 Cohesion: 0.05
 Nodes (8): compiledRules(), compileMatcher(), currentAuthorizedPhase(), escapeGlob(), evaluateConfirmedNavigation(), isAuthorizedBreak(), normalizedUrl(), releaseBlockedNavigationIfAllowed()
 
 ### Community 8 - "Community 8"
-Cohesion: 0.01
-Nodes (4): computePolicyHash(), verifyPolicy(), stored(), delivery()
+Cohesion: 0.02
+Nodes (29): f(), m(), u(), a(), c(), d(), ee(), f() (+21 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.03
-Nodes (29): f(), m(), u(), a(), c(), d(), ee(), f() (+21 more)
+Cohesion: 0.02
+Nodes (108): ApplicationCandidate, ApplicationRuleMatcher, FocusGuard.Recovery/Program.cs, ActiveFocusViewModelTests, ApplicationRuleEditorViewModelTests, WebsiteRuleEditorViewModelTests, ApplicationRuleMatcherTests, FocusGuard.Host.Windows.Tests (+100 more)
 
 ### Community 10 - "Community 10"
 Cohesion: 0.05
 Nodes (260): __builtin_crypto_vcipher(), __builtin_crypto_vcipherlast(), __builtin_crypto_vncipher(), __builtin_crypto_vncipherlast(), __builtin_crypto_vpermxor(), __builtin_crypto_vpmsumb(), __builtin_crypto_vsbox(), vec_abs() (+252 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.02
-Nodes (99): ApplicationCandidate, ApplicationRuleMatcher, FocusGuard.Recovery/Program.cs, ApplicationRuleEditorViewModelTests, WebsiteRuleEditorViewModelTests, ApplicationRuleMatcherTests, FocusGuard.Host.Windows.Tests, FocusGuard.ProcessAgent.Tests (+91 more)
+Cohesion: 0.03
+Nodes (101): ValidationResult, RuleTests, Id, Name, CancellationToken, Guid, IReadOnlyList, Task (+93 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.03
-Nodes (91): ValidationResult, RuleTests, Id, Name, CancellationToken, Guid, IReadOnlyList, Task (+83 more)
+Cohesion: 0.02
+Nodes (99): Accent, INotifyPropertyChanged, SolidColorBrush, ICommand, IEnumerable, IReadOnlyList, ObservableCollection, string (+91 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.02
-Nodes (84): Accent, INotifyPropertyChanged, SolidColorBrush, AppTheme, SessionEndPresentation, ThemePreferenceResolver, ICommand, string (+76 more)
+Nodes (81): CancellationToken, Guid, ValueTask, IFocusControlClient, ResolveCapturesRequest, ResolveCapturesResponse, ActivatePreparedSessionRequest, ActivatePreparedSessionResponse (+73 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.05
-Nodes (212): _mm_add_epi16(), _mm_add_epi32(), _mm_add_epi64(), _mm_add_epi8(), _mm_add_pd(), _mm_add_sd(), _mm_add_si64(), _mm_adds_epi16() (+204 more)
+Cohesion: 0.03
+Nodes (74): CancellationToken, Guid, string, TimeSpan, ValueTask, NamedPipeFocusControlClient, CancellationToken, ValueTask (+66 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.05
-Nodes (211): __DEFAULT_FN_ATTRS(), _mm512_broadcastb_epi8(), _mm512_broadcastw_epi16(), _mm512_cmpeq_epi16_mask(), _mm512_cmpeq_epi8_mask(), _mm512_cmpeq_epu16_mask(), _mm512_cmpeq_epu8_mask(), _mm512_cmpge_epi16_mask() (+203 more)
+Nodes (212): _mm_add_epi16(), _mm_add_epi32(), _mm_add_epi64(), _mm_add_epi8(), _mm_add_pd(), _mm_add_sd(), _mm_add_si64(), _mm_adds_epi16() (+204 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.02
-Nodes (101): NativeHostConfiguration, NativeHostManifest, NativeMessageFraming, NativeHostConfigurationTests, NativeHostTests, RecordingHandler, FragmentedReadStream, NativeMessageFramingTests (+93 more)
+Cohesion: 0.05
+Nodes (211): __DEFAULT_FN_ATTRS(), _mm512_broadcastb_epi8(), _mm512_broadcastw_epi16(), _mm512_cmpeq_epi16_mask(), _mm512_cmpeq_epi8_mask(), _mm512_cmpeq_epu16_mask(), _mm512_cmpeq_epu8_mask(), _mm512_cmpge_epi16_mask() (+203 more)
 
 ### Community 17 - "Community 17"
 Cohesion: 0.06
 Nodes (191): _mm_mask_unpackhi_ps(), _mm_mask_unpacklo_ps(), _mm_maskz_unpackhi_ps(), _mm_maskz_unpacklo_ps(), _mm_add_pi16(), _mm_add_pi32(), _mm_add_pi8(), _mm_adds_pi16() (+183 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.03
-Nodes (60): CancellationToken, ValueTask, NamedPipeFocusControlClient, ActivityRequest, ActivityResponse, int, string, CaptureProtocol (+52 more)
+Cohesion: 0.02
+Nodes (107): NativeHostTests, RecordingHandler, Failure, RecordingClient, ServiceHealthNativeMessageHandlerTests, ExtensionHealthPipeServiceTests, Failure, CancellationToken (+99 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.02
-Nodes (80): AgentAuditStore, SessionTests, ManualClock, ProcessAgentConnection, ReplyClient, RuleGroup, DateTimeOffset, IEnumerable (+72 more)
+Nodes (99): RuleGroup, CancellationToken, Guid, int, ValueTask, IConfirmedPolicyDistributionTarget, IExternallyAcknowledgedPolicyDistributionTarget, IPolicyDistributionTarget (+91 more)
 
 ### Community 20 - "Community 20"
+Cohesion: 0.05
+Nodes (10): a(), i(), c(), d(), u(), A(), n(), o() (+2 more)
+
+### Community 21 - "Community 21"
+Cohesion: 0.03
+Nodes (68): ActivityRequest, PhaseStatus, ICollection, ApplicationPolicyRule, StopSessionResponse, WebsitePolicyRule, ICommand, string (+60 more)
+
+### Community 22 - "Community 22"
 Cohesion: 0.07
 Nodes (163): vec_abs(), vec_add_u128(), vec_addc(), vec_addc_u128(), vec_adde_u128(), vec_addec_u128(), vec_all_eq(), vec_all_ge() (+155 more)
 
-### Community 21 - "Community 21"
-Cohesion: 0.05
-Nodes (7): c(), d(), u(), A(), o(), r(), t()
-
-### Community 22 - "Community 22"
-Cohesion: 0.08
-Nodes (146): __DEFAULT_FN_ATTRS(), _mm256_add_pd(), _mm256_add_ps(), _mm256_addsub_pd(), _mm256_addsub_ps(), _mm256_and_pd(), _mm256_and_ps(), _mm256_andnot_pd() (+138 more)
-
 ### Community 23 - "Community 23"
 Cohesion: 0.03
-Nodes (70): CancellationToken, Guid, int, ValueTask, IConfirmedPolicyDistributionTarget, IExternallyAcknowledgedPolicyDistributionTarget, IPolicyDistributionTarget, PolicyAcknowledgement (+62 more)
+Nodes (28): AsyncDelegateCommand, AsyncRuleCommand, CyclePhaseTransitionTracker, CycleTerminationMode, AsyncDelegateCommand, AsyncRuleCommand, BreakRuleViewModel, CyclePresetCardViewModel (+20 more)
 
 ### Community 24 - "Community 24"
 Cohesion: 0.08
-Nodes (141): _mm256_abs_epi16(), _mm256_abs_epi32(), _mm256_abs_epi8(), _mm256_add_epi16(), _mm256_add_epi32(), _mm256_add_epi64(), _mm256_add_epi8(), _mm256_adds_epi16() (+133 more)
+Nodes (146): __DEFAULT_FN_ATTRS(), _mm256_add_pd(), _mm256_add_ps(), _mm256_addsub_pd(), _mm256_addsub_ps(), _mm256_and_pd(), _mm256_and_ps(), _mm256_andnot_pd() (+138 more)
 
 ### Community 25 - "Community 25"
-Cohesion: 0.06
-Nodes (9): s(), I(), N(), a(), c(), d(), l(), u() (+1 more)
+Cohesion: 0.08
+Nodes (141): _mm256_abs_epi16(), _mm256_abs_epi32(), _mm256_abs_epi8(), _mm256_add_epi16(), _mm256_add_epi32(), _mm256_add_epi64(), _mm256_add_epi8(), _mm256_adds_epi16() (+133 more)
 
 ### Community 26 - "Community 26"
-Cohesion: 0.03
-Nodes (13): AsyncDelegateCommand, CyclePhaseTransitionTracker, CycleTerminationMode, FocusViewModel, FocusViewModel, IBrush, NavigationSection, PrepareSessionResponse (+5 more)
+Cohesion: 0.07
+Nodes (10): s(), I(), N(), a(), c(), d(), l(), u() (+2 more)
 
 ### Community 27 - "Community 27"
-Cohesion: 0.12
-Nodes (16): s(), v(), y(), _(), v(), y(), b(), Et() (+8 more)
+Cohesion: 0.03
+Nodes (66): ApplicationProcessTarget, AuditedProcessTerminator, FakeApplicationProcessController, IApplicationProcessController, IProcessTerminationAuditSink, ProcessTerminationAuditEvent, ProcessTerminationOptions, ProcessTerminationResult (+58 more)
 
 ### Community 28 - "Community 28"
+Cohesion: 0.11
+Nodes (28): _(), A(), b(), C(), D(), E(), g(), j() (+20 more)
+
+### Community 29 - "Community 29"
+Cohesion: 0.02
+Nodes (84): AgentAuditStore, ManualClock, ProcessAgentConnection, ReplyClient, FocusAuditEvent, FocusAuditEventKind, DateTimeOffset, HashSet (+76 more)
+
+### Community 30 - "Community 30"
+Cohesion: 0.04
+Nodes (22): SessionTests, StrictSessionStoreTests, Fact, Guid, string, Task, BreakRuleCompatibilityTests, Data (+14 more)
+
+### Community 31 - "Community 31"
+Cohesion: 0.02
+Nodes (39): Data, ProfileEditorWorkflowTests, ProfileWorkflowTests, TestProfiles, CycleCommandTests, Data, Fixture, HostPortableSettingsTests (+31 more)
+
+### Community 32 - "Community 32"
+Cohesion: 0.02
+Nodes (24): BridgeLimits, NumberFastDToA, Org.Webpki.Es6NumberSerialization, SodiumAead, SodiumBox, CaptureProtocol, BoundedPipeFraming, ExtensionHealthProtocol (+16 more)
+
+### Community 33 - "Community 33"
+Cohesion: 0.13
+Nodes (17): s(), v(), y(), _(), v(), y(), b(), Et() (+9 more)
+
+### Community 34 - "Community 34"
+Cohesion: 0.04
+Nodes (39): DateTimeOffset, Fact, InlineData, Task, Theory, TimeSpan, ActiveSessionCommandTests, Clock (+31 more)
+
+### Community 35 - "Community 35"
+Cohesion: 0.03
+Nodes (38): BackgroundService, DevelopmentServiceConstants, DevelopmentServiceState, DevelopmentServiceWorker, ConfirmedProcessPolicyEvaluator, DelayedRecoveryRequestStore, ExecutableSha256Cache, StrictConfirmationPhraseGenerator (+30 more)
+
+### Community 36 - "Community 36"
+Cohesion: 0.09
+Nodes (97): abs(), acos(), asin(), atan(), atan2(), ceil(), cos(), cosh() (+89 more)
+
+### Community 37 - "Community 37"
 Cohesion: 0.1
 Nodes (112): _mm256_cmov_si256(), _mm256_frcz_pd(), _mm256_frcz_ps(), _mm_cmov_si128(), _mm_comeq_epi16(), _mm_comeq_epi32(), _mm_comeq_epi64(), _mm_comeq_epi8() (+104 more)
 
-### Community 29 - "Community 29"
-Cohesion: 0.09
-Nodes (96): abs(), acos(), asin(), atan(), atan2(), ceil(), cos(), cosh() (+88 more)
-
-### Community 30 - "Community 30"
-Cohesion: 0.08
-Nodes (11): a(), i(), _(), ce(), g(), h(), le(), ue() (+3 more)
-
-### Community 31 - "Community 31"
+### Community 38 - "Community 38"
 Cohesion: 0.03
-Nodes (72): FocusAuditEvent, FocusAuditEventKind, DateTimeOffset, HashSet, int, IReadOnlySet, JsonSerializerOptions, ReadOnlySpan (+64 more)
+Nodes (75): CapturedItemView, CancellationToken, Error, ValueTask, CancellationToken, Dictionary, Error, Guid (+67 more)
 
-### Community 32 - "Community 32"
-Cohesion: 0.03
-Nodes (58): CoreWebView2, CoreWebView2BasicAuthenticationRequestedEventArgs, CoreWebView2ClientCertificateRequestedEventArgs, CoreWebView2DownloadStartingEventArgs, CoreWebView2NavigationCompletedEventArgs, CoreWebView2NavigationStartingEventArgs, CoreWebView2NewWindowRequestedEventArgs, CoreWebView2PermissionRequestedEventArgs (+50 more)
+### Community 39 - "Community 39"
+Cohesion: 0.02
+Nodes (53): RebootExpirationDrillResult, RebootExpirationDrillState, RebootExpirationDrillWorker, FixedTimeProvider, TestTimeProvider, FixedTimeProvider, ManualTimeProvider, RebootExpirationDrillWorkerTests (+45 more)
 
-### Community 33 - "Community 33"
+### Community 40 - "Community 40"
 Cohesion: 0.05
 Nodes (15): DesignSystemTests, DesignSystemTests, Fact, InlineData, Theory, XDocument, DesignSystemTests, Fact (+7 more)
 
-### Community 34 - "Community 34"
-Cohesion: 0.15
-Nodes (17): _(), b(), C(), d(), f(), g(), h(), l() (+9 more)
+### Community 41 - "Community 41"
+Cohesion: 0.03
+Nodes (58): CoreWebView2, CoreWebView2BasicAuthenticationRequestedEventArgs, CoreWebView2ClientCertificateRequestedEventArgs, CoreWebView2DownloadStartingEventArgs, CoreWebView2NavigationCompletedEventArgs, CoreWebView2NavigationStartingEventArgs, CoreWebView2NewWindowRequestedEventArgs, CoreWebView2PermissionRequestedEventArgs (+50 more)
 
-### Community 35 - "Community 35"
+### Community 42 - "Community 42"
+Cohesion: 0.14
+Nodes (16): _(), b(), C(), d(), f(), g(), h(), l() (+8 more)
+
+### Community 43 - "Community 43"
+Cohesion: 0.05
+Nodes (7): ExternalSystemBrowser, DeviceEnrollmentException, HostAccountService, IHostAccountService, HostPendingPairingSummary, HostSettingsLocalOverrideSummary, HostSettingsSyncConflictReview
+
+### Community 44 - "Community 44"
 Cohesion: 0.11
 Nodes (101): __DEFAULT_FN_ATTRS(), _mm256_broadcast_f32x2(), _mm256_broadcast_f64x2(), _mm256_broadcast_i32x2(), _mm256_broadcast_i64x2(), _mm256_cvtepi64_pd(), _mm256_cvtepi64_ps(), _mm256_cvtepu64_pd() (+93 more)
 
-### Community 36 - "Community 36"
+### Community 45 - "Community 45"
+Cohesion: 0.06
+Nodes (103): _(), ah(), am(), an(), ap(), Ar(), b(), bm() (+95 more)
+
+### Community 46 - "Community 46"
+Cohesion: 0.04
+Nodes (29): fromExceptionCode(), fromExceptionCodeWithMessage(), fromServiceSpecificError(), fromServiceSpecificErrorWithMessage(), fromStatus(), getExceptionCode(), getMessage(), impl() (+21 more)
+
+### Community 47 - "Community 47"
+Cohesion: 0.04
+Nodes (49): DayOfWeek, Dictionary, Guid, JsonSerializerOptions, SessionIntention, SessionJournalStore, bool, JsonSerializerOptions (+41 more)
+
+### Community 48 - "Community 48"
 Cohesion: 0.03
-Nodes (73): CancellationToken, Error, ValueTask, NativeBridgeDispatcher, CancellationToken, Dictionary, Error, Guid (+65 more)
+Nodes (17): EnforcementPolicy, EmptyAuditStore, NamedPipeProcessAgentClientTests, EmptyFocusAuditStore, IFocusService, InMemoryFocusService, NormalSessionShutdownTests, RecordingAuditStore (+9 more)
 
-### Community 37 - "Community 37"
-Cohesion: 0.06
-Nodes (28): Fact, InlineData, Task, Theory, ActiveSessionCommandTests, Fact, Task, ApplicationCatalogCommandTests (+20 more)
-
-### Community 38 - "Community 38"
-Cohesion: 0.06
-Nodes (12): IStartupRegistration, Dictionary, Fact, InlineData, IReadOnlyList, List, Task, Theory (+4 more)
-
-### Community 39 - "Community 39"
+### Community 49 - "Community 49"
 Cohesion: 0.11
 Nodes (84): __get_cpuid(), __get_cpuid_max(), _BitScanForward(), _BitScanForward64(), _BitScanReverse(), _BitScanReverse64(), _bittest(), _bittest64() (+76 more)
 
-### Community 40 - "Community 40"
-Cohesion: 0.03
-Nodes (18): BridgeLimits, SodiumAead, SodiumBox, CaptureProtocol, BoundedPipeFraming, ExtensionHealthProtocol, RecoveryCodeService, ServiceHealthCheck (+10 more)
-
-### Community 41 - "Community 41"
-Cohesion: 0.03
-Nodes (27): ApplicationRuleIndex, CyclePhaseNotificationCopy, CyclePhaseTransitionEventArgs, CyclePhaseTransitionTracker, ProcessMonitorPolicyReceiver, ApplicationRuleIndex, Create(), Matches() (+19 more)
-
-### Community 42 - "Community 42"
-Cohesion: 0.03
-Nodes (40): FixedTimeProvider, ActiveFocusViewModelTests, TestTimeProvider, FixedTimeProvider, ManualTimeProvider, AuditedProcessTerminator, FakeApplicationProcessController, IApplicationProcessController (+32 more)
-
-### Community 44 - "Community 44"
-Cohesion: 0.04
-Nodes (60): BitmapHeader, FocusGuard.Client.Platform, FocusGuard.Platform.Windows, IconInfo, NativeBitmap, ShellFileInfo, CancellationToken, IReadOnlyList (+52 more)
-
-### Community 45 - "Community 45"
-Cohesion: 0.02
-Nodes (37): StrictSessionStoreTests, Data, ProfileEditorWorkflowTests, CycleCommandTests, Data, EnforcementRestartTests, FixedTimeProvider, ExecutableSha256CacheTests (+29 more)
-
-### Community 46 - "Community 46"
-Cohesion: 0.03
-Nodes (22): NativeBridgeDispatcher, BridgeRequestParser, ConfirmedProcessPolicyEvaluator, ISettingsSyncCryptography, SettingsSyncCryptography, Dictionary, ExecutableSha256Cache, ApplicationIconCache (+14 more)
-
-### Community 47 - "Community 47"
-Cohesion: 0.05
-Nodes (29): fromExceptionCode(), fromExceptionCodeWithMessage(), fromServiceSpecificError(), fromServiceSpecificErrorWithMessage(), fromStatus(), getExceptionCode(), getMessage(), impl() (+21 more)
-
-### Community 48 - "Community 48"
-Cohesion: 0.05
-Nodes (30): GeneratedRecoveryCode, RecoveryCodeService, RecoveryCredential, DelayedRecoveryTests, IStrictSessionStore, DateTimeOffset, Fact, InlineData (+22 more)
-
-### Community 49 - "Community 49"
-Cohesion: 0.06
-Nodes (41): DelayedRecoveryRequest, DelayedRecoveryRequestStore, RecoveryAuditEvent, RecoveryAuditLog, SignedDelayedRecoveryRequest, byte, CancellationToken, DateTimeOffset (+33 more)
-
-### Community 50 - "Community 50"
-Cohesion: 0.06
-Nodes (81): af(), an(), At(), Bd(), bo(), Br(), bt(), cf() (+73 more)
-
 ### Community 51 - "Community 51"
-Cohesion: 0.04
-Nodes (13): EnforcementPolicy, EmptyAuditStore, NamedPipeProcessAgentClientTests, EmptyFocusAuditStore, IFocusService, InMemoryFocusService, ICaptureStore, IFocusAuditStore (+5 more)
+Cohesion: 0.03
+Nodes (27): AuthorizeState, byte, CachedPower, NumberCachedPowers, Org.Webpki.Es6NumberSerialization, NumberDiyFp, Org.Webpki.Es6NumberSerialization, NumberDToA (+19 more)
 
 ### Community 52 - "Community 52"
+Cohesion: 0.03
+Nodes (22): NativeBridgeDispatcher, BridgeRequestParser, DeviceEncoding, DeviceIdentity, RestoredDeviceMaterial, Validate(), AuditedProcessTerminator, FakeApplicationProcessController (+14 more)
+
+### Community 53 - "Community 53"
+Cohesion: 0.03
+Nodes (39): IClassicDesktopStyleApplicationLifetime, PixelPoint, IStartupRegistration, AppTheme, SessionEndPresentation, ThemePreferenceResolver, CancellationTokenSource, EventArgs (+31 more)
+
+### Community 54 - "Community 54"
+Cohesion: 0.1
+Nodes (83): _a(), ai(), al(), au(), ba(), bl(), bo(), bu() (+75 more)
+
+### Community 55 - "Community 55"
+Cohesion: 0.05
+Nodes (35): EventHandler, FontStyle, Graphics, GraphicsPath, Image, MouseEventArgs, PointF, PrivateFontCollection (+27 more)
+
+### Community 56 - "Community 56"
 Cohesion: 0.1
 Nodes (80): Add(), Align(), AsKey(), Blob(), Bool(), bsearch(), c_str(), Clear() (+72 more)
 
-### Community 53 - "Community 53"
+### Community 57 - "Community 57"
 Cohesion: 0.07
 Nodes (8): AndroidMembershipRuntimeProbe, CheckedAction, AndroidMembershipVerifier, CSharpMembershipFixture, Document, Member, VerifiedMembership, AndroidPairingAcceptance
 
-### Community 54 - "Community 54"
-Cohesion: 0.05
-Nodes (43): DayOfWeek, Dictionary, Guid, JsonSerializerOptions, SessionIntention, SessionJournalStore, bool, JsonSerializerOptions (+35 more)
+### Community 58 - "Community 58"
+Cohesion: 0.03
+Nodes (28): ActiveFocusView, ApplicationRulesView, StrictConfirmationView, WebsiteRulesView, ActiveFocusView, ApplicationRulesView, FocusBackground, RuleEditorView (+20 more)
 
-### Community 55 - "Community 55"
+### Community 59 - "Community 59"
 Cohesion: 0.14
 Nodes (74): __DEFAULT_FN_ATTRS(), _mm512_broadcast_f32x2(), _mm512_broadcast_f32x8(), _mm512_broadcast_f64x2(), _mm512_broadcast_i32x2(), _mm512_broadcast_i32x8(), _mm512_broadcast_i64x2(), _mm512_cvtepi64_pd() (+66 more)
 
-### Community 56 - "Community 56"
+### Community 60 - "Community 60"
 Cohesion: 0.27
 Nodes (21): _(), B(), C(), componentDidUpdate(), D(), g(), getSnapshotBeforeUpdate(), H() (+13 more)
 
-### Community 57 - "Community 57"
-Cohesion: 0.15
-Nodes (19): _(), A(), b(), C(), D(), E(), g(), j() (+11 more)
-
-### Community 58 - "Community 58"
-Cohesion: 0.04
-Nodes (18): CancellationTokenSource, EventWaitHandle, FileStream, App, DesktopSingleInstance, DocumentLifetime, ProcessAgentSupervisorLifetime, IAsyncDisposable (+10 more)
-
-### Community 59 - "Community 59"
-Cohesion: 0.05
-Nodes (23): Color, Control, CrossFadeLayer, GradientButton, IconTextControl, ModalCardPanel, OutlineButton, RoundedButton (+15 more)
-
-### Community 60 - "Community 60"
-Cohesion: 0.04
-Nodes (14): GlobalSettingsCodec, Validate(), SettingsEnvelopeCodec, SettingsExport, ProcessAgentProtocol, NativeHostConfiguration, DelayedRecoveryRequestStore, RecoveryAuditLog (+6 more)
-
 ### Community 61 - "Community 61"
-Cohesion: 0.31
-Nodes (14): A(), b(), D(), F(), h(), k(), M(), O() (+6 more)
+Cohesion: 0.04
+Nodes (51): BitmapHeader, IconInfo, NativeBitmap, ShellFileInfo, CancellationToken, IReadOnlyList, ReadOnlyMemory, Task (+43 more)
 
 ### Community 62 - "Community 62"
 Cohesion: 0.04
-Nodes (17): Channel, StrictConfirmationPhraseGenerator, ProcessAgentStartup, ProcessAgentSupervisor, WindowsProcessAgentLauncher, RebootExpirationDrillWorker, IStrictSessionStore, StrictSessionStore (+9 more)
+Nodes (18): CancellationTokenSource, EventWaitHandle, FileStream, App, DesktopSingleInstance, DocumentLifetime, ProcessAgentSupervisorLifetime, IAsyncDisposable (+10 more)
+
+### Community 63 - "Community 63"
+Cohesion: 0.04
+Nodes (15): GlobalSettingsCodec, Validate(), SettingsEnvelopeCodec, SettingsExport, ProcessAgentProtocol, NativeHostConfiguration, DelayedRecoveryRequestStore, RecoveryAuditLog (+7 more)
 
 ### Community 64 - "Community 64"
-Cohesion: 0.05
-Nodes (28): AsyncRuleCommand, bool, CatppuccinAccents, AsyncDelegateCommand, AsyncRuleCommand, BreakRuleViewModel, CyclePresetCardViewModel, DurationPresetViewModel (+20 more)
-
-### Community 65 - "Community 65"
-Cohesion: 0.04
-Nodes (16): CachedPower, NumberCachedPowers, Org.Webpki.Es6NumberSerialization, NumberDiyFp, Org.Webpki.Es6NumberSerialization, double, EmbeddedPackage, CachedPower (+8 more)
+Cohesion: 0.31
+Nodes (14): A(), b(), D(), F(), h(), k(), M(), O() (+6 more)
 
 ### Community 66 - "Community 66"
+Cohesion: 0.04
+Nodes (9): FocusControlPipeService, EndpointAuthorizationTests, TestSecurity, DiagnosticReadOnlyPipeSecurity, FocusControlPipeServiceTests, NativePipeSecurity, ServiceListenerFailureDiagnosticsTests, ThrowingPipeSecurity (+1 more)
+
+### Community 67 - "Community 67"
+Cohesion: 0.07
+Nodes (21): GeneratedRecoveryCode, RecoveryCodeService, RecoveryCredential, DelayedRecoveryTests, IStrictSessionStore, Fact, InlineData, Task (+13 more)
+
+### Community 68 - "Community 68"
+Cohesion: 0.07
+Nodes (32): DelayedRecoveryRequest, DelayedRecoveryRequestStore, RecoveryAuditEvent, RecoveryAuditLog, SignedDelayedRecoveryRequest, byte, CancellationToken, DateTimeOffset (+24 more)
+
+### Community 69 - "Community 69"
 Cohesion: 0.09
 Nodes (28): DateOnly, DateTimeOffset, Guid, int, CapturedItem, CaptureResolution, CaptureSourceKind, CancellationToken (+20 more)
 
-### Community 67 - "Community 67"
+### Community 70 - "Community 70"
 Cohesion: 0.1
 Nodes (4): fill(), AndroidDeviceIdentityInstrumentedTest, AndroidPairingService, SessionRecord
 
-### Community 68 - "Community 68"
-Cohesion: 0.06
-Nodes (32): EventHandler, FontStyle, Graphics, GraphicsPath, Image, MouseEventArgs, Panel, PointF (+24 more)
-
-### Community 69 - "Community 69"
+### Community 71 - "Community 71"
 Cohesion: 0.05
 Nodes (6): MainForm, FormWindowState, HostSmokeScenario, RendererFailureAction, RendererRecoveryController, SessionJournalStore
 
-### Community 70 - "Community 70"
+### Community 72 - "Community 72"
+Cohesion: 0.05
+Nodes (27): AccountPage(), react, ApplicationIcon(), BlockedStack(), addEventListener(), addListener(), removeEventListener(), removeListener() (+19 more)
+
+### Community 73 - "Community 73"
 Cohesion: 0.06
 Nodes (33): object, TimeProvider, SessionConnectionSnapshot, SessionConnectionState, SessionConnectionTracker, CancellationToken, ValueTask, CycleSessionInput (+25 more)
 
-### Community 71 - "Community 71"
+### Community 74 - "Community 74"
 Cohesion: 0.06
-Nodes (28): ValidationError, Guid, CyclePhaseNotificationCopy, CyclePhaseNotificationPresentation, CyclePhaseTransition, CyclePhaseTransitionEventArgs, CyclePhaseTransitionTracker, DateTimeOffset (+20 more)
+Nodes (35): DateTimeOffset, IReadOnlyList, WeeklyOccurrence, WeeklyOccurrenceCalculator, CancellationToken, DateTimeOffset, IReadOnlyList, JsonSerializerOptions (+27 more)
 
-### Community 72 - "Community 72"
+### Community 75 - "Community 75"
+Cohesion: 0.14
+Nodes (68): Ao(), as(), Bc(), bs(), C(), co(), cs(), da() (+60 more)
+
+### Community 76 - "Community 76"
 Cohesion: 0.06
 Nodes (28): BlockedWriteStream, ListenerFixture, PhaseClock, ProcessAgentPipeServiceTests, RecordingAuditStore, MemoryStream, ProcessAgentPipeService, RecordingAuditStore (+20 more)
 
-### Community 73 - "Community 73"
-Cohesion: 0.05
-Nodes (24): AccountPage(), react, ActiveSessionControls(), moment(), fixture(), render(), fixture(), configDraft() (+16 more)
-
-### Community 74 - "Community 74"
-Cohesion: 0.04
-Nodes (14): ApplicationCatalogCommandTests, Catalog, Client, Data, Icons, Catalog, Client, Icons (+6 more)
-
-### Community 75 - "Community 75"
-Cohesion: 0.08
-Nodes (29): CancellationToken, ValueTask, IRevisionedScheduleControlClient, NamedPipeFocusControlClient, RevisionedScheduleResponse, ScheduleView, DateTimeOffset, IReadOnlyList (+21 more)
-
-### Community 76 - "Community 76"
-Cohesion: 0.04
-Nodes (13): DateTimeOffset, Clock, SessionConnectionTrackerTests, ExtensionHealthProtocolTests, ProcessAgentProtocolTests, ActiveFocusViewModelTests, TestTimeProvider, EnforcementEndToEndTests (+5 more)
-
 ### Community 77 - "Community 77"
 Cohesion: 0.06
-Nodes (18): Border, bool, CancellationTokenSource, ContextRequestedEventArgs, DispatcherTimer, EventArgs, KeyEventArgs, List (+10 more)
+Nodes (17): Color, Control, CrossFadeLayer, GradientButton, IconTextControl, ModalCardPanel, OutlineButton, RoundedButton (+9 more)
 
 ### Community 78 - "Community 78"
-Cohesion: 0.03
-Nodes (62): _mm256_cmpgt_epi16_mask(), _mm256_cmpgt_epu16_mask(), _mm256_cmple_epi8_mask(), _mm256_cmpneq_epu8_mask(), _mm256_mask_blend_epi16(), _mm256_mask_blend_epi8(), _mm256_mask_broadcastw_epi16(), _mm256_mask_cmpeq_epi16_mask() (+54 more)
+Cohesion: 0.05
+Nodes (16): NativeHostConfiguration, NativeHostManifest, NativeMessageFraming, NativeHostConfigurationTests, FragmentedReadStream, NativeMessageFramingTests, FocusGuard.NativeMessaging, FocusGuard.NativeMessaging.Tests (+8 more)
 
 ### Community 79 - "Community 79"
 Cohesion: 0.03
-Nodes (62): _mm256_cmpeq_epi8_mask(), _mm256_cmpeq_epu16_mask(), _mm256_cmpge_epi8_mask(), _mm256_cmpgt_epi8_mask(), _mm256_cmpneq_epu16_mask(), _mm256_cvtepi16_epi8(), _mm256_mask_abs_epi8(), _mm256_mask_add_epi8() (+54 more)
+Nodes (62): _mm256_cmpeq_epu8_mask(), _mm256_cmpge_epi8_mask(), _mm256_cmpgt_epi8_mask(), _mm256_cmple_epi16_mask(), _mm256_cmple_epi8_mask(), _mm256_cmplt_epu16_mask(), _mm256_mask_cmpeq_epi8_mask(), _mm256_mask_cmpge_epu16_mask() (+54 more)
 
 ### Community 80 - "Community 80"
 Cohesion: 0.03
-Nodes (62): __DEFAULT_FN_ATTRS(), _mm256_cmpeq_epi16_mask(), _mm256_cmpge_epu16_mask(), _mm256_cmpgt_epu8_mask(), _mm256_cmple_epi16_mask(), _mm256_cmplt_epu8_mask(), _mm256_cmpneq_epi16_mask(), _mm256_cmpneq_epi8_mask() (+54 more)
+Nodes (62): _mm256_cmpge_epi16_mask(), _mm256_cmpgt_epu16_mask(), _mm256_cmpgt_epu8_mask(), _mm256_cmple_epu8_mask(), _mm256_cmplt_epi8_mask(), _mm256_cmpneq_epu8_mask(), _mm256_cvtepi16_epi8(), _mm256_mask_adds_epu8() (+54 more)
 
 ### Community 81 - "Community 81"
 Cohesion: 0.03
-Nodes (62): _mm256_cmple_epu8_mask(), _mm256_cmplt_epi8_mask(), _mm256_cvtsepi16_epi8(), _mm256_mask_adds_epu8(), _mm256_mask_avg_epu8(), _mm256_mask_cmpgt_epu16_mask(), _mm256_mask_cmple_epi8_mask(), _mm256_mask_cvtsepi16_storeu_epi8() (+54 more)
+Nodes (62): _mm256_cmple_epu16_mask(), _mm256_cmplt_epu8_mask(), _mm256_cmpneq_epi8_mask(), _mm256_mask_cmpeq_epu8_mask(), _mm256_mask_cmpgt_epi8_mask(), _mm256_mask_cmplt_epi16_mask(), _mm256_mask_cmplt_epi8_mask(), _mm256_mask_cvtepu8_epi16() (+54 more)
 
 ### Community 82 - "Community 82"
 Cohesion: 0.03
-Nodes (62): _mm256_cmpeq_epu8_mask(), _mm256_cmpge_epi16_mask(), _mm256_cmple_epu16_mask(), _mm256_cmplt_epi16_mask(), _mm256_mask2_permutex2var_epi16(), _mm256_mask_adds_epi16(), _mm256_mask_adds_epi8(), _mm256_mask_adds_epu16() (+54 more)
+Nodes (62): __DEFAULT_FN_ATTRS(), _mm256_cmpeq_epi16_mask(), _mm256_cmpneq_epu16_mask(), _mm256_mask2_permutex2var_epi16(), _mm256_mask_abs_epi8(), _mm256_mask_add_epi8(), _mm256_mask_adds_epi16(), _mm256_mask_blend_epi16() (+54 more)
 
 ### Community 83 - "Community 83"
 Cohesion: 0.03
-Nodes (62): _mm256_cmpge_epu8_mask(), _mm256_cmplt_epu16_mask(), _mm256_cvtusepi16_epi8(), _mm256_mask_avg_epu16(), _mm256_mask_cmpeq_epu8_mask(), _mm256_mask_cmpgt_epu8_mask(), _mm256_mask_cmple_epu16_mask(), _mm256_mask_cvtepi16_storeu_epi8() (+54 more)
+Nodes (62): _mm256_cmpeq_epi8_mask(), _mm256_cmpeq_epu16_mask(), _mm256_cvtsepi16_epi8(), _mm256_mask_abs_epi16(), _mm256_mask_add_epi16(), _mm256_mask_avg_epu16(), _mm256_mask_avg_epu8(), _mm256_mask_broadcastw_epi16() (+54 more)
 
 ### Community 84 - "Community 84"
-Cohesion: 0.04
-Nodes (17): AutoCloseable, ConfirmResult, HttpResult, MembershipSnapshot, RenewResult, Result, HashSet, IOException (+9 more)
+Cohesion: 0.03
+Nodes (62): _mm256_cmpge_epu16_mask(), _mm256_cmpge_epu8_mask(), _mm256_cmpgt_epi16_mask(), _mm256_cmplt_epi16_mask(), _mm256_cmpneq_epi16_mask(), _mm256_cvtusepi16_epi8(), _mm256_mask_adds_epi8(), _mm256_mask_adds_epu16() (+54 more)
 
 ### Community 85 - "Community 85"
-Cohesion: 0.08
-Nodes (26): AvaloniaFact, AvaloniaTheory, Fixture, ServiceClient, CancellationToken, Clock, Control, DateTimeOffset (+18 more)
+Cohesion: 0.07
+Nodes (42): isOrbStyle(), isPalette(), loadOrbStyle(), loadPalette(), loadReviewBeforeStart(), saveOrbStyle(), savePalette(), saveReviewBeforeStart() (+34 more)
 
 ### Community 86 - "Community 86"
-Cohesion: 0.14
-Nodes (61): ai(), al(), au(), bl(), bu(), cu(), dl(), Du() (+53 more)
+Cohesion: 0.06
+Nodes (17): Border, bool, CancellationTokenSource, ContextRequestedEventArgs, DispatcherTimer, EventArgs, KeyEventArgs, List (+9 more)
 
 ### Community 87 - "Community 87"
 Cohesion: 0.05
 Nodes (15): PinnedSettingsAuthor, DeviceAccountContext, DeviceIdentity, EncryptedContentDocument, LocalSettingsApiFixture, CountingTransport, Fixture, HostLocalSettingsOverridesTests (+7 more)
 
 ### Community 88 - "Community 88"
-Cohesion: 0.06
-Nodes (30): Check, Content, FocusGuard.Setup, int, long, Stream, string, EmbeddedPackage (+22 more)
+Cohesion: 0.05
+Nodes (13): bool, RecoveryKit, FocusViewModel, ScheduleDayChoice, ScheduleDayViewModel, ScheduleRowViewModel, FocusViewModel, HomeProfileViewModel (+5 more)
 
 ### Community 89 - "Community 89"
-Cohesion: 0.05
-Nodes (13): ExtensionHealthPipeConstants, ExtensionHealthPipeService, ExtensionHealthState, EndpointAuthorizationTests, TestSecurity, DiagnosticReadOnlyPipeSecurity, FocusControlPipeServiceTests, NativePipeSecurity (+5 more)
+Cohesion: 0.08
+Nodes (26): AvaloniaFact, AvaloniaTheory, Fixture, ServiceClient, CancellationToken, Clock, Control, DateTimeOffset (+18 more)
 
 ### Community 90 - "Community 90"
-Cohesion: 0.1
-Nodes (57): ah(), am(), ap(), b(), bm(), Bp(), dc(), di() (+49 more)
-
-### Community 91 - "Community 91"
-Cohesion: 0.06
-Nodes (12): HostSettingsSyncSessionTests, MemorySettingsTransport, ISettingsDocumentTransport, TaskCompletionSource, EncryptedSettingsServer, ScopedTransport, SettingsAutomaticSyncTwoRuntimeTests, LoopbackSender (+4 more)
-
-### Community 92 - "Community 92"
 Cohesion: 0.05
 Nodes (6): CompactFocusWindow, DesktopRefreshPolicy, MainWindow, NotificationAreaClosePolicy, IInputElement, SessionToastWindow
 
+### Community 91 - "Community 91"
+Cohesion: 0.1
+Nodes (5): AndroidContentDocumentCodec, DocumentContext, EncryptedDocument, AndroidE2eeRuntimeProbe, CheckedAction
+
+### Community 92 - "Community 92"
+Cohesion: 0.06
+Nodes (17): Application, CancellingController, FixedTimeProvider, ProcessTerminationTests, RecordingAuditSink, OwnerPresentProcessIntegrationTests, RecordingAuditSink, FakeGateway (+9 more)
+
 ### Community 93 - "Community 93"
-Cohesion: 0.05
-Nodes (37): BackgroundService, FileStamp, DllImport, int, IReadOnlyList, MarshalAs, IWindowsProcessIdSource, WindowsProcessIdSource (+29 more)
+Cohesion: 0.07
+Nodes (28): AvaloniaPropertyChangedEventArgs, ValidationError, FocusCycleConfigurationContract, PreparedSessionPhase, IReadOnlyList, bool, DispatcherTimer, DrawingContext (+20 more)
 
 ### Community 94 - "Community 94"
-Cohesion: 0.04
-Nodes (9): Client, Clock, Data, SavedNormalCycleWorkflowTests, Client, ProfileConflictTests, ProbeClient, ServiceHealthCheckTests (+1 more)
+Cohesion: 0.06
+Nodes (28): Check, Content, FocusGuard.Setup, int, long, Stream, string, EmbeddedPackage (+20 more)
 
 ### Community 95 - "Community 95"
-Cohesion: 0.05
-Nodes (13): Activity, Button, CheckBox, MainActivity, Form, DevicePairingApprovalDialog, DeviceSettingsTransferDialog, PortableSettingsTransferDialog (+5 more)
+Cohesion: 0.06
+Nodes (12): IFocusAuditStore, JsonLinesFocusAuditStore, IStrictSessionStore, StrictSessionStore, InvalidOperationException, SemaphoreSlim, SettingsTransportFailure, LocalSettingsCoordinator (+4 more)
 
 ### Community 96 - "Community 96"
-Cohesion: 0.08
-Nodes (28): CancellationToken, Guid, SqliteConnection, SqliteTransaction, Task, CyclePresetMutationResult, CyclePresetMutationStatus, CyclePresetRevision (+20 more)
+Cohesion: 0.11
+Nodes (53): Aa(), ae(), ce(), cl(), de(), dp(), Dt(), E() (+45 more)
 
 ### Community 97 - "Community 97"
-Cohesion: 0.09
-Nodes (39): isOrbStyle(), isPalette(), loadOrbStyle(), loadPalette(), loadReviewBeforeStart(), saveOrbStyle(), savePalette(), saveReviewBeforeStart() (+31 more)
+Cohesion: 0.05
+Nodes (18): AutoCloseable, Listener, ViewState, ConfirmResult, HttpResult, MembershipSnapshot, RenewResult, Result (+10 more)
 
 ### Community 98 - "Community 98"
 Cohesion: 0.05
-Nodes (15): CoreWebView2Environment, SurfaceForm, WebViewHardening, ResourceBudgetTests, MemoryPressurePolicy, RendererVisibilityController, ResourceWebView2, WebViewResourceController (+7 more)
+Nodes (13): Activity, Button, CheckBox, MainActivity, Form, DevicePairingApprovalDialog, DeviceSettingsTransferDialog, PortableSettingsTransferDialog (+5 more)
 
 ### Community 99 - "Community 99"
+Cohesion: 0.11
+Nodes (54): ac(), bh(), Bi(), cc(), cm(), Cp(), d(), dh() (+46 more)
+
+### Community 100 - "Community 100"
 Cohesion: 0.07
 Nodes (30): acknowledgeNewPolicyOnce(), nativeClient, sendHealth(), createNativePortClient(), cachedWebsiteRules, compiledRules(), compileMatcher(), currentAuthorizedPhase() (+22 more)
 
-### Community 100 - "Community 100"
-Cohesion: 0.04
-Nodes (17): ActiveFocusView, ApplicationRulesView, StrictConfirmationView, WebsiteRulesView, ActiveFocusView, ApplicationRulesView, FocusBackground, RuleEditorView (+9 more)
-
 ### Community 101 - "Community 101"
-Cohesion: 0.12
-Nodes (52): ac(), bh(), Bi(), cc(), cm(), Cp(), d(), dh() (+44 more)
+Cohesion: 0.1
+Nodes (11): BootstrapAlreadyExistsException, BootstrapChallengeLedger, InvalidBootstrapProofException, InvalidDeviceProofException, MembershipConflictException, ContentDocumentLedger, DocumentKeyEpochConflictException, InvalidContentDocumentException (+3 more)
 
 ### Community 102 - "Community 102"
 Cohesion: 0.05
 Nodes (16): ApplicationMatchOption, ActiveFocusViewModel, DelegateCommand, ApplicationRuleEditorViewModel, ApplicationRuleRowViewModel, DelegateCommand, RemoveCommandAdapter, DelegateCommand (+8 more)
 
 ### Community 103 - "Community 103"
-Cohesion: 0.06
-Nodes (7): byte, MembershipProtocol, Validate(), RecoveryKit, CurrentProcessMetadataConsent, SettingsRetryCheckpointStore, Validate()
+Cohesion: 0.07
+Nodes (10): HostSettingsSyncHttpsTests, LoopbackSender, ISettingsRequestSender, LoopbackSender, LostCreateResponse, SettingsHttpsLoopbackTests, Fixture, Sender (+2 more)
 
 ### Community 104 - "Community 104"
-Cohesion: 0.19
-Nodes (39): AParcel_nullableStdArrayAllocator(), AParcel_nullableStdArrayExternalAllocator(), AParcel_nullableStdArraySetter(), AParcel_nullableStdArrayStringElementAllocator(), AParcel_nullableStdStringAllocator(), AParcel_nullableStdVectorAllocator(), AParcel_nullableStdVectorExternalAllocator(), AParcel_nullableStdVectorSetter() (+31 more)
+Cohesion: 0.05
+Nodes (15): CoreWebView2Environment, SurfaceForm, WebViewHardening, ResourceBudgetTests, MemoryPressurePolicy, RendererVisibilityController, ResourceWebView2, WebViewResourceController (+7 more)
 
 ### Community 105 - "Community 105"
-Cohesion: 0.06
-Nodes (13): AuthorizeState, ServiceHealthProbe, ServiceHealthProbe, IAuthenticationBrowser, LoginResult, IdentitySession, UserTokenVault, Validate() (+5 more)
+Cohesion: 0.19
+Nodes (39): AParcel_nullableStdArrayAllocator(), AParcel_nullableStdArrayExternalAllocator(), AParcel_nullableStdArraySetter(), AParcel_nullableStdArrayStringElementAllocator(), AParcel_nullableStdStringAllocator(), AParcel_nullableStdVectorAllocator(), AParcel_nullableStdVectorExternalAllocator(), AParcel_nullableStdVectorSetter() (+31 more)
 
 ### Community 106 - "Community 106"
 Cohesion: 0.08
 Nodes (11): AuthenticationHandler, AuthenticationSchemeOptions, DelegateHttpHandler, HostAccountServiceSettingsSyncCreationTests, HttpMessageHandler, ApiAutomaticSettingsSyncChecks, LedgerSettingsDocumentTransport, SyntheticApiEnvironmentScope (+3 more)
 
 ### Community 107 - "Community 107"
-Cohesion: 0.06
-Nodes (13): AuthenticatedIpcClient, NamedPipeFocusControlClient, Clock, CountingFactory, FailingFactory, ReviewedSessionControlTests, VerifiedPipeConnectionFactory, IExtensionHealthClient (+5 more)
+Cohesion: 0.13
+Nodes (35): counts(), exact(), integer(), isControlledSession(), isNormalReview(), isProfilePage(), isStartedSession(), isStrictCancelled() (+27 more)
 
 ### Community 108 - "Community 108"
 Cohesion: 0.12
-Nodes (47): _(), Ar(), bn(), cn(), dn(), ee(), En(), ff() (+39 more)
+Nodes (27): asBinder(), BnCInterface(), BpCInterface(), delete(), dump(), handleShellCommand(), internal(), makeServiceName() (+19 more)
 
 ### Community 109 - "Community 109"
-Cohesion: 0.14
-Nodes (4): AndroidContentDocumentCodec, EncryptedDocument, AndroidE2eeRuntimeProbe, CheckedAction
-
-### Community 110 - "Community 110"
 Cohesion: 0.08
 Nodes (5): Client, CommitThenFailStore, Data, ProfileCommandTests, IRevisionedProfileStore
 
+### Community 110 - "Community 110"
+Cohesion: 0.09
+Nodes (7): Catalog, Clock, DesktopWorkflowUiTests, Fixture, ServiceClient, TestAppBuilder, TestStrictStore
+
 ### Community 111 - "Community 111"
-Cohesion: 0.09
-Nodes (25): CancellationToken, Guid, string, TimeSpan, ValueTask, NamedPipeFocusControlClient, CancellationToken, NamedPipeClientStream (+17 more)
-
-### Community 112 - "Community 112"
-Cohesion: 0.09
-Nodes (6): RecordingClient, ReviewedPolicyTarget, SessionActivationWorkflowTests, TestClock, TestData, TestStrictStore
-
-### Community 113 - "Community 113"
-Cohesion: 0.09
-Nodes (7): NumberFastDToABuilder, Org.Webpki.Es6NumberSerialization, char, JsonCanonicalizer, JsonDecoder, NumberFastDToABuilder, Org.Webpki.Es6NumberSerialization
-
-### Community 114 - "Community 114"
-Cohesion: 0.09
-Nodes (11): DirectoryInfo, AcceptingStrictSessionStore, NormalSessionJournalTests, RecordingAuditStore, TemporaryHistoryStore, TestClock, ReleasableStrictSessionStore, StrictSessionEndTests (+3 more)
-
-### Community 115 - "Community 115"
-Cohesion: 0.1
-Nodes (3): AndroidOidcAccountSession, Listener, ViewState
-
-### Community 116 - "Community 116"
-Cohesion: 0.09
-Nodes (5): ExternalSystemBrowser, HostAccountService, HostPendingPairingSummary, HostSettingsLocalOverrideSummary, HostSettingsSyncConflictReview
-
-### Community 117 - "Community 117"
 Cohesion: 0.1
 Nodes (21): Guid, HashSet, JsonElement, BridgeRequestParser, Guid, JsonElement, BridgeRequestParser, CycleParameters (+13 more)
 
-### Community 118 - "Community 118"
+### Community 112 - "Community 112"
+Cohesion: 0.08
+Nodes (26): SessionSummaryWindow, countLabel(), t(), SessionSummaryViewModel, accentStyle(), async(), leave(), mutate() (+18 more)
+
+### Community 113 - "Community 113"
 Cohesion: 0.1
-Nodes (6): Catalog, DesktopWorkflowUiTests, Fixture, ServiceClient, TestAppBuilder, TestStrictStore
+Nodes (5): RecordingClient, SessionActivationWorkflowTests, TestClock, TestData, TestStrictStore
 
-### Community 119 - "Community 119"
-Cohesion: 0.17
-Nodes (42): _a(), Ao(), ba(), Bc(), Ca(), da(), dm(), ec() (+34 more)
+### Community 114 - "Community 114"
+Cohesion: 0.1
+Nodes (42): af(), At(), Bd(), Bp(), bt(), cf(), ch(), ct() (+34 more)
 
-### Community 120 - "Community 120"
-Cohesion: 0.13
-Nodes (30): counts(), createDashboardClient(), exact(), integer(), isControlledSession(), isNormalReview(), isProfilePage(), isStartedSession() (+22 more)
+### Community 115 - "Community 115"
+Cohesion: 0.09
+Nodes (8): HostSettingsSyncSessionTests, MemorySettingsTransport, ISettingsDocumentTransport, TaskCompletionSource, EncryptedSettingsServer, ScopedTransport, SettingsAutomaticSyncTwoRuntimeTests, EmptyTransport
 
-### Community 121 - "Community 121"
+### Community 116 - "Community 116"
 Cohesion: 0.05
 Nodes (37): jsdom, motion, @radix-ui/react-tabs, FocusGuard.UI/package.json, dependencies, motion, @radix-ui/react-tabs, react (+29 more)
 
-### Community 122 - "Community 122"
+### Community 117 - "Community 117"
+Cohesion: 0.08
+Nodes (15): ApplicationRuleIndex, CyclePhaseNotificationCopy, CyclePhaseTransitionEventArgs, CyclePhaseTransitionTracker, ApplicationRuleIndex, Create(), Matches(), SimulatedProcessMonitor (+7 more)
+
+### Community 118 - "Community 118"
 Cohesion: 0.27
 Nodes (34): __clz(), __clzl(), __clzll(), __crc32b(), __crc32cb(), __crc32cd(), __crc32ch(), __crc32cw() (+26 more)
 
-### Community 123 - "Community 123"
+### Community 119 - "Community 119"
+Cohesion: 0.11
+Nodes (20): createApplicationsClient(), decodeIcon(), exact(), integer(), isApplicationPage(), record(), action(), count() (+12 more)
+
+### Community 120 - "Community 120"
+Cohesion: 0.11
+Nodes (8): ApplicationContext, DateTime, HostShell, SurfaceShellController, NotifyIcon, SessionEventMonitor, SurfaceForm, SynchronizationContext
+
+### Community 121 - "Community 121"
+Cohesion: 0.07
+Nodes (9): Catalog, Client, Icons, SavedRulePresentationTests, SlowCatalog, WindowsApplicationCatalog, WindowsApplicationIconProvider, IApplicationCatalog (+1 more)
+
+### Community 122 - "Community 122"
 Cohesion: 0.17
 Nodes (37): AddStructOffset(), Align(), buf_(), Clear(), ClearOffsets(), CreateString(), CreateStringImpl(), CreateUninitializedVector() (+29 more)
 
-### Community 124 - "Community 124"
+### Community 123 - "Community 123"
 Cohesion: 0.15
 Nodes (3): AndroidSignedKeyEnvelopeCodec, EnvelopeContext, SignedEnvelope
 
-### Community 125 - "Community 125"
-Cohesion: 0.08
-Nodes (9): CycleBreakEnforcementTests, PhaseClock, RecordingTarget, ManualClock, PolicyDistributionCoordinatorTests, RecordingTarget, StaleTarget, ThrowingTarget (+1 more)
-
-### Community 126 - "Community 126"
+### Community 124 - "Community 124"
 Cohesion: 0.27
 Nodes (32): _mm256_macc_pd(), _mm256_macc_ps(), _mm256_maddsub_pd(), _mm256_maddsub_ps(), _mm256_msub_pd(), _mm256_msub_ps(), _mm256_msubadd_pd(), _mm256_msubadd_ps() (+24 more)
 
-### Community 127 - "Community 127"
+### Community 125 - "Community 125"
 Cohesion: 0.27
 Nodes (32): _mm256_fmadd_pd(), _mm256_fmadd_ps(), _mm256_fmaddsub_pd(), _mm256_fmaddsub_ps(), _mm256_fmsub_pd(), _mm256_fmsub_ps(), _mm256_fmsubadd_pd(), _mm256_fmsubadd_ps() (+24 more)
 
-### Community 128 - "Community 128"
+### Community 126 - "Community 126"
 Cohesion: 0.09
-Nodes (17): CancellationToken, Func, IEnumerable, Process, string, Task, TimeProvider, TimeSpan (+9 more)
+Nodes (21): createDashboardClient(), fixture(), ActiveSessionControls(), moment(), fixture(), render(), button(), fixture() (+13 more)
 
-### Community 129 - "Community 129"
+### Community 128 - "Community 128"
 Cohesion: 0.09
 Nodes (27): createNativeStatusClient(), defaultWebViewTransport(), MessageListener, monotonicNow(), NativeStatusClient, PendingRequest, FakeWebView, initialize() (+19 more)
 
+### Community 129 - "Community 129"
+Cohesion: 0.1
+Nodes (31): ActiveSessionControls(), connection, fixture(), refresh, ControlledSession, ControlReview, counts(), createDashboardClient() (+23 more)
+
 ### Community 130 - "Community 130"
 Cohesion: 0.09
-Nodes (7): HostSettingsSyncHttpsTests, LoopbackSender, ISettingsRequestSender, Fixture, Sender, SettingsHttpTransportTests, HandlerSender
+Nodes (5): Library, AndroidSodium, Sodium, CryptoRuntimeProbe, Sodium
 
 ### Community 131 - "Community 131"
-Cohesion: 0.09
-Nodes (5): Library, AndroidSodium, Sodium, CryptoRuntimeProbe, Sodium
+Cohesion: 0.1
+Nodes (30): action(), ApplicationRule, count(), createProfilesClient(), exact(), isMutation(), isProfileDetail(), isRulePresentation() (+22 more)
 
 ### Community 132 - "Community 132"
 Cohesion: 0.29
 Nodes (30): _mm_abs_epi16(), _mm_abs_epi32(), _mm_abs_epi8(), _mm_abs_pi16(), _mm_abs_pi32(), _mm_abs_pi8(), _mm_hadd_epi16(), _mm_hadd_epi32() (+22 more)
 
-### Community 133 - "Community 133"
-Cohesion: 0.12
-Nodes (3): ICaptureStore, ISessionHistoryStore, SqliteSessionHistoryStore
-
-### Community 135 - "Community 135"
-Cohesion: 0.13
-Nodes (7): ApplicationContext, DateTime, HostShell, NotifyIcon, SessionEventMonitor, SurfaceForm, SynchronizationContext
-
-### Community 136 - "Community 136"
+### Community 134 - "Community 134"
 Cohesion: 0.17
 Nodes (26): exact(), guid(), integer(), isCycleConfiguration(), isCycleInput(), isCyclePage(), isCyclePresetMutation(), isCycleReview() (+18 more)
 
+### Community 135 - "Community 135"
+Cohesion: 0.12
+Nodes (3): ICaptureStore, ISessionHistoryStore, SqliteSessionHistoryStore
+
+### Community 136 - "Community 136"
+Cohesion: 0.13
+Nodes (30): CycleFields(), configDraft(), Copy, CyclePresetManager(), defaultConfig, Draft, Copy, DashboardStart() (+22 more)
+
 ### Community 137 - "Community 137"
-Cohesion: 0.1
-Nodes (20): SessionSummaryWindow, countLabel(), t(), SessionSummaryViewModel, accentFor(), accentStyle(), applyRowAction(), clockText() (+12 more)
-
-### Community 138 - "Community 138"
-Cohesion: 0.2
-Nodes (24): GET(), POST(), access(), cookieHeader(), database(), handleAuth(), provider(), redirect() (+16 more)
-
-### Community 139 - "Community 139"
 Cohesion: 0.12
 Nodes (3): AndroidDeviceIdentity, PublicIdentity, AndroidIdentityRuntimeProbe
 
-### Community 140 - "Community 140"
+### Community 138 - "Community 138"
+Cohesion: 0.09
+Nodes (5): FakeStartup, HostShellTests, RecordingShell, ScriptedClient, IHostShellController
+
+### Community 139 - "Community 139"
 Cohesion: 0.29
 Nodes (28): deepEquals(), erase(), getBoolean(), getBooleanVector(), getDouble(), getDoubleVector(), getInt(), getIntVector() (+20 more)
 
+### Community 140 - "Community 140"
+Cohesion: 0.2
+Nodes (24): GET(), POST(), access(), cookieHeader(), database(), handleAuth(), provider(), redirect() (+16 more)
+
 ### Community 141 - "Community 141"
-Cohesion: 0.12
-Nodes (14): FocusGuard.Ipc.Windows, AuthenticatedIpcClient, bool, byte, DllImport, int, IntPtr, object (+6 more)
+Cohesion: 0.11
+Nodes (5): ISettingsSyncCryptography, SettingsSyncCryptography, Dictionary, ApplicationIconCache, SessionJournalStore
 
 ### Community 142 - "Community 142"
 Cohesion: 0.15
 Nodes (14): DateTimeOffset, DllImport, IntPtr, MarshalAs, NamedPipeClientStream, NamedPipeServerStream, SafeAccessTokenHandle, SafePipeHandle (+6 more)
 
 ### Community 143 - "Community 143"
-Cohesion: 0.14
-Nodes (22): createApplicationsClient(), decodeIcon(), exact(), integer(), isApplicationPage(), record(), action(), count() (+14 more)
-
-### Community 144 - "Community 144"
 Cohesion: 0.31
 Nodes (27): __DEFAULT_FN_ATTRS(), _mm256_broadcastmb_epi64(), _mm256_broadcastmw_epi32(), _mm256_conflict_epi32(), _mm256_conflict_epi64(), _mm256_lzcnt_epi32(), _mm256_lzcnt_epi64(), _mm256_mask_conflict_epi32() (+19 more)
 
-### Community 145 - "Community 145"
+### Community 144 - "Community 144"
 Cohesion: 0.11
 Nodes (3): SetupOperations, WebSetupForm, SetupOperations
+
+### Community 145 - "Community 145"
+Cohesion: 0.13
+Nodes (3): Client, DashboardCommandTests, Data
 
 ### Community 146 - "Community 146"
 Cohesion: 0.12
 Nodes (16): Peer, Policy, Dictionary, Func, NamedPipeServerStream, object, AuthenticatedIpcServer, HashSet (+8 more)
 
 ### Community 147 - "Community 147"
-Cohesion: 0.13
-Nodes (3): Client, DashboardCommandTests, Data
+Cohesion: 0.15
+Nodes (11): CancellationToken, Exception, Fact, Guid, InlineData, List, Task, Theory (+3 more)
 
 ### Community 148 - "Community 148"
 Cohesion: 0.31
 Nodes (26): _m_pavgusb(), _m_pf2id(), _m_pf2iw(), _m_pfacc(), _m_pfadd(), _m_pfcmpeq(), _m_pfcmpge(), _m_pfcmpgt() (+18 more)
 
 ### Community 149 - "Community 149"
-Cohesion: 0.2
-Nodes (32): Aa(), ae(), C(), ce(), cl(), de(), E(), go() (+24 more)
-
-### Community 150 - "Community 150"
-Cohesion: 0.14
-Nodes (3): AndroidDeviceVault, AndroidVaultRuntimeProbe, CheckedAction
-
-### Community 151 - "Community 151"
 Cohesion: 0.12
 Nodes (4): Program, SetupForm, Label, SuccessCheckControl
 
-### Community 153 - "Community 153"
+### Community 150 - "Community 150"
 Cohesion: 0.15
 Nodes (22): createNativeStatusClient(), currentDocument(), defaultWebViewTransport(), monotonicNow(), secureGuid(), boundedRecord(), hasExactKeys(), isBridgeStatus() (+14 more)
 
-### Community 154 - "Community 154"
-Cohesion: 0.11
-Nodes (30): CyclePage, CyclePresetMutation, sameCycleConfiguration(), ControlledSession, ControlReview, counts(), createDashboardClient(), exact() (+22 more)
+### Community 151 - "Community 151"
+Cohesion: 0.14
+Nodes (3): AndroidDeviceVault, AndroidVaultRuntimeProbe, CheckedAction
 
-### Community 155 - "Community 155"
-Cohesion: 0.16
-Nodes (26): CycleFields(), configDraft(), Copy, CyclePresetManager(), defaultConfig, Draft, Copy, configuration (+18 more)
-
-### Community 156 - "Community 156"
+### Community 153 - "Community 153"
 Cohesion: 0.32
 Nodes (25): __DEFAULT_FN_ATTRS(), _mm_cmpeq_epi64(), _mm_cmpgt_epi64(), _mm_crc32_u16(), _mm_crc32_u32(), _mm_crc32_u64(), _mm_crc32_u8(), _mm_cvtepi16_epi32() (+17 more)
 
-### Community 157 - "Community 157"
-Cohesion: 0.22
-Nodes (31): as(), bs(), cs(), Es(), Gr(), gs(), hs(), i() (+23 more)
+### Community 154 - "Community 154"
+Cohesion: 0.1
+Nodes (7): ReviewedPolicyTarget, ManualClock, PolicyDistributionCoordinatorTests, RecordingTarget, StaleTarget, ThrowingTarget, IPolicyDistributionTarget
 
-### Community 158 - "Community 158"
-Cohesion: 0.11
-Nodes (7): DesktopSettingsStore, HostSettingsSyncSession, LoadedDeviceVault, SettingsAutomaticSyncRuntime, SettingsSyncScope, SettingsOutboxVault, Validate()
-
-### Community 160 - "Community 160"
-Cohesion: 0.11
-Nodes (12): Grid, ContextRequestedEventArgs, EventArgs, INotifyPropertyChanged, List, PropertyChangedEventArgs, RoutedEventArgs, string (+4 more)
-
-### Community 161 - "Community 161"
+### Community 155 - "Community 155"
 Cohesion: 0.09
 Nodes (8): CurrentProcessMetadataConsent, AuthenticatedIpcClient, AuthenticatedIpcServer, Deny(), IpcAuthorizationPolicy, IpcDeploymentManifest, OwnerLogonScope, TrustedIpcBinary
 
-### Community 162 - "Community 162"
-Cohesion: 0.08
-Nodes (12): BlockScrimWindow, CompactFocusWindow, BlockScrimWindow, PointerPressedEventArgs, RoutedEventArgs, CompactFocusWindow, DispatcherTimer, EventArgs (+4 more)
-
-### Community 163 - "Community 163"
-Cohesion: 0.17
-Nodes (22): utcMilliseconds(), createShellClient(), date(), defaultTransport(), exact(), guid(), isRecord(), parseHostSurface() (+14 more)
-
-### Community 164 - "Community 164"
+### Community 157 - "Community 157"
 Cohesion: 0.13
 Nodes (22): readOrbColors(), clampMinutes(), FocusOrb(), minutesForAngle(), addEventListener(), addListener(), removeEventListener(), removeListener() (+14 more)
 
-### Community 165 - "Community 165"
-Cohesion: 0.12
-Nodes (21): ApplicationIcon(), ApplicationsPicker(), Copy, AppIcon, ApplicationPage, ApplicationsClient, ApplicationsSnapshot, CatalogApplication (+13 more)
+### Community 158 - "Community 158"
+Cohesion: 0.14
+Nodes (3): BridgePolicyTests, RecordingWindowController, IHostWindowController
 
-### Community 166 - "Community 166"
+### Community 159 - "Community 159"
+Cohesion: 0.08
+Nodes (5): AcceleratedDeadlineClock, CancellationWaitingClient, RecordingClient, RollingRequestClock, TestAuthorization
+
+### Community 160 - "Community 160"
 Cohesion: 0.1
 Nodes (5): ClockDial, CyclePhaseTimeline, CyclePresetIcon, WeekSparkline, StyledProperty
 
-### Community 167 - "Community 167"
+### Community 161 - "Community 161"
 Cohesion: 0.1
 Nodes (3): AccountBridgeTests, RecordingAccount, IHostAccountService
 
-### Community 168 - "Community 168"
+### Community 162 - "Community 162"
+Cohesion: 0.08
+Nodes (7): DateTimeOffset, Clock, CountingFactory, FailingFactory, ReviewedSessionControlTests, ExtensionHealthProtocolTests, ProcessAgentProtocolTests
+
+### Community 163 - "Community 163"
+Cohesion: 0.12
+Nodes (16): SafeHandleZeroOrMinusOneIsInvalid, ServiceHandle, ServiceStatus, DllImport, IntPtr, MarshalAs, SupportedOSPlatform, uint (+8 more)
+
+### Community 164 - "Community 164"
+Cohesion: 0.16
+Nodes (6): DirectoryInfo, AcceptingStrictSessionStore, NormalSessionJournalTests, RecordingAuditStore, TemporaryHistoryStore, TestClock
+
+### Community 165 - "Community 165"
+Cohesion: 0.1
+Nodes (3): RecordingClient, SessionWorkflowTests, TemporaryProfiles
+
+### Community 167 - "Community 167"
 Cohesion: 0.11
 Nodes (17): PipeSecurity, SecurityAttributes, bool, CancellationToken, DllImport, int, IntPtr, NamedPipeClientStream (+9 more)
 
 ### Community 169 - "Community 169"
-Cohesion: 0.12
-Nodes (16): SafeHandleZeroOrMinusOneIsInvalid, ServiceHandle, ServiceStatus, DllImport, IntPtr, MarshalAs, SupportedOSPlatform, uint (+8 more)
-
-### Community 170 - "Community 170"
-Cohesion: 0.14
-Nodes (25): action(), ApplicationRule, count(), createProfilesClient(), exact(), isMutation(), isProfileDetail(), isRulePresentation() (+17 more)
-
-### Community 172 - "Community 172"
-Cohesion: 0.13
-Nodes (13): int, JsonElement, JsonSerializerOptions, ReadOnlySpan, string, IpcDeploymentManifest, IpcServiceManifest, IpcDirectoryPath (+5 more)
-
-### Community 173 - "Community 173"
-Cohesion: 0.1
-Nodes (3): RecordingClient, SessionWorkflowTests, TemporaryProfiles
-
-### Community 175 - "Community 175"
 Cohesion: 0.23
 Nodes (21): Data(), flatbuffers(), operator(), begin(), Data(), end(), flatbuffers(), GetAs() (+13 more)
 
-### Community 177 - "Community 177"
+### Community 170 - "Community 170"
+Cohesion: 0.09
+Nodes (7): RecordingClient, RecordingStartupRegistration, RuleTestCatalog, TemporaryDirectory, WindowsStartupRegistration, IStartupRegistration, StatusResponse
+
+### Community 171 - "Community 171"
+Cohesion: 0.11
+Nodes (5): ApplicationCatalogCommandTests, Catalog, Client, Data, Icons
+
+### Community 172 - "Community 172"
 Cohesion: 0.15
-Nodes (3): BridgeRequestParser, BridgeRequestParser, BridgeRequestParser
+Nodes (3): ControlledTransport, Fixture, SettingsSyncWorkerTests
+
+### Community 173 - "Community 173"
+Cohesion: 0.37
+Nodes (20): _mm256_mask2_permutex2var_epi8(), _mm256_mask_multishift_epi64_epi8(), _mm256_mask_permutex2var_epi8(), _mm256_mask_permutexvar_epi8(), _mm256_maskz_multishift_epi64_epi8(), _mm256_maskz_permutex2var_epi8(), _mm256_maskz_permutexvar_epi8(), _mm256_multishift_epi64_epi8() (+12 more)
+
+### Community 174 - "Community 174"
+Cohesion: 0.16
+Nodes (3): Clock, Clock, DesktopWorkflowTests
+
+### Community 175 - "Community 175"
+Cohesion: 0.11
+Nodes (5): Client, Clock, Data, SavedNormalCycleWorkflowTests, IFocusControlClient
+
+### Community 176 - "Community 176"
+Cohesion: 0.11
+Nodes (10): AuthenticatedIpcClient, VerifiedPipeConnectionFactory, IExtensionHealthClient, INativeMessageHandler, NamedPipeExtensionHealthClient, NativeHost, ServiceHealthNativeMessageHandler, IProcessAgentClient (+2 more)
+
+### Community 177 - "Community 177"
+Cohesion: 0.08
+Nodes (20): Microsoft.Data.Sqlite, SQLitePCLRaw.lib.e_sqlite3, Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit (+12 more)
 
 ### Community 178 - "Community 178"
 Cohesion: 0.11
 Nodes (14): App(), CopyKey, Language, PreferencesPanel, ProfileEditor, StatusClient, active, formatMoment() (+6 more)
 
 ### Community 179 - "Community 179"
-Cohesion: 0.09
-Nodes (17): ActiveSessionControls(), connection, fixture(), refresh, DashboardStart(), catalog, fixture(), idle (+9 more)
-
-### Community 180 - "Community 180"
-Cohesion: 0.37
-Nodes (20): _mm256_mask2_permutex2var_epi8(), _mm256_mask_multishift_epi64_epi8(), _mm256_mask_permutex2var_epi8(), _mm256_mask_permutexvar_epi8(), _mm256_maskz_multishift_epi64_epi8(), _mm256_maskz_permutex2var_epi8(), _mm256_maskz_permutexvar_epi8(), _mm256_multishift_epi64_epi8() (+12 more)
-
-### Community 181 - "Community 181"
-Cohesion: 0.15
-Nodes (10): IWindowsProcessGateway, WindowsProcessGateway, WindowsProcessInstance, HashSet, ProtectedProcessPolicy, CancellationToken, string, Task (+2 more)
-
-### Community 182 - "Community 182"
-Cohesion: 0.08
-Nodes (20): Microsoft.Data.Sqlite, SQLitePCLRaw.lib.e_sqlite3, Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit (+12 more)
-
-### Community 183 - "Community 183"
 Cohesion: 0.08
 Nodes (26): DOM, DOM.Iterable, ES2022, src, vite/client, vite.config.ts, vitest.config.ts, vitest/globals (+18 more)
 
-### Community 184 - "Community 184"
-Cohesion: 0.16
-Nodes (3): Clock, Clock, DesktopWorkflowTests
-
-### Community 185 - "Community 185"
-Cohesion: 0.1
-Nodes (6): AcceleratedDeadlineClock, RecordingClient, RecordingWindowController, RollingRequestClock, TestAuthorization, IHostWindowController
-
-### Community 186 - "Community 186"
-Cohesion: 0.12
-Nodes (12): CapturedItemView, Action, Guid, ICommand, IReadOnlyList, ObservableCollection, string, Task (+4 more)
-
-### Community 187 - "Community 187"
-Cohesion: 0.14
-Nodes (13): FileSystemRights, FileSystemSecurity, FinalImagePath, ManagedSha256, SafeFileHandle, Sha256, SupportedOSPlatform, DllImport (+5 more)
-
-### Community 188 - "Community 188"
+### Community 180 - "Community 180"
 Cohesion: 0.11
 Nodes (4): ActiveSessionCommandTests, Clock, FailedControlClient, IReviewedSessionControlClient
 
-### Community 189 - "Community 189"
+### Community 181 - "Community 181"
+Cohesion: 0.18
+Nodes (10): bool, byte, DllImport, int, IntPtr, object, CurrentProcessMetadataConsent, Fact (+2 more)
+
+### Community 182 - "Community 182"
+Cohesion: 0.14
+Nodes (13): FileSystemRights, FileSystemSecurity, FinalImagePath, ManagedSha256, SafeFileHandle, Sha256, SupportedOSPlatform, DllImport (+5 more)
+
+### Community 183 - "Community 183"
+Cohesion: 0.13
+Nodes (11): Action, Guid, ICommand, IReadOnlyList, ObservableCollection, string, Task, CapturedItemViewModel (+3 more)
+
+### Community 184 - "Community 184"
 Cohesion: 0.39
 Nodes (18): __TM_abort(), __TM_begin(), __TM_end(), __TM_failure_address(), __TM_failure_code(), __TM_is_conflict(), __TM_is_failure_persistent(), __TM_is_footprint_exceeded() (+10 more)
 
-### Community 190 - "Community 190"
-Cohesion: 0.19
-Nodes (5): JsonCanonicalizer, JsonDecoder, JsonToNumber, Org.Webpki.JsonCanonicalizer, Regex
-
-### Community 191 - "Community 191"
-Cohesion: 0.14
-Nodes (13): ApplicationProcessTarget, AuditedProcessTerminator, FakeApplicationProcessController, IApplicationProcessController, IProcessTerminationAuditSink, ProcessTerminationAuditEvent, ProcessTerminationOptions, ProcessTerminationResult (+5 more)
-
-### Community 195 - "Community 195"
-Cohesion: 0.14
-Nodes (6): IRevisionedCyclePresetStore, IRevisionedProfileCycleSettingsStore, IRevisionedProfileStore, ProfileRevision, SqliteProfileStore, IProfileStore
-
-### Community 196 - "Community 196"
-Cohesion: 0.39
-Nodes (18): __blcfill_u32(), __blcfill_u64(), __blci_u32(), __blci_u64(), __blcic_u32(), __blcic_u64(), __blcmsk_u32(), __blcmsk_u64() (+10 more)
-
-### Community 197 - "Community 197"
+### Community 185 - "Community 185"
 Cohesion: 0.28
 Nodes (18): _mm_mask_movedup_pd(), _mm_mask_movehdup_ps(), _mm_mask_moveldup_ps(), _mm_maskz_movedup_pd(), _mm_maskz_movehdup_ps(), _mm_maskz_moveldup_ps(), _mm_addsub_pd(), _mm_addsub_ps() (+10 more)
 
-### Community 198 - "Community 198"
-Cohesion: 0.08
-Nodes (23): background, service_worker, type, default_locale, description, host_permissions, icons, 128 (+15 more)
+### Community 186 - "Community 186"
+Cohesion: 0.39
+Nodes (18): __blcfill_u32(), __blcfill_u64(), __blci_u32(), __blci_u64(), __blcic_u32(), __blcic_u64(), __blcmsk_u32(), __blcmsk_u64() (+10 more)
 
-### Community 199 - "Community 199"
+### Community 187 - "Community 187"
+Cohesion: 0.19
+Nodes (5): JsonCanonicalizer, JsonDecoder, JsonToNumber, Org.Webpki.JsonCanonicalizer, Regex
+
+### Community 188 - "Community 188"
 Cohesion: 0.13
 Nodes (12): plannedPhases(), ringSegments(), CycleFields(), minutesText(), set(), DashboardStart(), exactMoment(), phaseMoment() (+4 more)
 
-### Community 200 - "Community 200"
-Cohesion: 0.17
-Nodes (4): DeviceEncoding, DeviceIdentity, RestoredDeviceMaterial, Validate()
+### Community 189 - "Community 189"
+Cohesion: 0.14
+Nodes (6): NativeBridgeDispatcher, NativeBridgeDispatcher, NativeBridgeDispatcher, OwnedBridgeCycleReview, SessionWorkflow, StrictReviewOwnership
 
-### Community 201 - "Community 201"
+### Community 190 - "Community 190"
+Cohesion: 0.14
+Nodes (6): IRevisionedCyclePresetStore, IRevisionedProfileCycleSettingsStore, IRevisionedProfileStore, ProfileRevision, SqliteProfileStore, IProfileStore
+
+### Community 191 - "Community 191"
 Cohesion: 0.13
 Nodes (3): Data, ScheduledClient, SessionIntentCommandTests
 
-### Community 203 - "Community 203"
-Cohesion: 0.2
-Nodes (4): JsonCanonicalizer, JsonDecoder, JsonToNumber, Org.Webpki.JsonCanonicalizer
+### Community 192 - "Community 192"
+Cohesion: 0.08
+Nodes (23): background, service_worker, type, default_locale, description, host_permissions, icons, 128 (+15 more)
 
-### Community 205 - "Community 205"
-Cohesion: 0.28
-Nodes (20): CheckedError(), Definition(), EqualByName(), flatbuffers(), GetAsInt64(), InlineAlignment(), InlineSize(), IsArray() (+12 more)
+### Community 193 - "Community 193"
+Cohesion: 0.17
+Nodes (11): int, JsonElement, JsonSerializerOptions, ReadOnlySpan, string, IpcDeploymentManifest, Fact, InlineData (+3 more)
 
-### Community 206 - "Community 206"
-Cohesion: 0.12
-Nodes (7): Application, FakeGateway, IWindowsProcessGateway, ProbeApp, WindowsApplicationProcessController, ProcessTerminationDeveloperOptions, ProtectedProcessPolicy
+### Community 194 - "Community 194"
+Cohesion: 0.16
+Nodes (18): ApplicationIcon(), ApplicationsPicker(), Copy, AppIcon, ApplicationPage, ApplicationsClient, ApplicationsSnapshot, CatalogApplication (+10 more)
 
-### Community 207 - "Community 207"
+### Community 195 - "Community 195"
 Cohesion: 0.11
 Nodes (14): DialogResult, Keys, Message, Bitmap, bool, Button, Color, Control (+6 more)
 
-### Community 208 - "Community 208"
-Cohesion: 0.11
-Nodes (4): BlockScreenViewModel, DispatcherTimer, BlockScreenWindow, SessionToastWindow
+### Community 196 - "Community 196"
+Cohesion: 0.2
+Nodes (4): JsonCanonicalizer, JsonDecoder, JsonToNumber, Org.Webpki.JsonCanonicalizer
 
-### Community 209 - "Community 209"
-Cohesion: 0.1
-Nodes (15): CancellationToken, NamedPipeClientStream, Task, NamedPipeClientStream, SupportedOSPlatform, IpcServerAuthentication, TrustedIpcServer, CancellationToken (+7 more)
+### Community 198 - "Community 198"
+Cohesion: 0.28
+Nodes (20): CheckedError(), Definition(), EqualByName(), flatbuffers(), GetAsInt64(), InlineAlignment(), InlineSize(), IsArray() (+12 more)
 
-### Community 210 - "Community 210"
+### Community 199 - "Community 199"
 Cohesion: 0.13
 Nodes (3): Data, SessionReflectionCommandTests, SummaryClient
 
-### Community 213 - "Community 213"
-Cohesion: 0.18
-Nodes (6): DelayedRecoveryRequestStore, StrictPolicyPersistenceCoordinator, StrictPolicyPersistenceWorker, StrictPolicySnapshotStore, ILogger, RecoveryAuditLog
+### Community 201 - "Community 201"
+Cohesion: 0.1
+Nodes (12): FocusGuard.Ipc.Windows, CancellationToken, NamedPipeClientStream, Task, AuthenticatedIpcClient, IpcServiceManifest, IpcDirectoryPath, CancellationToken (+4 more)
 
-### Community 214 - "Community 214"
+### Community 202 - "Community 202"
 Cohesion: 0.13
-Nodes (6): NativeBridgeDispatcher, NativeBridgeDispatcher, NativeBridgeDispatcher, NativeBridgeDispatcher, OwnedBridgeCycleReview, SessionWorkflow
+Nodes (5): NumberFastDToABuilder, Org.Webpki.Es6NumberSerialization, char, NumberFastDToABuilder, Org.Webpki.Es6NumberSerialization
 
-### Community 215 - "Community 215"
-Cohesion: 0.13
-Nodes (9): nint, DispatcherTimer, DllImport, EventArgs, IReadOnlyList, KeyEventArgs, MarshalAs, RoutedEventArgs (+1 more)
-
-### Community 217 - "Community 217"
+### Community 204 - "Community 204"
 Cohesion: 0.15
 Nodes (5): Fixture, ManualClock, ProcessAgentConnectionTests, ReplyClient, IProcessAgentClient
 
-### Community 219 - "Community 219"
+### Community 208 - "Community 208"
 Cohesion: 0.43
 Nodes (15): __andn_u32(), __andn_u64(), __bextr_u32(), __bextr_u64(), __blsi_u32(), __blsi_u64(), __blsmsk_u32(), __blsmsk_u64() (+7 more)
 
-### Community 221 - "Community 221"
-Cohesion: 0.1
-Nodes (5): FakeStartup, RecordingShell, ScriptedClient, SurfaceShellController, IHostShellController
+### Community 209 - "Community 209"
+Cohesion: 0.13
+Nodes (9): nint, DispatcherTimer, DllImport, EventArgs, IReadOnlyList, KeyEventArgs, MarshalAs, RoutedEventArgs (+1 more)
 
-### Community 222 - "Community 222"
+### Community 210 - "Community 210"
+Cohesion: 0.1
+Nodes (6): DispatcherTimer, BlockScrimWindow, CompactFocusWindow, SessionToastWindow, BlockScrimWindow, Window
+
+### Community 213 - "Community 213"
 Cohesion: 0.28
 Nodes (18): BufferToHexText(), Case(), ClassicLocale(), EscapeString(), flatbuffers(), FloatToString(), FromUTF8(), IntToStringHex() (+10 more)
 
-### Community 223 - "Community 223"
-Cohesion: 0.11
-Nodes (5): RecordingClient, RecordingStartupRegistration, RuleTestCatalog, TemporaryDirectory, StatusResponse
-
-### Community 224 - "Community 224"
-Cohesion: 0.16
-Nodes (13): ApplicationIcon(), BlockedStack(), addEventListener(), addListener(), removeEventListener(), removeListener(), statusClient(), accentStyle() (+5 more)
-
-### Community 226 - "Community 226"
+### Community 215 - "Community 215"
 Cohesion: 0.44
 Nodes (14): _mm512_broadcastmb_epi64(), _mm512_broadcastmw_epi32(), _mm512_conflict_epi32(), _mm512_conflict_epi64(), _mm512_lzcnt_epi32(), _mm512_lzcnt_epi64(), _mm512_mask_conflict_epi32(), _mm512_mask_conflict_epi64() (+6 more)
 
-### Community 227 - "Community 227"
+### Community 216 - "Community 216"
 Cohesion: 0.44
 Nodes (14): _bit_scan_forward(), _bit_scan_reverse(), _mm256_cvtph_ps(), _rdrand16_step(), _rdrand32_step(), _rdrand64_step(), _readfsbase_u32(), _readfsbase_u64() (+6 more)
 
-### Community 228 - "Community 228"
-Cohesion: 0.27
-Nodes (4): ISettingsRequestSender, NativeSettingsRequestSender, SettingsDocumentHttpTransport, SettingsTransportException
-
-### Community 229 - "Community 229"
+### Community 217 - "Community 217"
 Cohesion: 0.16
 Nodes (14): RM_PROCESS_INFO, RM_UNIQUE_PROCESS, bool, DllImport, FILETIME, int, IReadOnlyList, string (+6 more)
 
-### Community 231 - "Community 231"
+### Community 218 - "Community 218"
 Cohesion: 0.29
 Nodes (17): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+9 more)
 
-### Community 232 - "Community 232"
-Cohesion: 0.14
-Nodes (10): ICommand, IEnumerable, IReadOnlyList, ObservableCollection, string, ApplicationMatchOption, ApplicationRuleEditorViewModel, ApplicationRuleRowViewModel (+2 more)
-
-### Community 233 - "Community 233"
-Cohesion: 0.17
-Nodes (6): IEnumerable, WebsiteRuleMatcher, Fact, InlineData, Theory, WebsiteRuleMatcherTests
-
-### Community 234 - "Community 234"
-Cohesion: 0.45
-Nodes (14): asBinder(), BnCInterface(), BpCInterface(), delete(), dump(), handleShellCommand(), internal(), makeServiceName() (+6 more)
-
-### Community 235 - "Community 235"
+### Community 219 - "Community 219"
 Cohesion: 0.24
 Nodes (14): account(), createNativeAccountClient(), defaultTransport(), exact(), isFingerprint(), isGuid(), isRecord(), nullableText() (+6 more)
 
-### Community 236 - "Community 236"
-Cohesion: 0.18
-Nodes (18): utcMilliseconds(), count(), date(), exact(), guid(), isScheduleList(), isTodaySummary(), name() (+10 more)
-
-### Community 239 - "Community 239"
+### Community 222 - "Community 222"
 Cohesion: 0.17
 Nodes (4): InMemoryFocusServiceTests, RecordingStrictSessionStore, TestTimeProvider, StrictPolicySnapshot
 
-### Community 240 - "Community 240"
+### Community 225 - "Community 225"
+Cohesion: 0.27
+Nodes (4): ISettingsRequestSender, NativeSettingsRequestSender, SettingsDocumentHttpTransport, SettingsTransportException
+
+### Community 226 - "Community 226"
+Cohesion: 0.18
+Nodes (18): utcMilliseconds(), count(), date(), exact(), guid(), isScheduleList(), isTodaySummary(), name() (+10 more)
+
+### Community 227 - "Community 227"
 Cohesion: 0.46
 Nodes (13): __assert_fail(), __brkpt(), cospi(), erfcinv(), erfcx(), normcdf(), normcdfinv(), rcbrt() (+5 more)
 
-### Community 242 - "Community 242"
-Cohesion: 0.16
-Nodes (4): WindowsAuthenticatedPipeStreams, ToLong(), WindowsProcessInspector, uint
-
-### Community 243 - "Community 243"
+### Community 228 - "Community 228"
 Cohesion: 0.18
 Nodes (6): DelegatingHandler, DocumentLifetime, HostSettingsSyncSession, ApiAcceptanceChecks, ObservedApiHandler, SensitiveContentKey
 
-### Community 244 - "Community 244"
+### Community 229 - "Community 229"
 Cohesion: 0.16
-Nodes (9): currentRequest(), FakeWebView, initialize(), reply(), status(), AccountPanel(), client(), t() (+1 more)
+Nodes (4): WindowsAuthenticatedPipeStreams, ToLong(), WindowsProcessInspector, uint
 
-### Community 245 - "Community 245"
-Cohesion: 0.2
-Nodes (12): formatFocusSeconds(), at(), dateFromLocalKey(), groupSessions(), leave(), localDateKey(), localDayRangeUtc(), shiftLocalDate() (+4 more)
-
-### Community 246 - "Community 246"
+### Community 231 - "Community 231"
 Cohesion: 0.18
 Nodes (3): Data, FixedClock, RevisionedProfileStoreTests
 
-### Community 247 - "Community 247"
+### Community 232 - "Community 232"
+Cohesion: 0.19
+Nodes (6): IEnumerable, WebsiteRuleMatcher, Fact, InlineData, Theory, WebsiteRuleMatcherTests
+
+### Community 233 - "Community 233"
+Cohesion: 0.35
+Nodes (14): GetModule(), IsVirtualThread(), _jbooleanArray(), _jbyteArray(), _jcharArray(), _jdoubleArray(), _jfloatArray(), _jintArray() (+6 more)
+
+### Community 234 - "Community 234"
 Cohesion: 0.47
 Nodes (12): _mm256_madd52hi_epu64(), _mm256_madd52lo_epu64(), _mm256_mask_madd52hi_epu64(), _mm256_mask_madd52lo_epu64(), _mm256_maskz_madd52hi_epu64(), _mm256_maskz_madd52lo_epu64(), _mm_madd52hi_epu64(), _mm_madd52lo_epu64() (+4 more)
 
+### Community 235 - "Community 235"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 236 - "Community 236"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 237 - "Community 237"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 238 - "Community 238"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 239 - "Community 239"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 240 - "Community 240"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 241 - "Community 241"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 242 - "Community 242"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 243 - "Community 243"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 244 - "Community 244"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 245 - "Community 245"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 246 - "Community 246"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
+### Community 247 - "Community 247"
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
+
 ### Community 248 - "Community 248"
-Cohesion: 0.35
-Nodes (14): GetModule(), IsVirtualThread(), _jbooleanArray(), _jbyteArray(), _jcharArray(), _jdoubleArray(), _jfloatArray(), _jintArray() (+6 more)
+Cohesion: 0.19
+Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
 
 ### Community 249 - "Community 249"
 Cohesion: 0.19
@@ -1829,152 +1813,164 @@ Cohesion: 0.19
 Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
 
 ### Community 252 - "Community 252"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 253 - "Community 253"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 254 - "Community 254"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 255 - "Community 255"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 256 - "Community 256"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 257 - "Community 257"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 258 - "Community 258"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 259 - "Community 259"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 260 - "Community 260"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 261 - "Community 261"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 262 - "Community 262"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 263 - "Community 263"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 264 - "Community 264"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 265 - "Community 265"
-Cohesion: 0.19
-Nodes (12): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Invoke-FocusGuardServiceHealthProbe() (+4 more)
-
-### Community 268 - "Community 268"
 Cohesion: 0.11
 Nodes (13): Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk (+5 more)
 
-### Community 269 - "Community 269"
-Cohesion: 0.14
-Nodes (10): Action, IDesktopInstance, Action, bool, CancellationTokenSource, int, SupportedOSPlatform, Task (+2 more)
+### Community 254 - "Community 254"
+Cohesion: 0.17
+Nodes (4): DesktopSettingsStore, HostSettingsSyncSession, LoadedDeviceVault, SettingsAutomaticSyncRuntime
 
-### Community 270 - "Community 270"
-Cohesion: 0.14
-Nodes (8): PixelPoint, EventArgs, int, KeyEventArgs, PixelRect, RoutedEventArgs, TrayFlyoutPlacement, TrayFlyoutWindow
-
-### Community 271 - "Community 271"
+### Community 256 - "Community 256"
 Cohesion: 0.15
 Nodes (10): FromException(), IpcPolicyDeniedException, Exception, IpcFailureDiagnostic, IpcPolicyDeniedException, Fact, InlineData, Theory (+2 more)
 
-### Community 273 - "Community 273"
+### Community 257 - "Community 257"
 Cohesion: 0.15
 Nodes (6): HostWindowStrings, ExternalSystemBrowser, IAuthenticationBrowser, SystemBrowserLogin, ResourceManager, UiStrings
 
-### Community 275 - "Community 275"
-Cohesion: 0.15
-Nodes (7): OwnerPresentProcessIntegrationTests, RecordingAuditSink, OwnerPresentProcessIntegrationTests, RecordingAuditSink, ITestOutputHelper, StreamReader, Trait
-
-### Community 276 - "Community 276"
-Cohesion: 0.19
-Nodes (10): DllImport, FileTime, int, MarshalAs, SafeProcessHandle, uint, FileTime, WindowsProcessInspector (+2 more)
-
-### Community 277 - "Community 277"
-Cohesion: 0.18
-Nodes (4): NativeBridgeDispatcher, NativeBridgeDispatcher, IRevisionedProfileCycleSettingsStore, ProfileEditorWorkflow
-
-### Community 278 - "Community 278"
-Cohesion: 0.36
-Nodes (15): bridgeStatus(), cyclePhases(), dashed(), detail(), find(), iso(), mutation(), result() (+7 more)
-
-### Community 280 - "Community 280"
-Cohesion: 0.29
-Nodes (15): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+7 more)
-
-### Community 281 - "Community 281"
-Cohesion: 0.29
-Nodes (15): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+7 more)
-
-### Community 282 - "Community 282"
-Cohesion: 0.38
-Nodes (14): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+6 more)
-
-### Community 283 - "Community 283"
-Cohesion: 0.29
-Nodes (15): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+7 more)
-
-### Community 284 - "Community 284"
-Cohesion: 0.29
-Nodes (15): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+7 more)
-
-### Community 285 - "Community 285"
-Cohesion: 0.31
-Nodes (5): Fact, InlineData, Task, Theory, SessionWorkflowTests
-
-### Community 286 - "Community 286"
+### Community 258 - "Community 258"
 Cohesion: 0.17
 Nodes (8): bool, DateTimeOffset, ICommand, string, Task, TimeProvider, BlockScreenViewModel, NotifyingDelegateCommand
 
-### Community 287 - "Community 287"
+### Community 259 - "Community 259"
 Cohesion: 0.18
-Nodes (13): SecurityIdentifier, CancellationToken, DllImport, Fact, IntPtr, MarshalAs, NamedPipeServerStream, SafeAccessTokenHandle (+5 more)
+Nodes (4): NativeBridgeDispatcher, NativeBridgeDispatcher, IRevisionedProfileCycleSettingsStore, ProfileEditorWorkflow
 
-### Community 288 - "Community 288"
-Cohesion: 0.18
-Nodes (9): Avalonia, Avalonia.Desktop, Avalonia.Themes.Fluent, Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk (+1 more)
+### Community 261 - "Community 261"
+Cohesion: 0.36
+Nodes (15): bridgeStatus(), cyclePhases(), dashed(), detail(), find(), iso(), mutation(), result() (+7 more)
 
-### Community 289 - "Community 289"
+### Community 262 - "Community 262"
 Cohesion: 0.24
 Nodes (3): SessionCaptureTests, TemporaryHistoryStore, TestClock
 
-### Community 290 - "Community 290"
+### Community 263 - "Community 263"
+Cohesion: 0.2
+Nodes (5): ReleasableStrictSessionStore, StrictSessionEndTests, TestClock, StrictPolicyLoadStatus, TestClock
+
+### Community 264 - "Community 264"
+Cohesion: 0.29
+Nodes (15): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+7 more)
+
+### Community 265 - "Community 265"
+Cohesion: 0.29
+Nodes (15): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+7 more)
+
+### Community 266 - "Community 266"
+Cohesion: 0.38
+Nodes (14): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+6 more)
+
+### Community 267 - "Community 267"
+Cohesion: 0.29
+Nodes (15): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+7 more)
+
+### Community 268 - "Community 268"
+Cohesion: 0.29
+Nodes (15): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Get-FocusGuardTreeFingerprint() (+7 more)
+
+### Community 269 - "Community 269"
+Cohesion: 0.22
+Nodes (3): Channel, SettingsRetryController, SettingsSyncScheduler
+
+### Community 270 - "Community 270"
+Cohesion: 0.18
+Nodes (13): SecurityIdentifier, CancellationToken, DllImport, Fact, IntPtr, MarshalAs, NamedPipeServerStream, SafeAccessTokenHandle (+5 more)
+
+### Community 271 - "Community 271"
 Cohesion: 0.12
 Nodes (12): System.Security.Cryptography.ProtectedData, Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk, coverlet.collector (+4 more)
 
-### Community 291 - "Community 291"
+### Community 272 - "Community 272"
 Cohesion: 0.5
 Nodes (10): _mm512_mask2_permutex2var_epi8(), _mm512_mask_multishift_epi64_epi8(), _mm512_mask_permutex2var_epi8(), _mm512_mask_permutexvar_epi8(), _mm512_maskz_multishift_epi64_epi8(), _mm512_maskz_permutex2var_epi8(), _mm512_maskz_permutexvar_epi8(), _mm512_multishift_epi64_epi8() (+2 more)
 
-### Community 295 - "Community 295"
+### Community 276 - "Community 276"
+Cohesion: 0.23
+Nodes (8): defaultSetupTransport(), exact(), isRecord(), parseHostMessage(), text(), onMessage(), send(), start()
+
+### Community 277 - "Community 277"
 Cohesion: 0.28
 Nodes (9): EndTable(), flatbuffers(), identifier(), SetFlexReuseTracker(), VerifyComplexity(), VerifyString(), VerifyTableStart(), VerifyVectorOfStrings() (+1 more)
 
-### Community 296 - "Community 296"
+### Community 279 - "Community 279"
 Cohesion: 0.19
-Nodes (6): IClassicDesktopStyleApplicationLifetime, CancellationTokenSource, EventArgs, IDesktopInstance, Task, App
+Nodes (4): BreakRuleCompatibilityTests, Data, PhaseClock, RecordingTarget
+
+### Community 280 - "Community 280"
+Cohesion: 0.23
+Nodes (3): FocusCycleServiceTests, RecordingStrictSessionStore, TestTimeProvider
+
+### Community 284 - "Community 284"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 285 - "Community 285"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 286 - "Community 286"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 287 - "Community 287"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 288 - "Community 288"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 289 - "Community 289"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 290 - "Community 290"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 291 - "Community 291"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 292 - "Community 292"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 293 - "Community 293"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 294 - "Community 294"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 295 - "Community 295"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 296 - "Community 296"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 297 - "Community 297"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 298 - "Community 298"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 299 - "Community 299"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 300 - "Community 300"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 301 - "Community 301"
+Cohesion: 0.21
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
 
 ### Community 302 - "Community 302"
 Cohesion: 0.21
@@ -1984,113 +1980,113 @@ Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractivePro
 Cohesion: 0.21
 Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
 
-### Community 304 - "Community 304"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 305 - "Community 305"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
 ### Community 306 - "Community 306"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 307 - "Community 307"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 308 - "Community 308"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 309 - "Community 309"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 310 - "Community 310"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 311 - "Community 311"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 312 - "Community 312"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 313 - "Community 313"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 314 - "Community 314"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 315 - "Community 315"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 316 - "Community 316"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 317 - "Community 317"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 318 - "Community 318"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 319 - "Community 319"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 320 - "Community 320"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 321 - "Community 321"
-Cohesion: 0.21
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 322 - "Community 322"
-Cohesion: 0.28
-Nodes (8): IpcClientRole, Fact, InlineData, IpcAuthorizationPolicy, IpcPeerEvidence, string, Theory, IpcAuthorizationPolicyTests
-
-### Community 323 - "Community 323"
-Cohesion: 0.23
-Nodes (8): defaultSetupTransport(), exact(), isRecord(), parseHostMessage(), text(), onMessage(), send(), start()
-
-### Community 324 - "Community 324"
 Cohesion: 0.22
 Nodes (3): Data, RecordingStrictSessionStore, StrictSessionCommandTests
 
-### Community 327 - "Community 327"
-Cohesion: 0.19
-Nodes (4): BreakRuleCompatibilityTests, Data, PhaseClock, RecordingTarget
+### Community 308 - "Community 308"
+Cohesion: 0.28
+Nodes (8): IpcClientRole, Fact, InlineData, IpcAuthorizationPolicy, IpcPeerEvidence, string, Theory, IpcAuthorizationPolicyTests
 
-### Community 329 - "Community 329"
-Cohesion: 0.23
-Nodes (3): FocusCycleServiceTests, RecordingStrictSessionStore, TestTimeProvider
-
-### Community 330 - "Community 330"
-Cohesion: 0.2
-Nodes (4): RebootExpirationDrillResult, RebootExpirationDrillState, RebootExpirationDrillWorker, RebootExpirationDrillWorkerTests
-
-### Community 332 - "Community 332"
+### Community 309 - "Community 309"
 Cohesion: 0.4
 Nodes (12): FinishSchemaBuffer(), FinishSizePrefixedSchemaBuffer(), FLATBUFFERS_FINAL_CLASS(), GetSchema(), GetSizePrefixedSchema(), reflection(), SchemaBufferHasIdentifier(), SchemaExtension() (+4 more)
 
-### Community 335 - "Community 335"
-Cohesion: 0.26
-Nodes (3): DesktopSettings, DesktopSettingsStore, ThemePreferenceResolver
+### Community 312 - "Community 312"
+Cohesion: 0.28
+Nodes (10): formatFocusSeconds(), at(), dateFromLocalKey(), groupSessions(), leave(), localDateKey(), localDayRangeUtc(), shiftLocalDate() (+2 more)
 
-### Community 338 - "Community 338"
+### Community 317 - "Community 317"
 Cohesion: 0.22
 Nodes (6): Dispose(), HostComposition, IHostControlAuthorization, Phase4AuthorizationNotIntegrated, VerifiedNativeHostAuthorization, IHostControlAuthorization
+
+### Community 319 - "Community 319"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 320 - "Community 320"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 321 - "Community 321"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 322 - "Community 322"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 323 - "Community 323"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 324 - "Community 324"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 325 - "Community 325"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 326 - "Community 326"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 327 - "Community 327"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 328 - "Community 328"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 329 - "Community 329"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 330 - "Community 330"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 331 - "Community 331"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 332 - "Community 332"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 333 - "Community 333"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 334 - "Community 334"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 335 - "Community 335"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 336 - "Community 336"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 337 - "Community 337"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 338 - "Community 338"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 339 - "Community 339"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+
+### Community 340 - "Community 340"
+Cohesion: 0.23
+Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
 
 ### Community 341 - "Community 341"
 Cohesion: 0.23
@@ -2104,369 +2100,361 @@ Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractivePro
 Cohesion: 0.23
 Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
 
-### Community 344 - "Community 344"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 345 - "Community 345"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
 ### Community 346 - "Community 346"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+Cohesion: 0.22
+Nodes (3): IReactPilotProcessOperations, ReactPilotLauncher, WindowsReactPilotProcessOperations
 
 ### Community 347 - "Community 347"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 348 - "Community 348"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+Cohesion: 0.26
+Nodes (3): DesktopSettings, DesktopSettingsStore, ThemePreferenceResolver
 
 ### Community 349 - "Community 349"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
+Cohesion: 0.17
+Nodes (9): NamedPipeClientStream, SupportedOSPlatform, IpcServerAuthentication, TrustedIpcServer, Fact, InlineData, string, Theory (+1 more)
 
 ### Community 350 - "Community 350"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 351 - "Community 351"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 352 - "Community 352"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 353 - "Community 353"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 354 - "Community 354"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 355 - "Community 355"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 356 - "Community 356"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 357 - "Community 357"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 358 - "Community 358"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 359 - "Community 359"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 360 - "Community 360"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 361 - "Community 361"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 362 - "Community 362"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 363 - "Community 363"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 364 - "Community 364"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 365 - "Community 365"
-Cohesion: 0.23
-Nodes (10): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardInteractiveProcessContext(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardInteractiveSessionId(), Get-FocusGuardProcessOwnerSid(), Start-FocusGuardInteractiveProcess() (+2 more)
-
-### Community 366 - "Community 366"
-Cohesion: 0.17
-Nodes (7): WindowCloseReason, NotificationAreaClosePolicy, Fact, InlineData, Theory, WindowCloseReason, LocalizationTests
-
-### Community 367 - "Community 367"
-Cohesion: 0.17
-Nodes (10): AvaloniaPropertyChangedEventArgs, bool, DispatcherTimer, DrawingContext, IBrush, IReadOnlyList, StyledProperty, CyclePhaseTimeline (+2 more)
-
-### Community 368 - "Community 368"
-Cohesion: 0.15
-Nodes (8): CultureInfo, Program, AppBuilder, STAThread, Program, FocusGuard.Desktop/WindowsStartupRegistration.cs, IEnumerable, DesktopStartupOptions
-
-### Community 369 - "Community 369"
-Cohesion: 0.13
-Nodes (6): FocusGuard.Ipc.Windows.Tests, Fact, Task, ColdIdentityTests, Fact, EvidenceBoundaryTests
-
-### Community 371 - "Community 371"
 Cohesion: 0.53
 Nodes (8): _bzhi_u32(), _bzhi_u64(), __DEFAULT_FN_ATTRS(), _mulx_u64(), _pdep_u32(), _pdep_u64(), _pext_u32(), _pext_u64()
 
-### Community 373 - "Community 373"
-Cohesion: 0.2
-Nodes (4): NormalSessionShutdownTests, RecordingAuditStore, TemporaryHistoryStore, TestClock
-
-### Community 378 - "Community 378"
-Cohesion: 0.3
-Nodes (7): AddDurationError(), CompletedMetricsAt(), Create(), FocusCyclePlanBuilder, IsPartial(), IsValid(), PlannedDurationFor()
-
-### Community 379 - "Community 379"
-Cohesion: 0.31
-Nodes (9): ComputeHash(), Create(), HasValidIntegrity(), IConfirmedPolicyDistributionTarget, IExternallyAcknowledgedPolicyDistributionTarget, IPolicyDistributionTarget, WriteApplicationRule(), WritePlan() (+1 more)
-
-### Community 380 - "Community 380"
-Cohesion: 0.19
-Nodes (3): Bitmap, BlockingProcessesForm, ModalCardPanel
-
-### Community 382 - "Community 382"
+### Community 351 - "Community 351"
 Cohesion: 0.14
 Nodes (14): __DEFAULT_FN_ATTRS(), _mm_maskz_load_epi64(), _mm_maskz_mov_epi64(), _mm_maskz_rolv_epi64(), _mm_maskz_rorv_epi64(), _mm_maskz_sll_epi64(), _mm_maskz_sllv_epi64(), _mm_maskz_sra_epi64() (+6 more)
 
-### Community 383 - "Community 383"
-Cohesion: 0.3
-Nodes (12): BROWSER_INTERNAL_PREFIXES, CompiledWebsiteRule, compileMatcher(), compileWebsiteRules(), escapeGlob(), evaluateWebsiteRules(), isBrowserInternal(), normalizePattern() (+4 more)
+### Community 353 - "Community 353"
+Cohesion: 0.19
+Nodes (3): Bitmap, BlockingProcessesForm, ModalCardPanel
 
-### Community 384 - "Community 384"
+### Community 354 - "Community 354"
+Cohesion: 0.35
+Nodes (10): createShellClient(), date(), defaultTransport(), exact(), guid(), isRecord(), parseHostSurface(), phaseKind() (+2 more)
+
+### Community 355 - "Community 355"
+Cohesion: 0.24
+Nodes (8): currentRequest(), FakeWebView, initialize(), reply(), status(), client(), t(), vitest
+
+### Community 356 - "Community 356"
 Cohesion: 0.2
 Nodes (8): EventArgs, ApplicationBlockedEventArgs, NotifyingDelegateCommand, SessionEndedEventArgs, ToString(), Guid, ApplicationBlockedEventArgs, SessionEndedEventArgs
 
-### Community 386 - "Community 386"
+### Community 357 - "Community 357"
+Cohesion: 0.19
+Nodes (7): WindowCloseReason, NotificationAreaClosePolicy, Fact, InlineData, Theory, WindowCloseReason, LocalizationTests
+
+### Community 358 - "Community 358"
+Cohesion: 0.3
+Nodes (7): AddDurationError(), CompletedMetricsAt(), Create(), FocusCyclePlanBuilder, IsPartial(), IsValid(), PlannedDurationFor()
+
+### Community 359 - "Community 359"
+Cohesion: 0.31
+Nodes (9): ComputeHash(), Create(), HasValidIntegrity(), IConfirmedPolicyDistributionTarget, IExternallyAcknowledgedPolicyDistributionTarget, IPolicyDistributionTarget, WriteApplicationRule(), WritePlan() (+1 more)
+
+### Community 362 - "Community 362"
 Cohesion: 0.3
 Nodes (3): CycleBreakHeartbeatTests, NullTarget, PhaseClock
 
-### Community 387 - "Community 387"
-Cohesion: 0.2
-Nodes (6): ApplicationIconPixels, IApplicationCatalog, IApplicationIconProvider, IDesktopInstance, IProcessAgentLauncher, IStartupRegistration
-
-### Community 388 - "Community 388"
+### Community 364 - "Community 364"
 Cohesion: 0.22
 Nodes (5): Action, CapturedItemView, CapturedItemViewModel, SessionSummaryViewModel, SessionSummaryResponse
 
-### Community 389 - "Community 389"
-Cohesion: 0.31
-Nodes (3): InvalidOperationException, LocalSettingsCoordinator, SettingsResetConflictException
+### Community 365 - "Community 365"
+Cohesion: 0.3
+Nodes (12): BROWSER_INTERNAL_PREFIXES, CompiledWebsiteRule, compileMatcher(), compileWebsiteRules(), escapeGlob(), evaluateWebsiteRules(), isBrowserInternal(), normalizePattern() (+4 more)
 
-### Community 392 - "Community 392"
+### Community 368 - "Community 368"
+Cohesion: 0.2
+Nodes (6): ApplicationIconPixels, IApplicationCatalog, IApplicationIconProvider, IDesktopInstance, IProcessAgentLauncher, IStartupRegistration
+
+### Community 369 - "Community 369"
+Cohesion: 0.14
+Nodes (6): FocusGuard.Ipc.Windows.Tests, Fact, Task, ColdIdentityTests, Fact, EvidenceBoundaryTests
+
+### Community 370 - "Community 370"
+Cohesion: 0.16
+Nodes (9): Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio (+1 more)
+
+### Community 371 - "Community 371"
 Cohesion: 0.51
 Nodes (9): aad(), canonical(), decode(), decryptContentDocument(), encode(), encryptContentDocument(), header(), requireContext() (+1 more)
 
-### Community 394 - "Community 394"
-Cohesion: 0.22
-Nodes (6): CancellingController, FixedTimeProvider, ProcessTerminationTests, RecordingAuditSink, IApplicationProcessController, IProcessTerminationAuditSink
-
-### Community 396 - "Community 396"
+### Community 372 - "Community 372"
 Cohesion: 0.44
 Nodes (9): b64(), bytes(), requireContext(), signedBytes(), encode(), make(), open(), unwrapAccountKey() (+1 more)
 
-### Community 397 - "Community 397"
+### Community 375 - "Community 375"
 Cohesion: 0.31
 Nodes (11): Assert-FocusGuardInstalledPayload(), Assert-FocusGuardServiceResponsive(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Get-FocusGuardTreeFingerprint(), Protect-FocusGuardInstallationTree(), Start-FocusGuardInteractiveProcess(), Stop-FocusGuardRuntimeProcesses() (+3 more)
 
-### Community 398 - "Community 398"
+### Community 376 - "Community 376"
 Cohesion: 0.15
 Nodes (13): extension/tsconfig.json, compilerOptions, allowImportingTsExtensions, allowJs, module, noEmit, strict, target (+5 more)
 
-### Community 401 - "Community 401"
+### Community 381 - "Community 381"
 Cohesion: 0.15
 Nodes (11): FocusGuard.Recovery, net10.0-windows, Microsoft.NET.Sdk, FocusGuard.Application.Tests, FocusGuard.Contracts.Tests, FocusGuard.Domain.Tests, FocusGuard.Infrastructure.Windows.Tests, FocusGuard.Monitoring.Tests (+3 more)
 
-### Community 402 - "Community 402"
+### Community 382 - "Community 382"
+Cohesion: 0.22
+Nodes (7): Avalonia, Avalonia.Desktop, Avalonia.Themes.Fluent, Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk, Microsoft.NET.Sdk
+
+### Community 383 - "Community 383"
 Cohesion: 0.55
 Nodes (6): _addcarry_u32(), _addcarry_u64(), _addcarryx_u32(), _addcarryx_u64(), _subborrow_u32(), _subborrow_u64()
 
-### Community 403 - "Community 403"
+### Community 384 - "Community 384"
 Cohesion: 0.55
 Nodes (6): _mm512_madd52hi_epu64(), _mm512_madd52lo_epu64(), _mm512_mask_madd52hi_epu64(), _mm512_mask_madd52lo_epu64(), _mm512_maskz_madd52hi_epu64(), _mm512_maskz_madd52lo_epu64()
 
-### Community 404 - "Community 404"
+### Community 385 - "Community 385"
 Cohesion: 0.55
 Nodes (6): _mm_sha1msg1_epu32(), _mm_sha1msg2_epu32(), _mm_sha1nexte_epu32(), _mm_sha256msg1_epu32(), _mm_sha256msg2_epu32(), _mm_sha256rnds2_epu32()
 
-### Community 406 - "Community 406"
+### Community 386 - "Community 386"
 Cohesion: 0.53
 Nodes (8): compileMatcher(), compileWebsiteRules(), escapeGlob(), evaluateWebsiteRules(), isBrowserInternal(), normalizePattern(), normalizeUrl(), sanitizeUrlForLog()
 
-### Community 407 - "Community 407"
+### Community 387 - "Community 387"
 Cohesion: 0.24
 Nodes (4): DefaultFactory, IIpcServerSecurity, IPipeConnectionFactory, PipeConnectionFactories
 
-### Community 408 - "Community 408"
-Cohesion: 0.32
-Nodes (8): BootstrapAlreadyExistsException, InvalidBootstrapProofException, InvalidDeviceProofException, MembershipConflictException, DocumentKeyEpochConflictException, InvalidContentDocumentException, StaleDeviceSessionException, Exception
-
-### Community 410 - "Community 410"
-Cohesion: 0.2
-Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
-
-### Community 411 - "Community 411"
-Cohesion: 0.2
-Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
-
-### Community 412 - "Community 412"
-Cohesion: 0.2
-Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
-
-### Community 413 - "Community 413"
-Cohesion: 0.2
-Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
-
-### Community 414 - "Community 414"
-Cohesion: 0.2
-Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
-
-### Community 415 - "Community 415"
-Cohesion: 0.17
-Nodes (12): extension/package.json, devDependencies, @types/node, typescript, @types/node, typescript, name, private (+4 more)
-
-### Community 416 - "Community 416"
-Cohesion: 0.17
-Nodes (9): Microsoft.Web.WebView2, net10.0-windows, Microsoft.NET.Sdk, Microsoft.NET.Sdk, net10.0-windows, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio (+1 more)
-
-### Community 419 - "Community 419"
+### Community 390 - "Community 390"
 Cohesion: 0.23
 Nodes (4): FixedTimeProvider, RecordingClient, ServiceHealthNativeMessageHandlerTests, IExtensionHealthClient
 
-### Community 420 - "Community 420"
+### Community 391 - "Community 391"
+Cohesion: 0.2
+Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
+
+### Community 392 - "Community 392"
+Cohesion: 0.2
+Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
+
+### Community 393 - "Community 393"
+Cohesion: 0.2
+Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
+
+### Community 394 - "Community 394"
+Cohesion: 0.2
+Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
+
+### Community 395 - "Community 395"
+Cohesion: 0.2
+Nodes (4): Assert-FocusGuardInstalledPayload(), Copy-FocusGuardComponentsWithRetry(), Get-FocusGuardBrowserPackageEntries(), Stop-FocusGuardRuntimeProcesses()
+
+### Community 396 - "Community 396"
+Cohesion: 0.17
+Nodes (12): extension/package.json, devDependencies, @types/node, typescript, @types/node, typescript, name, private (+4 more)
+
+### Community 397 - "Community 397"
+Cohesion: 0.23
+Nodes (5): Func, IReadOnlyList, StrictConfirmationPhraseGenerator, Fact, StrictConfirmationPhraseGeneratorTests
+
+### Community 398 - "Community 398"
 Cohesion: 0.55
 Nodes (5): __rdpmc(), __rdtsc(), __rdtscp(), __readeflags(), __writeeflags()
 
-### Community 421 - "Community 421"
+### Community 399 - "Community 399"
 Cohesion: 0.55
 Nodes (5): __lzcnt16(), __lzcnt32(), __lzcnt64(), _lzcnt_u32(), _lzcnt_u64()
 
-### Community 422 - "Community 422"
+### Community 400 - "Community 400"
 Cohesion: 0.55
 Nodes (5): __funnelshift_l(), __funnelshift_lc(), __funnelshift_r(), __funnelshift_rc(), __ldg()
 
-### Community 423 - "Community 423"
+### Community 401 - "Community 401"
 Cohesion: 0.55
 Nodes (5): _mm_aesdec_si128(), _mm_aesdeclast_si128(), _mm_aesenc_si128(), _mm_aesenclast_si128(), _mm_aesimc_si128()
 
-### Community 424 - "Community 424"
+### Community 402 - "Community 402"
 Cohesion: 0.55
 Nodes (8): EnumName(), flatbuffers(), InlineSize(), IterateFlatBuffer(), IterateObject(), IterateValue(), IterationVisitor(), LookupEnum()
 
-### Community 428 - "Community 428"
-Cohesion: 0.6
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 431 - "Community 431"
+### Community 404 - "Community 404"
 Cohesion: 0.4
 Nodes (5): DrawingContext, IBrush, Point, StyledProperty, ClockDial
 
-### Community 433 - "Community 433"
+### Community 405 - "Community 405"
+Cohesion: 0.36
+Nodes (7): Pen, DrawingContext, Guid, IBrush, Point, StyledProperty, CyclePresetIcon
+
+### Community 406 - "Community 406"
+Cohesion: 0.6
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 409 - "Community 409"
+Cohesion: 0.27
+Nodes (3): CycleBreakEnforcementTests, PhaseClock, RecordingTarget
+
+### Community 411 - "Community 411"
 Cohesion: 0.2
 Nodes (3): ReactPilotLauncherTests, RecordingProcessOperations, IReactPilotProcessOperations
 
-### Community 435 - "Community 435"
+### Community 413 - "Community 413"
 Cohesion: 0.6
 Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
-### Community 437 - "Community 437"
+### Community 415 - "Community 415"
 Cohesion: 0.53
 Nodes (4): _mm_extract_si64(), _mm_insert_si64(), _mm_stream_sd(), _mm_stream_ss()
 
-### Community 438 - "Community 438"
-Cohesion: 0.53
-Nodes (4): __builtin_tbegin_retry_nofloat_null(), __builtin_tbegin_retry_nofloat_tdb(), __builtin_tbegin_retry_null(), __builtin_tbegin_retry_tdb()
-
-### Community 439 - "Community 439"
-Cohesion: 0.53
-Nodes (4): _mm_popcnt_u32(), _mm_popcnt_u64(), _popcnt32(), _popcnt64()
-
-### Community 440 - "Community 440"
-Cohesion: 0.53
-Nodes (4): _xrstor(), _xrstor64(), _xsave(), _xsave64()
-
-### Community 441 - "Community 441"
-Cohesion: 0.53
-Nodes (4): _xrstors(), _xrstors64(), _xsaves(), _xsaves64()
-
-### Community 442 - "Community 442"
+### Community 416 - "Community 416"
 Cohesion: 0.53
 Nodes (4): _fxrstor(), _fxrstor64(), _fxsave(), _fxsave64()
 
-### Community 443 - "Community 443"
+### Community 417 - "Community 417"
+Cohesion: 0.53
+Nodes (4): __builtin_tbegin_retry_nofloat_null(), __builtin_tbegin_retry_nofloat_tdb(), __builtin_tbegin_retry_null(), __builtin_tbegin_retry_tdb()
+
+### Community 418 - "Community 418"
+Cohesion: 0.53
+Nodes (4): _mm_popcnt_u32(), _mm_popcnt_u64(), _popcnt32(), _popcnt64()
+
+### Community 419 - "Community 419"
 Cohesion: 0.6
 Nodes (4): _Unwind_GetGR(), _Unwind_GetIP(), _Unwind_SetGR(), _Unwind_SetIP()
 
-### Community 444 - "Community 444"
-Cohesion: 0.33
-Nodes (3): DevelopmentServiceConstants, DevelopmentServiceState, DevelopmentServiceWorker
+### Community 420 - "Community 420"
+Cohesion: 0.53
+Nodes (4): _xrstor(), _xrstor64(), _xsave(), _xsave64()
 
-### Community 445 - "Community 445"
+### Community 421 - "Community 421"
+Cohesion: 0.53
+Nodes (4): _xrstors(), _xrstors64(), _xsaves(), _xsaves64()
+
+### Community 422 - "Community 422"
 Cohesion: 0.4
 Nodes (9): Acknowledge(), Edit(), GetEnvelope(), Prepare(), Receive(), RequestReset(), Resolve(), ResolveReset() (+1 more)
 
-### Community 448 - "Community 448"
-Cohesion: 0.51
-Nodes (7): fill_big(), flatbuffers(), pop(), reallocate(), scratch_pop(), swap(), swap_allocator()
-
-### Community 451 - "Community 451"
+### Community 425 - "Community 425"
 Cohesion: 0.2
 Nodes (7): DrawingContext, IBrush, int, IReadOnlyList, Size, StyledProperty, WeekSparkline
 
-### Community 453 - "Community 453"
+### Community 427 - "Community 427"
+Cohesion: 0.51
+Nodes (7): fill_big(), flatbuffers(), pop(), reallocate(), scratch_pop(), swap(), swap_allocator()
+
+### Community 431 - "Community 431"
 Cohesion: 0.56
 Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
-### Community 454 - "Community 454"
+### Community 432 - "Community 432"
 Cohesion: 0.56
 Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
-### Community 455 - "Community 455"
+### Community 433 - "Community 433"
 Cohesion: 0.56
 Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
-### Community 456 - "Community 456"
+### Community 434 - "Community 434"
 Cohesion: 0.56
 Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
-### Community 457 - "Community 457"
+### Community 435 - "Community 435"
 Cohesion: 0.56
 Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
-### Community 458 - "Community 458"
-Cohesion: 0.22
-Nodes (6): ErrorBoundary, applications, client, dashboard, profiles, root
+### Community 437 - "Community 437"
+Cohesion: 0.2
+Nodes (8): Microsoft.Web.WebView2, net10.0-windows, Microsoft.NET.Sdk, net10.0-windows, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 459 - "Community 459"
+### Community 438 - "Community 438"
 Cohesion: 0.36
 Nodes (9): CaptureActionResult, CapturedItem, count(), exact(), guid(), isCaptureActionResult(), isSessionSummary(), record() (+1 more)
 
-### Community 463 - "Community 463"
+### Community 439 - "Community 439"
+Cohesion: 0.22
+Nodes (6): ErrorBoundary, applications, client, dashboard, profiles, root
+
+### Community 440 - "Community 440"
 Cohesion: 0.5
 Nodes (3): _rdseed16_step(), _rdseed32_step(), _rdseed64_step()
 
+### Community 441 - "Community 441"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 442 - "Community 442"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 443 - "Community 443"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 444 - "Community 444"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 445 - "Community 445"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 446 - "Community 446"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 447 - "Community 447"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 448 - "Community 448"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 449 - "Community 449"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 450 - "Community 450"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 451 - "Community 451"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 452 - "Community 452"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 453 - "Community 453"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 454 - "Community 454"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 455 - "Community 455"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 456 - "Community 456"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 457 - "Community 457"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 461 - "Community 461"
+Cohesion: 0.39
+Nodes (7): addEventListener(), addListener(), button(), fixture(), removeEventListener(), removeListener(), shell()
+
+### Community 462 - "Community 462"
+Cohesion: 0.28
+Nodes (5): DispatcherTimer, EventArgs, PointerPressedEventArgs, TimeSpan, SessionToastWindow
+
+### Community 463 - "Community 463"
+Cohesion: 0.53
+Nodes (7): CanTransitionTo(), Create(), CreateCore(), CreateScheduled(), ExpireIfDue(), IsExpiredAt(), TransitionTo()
+
 ### Community 464 - "Community 464"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 465 - "Community 465"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 466 - "Community 466"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+Cohesion: 0.56
+Nodes (7): ApplyTo(), Merge(), Parse(), ReadOptionalInteger(), ReadOptionalText(), ToCanonicalJson(), Validate()
 
 ### Community 467 - "Community 467"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 468 - "Community 468"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+Cohesion: 0.28
+Nodes (3): NativeHostTests, RecordingHandler, INativeMessageHandler
 
 ### Community 469 - "Community 469"
 Cohesion: 0.47
@@ -2516,13 +2504,33 @@ Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTrave
 Cohesion: 0.47
 Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
+### Community 481 - "Community 481"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 482 - "Community 482"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 483 - "Community 483"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
 ### Community 484 - "Community 484"
-Cohesion: 0.53
-Nodes (7): CanTransitionTo(), Create(), CreateCore(), CreateScheduled(), ExpireIfDue(), IsExpiredAt(), TransitionTo()
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 485 - "Community 485"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
 ### Community 486 - "Community 486"
-Cohesion: 0.28
-Nodes (3): NativeHostTests, RecordingHandler, INativeMessageHandler
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+
+### Community 487 - "Community 487"
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
 ### Community 488 - "Community 488"
 Cohesion: 0.47
@@ -2565,8 +2573,8 @@ Cohesion: 0.47
 Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
 ### Community 498 - "Community 498"
-Cohesion: 0.56
-Nodes (7): ApplyTo(), Merge(), Parse(), ReadOptionalInteger(), ReadOptionalText(), ToCanonicalJson(), Validate()
+Cohesion: 0.47
+Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
 ### Community 499 - "Community 499"
 Cohesion: 0.47
@@ -2648,308 +2656,224 @@ Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTrave
 Cohesion: 0.47
 Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
 
-### Community 519 - "Community 519"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
 ### Community 520 - "Community 520"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
+Cohesion: 0.25
+Nodes (3): ISessionWorkflow, SessionConnectionTracker, SessionWorkflow
 
 ### Community 521 - "Community 521"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 522 - "Community 522"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 523 - "Community 523"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 524 - "Community 524"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 525 - "Community 525"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 526 - "Community 526"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 527 - "Community 527"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 528 - "Community 528"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 529 - "Community 529"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 530 - "Community 530"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 531 - "Community 531"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 532 - "Community 532"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 533 - "Community 533"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 534 - "Community 534"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 535 - "Community 535"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 536 - "Community 536"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 537 - "Community 537"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 538 - "Community 538"
-Cohesion: 0.47
-Nodes (8): Assert-FocusGuardLeafName(), Assert-FocusGuardNoReparseDirectoryTraversal(), Assert-FocusGuardUserSid(), ConvertTo-FocusGuardCanonicalDirectoryPath(), Get-FocusGuardLeafSha256(), Get-FocusGuardOptionalRoleSpec(), New-FocusGuardIpcPolicyManifest(), Write-FocusGuardIpcPolicyManifestAtomically()
-
-### Community 541 - "Community 541"
-Cohesion: 0.47
-Nodes (3): ref(), readContract(), validators()
-
-### Community 542 - "Community 542"
 Cohesion: 0.22
 Nodes (7): net10.0, Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 543 - "Community 543"
-Cohesion: 0.39
-Nodes (7): addEventListener(), addListener(), button(), fixture(), removeEventListener(), removeListener(), shell()
-
-### Community 544 - "Community 544"
-Cohesion: 0.25
-Nodes (3): DevelopmentServiceConstants, DevelopmentServiceState, DevelopmentServiceWorker
-
-### Community 552 - "Community 552"
+### Community 530 - "Community 530"
 Cohesion: 0.54
 Nodes (5): BaseGenerator(), flatbuffers(), FloatConstantGenerator(), SimpleFloatConstantGenerator(), TypedFloatConstantGenerator()
 
-### Community 553 - "Community 553"
+### Community 531 - "Community 531"
 Cohesion: 0.61
 Nodes (5): c_str(), GetCstring(), GetString(), GetStringView(), string_view()
 
-### Community 570 - "Community 570"
-Cohesion: 0.25
-Nodes (4): ConcurrentDictionary, InstalledApplication, IReadOnlyList, ApplicationPresentation
+### Community 538 - "Community 538"
+Cohesion: 0.32
+Nodes (3): PointerPressedEventArgs, RoutedEventArgs, CompactFocusWindow
 
-### Community 571 - "Community 571"
+### Community 539 - "Community 539"
+Cohesion: 0.25
+Nodes (4): PixelRect, Size, DesktopWindowLayout, PixelRect
+
+### Community 549 - "Community 549"
+Cohesion: 0.36
+Nodes (5): exact(), isUserPreferences(), record(), UserPreferences, Copy
+
+### Community 550 - "Community 550"
+Cohesion: 0.25
+Nodes (5): catalog, fixture(), idle, refresh, review
+
+### Community 551 - "Community 551"
 Cohesion: 0.36
 Nodes (5): Fact, Func, Task, TimeSpan, DevelopmentServiceWorkerTests
 
-### Community 572 - "Community 572"
+### Community 552 - "Community 552"
 Cohesion: 0.36
 Nodes (3): Fact, Task, PlatformBoundaryTests
 
-### Community 573 - "Community 573"
+### Community 553 - "Community 553"
 Cohesion: 0.25
-Nodes (6): Microsoft.NET.Sdk, coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
+Nodes (4): ConcurrentDictionary, InstalledApplication, IReadOnlyList, ApplicationPresentation
 
-### Community 581 - "Community 581"
+### Community 559 - "Community 559"
 Cohesion: 0.57
 Nodes (4): flatbuffers(), GetRoot(), GetSizePrefixedRoot(), Read()
 
-### Community 585 - "Community 585"
+### Community 563 - "Community 563"
 Cohesion: 0.43
 Nodes (4): Apply(), MatchesAcknowledgement(), SettingsReconciliation, Validate()
 
-### Community 605 - "Community 605"
+### Community 570 - "Community 570"
 Cohesion: 0.62
 Nodes (5): Create(), DefaultTextFor(), IsSanitizedWebSource(), NormalizeText(), Resolve()
 
-### Community 606 - "Community 606"
+### Community 583 - "Community 583"
 Cohesion: 0.29
 Nodes (3): Microsoft.Extensions.Hosting.WindowsServices, System.Security.Cryptography.ProtectedData, Microsoft.NET.Sdk
 
-### Community 607 - "Community 607"
+### Community 584 - "Community 584"
 Cohesion: 0.29
 Nodes (5): coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 609 - "Community 609"
+### Community 585 - "Community 585"
 Cohesion: 0.29
 Nodes (5): coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 610 - "Community 610"
-Cohesion: 0.4
-Nodes (6): _mm512_abs_pd(), _mm512_and_epi64(), _mm512_mask_abs_pd(), _mm512_mask_and_epi64(), _mm512_maskz_and_epi64(), _mm512_set1_epi64()
-
-### Community 611 - "Community 611"
+### Community 586 - "Community 586"
 Cohesion: 0.4
 Nodes (6): _mm512_abs_ps(), _mm512_and_epi32(), _mm512_mask_abs_ps(), _mm512_mask_and_epi32(), _mm512_maskz_and_epi32(), _mm512_set1_epi32()
 
-### Community 612 - "Community 612"
+### Community 587 - "Community 587"
+Cohesion: 0.4
+Nodes (6): _mm512_abs_pd(), _mm512_and_epi64(), _mm512_mask_abs_pd(), _mm512_mask_and_epi64(), _mm512_maskz_and_epi64(), _mm512_set1_epi64()
+
+### Community 588 - "Community 588"
 Cohesion: 0.6
 Nodes (3): flatbuffers(), VerifyOffset64(), VerifyOffset64Required()
 
-### Community 615 - "Community 615"
+### Community 591 - "Community 591"
 Cohesion: 0.6
 Nodes (3): Add-FakeRoleFiles(), Assert-TestCondition(), Assert-Throws()
 
-### Community 618 - "Community 618"
+### Community 594 - "Community 594"
 Cohesion: 0.73
 Nodes (4): Create(), IsAccentHex(), New(), ValidateName()
 
-### Community 619 - "Community 619"
-Cohesion: 0.67
-Nodes (4): Create(), EffectiveApplicationRules(), EffectiveWebsiteRules(), IsAuthorizedBreak()
-
-### Community 622 - "Community 622"
+### Community 598 - "Community 598"
 Cohesion: 0.73
 Nodes (4): EnsureUniqueProperties(), Hash(), Parse(), ReadProtected()
 
-### Community 623 - "Community 623"
+### Community 599 - "Community 599"
 Cohesion: 0.33
 Nodes (3): ConfirmedProcessPolicyEvaluator, ProcessMonitorPolicyReceiver, SimulatedProcessMonitor
 
-### Community 624 - "Community 624"
+### Community 600 - "Community 600"
 Cohesion: 0.6
 Nodes (4): contrast(), luminance(), token(), tokens()
 
-### Community 635 - "Community 635"
-Cohesion: 0.33
-Nodes (5): coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
+### Community 611 - "Community 611"
+Cohesion: 0.67
+Nodes (4): Create(), EffectiveApplicationRules(), EffectiveWebsiteRules(), IsAuthorizedBreak()
 
-### Community 636 - "Community 636"
+### Community 612 - "Community 612"
 Cohesion: 0.33
 Nodes (5): Avalonia.Headless.XUnit, xunit.v3, Microsoft.NET.Test.Sdk, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 637 - "Community 637"
-Cohesion: 0.53
-Nodes (4): nudge(), onScroll(), scrollByCard(), scrollToCard()
+### Community 613 - "Community 613"
+Cohesion: 0.33
+Nodes (5): coverlet.collector, Microsoft.NET.Test.Sdk, xunit, xunit.runner.visualstudio, Microsoft.NET.Sdk
 
-### Community 640 - "Community 640"
+### Community 615 - "Community 615"
 Cohesion: 0.6
 Nodes (3): Get-GoogleSecret(), Invoke-Admin(), Read-LocalSecret()
 
-### Community 641 - "Community 641"
+### Community 616 - "Community 616"
 Cohesion: 0.6
 Nodes (3): Assert(), GetApi(), Permissions()
 
-### Community 656 - "Community 656"
-Cohesion: 0.4
-Nodes (3): PixelRect, Size, DesktopWindowLayout
-
-### Community 690 - "Community 690"
+### Community 666 - "Community 666"
 Cohesion: 0.5
 Nodes (3): directives, fonts, root
 
-### Community 691 - "Community 691"
+### Community 667 - "Community 667"
 Cohesion: 0.67
-Nodes (3): _mm512_mask_or_epi32(), _mm512_maskz_or_epi32(), _mm512_or_epi32()
+Nodes (3): _mm512_mask_unpackhi_epi32(), _mm512_maskz_unpackhi_epi32(), _mm512_unpackhi_epi32()
 
-### Community 692 - "Community 692"
-Cohesion: 0.67
-Nodes (3): _mm512_broadcastsd_pd(), _mm512_mask_broadcastsd_pd(), _mm512_maskz_broadcastsd_pd()
-
-### Community 693 - "Community 693"
-Cohesion: 0.67
-Nodes (3): _mm512_mask_unpackhi_pd(), _mm512_maskz_unpackhi_pd(), _mm512_unpackhi_pd()
-
-### Community 694 - "Community 694"
-Cohesion: 0.67
-Nodes (3): _mm512_broadcastss_ps(), _mm512_mask_broadcastss_ps(), _mm512_maskz_broadcastss_ps()
-
-### Community 695 - "Community 695"
-Cohesion: 0.67
-Nodes (3): _mm512_broadcastq_epi64(), _mm512_mask_broadcastq_epi64(), _mm512_maskz_broadcastq_epi64()
-
-### Community 696 - "Community 696"
-Cohesion: 0.67
-Nodes (3): _mm512_andnot_epi32(), _mm512_mask_andnot_epi32(), _mm512_maskz_andnot_epi32()
-
-### Community 697 - "Community 697"
-Cohesion: 0.67
-Nodes (3): _mm512_andnot_epi64(), _mm512_mask_andnot_epi64(), _mm512_maskz_andnot_epi64()
-
-### Community 698 - "Community 698"
-Cohesion: 0.67
-Nodes (3): _mm512_mask_xor_epi32(), _mm512_maskz_xor_epi32(), _mm512_xor_epi32()
-
-### Community 699 - "Community 699"
+### Community 668 - "Community 668"
 Cohesion: 0.67
 Nodes (3): _mm512_mask_or_epi64(), _mm512_maskz_or_epi64(), _mm512_or_epi64()
 
-### Community 700 - "Community 700"
-Cohesion: 0.67
-Nodes (3): _mm512_mask_unpacklo_epi64(), _mm512_maskz_unpacklo_epi64(), _mm512_unpacklo_epi64()
-
-### Community 701 - "Community 701"
+### Community 669 - "Community 669"
 Cohesion: 0.67
 Nodes (3): _mm512_mask_unpacklo_pd(), _mm512_maskz_unpacklo_pd(), _mm512_unpacklo_pd()
 
-### Community 702 - "Community 702"
+### Community 670 - "Community 670"
 Cohesion: 0.67
 Nodes (3): _mm512_mask_xor_epi64(), _mm512_maskz_xor_epi64(), _mm512_xor_epi64()
 
-### Community 703 - "Community 703"
+### Community 671 - "Community 671"
 Cohesion: 0.67
-Nodes (3): _mm512_mask_unpacklo_epi32(), _mm512_maskz_unpacklo_epi32(), _mm512_unpacklo_epi32()
+Nodes (3): _mm512_broadcastq_epi64(), _mm512_mask_broadcastq_epi64(), _mm512_maskz_broadcastq_epi64()
 
-### Community 704 - "Community 704"
+### Community 672 - "Community 672"
 Cohesion: 0.67
-Nodes (3): _mm512_broadcastd_epi32(), _mm512_mask_broadcastd_epi32(), _mm512_maskz_broadcastd_epi32()
+Nodes (3): _mm512_mask_unpackhi_pd(), _mm512_maskz_unpackhi_pd(), _mm512_unpackhi_pd()
 
-### Community 705 - "Community 705"
+### Community 673 - "Community 673"
 Cohesion: 0.67
-Nodes (3): _mm512_mask_unpackhi_ps(), _mm512_maskz_unpackhi_ps(), _mm512_unpackhi_ps()
+Nodes (3): _mm512_broadcastsd_pd(), _mm512_mask_broadcastsd_pd(), _mm512_maskz_broadcastsd_pd()
 
-### Community 706 - "Community 706"
-Cohesion: 0.67
-Nodes (3): _mm512_mask_unpackhi_epi64(), _mm512_maskz_unpackhi_epi64(), _mm512_unpackhi_epi64()
-
-### Community 707 - "Community 707"
+### Community 674 - "Community 674"
 Cohesion: 0.67
 Nodes (3): _mm512_mask_unpacklo_ps(), _mm512_maskz_unpacklo_ps(), _mm512_unpacklo_ps()
 
-### Community 708 - "Community 708"
+### Community 675 - "Community 675"
+Cohesion: 0.67
+Nodes (3): _mm512_broadcastss_ps(), _mm512_mask_broadcastss_ps(), _mm512_maskz_broadcastss_ps()
+
+### Community 676 - "Community 676"
+Cohesion: 0.67
+Nodes (3): _mm512_mask_unpackhi_ps(), _mm512_maskz_unpackhi_ps(), _mm512_unpackhi_ps()
+
+### Community 677 - "Community 677"
+Cohesion: 0.67
+Nodes (3): _mm512_andnot_epi64(), _mm512_mask_andnot_epi64(), _mm512_maskz_andnot_epi64()
+
+### Community 678 - "Community 678"
 Cohesion: 0.67
 Nodes (3): _mm512_mask_movehdup_ps(), _mm512_maskz_movehdup_ps(), _mm512_movehdup_ps()
 
-### Community 709 - "Community 709"
+### Community 679 - "Community 679"
+Cohesion: 0.67
+Nodes (3): _mm512_broadcastd_epi32(), _mm512_mask_broadcastd_epi32(), _mm512_maskz_broadcastd_epi32()
+
+### Community 680 - "Community 680"
+Cohesion: 0.67
+Nodes (3): _mm512_mask_xor_epi32(), _mm512_maskz_xor_epi32(), _mm512_xor_epi32()
+
+### Community 681 - "Community 681"
+Cohesion: 0.67
+Nodes (3): _mm512_andnot_epi32(), _mm512_mask_andnot_epi32(), _mm512_maskz_andnot_epi32()
+
+### Community 682 - "Community 682"
+Cohesion: 0.67
+Nodes (3): _mm512_mask_unpacklo_epi64(), _mm512_maskz_unpacklo_epi64(), _mm512_unpacklo_epi64()
+
+### Community 683 - "Community 683"
+Cohesion: 0.67
+Nodes (3): _mm512_mask_or_epi32(), _mm512_maskz_or_epi32(), _mm512_or_epi32()
+
+### Community 684 - "Community 684"
+Cohesion: 0.67
+Nodes (3): _mm512_mask_unpacklo_epi32(), _mm512_maskz_unpacklo_epi32(), _mm512_unpacklo_epi32()
+
+### Community 685 - "Community 685"
+Cohesion: 0.67
+Nodes (3): _mm512_mask_unpackhi_epi64(), _mm512_maskz_unpackhi_epi64(), _mm512_unpackhi_epi64()
+
+### Community 686 - "Community 686"
 Cohesion: 0.67
 Nodes (3): _mm512_mask_moveldup_ps(), _mm512_maskz_moveldup_ps(), _mm512_moveldup_ps()
-
-### Community 710 - "Community 710"
-Cohesion: 0.67
-Nodes (3): _mm512_mask_unpackhi_epi32(), _mm512_maskz_unpackhi_epi32(), _mm512_unpackhi_epi32()
 
 ## Knowledge Gaps
 - **426 isolated node(s):** `StoredCyclePreset`, `CycleTerminationMode`, `ProfileCycleSettings`, `PrepareSessionResponse`, `RecoveryCredential` (+421 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **364 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **358 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `string` connect `Community 47` to `Community 26`, `Community 40`, `Community 41`, `Community 42`, `Community 555`, `Community 45`, `Community 46`, `Community 51`, `Community 58`, `Community 59`, `Community 60`, `Community 62`, `Community 575`, `Community 64`, `Community 65`, `Community 69`, `Community 72`, `Community 74`, `Community 87`, `Community 89`, `Community 94`, `Community 102`, `Community 103`, `Community 104`, `Community 105`, `Community 106`, `Community 107`, `Community 110`, `Community 112`, `Community 116`, `Community 118`, `Community 123`, `Community 133`, `Community 145`, `Community 147`, `Community 151`, `Community 152`, `Community 158`, `Community 161`, `Community 167`, `Community 171`, `Community 173`, `Community 174`, `Community 184`, `Community 190`, `Community 192`, `Community 193`, `Community 201`, `Community 202`, `Community 203`, `Community 204`, `Community 206`, `Community 210`, `Community 212`, `Community 213`, `Community 214`, `Community 220`, `Community 222`, `Community 228`, `Community 246`, `Community 266`, `Community 267`, `Community 272`, `Community 275`, `Community 277`, `Community 298`, `Community 324`, `Community 327`, `Community 331`, `Community 333`, `Community 335`, `Community 388`, `Community 390`, `Community 391`, `Community 393`, `Community 405`, `Community 417`, `Community 418`, `Community 461`, `Community 462`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
-- **Why does `MainForm` connect `Community 69` to `Community 64`, `Community 98`, `Community 195`, `Community 68`, `Community 167`, `Community 40`, `Community 74`, `Community 47`, `Community 338`, `Community 243`, `Community 151`, `Community 185`, `Community 58`, `Community 158`, `Community 60`, `Community 94`, `Community 95`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
-- **Why does `releaseBlockedNavigationIfAllowed()` connect `Community 7` to `Community 8`, `Community 69`, `Community 6`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+- **Why does `string` connect `Community 46` to `Community 259`, `Community 135`, `Community 520`, `Community 138`, `Community 141`, `Community 144`, `Community 145`, `Community 149`, `Community 23`, `Community 152`, `Community 279`, `Community 155`, `Community 158`, `Community 31`, `Community 32`, `Community 161`, `Community 35`, `Community 165`, `Community 166`, `Community 170`, `Community 43`, `Community 172`, `Community 171`, `Community 430`, `Community 175`, `Community 176`, `Community 48`, `Community 305`, `Community 307`, `Community 51`, `Community 52`, `Community 436`, `Community 306`, `Community 187`, `Community 189`, `Community 62`, `Community 63`, `Community 191`, `Community 66`, `Community 196`, `Community 71`, `Community 200`, `Community 199`, `Community 76`, `Community 77`, `Community 205`, `Community 213`, `Community 214`, `Community 87`, `Community 344`, `Community 88`, `Community 347`, `Community 92`, `Community 95`, `Community 225`, `Community 101`, `Community 122`, `Community 102`, `Community 231`, `Community 105`, `Community 106`, `Community 363`, `Community 364`, `Community 109`, `Community 110`, `Community 174`, `Community 113`, `Community 377`, `Community 378`, `Community 379`, `Community 253`, `Community 254`, `Community 255`?**
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
+- **Why does `MainForm` connect `Community 71` to `Community 32`, `Community 161`, `Community 98`, `Community 228`, `Community 104`, `Community 77`, `Community 46`, `Community 175`, `Community 149`, `Community 55`, `Community 254`, `Community 62`, `Community 121`, `Community 88`, `Community 190`, `Community 317`, `Community 158`, `Community 63`?**
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
+- **Why does `releaseBlockedNavigationIfAllowed()` connect `Community 7` to `Community 5`, `Community 6`, `Community 71`?**
+  _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `t()` (e.g. with `gg()` and `kg()`) actually correct?**
   _`t()` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `StoredCyclePreset`, `CycleTerminationMode`, `ProfileCycleSettings` to the rest of the system?**

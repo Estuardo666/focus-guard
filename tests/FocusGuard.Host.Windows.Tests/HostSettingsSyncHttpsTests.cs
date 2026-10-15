@@ -28,7 +28,7 @@ namespace FocusGuard.Host.Windows.Tests;
 public sealed class HostSettingsSyncHttpsTests
 {
     [Fact]
-    public async Task TwoHostSessionsConvergeOverPinnedHttpsAndPreserveDeviceLocalPreferences()
+    public async Task TwoHostSessionsConvergeOverPinnedHttpsAndPreserveLocalOverridesAcrossRestart()
     {
         var root = Path.Combine(Path.GetTempPath(), "FocusGuard-Host-TwoSessionHttps-" + Guid.NewGuid().ToString("N"));
         var syncRoot = Path.Combine(root, "sync");
@@ -128,6 +128,7 @@ public sealed class HostSettingsSyncHttpsTests
         using var resetPublisherStop = new CancellationTokenSource();
         using var resetConflictStop = new CancellationTokenSource();
         using var resetDeliveryStop = new CancellationTokenSource();
+        using var overrideDeliveryStop = new CancellationTokenSource();
         WebApplication? app = null;
         HttpClient? httpClient = null;
         HttpClientHandler? handler = null;
@@ -496,8 +497,10 @@ public sealed class HostSettingsSyncHttpsTests
                 state => state.Confirmed.Revision == 4 && state.Confirmed.Deleted && !state.Pending, resolvedStop.Token);
             Assert.Equal(GlobalSettings.Default, resetConvergence.Confirmed.EffectiveValues);
 
-            var ownerAfterReset = ownerPreferences.Load();
-            var joinedAfterReset = joinedPreferences.Load();
+            var ownerAfterReset = await WaitForPreferencesAsync(ownerPreferences,
+                settings => DesktopSettingsProjection.Extract(settings) == GlobalSettings.Default, resolvedStop.Token);
+            var joinedAfterReset = await WaitForPreferencesAsync(joinedPreferences,
+                settings => DesktopSettingsProjection.Extract(settings) == GlobalSettings.Default, resolvedStop.Token);
             Assert.Equal(GlobalSettings.Default, DesktopSettingsProjection.Extract(ownerAfterReset));
             Assert.Equal(GlobalSettings.Default, DesktopSettingsProjection.Extract(joinedAfterReset));
             Assert.True(ownerAfterReset.ReduceMotion);
@@ -683,13 +686,149 @@ public sealed class HostSettingsSyncHttpsTests
             Assert.True((await ownerSession.Outbox.LoadAsync())!.SyncConsentEnabled);
             Assert.True((await joinedSyncSession.Outbox.LoadAsync())!.SyncConsentEnabled);
 
+            resetDeliveryStop.Cancel();
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => joinedLoop!);
+            joinedLoop = null;
+
+            var ownerBeforeOverride = await ownerSession.Outbox.LoadAsync() ??
+                throw new InvalidOperationException("The owner outbox disappeared before local override coverage.");
+            Assert.Equal(7, ownerBeforeOverride.Confirmed.Revision);
+            Assert.True(ownerBeforeOverride.Confirmed.Deleted);
+            var postsBeforeOverride = Volatile.Read(ref httpPostCount);
+            await ownerSession.Edits.UpdateOverridesAsync(ownerBeforeOverride.Confirmed.Revision,
+                ownerBeforeOverride.LocalOverrides, new LocalSettingsOverrides(Theme: "dark"),
+                CancellationToken.None, ownerBeforeOverride.LocalOverrides.Apply(ownerBeforeOverride.Confirmed.EffectiveValues));
+            var ownerAfterOverride = await ownerSession.Outbox.LoadAsync();
+            Assert.NotNull(ownerAfterOverride);
+            Assert.Equal(7, ownerAfterOverride.Confirmed.Revision);
+            Assert.Equal(new LocalSettingsOverrides(Theme: "dark"), ownerAfterOverride.LocalOverrides);
+            Assert.Null(ownerAfterOverride.Draft);
+            Assert.False(ownerAfterOverride.Pending);
+            Assert.Equal(postsBeforeOverride, Volatile.Read(ref httpPostCount));
+            Assert.Equal(AppTheme.Dark, ownerPreferences.Load().Theme);
+            Assert.True(ownerPreferences.Load().ReduceMotion);
+            Assert.False(ownerPreferences.Load().CyclePhaseNotifications);
+            Assert.True(ownerPreferences.Load().EnforcementEnabled);
+
+            resetConflictService.Dispose();
+            resetConflictService = null;
+            ownerSession = null;
+            await joinedSyncSession.DisposeAsync();
+            joinedSyncSession = null;
+            var ownerOverrideReady = NewSignal();
+            var joinedOverrideReady = NewSignal();
+            var ownerOverrideRestarted = await ownerVault.LoadForAccountAsync(account.Issuer, account.AccountBinding,
+                CancellationToken.None) ?? throw new InvalidOperationException("The owner vault did not survive override restart.");
+            try
+            {
+                ownerSession = HostSettingsSyncSession.CreateForTesting(account.AccountBinding,
+                    CreateTransport(httpClient, address, account, ownerOverrideRestarted,
+                        ownerToken, ownerAccessDigest, entityId), ownerOverrideRestarted, history,
+                    ownerPreferences, syncRoot, report: (result, state, _) =>
+                    {
+                        if (result.Status == SettingsRetryStatus.Idle &&
+                            state?.Confirmed is { Revision: 7, Deleted: true } && !state.Pending)
+                            ownerOverrideReady.TrySetResult();
+                        return Task.CompletedTask;
+                    });
+                ownerOverrideRestarted = null!;
+            }
+            finally { ownerOverrideRestarted?.Dispose(); }
+            var joinedOverrideRestarted = await joinedVault.LoadForAccountAsync(account.Issuer, account.AccountBinding,
+                CancellationToken.None) ?? throw new InvalidOperationException("The joined vault did not survive override restart.");
+            try
+            {
+                joinedSyncSession = HostSettingsSyncSession.CreateForTesting(account.AccountBinding,
+                    CreateTransport(httpClient, address, account, joinedOverrideRestarted,
+                        joinedToken, joinedAccessDigest, entityId), joinedOverrideRestarted, history,
+                    joinedPreferences, syncRoot, report: (result, state, _) =>
+                    {
+                        if (result.Status == SettingsRetryStatus.Idle &&
+                            state?.Confirmed is { Revision: 7, Deleted: true } && !state.Pending)
+                            joinedOverrideReady.TrySetResult();
+                        return Task.CompletedTask;
+                    });
+                joinedOverrideRestarted = null!;
+            }
+            finally { joinedOverrideRestarted?.Dispose(); }
+
+            ownerLoop = ownerSession.RunAsync(overrideDeliveryStop.Token);
+            joinedLoop = joinedSyncSession.RunAsync(overrideDeliveryStop.Token);
+            await Task.WhenAll(ownerOverrideReady.Task.WaitAsync(TimeSpan.FromSeconds(5)),
+                joinedOverrideReady.Task.WaitAsync(TimeSpan.FromSeconds(5)));
+            var ownerAfterOverrideRestart = await ownerSession.Outbox.LoadAsync();
+            Assert.NotNull(ownerAfterOverrideRestart);
+            Assert.Equal(new LocalSettingsOverrides(Theme: "dark"), ownerAfterOverrideRestart.LocalOverrides);
+            Assert.Equal(AppTheme.Dark, ownerPreferences.Load().Theme);
+
+            // Recreate the shared document from the peer. The owner's local override keeps Dark
+            // while the joined device publishes and applies the new shared Light value.
+            await joinedSyncSession.Edits.EditSelectedAsync(new GlobalSettings(50, "light", "es"),
+                SettingsFields.Theme, new LocalSettingsOverrides(), overrideDeliveryStop.Token);
+            Assert.True(ownerSession.NotifyConnectivityRestored());
+            var latestSharedValues = new GlobalSettings(50, "light", "es");
+            SettingsOutbox ownerAfterRemoteTheme;
+            try
+            {
+                ownerAfterRemoteTheme = await WaitForStateAsync(ownerSession.Outbox,
+                    state => state.Confirmed.Revision == 8 && !state.Confirmed.Deleted &&
+                        state.Confirmed.Values == latestSharedValues && !state.Pending, overrideDeliveryStop.Token);
+            }
+            catch (Exception error)
+            {
+                var ownerState = await ownerSession.Outbox.LoadAsync();
+                var joinedState = await joinedSyncSession.Outbox.LoadAsync();
+                long serverRevision;
+                lock (ledgerLock) serverRevision = committedDocument?.ProposedRevision ?? 0;
+                throw new Xunit.Sdk.XunitException(
+                    $"Local override receiver did not converge. Server={serverRevision}; owner={Describe(ownerState)}; " +
+                    $"joined={Describe(joinedState)}; owner reports=[{string.Join(';', ownerReports)}]; " +
+                    $"joined reports=[{string.Join(';', joinedReports)}]; cause={error.Message}");
+            }
+            var joinedAfterRemoteTheme = await WaitForStateAsync(joinedSyncSession.Outbox,
+                state => state.Confirmed.Revision == 8 && !state.Confirmed.Deleted &&
+                    state.Confirmed.Values == latestSharedValues && !state.Pending, overrideDeliveryStop.Token);
+            _ = await WaitForPreferencesAsync(ownerPreferences, settings => settings.Theme == AppTheme.Dark,
+                overrideDeliveryStop.Token);
+            _ = await WaitForPreferencesAsync(joinedPreferences, settings => settings.Theme == AppTheme.Light,
+                overrideDeliveryStop.Token);
+            Assert.Equal(new LocalSettingsOverrides(Theme: "dark"), ownerAfterRemoteTheme.LocalOverrides);
+            Assert.Equal(new LocalSettingsOverrides(), joinedAfterRemoteTheme.LocalOverrides);
+            Assert.Equal(AppTheme.Dark, ownerPreferences.Load().Theme);
+            Assert.Equal(AppTheme.Light, joinedPreferences.Load().Theme);
+            Assert.True(ownerPreferences.Load().ReduceMotion);
+            Assert.False(ownerPreferences.Load().CyclePhaseNotifications);
+            Assert.True(ownerPreferences.Load().EnforcementEnabled);
+            Assert.False(joinedPreferences.Load().ReduceMotion);
+            Assert.True(joinedPreferences.Load().CyclePhaseNotifications);
+            Assert.True(joinedPreferences.Load().EnforcementEnabled);
+            var postsAfterRemoteTheme = Volatile.Read(ref httpPostCount);
+
+            var ownerBeforeClearingOverride = await ownerSession.Outbox.LoadAsync() ??
+                throw new InvalidOperationException("The owner outbox disappeared before clearing its override.");
+            await ownerSession.Edits.UpdateOverridesAsync(ownerBeforeClearingOverride.Confirmed.Revision,
+                ownerBeforeClearingOverride.LocalOverrides, new LocalSettingsOverrides(), CancellationToken.None,
+                new GlobalSettings(50, "dark", "es"));
+            var ownerAfterClearingOverride = await ownerSession.Outbox.LoadAsync();
+            Assert.NotNull(ownerAfterClearingOverride);
+            Assert.Equal(8, ownerAfterClearingOverride.Confirmed.Revision);
+            Assert.Equal(latestSharedValues, ownerAfterClearingOverride.Confirmed.Values);
+            Assert.Equal(new LocalSettingsOverrides(), ownerAfterClearingOverride.LocalOverrides);
+            Assert.Null(ownerAfterClearingOverride.Draft);
+            Assert.Null(ownerAfterClearingOverride.InFlight);
+            Assert.False(ownerAfterClearingOverride.Pending);
+            Assert.Equal(AppTheme.Light, ownerPreferences.Load().Theme);
+            Assert.Equal(AppTheme.Light, joinedPreferences.Load().Theme);
+            Assert.Equal(postsAfterRemoteTheme, Volatile.Read(ref httpPostCount));
+
             lock (ledgerLock)
             {
                 Assert.NotNull(committedDocument);
-                Assert.Equal(7, committedDocument.ProposedRevision);
+                Assert.Equal(8, committedDocument.ProposedRevision);
                 var wire = JsonSerializer.Serialize(committedDocument, new JsonSerializerOptions(JsonSerializerDefaults.Web));
                 Assert.DoesNotContain("light", wire);
                 Assert.DoesNotContain("uiLanguage", wire);
+                Assert.DoesNotContain("localOverrides", wire, StringComparison.OrdinalIgnoreCase);
             }
         }
         finally
@@ -701,6 +840,7 @@ public sealed class HostSettingsSyncHttpsTests
             resetPublisherStop.Cancel();
             resetConflictStop.Cancel();
             resetDeliveryStop.Cancel();
+            overrideDeliveryStop.Cancel();
             if (ownerLoop is not null)
             {
                 try { await ownerLoop; }
@@ -748,6 +888,21 @@ public sealed class HostSettingsSyncHttpsTests
             await Task.Delay(20, token);
         }
         throw new TimeoutException("Two Host settings sessions did not converge through the loopback HTTPS API.");
+    }
+
+    private static async Task<DesktopSettings> WaitForPreferencesAsync(DesktopSettingsStore store,
+        Func<DesktopSettings, bool> predicate, CancellationToken token)
+    {
+        var deadline = DateTimeOffset.UtcNow.AddSeconds(10);
+        DesktopSettings? last = null;
+        while (DateTimeOffset.UtcNow < deadline)
+        {
+            token.ThrowIfCancellationRequested();
+            last = store.Load();
+            if (predicate(last)) return last;
+            await Task.Delay(20, token);
+        }
+        throw new TimeoutException($"Local preferences were not projected in the loopback HTTPS test: {last}.");
     }
 
     private static async Task<(SettingsOutbox Losing, bool FirstLoses)> WaitForConcurrentDurationConflictAsync(
