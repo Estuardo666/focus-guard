@@ -12,11 +12,13 @@ La sincronización y las transferencias de ajustes ahora nombran el campo compar
 - `AccountPanel.test.tsx` verifica la terminología de modo claro/oscuro y los ejemplos localizados de paleta.
 - Runbook y matriz de aceptación ahora registran modo compartido y paleta/orbe por separado.
 - `App.test.tsx` fija Bruma (`mist`) y estilo `lava`, procesa el refresco remoto de modo/idioma/duración y comprueba que `data-palette`, `data-orb` y `localStorage` no cambian, sin `preferences.set` de eco.
+- `SettingsReconciliationTests` también verifica que el codec global rechaza payloads con claves `palette` u `orbStyle`; la serialización permitida sigue siendo exactamente modo claro/oscuro, idioma y duración.
 
 ## Verificación
 
 - UI: **254/254 PASS**; TypeScript/build y verificaciones CSP/contraste/responsive PASS.
 - Regresión de refresco en ventana abierta: modo/idioma/duración remotos aplicados y paleta/orbe locales conservados.
+- Sync.Core: **162/162 PASS**; formato focalizado PASS.
 - Host Windows: **263/263 PASS**.
 - `dotnet format whitespace ... --verify-no-changes`: PASS.
 - Build del Setup/ZIP `.182`: PASS; guard de Client de producción PASS.
@@ -24,7 +26,7 @@ La sincronización y las transferencias de ajustes ahora nombran el campo compar
 - `--package-self-test`: exit 0.
 - SHA-256 Setup: `0A390D45ED48B036FAFD25FE3A9A6F9205F47D64E17716B07DC29DC45438BAA8`.
 - SHA-256 ZIP menú: `46600F7E5263E6AE434524ADADAE5AFCF57EF0FE3937065ACAB312D47B44C84C`.
-- Graphify: PASS; 1.932 archivos AST, 24.804 nodos, 181.235 aristas y 2.028 comunidades.
+- Graphify: PASS; 1.932 archivos AST, 24.804 nodos, 181.235 aristas y 2.031 comunidades.
 
 ## Límites
 

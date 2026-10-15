@@ -99,6 +99,8 @@ public sealed class SettingsReconciliationTests
 
     [Theory]
     [InlineData("{\"defaultDurationMinutes\":50,\"theme\":\"dark\",\"uiLanguage\":\"es\",\"permissions\":true}")]
+    [InlineData("{\"defaultDurationMinutes\":50,\"theme\":\"dark\",\"uiLanguage\":\"es\",\"palette\":\"mist\"}")]
+    [InlineData("{\"defaultDurationMinutes\":50,\"theme\":\"dark\",\"uiLanguage\":\"es\",\"orbStyle\":\"lava\"}")]
     [InlineData("{\"defaultDurationMinutes\":50,\"theme\":\"dark\",\"theme\":\"light\",\"uiLanguage\":\"es\"}")]
     [InlineData("{\"theme\":\"dark\",\"uiLanguage\":\"es\"}")]
     [InlineData("[]")]
