@@ -316,10 +316,14 @@ it('applies externally refreshed preferences to the mounted header and default d
   const initial: UserPreferences = { uiLanguage: 'es', theme: 'Dark', reduceMotion: false, sessionEnd: 'Window',
     cyclePhaseNotifications: true, enforcementEnabled: false, lastDurationMinutes: 13, lastSessionMode: 'SimpleTimer', lastCyclePresetId: null };
   const remote: UserPreferences = { ...initial, uiLanguage: 'en', theme: 'Light', lastDurationMinutes: 50 };
+  const previousPalette = localStorage.getItem('focusguard.palette');
+  const previousOrb = localStorage.getItem('focusguard.orb');
   const catalog = { items: [{ id: '22222222-2222-4222-8222-222222222222', name: 'Saved profile', applicationRuleCount: 1, websiteRuleCount: 0, blockedApplicationCount: 1, blockedWebsiteCount: 0 }], offset: 0, total: 1, pilotEnabled: true };
   const emit = (value: unknown) => target.dispatchEvent(new MessageEvent('message', { data: value }));
   const reply = (request: Record<string, unknown>, result: unknown) => emit({ version: 1, requestId: request.requestId, documentToken: request.documentToken, error: null, result });
   try {
+    localStorage.setItem('focusguard.palette', 'mist');
+    localStorage.setItem('focusguard.orb', 'lava');
     await act(async () => { root.render(<><App client={test.client} dashboard={dashboard}/><DashboardStart dashboard={dashboard} connection={inactive} language="es" t={key => es[key]} refresh={async () => undefined}/></>); await Promise.resolve(); });
     const token = '11111111111141118111111111111111';
     await act(async () => {
@@ -332,6 +336,8 @@ it('applies externally refreshed preferences to the mounted header and default d
     await act(async () => { await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); });
     expect(document.documentElement.lang).toBe('es');
     expect(document.documentElement.dataset.theme).toBe('dark');
+    expect(document.documentElement.dataset.palette).toBe('mist');
+    expect(document.documentElement.dataset.orb).toBe('lava');
     expect(container.querySelector<HTMLInputElement>('#setup-duration')?.value).toBe('13');
 
     await act(async () => { await vi.advanceTimersByTimeAsync(2000); });
@@ -341,6 +347,10 @@ it('applies externally refreshed preferences to the mounted header and default d
 
     expect(document.documentElement.lang).toBe('en');
     expect(document.documentElement.dataset.theme).toBe('light');
+    expect(document.documentElement.dataset.palette).toBe('mist');
+    expect(document.documentElement.dataset.orb).toBe('lava');
+    expect(localStorage.getItem('focusguard.palette')).toBe('mist');
+    expect(localStorage.getItem('focusguard.orb')).toBe('lava');
     expect(container.querySelector<HTMLInputElement>('#setup-duration')?.value).toBe('50');
     expect(messages.some(request => request.method === 'preferences.set')).toBe(false);
     const readsBeforeStop = messages.filter(request => request.method === 'preferences.get').length;
@@ -349,6 +359,10 @@ it('applies externally refreshed preferences to the mounted header and default d
     expect(messages.filter(request => request.method === 'preferences.get')).toHaveLength(readsBeforeStop);
   } finally {
     await act(async () => root.unmount());
+    if (previousPalette === null) localStorage.removeItem('focusguard.palette');
+    else localStorage.setItem('focusguard.palette', previousPalette);
+    if (previousOrb === null) localStorage.removeItem('focusguard.orb');
+    else localStorage.setItem('focusguard.orb', previousOrb);
     vi.useRealTimers();
   }
 });
