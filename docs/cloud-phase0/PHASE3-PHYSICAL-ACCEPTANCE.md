@@ -32,7 +32,7 @@ Los dos valores deben coincidir exactamente con los SHA-256 de arriba antes de i
 
 ## Activar consentimiento y convergencia normal
 
-1. En cada PC, abrir **Connection / Conexión → Automatic settings sync / Sincronización automática de ajustes → Enable sync / Activar sincronización** y aceptar el diálogo nativo por separado. Confirmar que ambas muestran «Sync is on for theme, language, and default timer duration…» / «La sincronización está activa para tema, idioma y duración predeterminada…».
+1. En cada PC, abrir **Connection / Conexión → Automatic settings sync / Sincronización automática de ajustes → Enable sync / Activar sincronización** y aceptar el diálogo nativo por separado. Confirmar que ambas muestran «Sync is on for light/dark mode, language, and default timer duration…» / «La sincronización está activa para el modo claro/oscuro, el idioma y la duración predeterminada…».
 2. En la PC del propietario, cambiar solo el modo claro/oscuro. Mantener FocusGuard abierto en ambos equipos; esperar hasta 45 segundos y comprobar que cambia en el hermano sin usar la transferencia manual. Confirmar que las paletas y el estilo del orbe siguen con los valores propios de cada PC.
 3. Repetir por separado con idioma y duración predeterminada. En cada paso, esperar a que la sincronización se estabilice antes del siguiente.
 4. Comparar las reglas, perfiles, permisos, historial, enforcement, movimiento reducido y notificaciones con los valores anotados. Estos valores deben permanecer locales y distintos donde ya lo eran.
