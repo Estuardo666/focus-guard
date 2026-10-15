@@ -618,6 +618,13 @@ public sealed class HostSettingsSyncHttpsTests
                 throw new InvalidOperationException("The owner settings outbox disappeared before reset-conflict staging.");
             var joinedResetBase = await joinedSyncSession.Outbox.LoadAsync() ??
                 throw new InvalidOperationException("The joined settings outbox disappeared before reset-conflict staging.");
+            var resetConflictOverrides = new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es",
+                DefaultDurationMinutes: 90);
+            await ownerSession.Edits.UpdateOverridesAsync(ownerResetBase.Confirmed.Revision,
+                ownerResetBase.LocalOverrides, resetConflictOverrides, CancellationToken.None,
+                ownerResetBase.Confirmed.EffectiveValues);
+            ownerResetBase = await ownerSession.Outbox.LoadAsync() ??
+                throw new InvalidOperationException("The owner outbox disappeared after saving reset-conflict overrides.");
             _ = await ownerSession.ResetSharedSettingsAsync(ownerResetBase.Confirmed.Revision,
                 ownerResetBase.Confirmed.EffectiveValues, ownerConfirmed: true, CancellationToken.None);
             await joinedSyncSession.Edits.EditSelectedAsync(
@@ -675,16 +682,36 @@ public sealed class HostSettingsSyncHttpsTests
             _ = await WaitForStateAsync(joinedSyncSession.Outbox,
                 state => state.Confirmed.Revision == 7 && state.Confirmed.Deleted && !state.Pending &&
                     state.Conflicts == SettingsFields.None, resetDeliveryStop.Token);
-            var ownerAfterResetConflict = ownerPreferences.Load();
-            var joinedAfterResetConflict = joinedPreferences.Load();
-            Assert.Equal(GlobalSettings.Default, DesktopSettingsProjection.Extract(ownerAfterResetConflict));
+            var ownerAfterResetConflict = await WaitForPreferencesAsync(ownerPreferences,
+                settings => DesktopSettingsProjection.Extract(settings) == new GlobalSettings(90, "dark", "es"),
+                resetDeliveryStop.Token);
+            var joinedAfterResetConflict = await WaitForPreferencesAsync(joinedPreferences,
+                settings => DesktopSettingsProjection.Extract(settings) == GlobalSettings.Default, resetDeliveryStop.Token);
+            Assert.Equal(new GlobalSettings(90, "dark", "es"), DesktopSettingsProjection.Extract(ownerAfterResetConflict));
             Assert.Equal(GlobalSettings.Default, DesktopSettingsProjection.Extract(joinedAfterResetConflict));
             Assert.True(ownerAfterResetConflict.ReduceMotion);
             Assert.False(joinedAfterResetConflict.ReduceMotion);
             Assert.False(ownerAfterResetConflict.CyclePhaseNotifications);
             Assert.True(joinedAfterResetConflict.CyclePhaseNotifications);
+            Assert.Equal(resetConflictOverrides, (await ownerSession.Outbox.LoadAsync())!.LocalOverrides);
+            Assert.Equal(new LocalSettingsOverrides(), (await joinedSyncSession.Outbox.LoadAsync())!.LocalOverrides);
             Assert.True((await ownerSession.Outbox.LoadAsync())!.SyncConsentEnabled);
             Assert.True((await joinedSyncSession.Outbox.LoadAsync())!.SyncConsentEnabled);
+
+            var postsAfterConflictReset = Volatile.Read(ref httpPostCount);
+            await ownerSession.Edits.UpdateOverridesAsync(7, resetConflictOverrides, new LocalSettingsOverrides(),
+                CancellationToken.None, new GlobalSettings(90, "dark", "es"));
+            var ownerAfterConflictOverrideRemoval = await ownerSession.Outbox.LoadAsync();
+            Assert.NotNull(ownerAfterConflictOverrideRemoval);
+            Assert.Equal(7, ownerAfterConflictOverrideRemoval.Confirmed.Revision);
+            Assert.True(ownerAfterConflictOverrideRemoval.Confirmed.Deleted);
+            Assert.Equal(new LocalSettingsOverrides(), ownerAfterConflictOverrideRemoval.LocalOverrides);
+            Assert.Null(ownerAfterConflictOverrideRemoval.Draft);
+            Assert.Null(ownerAfterConflictOverrideRemoval.InFlight);
+            Assert.False(ownerAfterConflictOverrideRemoval.Pending);
+            Assert.Equal(GlobalSettings.Default,
+                DesktopSettingsProjection.Extract(ownerPreferences.Load()));
+            Assert.Equal(postsAfterConflictReset, Volatile.Read(ref httpPostCount));
 
             resetDeliveryStop.Cancel();
             await Assert.ThrowsAnyAsync<OperationCanceledException>(() => joinedLoop!);
