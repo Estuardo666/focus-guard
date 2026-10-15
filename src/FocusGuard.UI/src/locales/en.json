@@ -173,6 +173,7 @@
   "accountSettingsSyncConflictReview": "Compare the conflicting values and choose which one to keep for each setting.",
   "accountSettingsSyncResetConflict": "This PC requested a shared-settings reset while another device saved new values. Choose whether to re-apply the reset to the current revision or keep the other devices' values on this PC.",
   "accountSettingsSyncResetBoundary": "Only shared theme, interface language, and default duration are reset. Values marked ‘Kept on this PC’ remain active and take priority until you remove those overrides. Rules, profiles, permissions, schedules, and history stay local.",
+  "accountSettingsSyncConflictOverrides": "These settings remain on this PC while you resolve the shared conflict:",
   "accountSettingsSyncKeepReset": "Keep this PC's reset",
   "accountSettingsSyncKeepOther": "Cancel reset and keep remote values",
   "accountSettingsSyncTheme": "Theme",

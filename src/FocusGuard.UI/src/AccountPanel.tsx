@@ -87,6 +87,8 @@ export function AccountPanel({ client, snapshot, t }: {
         : syncStatus === 'Pending' ? 'accountSettingsSyncStatePending' : 'accountSettingsSyncStateOn';
   const syncTone = !account?.settingsSyncEnabled ? 'off' : syncStatus === 'Attention' || syncStatus === 'Conflict' ? 'warn'
     : syncStatus === 'Pending' ? 'pending' : 'on';
+  const localOverrideFields = (['theme', 'language', 'duration'] as const)
+    .filter(field => !!account?.settingsSyncLocalOverrides?.[field]);
   const closeMenu = () => (document.getElementById('account-sync-menu') as (HTMLElement & { hidePopover?(): void }) | null)?.hidePopover?.();
   const portableCard = <div className="account-pairing account-tile" aria-labelledby="account-portable-settings-title">
     <div className="account-tile-head">
@@ -213,6 +215,17 @@ export function AccountPanel({ client, snapshot, t }: {
         {account.settingsSyncStatus === 'Pending' ? <p className="account-notice" role="status">{t('accountSettingsSyncPending')}</p> : null}
         {account.settingsSyncStatus === 'Conflict' && !conflictReview
           ? <p className="account-notice" role="status">{t('accountSettingsSyncConflict')}</p> : null}
+        {account.settingsSyncEnabled && account.settingsSyncStatus === 'Conflict' && localOverrideFields.length > 0
+          ? <div className="account-settings-conflict-local-overrides" role="note">
+            <p className="account-settings-reset-boundary">{t('accountSettingsSyncConflictOverrides')}</p>
+            <div className="account-sync-fields" role="group" aria-label={t('accountSettingsSyncOverridesTitle')}>
+              {localOverrideFields.map(field => <span key={field} className="account-sync-chip is-local">
+                <DesktopIcon aria-hidden="true" />
+                <span>{t(conflictFieldLabels[field])}</span>
+                <small>{t('accountSettingsSyncLocal')}</small>
+              </span>)}
+            </div>
+          </div> : null}
         {account.settingsSyncStatus === 'Conflict' && conflictReview && !conflictReview.resetConflict ? <div className="account-settings-conflict-review" aria-labelledby="account-settings-sync-conflict-title">
           <p id="account-settings-sync-conflict-title" role="status">{t('accountSettingsSyncConflictReview')}</p>
           {conflictReview.fields.map(field => <fieldset className="account-settings-conflict-field" key={field}>

@@ -1,15 +1,15 @@
-# Fase 3: aclarar la prioridad de overrides en el reset compartido
+# Fase 3: hacer visibles los overrides durante conflictos
 
 ## Resultado
 
-La confirmación nativa de Windows y la revisión de conflicto del reset ahora advierten que el reset cambia solo los valores compartidos y que los overrides «Kept on this PC / Se conserva en esta PC» siguen activos y tienen prioridad hasta retirarlos. Esto coincide con la precedencia especificada y evita sugerir que el equipo mostrará defaults locales mientras haya excepciones activas.
+La confirmación nativa de Windows y la revisión de conflicto del reset mantienen la explicación de que solo cambian los valores compartidos y que los overrides «Kept on this PC / Se conserva en esta PC» siguen activos y tienen prioridad hasta retirarlos. `.181` añade a las revisiones de conflicto normal y de reset una nota con los campos que tienen override local activo. Esto evita confundir una decisión sobre el documento compartido con la retirada de excepciones locales.
 
 ## Cambios
 
-- Copia EN/ES en `HostStrings.resx` para la confirmación de reset nativa.
-- Copia EN/ES en `AccountPanel` para el límite de reset/conflicto.
-- `AccountPanel.test.tsx` comprueba las dos traducciones; `HostWindowStringsTests` comprueba que los recursos nativos contienen la advertencia y que el detalle con valores se formatea correctamente.
-- Candidato distribuible `.180`; no se instaló ni desplegó.
+- `AccountPanel` muestra los campos overridden como chips de solo lectura si la revisión está en conflicto; la acción para cambiar overrides sigue oculta en ese estado.
+- Copia EN/ES añadida para explicar los overrides activos durante la resolución.
+- `AccountPanel.test.tsx` comprueba la nota y la lista de campos tanto en conflictos normales como de reset. La confirmación nativa y sus pruebas siguen cubiertas desde `.180`.
+- Candidato distribuible `.181`; no se instaló ni desplegó.
 
 ## Verificación
 
@@ -19,8 +19,8 @@ La confirmación nativa de Windows y la revisión de conflicto del reset ahora a
 - Guard de producción: PASS.
 - `scripts/test-installer.ps1`: PASS (8 casos de readiness y contratos).
 - `--package-self-test`: PASS.
-- SHA-256 Setup `.180`: `B8DDFA39BD5CFF8F2AC5E9102A2E60BBF0CA56DF961D1A18735C1ED666BF7AA4`.
-- SHA-256 ZIP `.180`: `B3D7C4BEBB367F1CA5035610B928D5AB013E005D2FCA5D3B4B0D3393E5B79620`.
+- SHA-256 Setup `.181`: `E1932EEFEED0B9EA285511117C8CF7C93C5F35D1D0EA9C85AB616B18C3FDB065`.
+- SHA-256 ZIP `.181`: `8D2BB88E5189CA78EDE74DF375A54FF2F68950DEEFA8531959BA61354A566CE6`.
 
 ## Límites
 

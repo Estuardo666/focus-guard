@@ -251,11 +251,16 @@ describe('native account panel', () => {
       deviceLinked: true, accountHasLinkedDevice: true, deviceLinkPending: false, pairingBusy: false,
       settingsTransferBusy: false, settingsTransferStatus: null, settingsSyncBusy: false, settingsSyncEnabled: true,
       settingsSyncStatus: 'Conflict', pairingId: null, pairingFingerprint: null, pendingPairings: [], error: null, remoteRevoked: null,
+      settingsSyncLocalOverrides: { theme: false, language: true, duration: false },
       settingsSyncConflict: { revision: 3, fields: ['theme', 'duration'],
         current: { defaultDurationMinutes: 45, theme: 'light', uiLanguage: 'es' },
         thisDevice: { defaultDurationMinutes: 50, theme: 'dark', uiLanguage: 'es' }, resetConflict: false },
     } };
     await act(async () => root.render(<AccountPanel client={accountClient} snapshot={snapshot} t={t}/>));
+    expect(container.textContent).toContain(es.accountSettingsSyncConflictOverrides);
+    const localOverrideGroup = container.querySelector(`[aria-label="${es.accountSettingsSyncOverridesTitle}"]`)!;
+    expect(localOverrideGroup.querySelectorAll('.account-sync-chip')).toHaveLength(1);
+    expect(localOverrideGroup.textContent).toContain(es.accountSettingsSyncLanguage);
     expect(container.textContent).toContain(es.accountSettingsSyncThemeLight);
     expect(container.textContent).toContain(es.accountSettingsSyncThemeDark);
     const apply = [...container.querySelectorAll('button')].find(button => button.textContent === es.accountSettingsSyncResolve)!;
@@ -277,6 +282,7 @@ describe('native account panel', () => {
       deviceLinked: true, accountHasLinkedDevice: true, deviceLinkPending: false, pairingBusy: false,
       settingsTransferBusy: false, settingsTransferStatus: null, settingsSyncBusy: false, settingsSyncEnabled: true,
       settingsSyncStatus: 'Conflict', pairingId: null, pairingFingerprint: null, pendingPairings: [], error: null, remoteRevoked: null,
+      settingsSyncLocalOverrides: { theme: true, language: false, duration: true },
       settingsSyncConflict: { revision: 8, fields: ['theme', 'language', 'duration'],
         current: { defaultDurationMinutes: 35, theme: 'light', uiLanguage: 'en' },
         thisDevice: { defaultDurationMinutes: 50, theme: 'dark', uiLanguage: 'es' }, resetConflict: true },
@@ -285,6 +291,11 @@ describe('native account panel', () => {
     expect(container.textContent).toContain(es.accountSettingsSyncResetBoundary);
     expect(es.accountSettingsSyncResetBoundary).toContain(es.accountSettingsSyncOverrideLocal);
     expect(en.accountSettingsSyncResetBoundary).toContain(en.accountSettingsSyncOverrideLocal);
+    expect(container.textContent).toContain(es.accountSettingsSyncConflictOverrides);
+    const localOverrideGroup = container.querySelector(`[aria-label="${es.accountSettingsSyncOverridesTitle}"]`)!;
+    expect(localOverrideGroup.querySelectorAll('.account-sync-chip')).toHaveLength(2);
+    expect(localOverrideGroup.textContent).toContain(es.accountSettingsSyncTheme);
+    expect(localOverrideGroup.textContent).toContain(es.accountSettingsSyncDuration);
     expect(container.textContent).toContain(es.accountSettingsSyncThemeLight);
     const keepReset = [...container.querySelectorAll('button')].find(button => button.textContent === es.accountSettingsSyncKeepReset)!;
     const keepRemote = [...container.querySelectorAll('button')].find(button => button.textContent === es.accountSettingsSyncKeepOther)!;
