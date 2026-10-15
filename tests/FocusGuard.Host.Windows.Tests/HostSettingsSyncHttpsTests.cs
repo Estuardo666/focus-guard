@@ -774,6 +774,9 @@ public sealed class HostSettingsSyncHttpsTests
             await joinedSyncSession.Edits.EditSelectedAsync(latestSharedValues,
                 SettingsFields.Theme | SettingsFields.Language | SettingsFields.Duration,
                 new LocalSettingsOverrides(), overrideDeliveryStop.Token);
+            var joinedAfterRemoteSettings = await WaitForStateAsync(joinedSyncSession.Outbox,
+                state => state.Confirmed.Revision == 8 && !state.Confirmed.Deleted &&
+                    state.Confirmed.Values == latestSharedValues && !state.Pending, overrideDeliveryStop.Token);
             Assert.True(ownerSession.NotifyConnectivityRestored());
             SettingsOutbox ownerAfterRemoteSettings;
             try
@@ -793,9 +796,6 @@ public sealed class HostSettingsSyncHttpsTests
                     $"joined={Describe(joinedState)}; owner reports=[{string.Join(';', ownerReports)}]; " +
                     $"joined reports=[{string.Join(';', joinedReports)}]; cause={error.Message}");
             }
-            var joinedAfterRemoteSettings = await WaitForStateAsync(joinedSyncSession.Outbox,
-                state => state.Confirmed.Revision == 8 && !state.Confirmed.Deleted &&
-                    state.Confirmed.Values == latestSharedValues && !state.Pending, overrideDeliveryStop.Token);
             _ = await WaitForPreferencesAsync(ownerPreferences, settings =>
                     DesktopSettingsProjection.Extract(settings) == new GlobalSettings(90, "dark", "es"),
                 overrideDeliveryStop.Token);
@@ -836,10 +836,75 @@ public sealed class HostSettingsSyncHttpsTests
             Assert.Equal(latestSharedValues, DesktopSettingsProjection.Extract(joinedPreferences.Load()));
             Assert.Equal(postsAfterRemoteTheme, Volatile.Read(ref httpPostCount));
 
+            // A shared reset tombstones only the global document. All three owner overrides
+            // remain local through remote delivery and can be removed without republishing.
+            var ownerBeforeResetOverrides = await ownerSession.Outbox.LoadAsync() ??
+                throw new InvalidOperationException("The owner outbox disappeared before reset override coverage.");
+            var resetOverrides = new LocalSettingsOverrides(Theme: "dark", UiLanguage: "es",
+                DefaultDurationMinutes: 90);
+            var postsBeforeReset = Volatile.Read(ref httpPostCount);
+            await ownerSession.Edits.UpdateOverridesAsync(ownerBeforeResetOverrides.Confirmed.Revision,
+                ownerBeforeResetOverrides.LocalOverrides, resetOverrides, CancellationToken.None, latestSharedValues);
+            Assert.Equal(postsBeforeReset, Volatile.Read(ref httpPostCount));
+            Assert.Equal(new GlobalSettings(90, "dark", "es"),
+                DesktopSettingsProjection.Extract(ownerPreferences.Load()));
+
+            await ownerSession.ResetSharedSettingsAsync(ownerBeforeResetOverrides.Confirmed.Revision,
+                latestSharedValues, ownerConfirmed: true, overrideDeliveryStop.Token);
+            var ownerAfterSharedReset = await WaitForStateAsync(ownerSession.Outbox,
+                state => state.Confirmed.Revision == 9 && state.Confirmed.Deleted && !state.Pending,
+                overrideDeliveryStop.Token);
+            Assert.True(joinedSyncSession.NotifyConnectivityRestored());
+            SettingsOutbox joinedAfterSharedReset;
+            try
+            {
+                joinedAfterSharedReset = await WaitForStateAsync(joinedSyncSession.Outbox,
+                    state => state.Confirmed.Revision == 9 && state.Confirmed.Deleted && !state.Pending,
+                    overrideDeliveryStop.Token);
+            }
+            catch (Exception error)
+            {
+                var currentOwner = await ownerSession.Outbox.LoadAsync();
+                var currentJoined = await joinedSyncSession.Outbox.LoadAsync();
+                long serverRevision;
+                lock (ledgerLock) serverRevision = committedDocument?.ProposedRevision ?? 0;
+                throw new Xunit.Sdk.XunitException(
+                    $"Peer did not receive shared reset while owner overrides were active. Server={serverRevision}; " +
+                    $"owner={Describe(currentOwner)}; joined={Describe(currentJoined)}; " +
+                    $"owner reports=[{string.Join(';', ownerReports)}]; joined reports=[{string.Join(';', joinedReports)}]; " +
+                    $"cause={error.Message}");
+            }
+            _ = await WaitForPreferencesAsync(ownerPreferences, settings =>
+                    DesktopSettingsProjection.Extract(settings) == new GlobalSettings(90, "dark", "es"),
+                overrideDeliveryStop.Token);
+            _ = await WaitForPreferencesAsync(joinedPreferences,
+                settings => DesktopSettingsProjection.Extract(settings) == GlobalSettings.Default,
+                overrideDeliveryStop.Token);
+            Assert.Equal(resetOverrides, ownerAfterSharedReset.LocalOverrides);
+            Assert.Equal(new LocalSettingsOverrides(), joinedAfterSharedReset.LocalOverrides);
+            Assert.True(ownerPreferences.Load().EnforcementEnabled);
+            Assert.True(joinedPreferences.Load().EnforcementEnabled);
+            var postsAfterSharedReset = Volatile.Read(ref httpPostCount);
+
+            await ownerSession.Edits.UpdateOverridesAsync(ownerAfterSharedReset.Confirmed.Revision,
+                ownerAfterSharedReset.LocalOverrides, new LocalSettingsOverrides(), CancellationToken.None,
+                new GlobalSettings(90, "dark", "es"));
+            var ownerAfterRemovingResetOverrides = await ownerSession.Outbox.LoadAsync();
+            Assert.NotNull(ownerAfterRemovingResetOverrides);
+            Assert.Equal(9, ownerAfterRemovingResetOverrides.Confirmed.Revision);
+            Assert.True(ownerAfterRemovingResetOverrides.Confirmed.Deleted);
+            Assert.Equal(new LocalSettingsOverrides(), ownerAfterRemovingResetOverrides.LocalOverrides);
+            Assert.Null(ownerAfterRemovingResetOverrides.Draft);
+            Assert.Null(ownerAfterRemovingResetOverrides.InFlight);
+            Assert.False(ownerAfterRemovingResetOverrides.Pending);
+            Assert.Equal(GlobalSettings.Default, DesktopSettingsProjection.Extract(ownerPreferences.Load()));
+            Assert.Equal(GlobalSettings.Default, DesktopSettingsProjection.Extract(joinedPreferences.Load()));
+            Assert.Equal(postsAfterSharedReset, Volatile.Read(ref httpPostCount));
+
             lock (ledgerLock)
             {
                 Assert.NotNull(committedDocument);
-                Assert.Equal(8, committedDocument.ProposedRevision);
+                Assert.Equal(9, committedDocument.ProposedRevision);
                 var wire = JsonSerializer.Serialize(committedDocument, new JsonSerializerOptions(JsonSerializerDefaults.Web));
                 Assert.DoesNotContain("light", wire);
                 Assert.DoesNotContain("uiLanguage", wire);
