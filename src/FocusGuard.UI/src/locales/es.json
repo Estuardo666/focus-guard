@@ -172,7 +172,7 @@
   "accountSettingsSyncConflict": "Los ajustes difieren entre dispositivos. La sincronización espera a que se revise el conflicto; no se reemplaza la elección de ningún dispositivo.",
   "accountSettingsSyncConflictReview": "Compara los valores en conflicto y elige cuál conservar en cada ajuste.",
   "accountSettingsSyncResetConflict": "Esta PC solicitó restablecer los ajustes compartidos mientras otro dispositivo guardó valores nuevos. Elige si se vuelve a aplicar el reset a la revisión actual o si esta PC conserva los valores de los otros dispositivos.",
-  "accountSettingsSyncResetBoundary": "Solo afecta tema, idioma y duración predeterminada. Reglas, perfiles, permisos, agenda e historial permanecen locales.",
+  "accountSettingsSyncResetBoundary": "El reset solo cambia el tema, el idioma y la duración predeterminada compartidos. Los valores marcados «Se conserva en esta PC» siguen activos y tienen prioridad hasta que retires esos overrides. Las reglas, perfiles, permisos, agenda e historial permanecen locales.",
   "accountSettingsSyncKeepReset": "Mantener el reset de esta PC",
   "accountSettingsSyncKeepOther": "Cancelar reset y conservar valores remotos",
   "accountSettingsSyncTheme": "Tema",

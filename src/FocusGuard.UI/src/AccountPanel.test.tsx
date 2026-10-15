@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AccountChip, AccountPanel, accountInitials } from './AccountPanel';
 import type { AccountClient, AccountSnapshot } from './native/account';
 import es from './locales/es.json';
+import en from './locales/en.json';
 
 const t = (key: keyof typeof es) => es[key];
 const base: AccountSnapshot = { phase: 'ready', account: null, error: null };
@@ -282,6 +283,8 @@ describe('native account panel', () => {
     } };
     await act(async () => root.render(<AccountPanel client={accountClient} snapshot={snapshot} t={t}/>));
     expect(container.textContent).toContain(es.accountSettingsSyncResetBoundary);
+    expect(es.accountSettingsSyncResetBoundary).toContain(es.accountSettingsSyncOverrideLocal);
+    expect(en.accountSettingsSyncResetBoundary).toContain(en.accountSettingsSyncOverrideLocal);
     expect(container.textContent).toContain(es.accountSettingsSyncThemeLight);
     const keepReset = [...container.querySelectorAll('button')].find(button => button.textContent === es.accountSettingsSyncKeepReset)!;
     const keepRemote = [...container.querySelectorAll('button')].find(button => button.textContent === es.accountSettingsSyncKeepOther)!;

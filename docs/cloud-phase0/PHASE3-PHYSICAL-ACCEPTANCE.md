@@ -4,21 +4,21 @@
 
 ## Paquete candidato
 
-- Setup autónomo: `artifacts/installer/FocusGuard-0.1.179-Setup.exe`
-- SHA-256 del Setup: `F4F174BE03E89ED228CF9C34A2C0FA202BAF9BB7F097F10E94B0AEE3F1B31D91`
-- ZIP del menú: `artifacts/installer/FocusGuard-0.1.179-win-x64-menu.zip`
-- SHA-256 del ZIP: `BCD9CFA04384CD92F4C29497D97290ED4B3A82D43F77A18CD0879896EA90271B`
-- Verificación actual: build de producción, guard de cliente, `scripts/test-installer.ps1` y `--package-self-test` pasan; los hashes se calcularon localmente. `.179` incluye la corrección de importación portátil con sync revocada y extensión MV3 de la misma versión; no se ha instalado. La prueba en dos PCs sigue pendiente.
+- Setup autónomo: `artifacts/installer/FocusGuard-0.1.180-Setup.exe`
+- SHA-256 del Setup: `B8DDFA39BD5CFF8F2AC5E9102A2E60BBF0CA56DF961D1A18735C1ED666BF7AA4`
+- ZIP del menú: `artifacts/installer/FocusGuard-0.1.180-win-x64-menu.zip`
+- SHA-256 del ZIP: `B3D7C4BEBB367F1CA5035610B928D5AB013E005D2FCA5D3B4B0D3393E5B79620`
+- Verificación actual: build de producción, guard de cliente, `scripts/test-installer.ps1` y `--package-self-test` pasan; los hashes se calcularon localmente. `.180` aclara que los overrides locales siguen teniendo prioridad durante el reset compartido; conserva la importación portátil de `.179` y la extensión MV3 de la misma versión. No se ha instalado. La prueba en dos PCs sigue pendiente.
 
 El cursor es opcional mientras el backend no haya sido actualizado. La aceptación física puede validar convergencia automática contra el API actual; no debe registrar como fallo que el servidor aún no devuelva `X-FG-Cursor`. La verificación del cursor contra un backend desplegado queda después del gate físico.
 
-Antes de usarlo en cada PC, comparar el hash del Setup y ZIP con los SHA-256 indicados y anotar la versión observada después de la actualización. Instalar el mismo `.179` en ambas. Mantener la misma cuenta y los vínculos existentes; no cerrar sesión, desvincular ni volver a emparejar.
+Antes de usarlo en cada PC, comparar el hash del Setup y ZIP con los SHA-256 indicados y anotar la versión observada después de la actualización. Instalar el mismo `.180` en ambas. Mantener la misma cuenta y los vínculos existentes; no cerrar sesión, desvincular ni volver a emparejar.
 
 Para comparar los archivos en cada PC, abre PowerShell en la carpeta donde copiaste el paquete y ejecuta:
 
 ```powershell
-Get-FileHash .\FocusGuard-0.1.179-Setup.exe -Algorithm SHA256
-Get-FileHash .\FocusGuard-0.1.179-win-x64-menu.zip -Algorithm SHA256
+Get-FileHash .\FocusGuard-0.1.180-Setup.exe -Algorithm SHA256
+Get-FileHash .\FocusGuard-0.1.180-win-x64-menu.zip -Algorithm SHA256
 ```
 
 Los dos valores deben coincidir exactamente con los SHA-256 de arriba antes de instalar.
@@ -55,7 +55,7 @@ Los dos valores deben coincidir exactamente con los SHA-256 de arriba antes de i
 
 ## Cerrar la prueba y restaurar
 
-Antes de cerrar, ejecutar también la aceptación de las integraciones nuevas incluidas en `.179`:
+Antes de cerrar, ejecutar también la aceptación de las integraciones nuevas incluidas en `.180`:
 
 1. Con sync estable, abrir el diálogo de ajustes exclusivos de esta PC y marcar solo tema. Cambiar el tema local; comprobar que el otro equipo conserva su tema compartido. Cambiar idioma/duración y verificar que continúan sincronizándose. Anotar la selección local.
 2. Cerrar y reabrir: la excepción de tema debe conservarse. Quitarla y comprobar que esta PC vuelve al último tema compartido sin publicarlo como un cambio nuevo. Cancelar el diálogo debe conservar la selección previa.
@@ -72,7 +72,7 @@ Registrar estos resultados por separado de la transferencia manual E2EE y de la 
 
 ## Evidencia y recuperación
 
-El estado DPAPI de `.179` incorpora las excepciones locales. Después de que esta versión guarde el outbox, `.174` rechazará ese archivo por el campo nuevo y detendrá sync conservando los datos. Para recuperar sync, volver a `.179`; no borrar el archivo ni quitar campos a mano. Esta limitación de downgrade no cambia las preferencias locales ni la fecha de fin de sesiones existentes.
+El estado DPAPI de `.180` incorpora las excepciones locales. Después de que esta versión guarde el outbox, `.174` rechazará ese archivo por el campo nuevo y detendrá sync conservando los datos. Para recuperar sync, volver a `.180` o `.179`; no borrar el archivo ni quitar campos a mano. Esta limitación de downgrade no cambia las preferencias locales ni la fecha de fin de sesiones existentes.
 
 Registrar por cada checkpoint: versión instalada en ambas PCs, estado de cuenta/vínculo, consentimiento sync, valores compartidos antes/después, estado **Pending/Conflict/Enabled**, valores locales que se conservaron y si el reset produjo la revisión esperada. No incluir contraseñas, códigos MFA, recovery kit, access tokens ni claves.
 
@@ -86,7 +86,7 @@ Completar una fila por equipo y checkpoint. Se pueden anotar los valores observa
 
 | Checkpoint | PC propietario | PC hermano | Observación |
 | --- | --- | --- | --- |
-| Setup `.179` y SHA-256 correctos | Pendiente | Pendiente | |
+| Setup `.180` y SHA-256 correctos | Pendiente | Pendiente | |
 | Cuenta iniciada y dispositivo vinculado | Pendiente | Pendiente | |
 | Consentimiento sync activo después de aceptar | Pendiente | Pendiente | |
 | Cambio de tema convergió automáticamente en ventana abierta | Reportado PASS | Reportado PASS | 30–45 s según propietario |

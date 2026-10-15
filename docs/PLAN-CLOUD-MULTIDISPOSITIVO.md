@@ -988,6 +988,8 @@ La integración HTTPS dual Host también cubre los tres overrides: tema/idioma/d
 
 El conflicto CAS normal de duración también se probó con tema/idioma overridden en ambos Hosts: ambos mantienen sus valores de presentación mientras converge la duración; retirar las excepciones no genera otro POST.
 
+El candidato `.180` añade texto de consecuencias en inglés/español a la confirmación nativa de reset y a la revisión de conflicto: los overrides marcados para esta PC siguen activos y prevalecen hasta retirarlos. UI254/254, Host261/261, build, guard, `test-installer`, package-self-test y graphify pasan; no se instaló. Los gates físicos y staging permanecen separados.
+
 1. Documentos cifrados CAS/ETag.
 2. Snapshot/cursor, outbox y avisos.
 3. Edición offline, conflictos y tombstones.
