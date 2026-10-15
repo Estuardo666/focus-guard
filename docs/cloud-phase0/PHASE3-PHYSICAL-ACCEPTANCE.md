@@ -8,7 +8,7 @@
 - SHA-256 del Setup: `D4F497C16AE1CE7C0D30A05D527264B9312DEF0C902DBCB54E97FF7949B18F6D`
 - ZIP del menú: `artifacts/installer/FocusGuard-0.1.183-win-x64-menu.zip`
 - SHA-256 del ZIP: `AF74587E8E26BA03B730E990B38860F2D1F00A3279BB2A0CD7264C4636D6B7B0`
-- Verificación actual: UI254/254, TypeScript/build, guard de producción, `scripts/test-installer.ps1`, `--package-self-test` y graphify pasan. Host263/263 y Sync162/162 son las últimas suites verdes de `.182`; `.183` solo cambia textos de UI. Este candidato llama «Modo claro/oscuro» al control de Preferencias y aclara que paleta/orbe quedan locales. No se ha instalado. La prueba física sigue pendiente.
+- Verificación actual: UI254/254, Host263/263 (suite completa, con WebView2 empaquetado3/3), TypeScript/build, guard de producción, `scripts/test-installer.ps1`, `--package-self-test` y graphify pasan. Sync162/162 es la suite vigente de `.182`; no cambió Sync.Core. `.183` aclara «Modo claro/oscuro» en Preferencias y que paleta/orbe quedan locales. No se ha instalado. La prueba física sigue pendiente.
 
 El cursor es opcional mientras el backend no haya sido actualizado. La aceptación física puede validar convergencia automática contra el API actual; no debe registrar como fallo que el servidor aún no devuelva `X-FG-Cursor`. La verificación del cursor contra un backend desplegado queda después del gate físico.
 
