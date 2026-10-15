@@ -725,5 +725,21 @@
   "blockTitle": "{app} is blocked",
   "blockBody": "Back to what matters. Your session ends at {time}.",
   "blockStrict": "Strict session: it cannot be stopped early.",
-  "blockBack": "Back to work"
+  "blockBack": "Back to work",
+  "accountSettingsGroupTitle": "Settings across devices",
+  "accountSettingsGroupScope": "Only theme, language, and duration. Rules, profiles, schedule, and history never leave this PC.",
+  "accountSettingsSyncShort": "Your linked PCs share these settings.",
+  "accountSettingsTransferShort": "Send or receive settings once.",
+  "accountPortableSettingsShort": "Save them to a JSON file.",
+  "accountPairingRequestsShort": "Approve new PCs on your account.",
+  "accountSettingsSyncStateOn": "On",
+  "accountSettingsSyncStateOff": "Off",
+  "accountSettingsSyncStatePending": "Pending",
+  "accountSettingsSyncStateAttention": "Needs attention",
+  "accountSettingsSyncStateConflict": "Conflict",
+  "accountSettingsSyncShared": "Shared",
+  "accountSettingsSyncLocal": "This PC only",
+  "accountMoreOptions": "More options",
+  "accountMoreInfo": "More information",
+  "accountSettingsSyncMenuHint": "These actions only affect theme, language, and duration."
 }

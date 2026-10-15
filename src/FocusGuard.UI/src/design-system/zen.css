@@ -1367,3 +1367,57 @@ html[data-surface] #root{height:100vh}
 .app-shell .account-settings-recovery{display:grid;justify-items:start;gap:10px}
 @media(width<=560px){.app-shell .account-settings-conflict-field label{grid-template-columns:18px minmax(78px,1fr) minmax(0,1fr);gap:6px;font-size:12px}.app-shell .account-settings-conflict-field>p{grid-template-columns:minmax(78px,1fr) minmax(0,1fr);gap:6px;font-size:12px}}
 @media(forced-colors:active){.app-shell .account-settings-conflict-field{border:1px solid CanvasText}.app-shell .account-settings-conflict-field label:has(input:checked){outline:1px solid Highlight}}
+
+/* Account: settings across devices (grouped, tooltip-first) */
+.app-shell .account-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.app-shell .account-settings-group{display:grid;gap:14px}
+.app-shell .account-group-head{display:flex;align-items:center;gap:6px;padding:0 4px}
+.app-shell .account-group-head h3{margin:0;color:var(--muted);font-size:12px;font-weight:650;letter-spacing:.08em;text-transform:uppercase}
+.app-shell .account-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.app-shell .account-settings-group .account-pairing,.app-shell .account-sections .account-tile{align-content:start;gap:16px;padding:20px;border-radius:20px;background:var(--glass);backdrop-filter:blur(18px)}
+.app-shell .account-tile-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.app-shell .account-tile-title{display:grid;gap:3px;min-width:0}
+.app-shell .account-title-row{display:flex;align-items:center;gap:4px;min-width:0}
+.app-shell .account-tile-title h3{margin:0;font-size:15px;font-weight:650}
+.app-shell .account-tile-title p{margin:0;color:var(--secondary);font-size:13px;line-height:1.45}
+.app-shell .account-sync-state{display:inline-flex;align-items:center;gap:7px;padding:5px 11px 5px 9px;border:1px solid var(--glass-line);border-radius:999px;background:var(--glass);color:var(--secondary);font-size:12px;font-weight:620;white-space:nowrap}
+.app-shell .account-sync-state .account-state-dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.app-shell .account-sync-state.is-on{color:var(--text);border-color:color-mix(in srgb,var(--success) 40%,var(--glass-line))}
+.app-shell .account-sync-state.is-on .account-state-dot{background:var(--success);box-shadow:0 0 0 3px color-mix(in srgb,var(--success) 18%,transparent)}
+.app-shell .account-sync-state.is-pending .account-state-dot{background:var(--accent)}
+.app-shell .account-sync-state.is-warn{color:var(--text);border-color:color-mix(in srgb,var(--warning) 45%,var(--glass-line))}
+.app-shell .account-sync-state.is-warn .account-state-dot{background:var(--warning)}
+.app-shell .account-sync-fields{display:flex;flex-wrap:wrap;gap:8px}
+.app-shell .account-sync-chip{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid var(--glass-line);border-radius:12px;background:color-mix(in srgb,var(--surface) 40%,transparent);font-size:13px;font-weight:600}
+.app-shell .account-sync-chip svg{width:13px;height:13px;color:var(--success)}
+.app-shell .account-sync-chip small{color:var(--muted);font-size:12px;font-weight:500}
+.app-shell .account-sync-chip.is-local svg{color:var(--accent)}
+.app-shell .account-hint{margin:0;color:var(--muted);font-size:12.5px;line-height:1.45}
+.app-shell .account-hint.is-ok{color:var(--success)}
+.app-shell .account-icon-button{display:inline-grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--glass-line);border-radius:999px;background:var(--glass);color:var(--secondary);cursor:pointer;anchor-name:--account-anchor;transition:transform 160ms var(--ease-out),color 160ms ease,border-color 160ms ease}
+.app-shell .account-icon-button:active:not(:disabled){transform:scale(.96)}
+.app-shell .account-icon-button:disabled{opacity:.5;cursor:default}
+.app-shell .account-icon-button svg{width:15px;height:15px}
+.app-shell .account-actions button{transition:transform 160ms var(--ease-out),color 160ms ease,border-color 160ms ease,background-color 160ms ease}
+.app-shell .account-actions button:active:not(:disabled){transform:scale(.97)}
+/* Tooltip */
+.app-shell .account-tip{position:relative;display:inline-flex}
+.app-shell .account-tip-trigger{display:inline-grid;place-items:center;width:24px;height:24px;padding:0;border:0;border-radius:999px;background:transparent;color:var(--muted);cursor:help}
+.app-shell .account-tip-trigger svg{width:14px;height:14px}
+.app-shell .account-tip-trigger:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.app-shell .account-tip-bubble{position:absolute;z-index:40;left:50%;bottom:calc(100% + 8px);width:max-content;max-width:280px;padding:10px 12px;border:1px solid var(--glass-line);border-radius:12px;background:var(--glass-strong);backdrop-filter:blur(24px);box-shadow:0 12px 32px var(--shadow-tint);color:var(--text);font-size:12.5px;font-weight:500;line-height:1.5;letter-spacing:0;text-transform:none;text-align:left;pointer-events:none;opacity:0;transform:translate(-50%,4px) scale(.97);transform-origin:50% 100%;transition:opacity 140ms var(--ease-out),transform 140ms var(--ease-out);transition-delay:0ms}
+.app-shell .account-tip:hover .account-tip-bubble,.app-shell .account-tip:focus-within .account-tip-bubble{opacity:1;transform:translate(-50%,0) scale(1);transition-delay:180ms}
+.app-shell .account-tip:focus-within .account-tip-bubble{transition-delay:0ms}
+@media(hover:hover) and (pointer:fine){.app-shell .account-tip-trigger:hover{color:var(--text)}.app-shell .account-icon-button:hover:not(:disabled){color:var(--text);border-color:color-mix(in srgb,var(--accent) 40%,var(--glass-line))}}
+/* Popover menu */
+.app-shell .account-menu{position:fixed;inset:auto;position-anchor:--account-anchor;top:anchor(bottom);left:anchor(left);margin:8px 0 0;display:none;gap:4px;min-width:240px;max-width:300px;padding:8px;border:1px solid var(--glass-line);border-radius:14px;background:var(--glass-strong);backdrop-filter:blur(24px);box-shadow:0 18px 40px var(--shadow-tint);color:var(--text);opacity:1;transform:none;transform-origin:top left;transition:opacity 160ms var(--ease-out),transform 160ms var(--ease-out),display 160ms allow-discrete,overlay 160ms allow-discrete}
+.app-shell .account-menu:popover-open{display:grid}
+@starting-style{.app-shell .account-menu:popover-open{opacity:0;transform:scale(.96) translateY(-4px)}}
+.app-shell .account-menu p{margin:0;padding:6px 10px 8px;color:var(--muted);font-size:12px;line-height:1.45}
+.app-shell .account-menu-item{display:block;width:100%;padding:9px 10px;border:0;border-radius:9px;background:transparent;color:var(--text);font:inherit;font-size:13px;font-weight:600;text-align:left;cursor:pointer}
+.app-shell .account-menu-item.is-danger{color:var(--danger)}
+.app-shell .account-menu-item:hover:not(:disabled),.app-shell .account-menu-item:focus-visible{background:color-mix(in srgb,var(--text) 8%,transparent);outline:none}
+@media(prefers-reduced-motion:reduce){.app-shell .account-tip-bubble,.app-shell .account-menu{transform:none!important;transition-property:opacity}}
+@media(prefers-reduced-transparency:reduce){.app-shell .account-settings-group .account-pairing,.app-shell .account-tip-bubble,.app-shell .account-menu{backdrop-filter:none;background:var(--surface)}}
+@media(forced-colors:active){.app-shell .account-tip-bubble,.app-shell .account-menu,.app-shell .account-sync-chip,.app-shell .account-sync-state{border:1px solid CanvasText}}
+@media(width<=560px){.app-shell .account-tile-head{grid-template-columns:auto minmax(0,1fr)}.app-shell .account-sync-state{grid-column:1/-1;justify-self:start}}

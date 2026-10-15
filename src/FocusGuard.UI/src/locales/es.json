@@ -725,5 +725,21 @@
   "blockTitle": "{app} está bloqueada",
   "blockBody": "Vuelve a lo que importa. Tu sesión termina a las {time}.",
   "blockStrict": "Sesión estricta: no se puede detener antes de tiempo.",
-  "blockBack": "Volver al trabajo"
+  "blockBack": "Volver al trabajo",
+  "accountSettingsGroupTitle": "Ajustes entre dispositivos",
+  "accountSettingsGroupScope": "Solo tema, idioma y duración. Reglas, perfiles, agenda e historial nunca salen de esta PC.",
+  "accountSettingsSyncShort": "Tus PCs vinculadas comparten estos ajustes.",
+  "accountSettingsTransferShort": "Envía o recibe ajustes una sola vez.",
+  "accountPortableSettingsShort": "Guárdalos en un archivo JSON.",
+  "accountPairingRequestsShort": "Aprueba nuevas PCs de tu cuenta.",
+  "accountSettingsSyncStateOn": "Activa",
+  "accountSettingsSyncStateOff": "Desactivada",
+  "accountSettingsSyncStatePending": "Pendiente",
+  "accountSettingsSyncStateAttention": "Requiere atención",
+  "accountSettingsSyncStateConflict": "Conflicto",
+  "accountSettingsSyncShared": "Compartido",
+  "accountSettingsSyncLocal": "Solo esta PC",
+  "accountMoreOptions": "Más opciones",
+  "accountMoreInfo": "Más información",
+  "accountSettingsSyncMenuHint": "Estas acciones solo afectan tema, idioma y duración."
 }

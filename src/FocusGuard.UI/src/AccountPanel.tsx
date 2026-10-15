@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { AccountClient, AccountSnapshot } from './native/account';
 import type { SettingsSyncChoiceSource, SettingsSyncField } from './native/account';
-import { CheckCircledIcon, LaptopIcon, LockClosedIcon, MixerHorizontalIcon, ReloadIcon } from '@radix-ui/react-icons';
+import type { ReactNode } from 'react';
+import { CheckCircledIcon, DesktopIcon, DotsHorizontalIcon, FileTextIcon, InfoCircledIcon, LaptopIcon, Link2Icon, LockClosedIcon, ReloadIcon, Share1Icon } from '@radix-ui/react-icons';
 import es from './locales/es.json';
 
 type CopyKey = keyof typeof es;
@@ -79,6 +80,33 @@ export function AccountPanel({ client, snapshot, t }: {
     && conflictReview.fields.every(field => conflictChoices[field] !== undefined);
 
   const initials = accountInitials(account?.displayName, account?.email);
+  const syncStatus = account?.settingsSyncStatus;
+  const syncStateKey: CopyKey = !account?.settingsSyncEnabled ? 'accountSettingsSyncStateOff'
+    : syncStatus === 'Attention' ? 'accountSettingsSyncStateAttention'
+      : syncStatus === 'Conflict' ? 'accountSettingsSyncStateConflict'
+        : syncStatus === 'Pending' ? 'accountSettingsSyncStatePending' : 'accountSettingsSyncStateOn';
+  const syncTone = !account?.settingsSyncEnabled ? 'off' : syncStatus === 'Attention' || syncStatus === 'Conflict' ? 'warn'
+    : syncStatus === 'Pending' ? 'pending' : 'on';
+  const closeMenu = () => (document.getElementById('account-sync-menu') as (HTMLElement & { hidePopover?(): void }) | null)?.hidePopover?.();
+  const portableCard = <div className="account-pairing account-tile" aria-labelledby="account-portable-settings-title">
+    <div className="account-tile-head">
+      <span className="account-card-icon" aria-hidden="true"><FileTextIcon /></span>
+      <div className="account-tile-title">
+        <div className="account-title-row">
+          <h3 id="account-portable-settings-title">{t('accountPortableSettingsTitle')}</h3>
+          <InfoTip id="account-portable-settings-tip" label={t('accountMoreInfo')}>{t('accountPortableSettingsDescription')}</InfoTip>
+        </div>
+        <p>{t('accountPortableSettingsShort')}</p>
+      </div>
+    </div>
+    <div className="account-actions">
+      <button type="button" className="account-secondary" onClick={() => void client.exportPortableSettings()} disabled={busy}>{t('accountPortableSettingsExport')}</button>
+      <button type="button" className="account-secondary" onClick={() => void client.importPortableSettings()} disabled={busy}>{t('accountPortableSettingsImport')}</button>
+    </div>
+    {account?.settingsTransferBusy ? <p className="account-notice" role="status">{t('accountSettingsWorking')}</p> : null}
+    {account?.settingsTransferStatus === 'PortableExported' ? <p className="account-hint is-ok" role="status">{t('accountPortableSettingsExported')}</p> : null}
+    {account?.settingsTransferStatus === 'PortableImported' ? <p className="account-hint is-ok" role="status">{t('accountPortableSettingsImported')}</p> : null}
+  </div>;
 
   return <section className={`account-panel${account?.signedIn ? ' is-signed-in' : ''}`} aria-labelledby="account-panel-title">
     <header className="account-hero">
@@ -131,96 +159,57 @@ export function AccountPanel({ client, snapshot, t }: {
       ? <p className="account-notice" role="status">{t('accountVerificationRequired')}</p> : null}
     </div>
 
-    <div className="account-sections">
-      <div className="account-pairing" aria-labelledby="account-portable-settings-title">
-        <div className="account-card-head"><span className="account-card-icon" aria-hidden="true"><MixerHorizontalIcon /></span><div>
-          <h3 id="account-portable-settings-title">{t('accountPortableSettingsTitle')}</h3>
-          <p>{t('accountPortableSettingsDescription')}</p></div></div>
-        <div className="account-actions">
-          <button type="button" className="account-secondary" onClick={() => void client.exportPortableSettings()} disabled={busy}>{t('accountPortableSettingsExport')}</button>
-          <button type="button" className="account-secondary" onClick={() => void client.importPortableSettings()} disabled={busy}>{t('accountPortableSettingsImport')}</button>
-        </div>
-        {account?.settingsTransferBusy ? <p className="account-notice" role="status">{t('accountSettingsWorking')}</p> : null}
-        {account?.settingsTransferStatus === 'PortableExported' ? <p className="account-pairing-empty" role="status">{t('accountPortableSettingsExported')}</p> : null}
-        {account?.settingsTransferStatus === 'PortableImported' ? <p className="account-pairing-empty" role="status">{t('accountPortableSettingsImported')}</p> : null}
-      </div>
-    </div>
+    {account?.signedIn && account.deviceLinked ? <section className="account-settings-group" aria-labelledby="account-settings-group-title">
+      <header className="account-group-head">
+        <h3 id="account-settings-group-title">{t('accountSettingsGroupTitle')}</h3>
+        <InfoTip id="account-settings-group-tip" label={t('accountMoreInfo')}>{t('accountSettingsGroupScope')}</InfoTip>
+      </header>
 
-    {account?.signedIn ? <div className="account-sections">
-      {account.accountHasLinkedDevice && !account.deviceLinked ? <div className="account-pairing" aria-labelledby="account-pairing-title">
-        <h3 id="account-pairing-title">{t('accountPairingTitle')}</h3>
-        <p>{t('accountPairingDescription')}</p>
-        {account.pairingId && account.pairingFingerprint ? <div className="account-pairing-code">
-          <span>{t('accountPairingCode')}</span>
-          <code>{account.pairingId}</code>
-          <span>{t('accountPairingFingerprint')}</span>
-          <code>{account.pairingFingerprint}</code>
-          <small>{t('accountPairingCompare')}</small>
-          <button type="button" className="account-secondary" onClick={() => void client.completePairing()} disabled={busy}>
-            {t('accountPairingCheck')}</button>
-        </div> : <button type="button" className="account-primary" onClick={() => void client.requestPairing()}
-          disabled={busy || !account.emailVerified}>{t('accountPairingRequest')}</button>}
-      </div> : null}
-      {account.deviceLinked ? <div className="account-pairing" aria-labelledby="account-pairing-requests-title">
-        <div className="account-card-head"><span className="account-card-icon" aria-hidden="true"><LaptopIcon /></span><div>
-          <h3 id="account-pairing-requests-title">{t('accountPairingRequests')}</h3>
-          <p>{t('accountPairingApprovalDescription')}</p></div>
-          <button type="button" className="account-secondary account-refresh" onClick={() => void client.refreshPairings()} disabled={busy}>
-            <ReloadIcon aria-hidden="true" />{t('accountPairingRefresh')}</button></div>
-        {account.pendingPairings.length > 0 ? <ul className="account-pairing-list">{account.pendingPairings.map(pairing => <li key={pairing.pairingId}>
-          <div><strong>{pairing.platform} · {pairing.clientVersion}</strong><span>{t('accountPairingCode')}: <code>{pairing.pairingId}</code></span>
-            <span>{t('accountPairingFingerprint')}: <code>{pairing.fingerprint}</code></span>
-            <small>{t('accountPairingExpires')}: {new Date(pairing.expiresAtUtc).toLocaleString()}</small></div>
-          <button type="button" className="account-primary" onClick={() => void client.approvePairing(pairing.pairingId, pairing.fingerprint)} disabled={busy}>
-            {t('accountPairingApprove')}</button>
-        </li>)}</ul> : <p className="account-pairing-empty">{t('accountPairingNone')}</p>}
-      </div> : null}
-      {account.deviceLinked ? <div className="account-pairing" aria-labelledby="account-settings-transfer-title">
-        <div className="account-card-head"><span className="account-card-icon" aria-hidden="true"><MixerHorizontalIcon /></span><div>
-          <h3 id="account-settings-transfer-title">{t('accountSettingsTransferTitle')}</h3>
-          <p>{t('accountSettingsTransferDescription')}</p></div></div>
-        <div className="account-actions">
-          <button type="button" className="account-secondary" onClick={() => void client.shareSettings()} disabled={busy}>
-            {t('accountSettingsShare')}</button>
-          <button type="button" className="account-secondary" onClick={() => void client.importSettings()} disabled={busy}>
-            {t('accountSettingsImport')}</button>
+      <div className="account-pairing account-sync-card" aria-labelledby="account-settings-sync-title">
+        <div className="account-tile-head">
+          <span className="account-card-icon" aria-hidden="true"><ReloadIcon /></span>
+          <div className="account-tile-title">
+            <div className="account-title-row">
+              <h3 id="account-settings-sync-title">{t('accountSettingsSyncTitle')}</h3>
+              <InfoTip id="account-settings-sync-tip" label={t('accountMoreInfo')}>{t('accountSettingsSyncDescription')}</InfoTip>
+            </div>
+            <p>{t('accountSettingsSyncShort')}</p>
+          </div>
+          <span className={`account-sync-state is-${syncTone}`}><span className="account-state-dot" aria-hidden="true" />{t(syncStateKey)}</span>
         </div>
-        {account.settingsTransferBusy ? <p className="account-notice" role="status">{t('accountSettingsWorking')}</p> : null}
-        {account.settingsTransferStatus === 'Shared' ? <p className="account-pairing-empty" role="status">{t('accountSettingsShared')}</p> : null}
-        {account.settingsTransferStatus === 'Imported' ? <p className="account-pairing-empty" role="status">{t('accountSettingsImported')}</p> : null}
-        {account.settingsTransferStatus === 'NoSharedSettings' ? <p className="account-pairing-empty" role="status">{t('accountSettingsNone')}</p> : null}
-      </div> : null}
-      {account.deviceLinked ? <div className="account-pairing" aria-labelledby="account-settings-sync-title">
-        <div className="account-card-head"><span className="account-card-icon" aria-hidden="true"><ReloadIcon /></span><div>
-          <h3 id="account-settings-sync-title">{t('accountSettingsSyncTitle')}</h3>
-          <p>{t('accountSettingsSyncDescription')}</p></div></div>
+        {account.settingsSyncEnabled && account.settingsSyncStatus === 'Enabled' && account.settingsSyncLocalOverrides
+          ? <div className="account-sync-fields" role="group" aria-labelledby="account-settings-overrides-title">
+            <span id="account-settings-overrides-title" className="account-sr">{t('accountSettingsSyncOverridesTitle')}</span>
+            {(['theme', 'language', 'duration'] as const).map(field => {
+              const local = account.settingsSyncLocalOverrides![field];
+              return <span key={field} className={`account-sync-chip${local ? ' is-local' : ''}`}>
+                {local ? <DesktopIcon aria-hidden="true" /> : <Link2Icon aria-hidden="true" />}
+                <span>{t(conflictFieldLabels[field])}</span>
+                <small aria-hidden="true">{t(local ? 'accountSettingsSyncLocal' : 'accountSettingsSyncShared')}</small>
+                <span className="account-sr">{t(local ? 'accountSettingsSyncOverrideLocal' : 'accountSettingsSyncOverrideFollow')}</span>
+              </span>;
+            })}
+          </div> : null}
         <div className="account-actions">
           {account.settingsSyncEnabled
             ? <>
-              <button type="button" className="account-danger" onClick={() => void client.disableSettingsSync()} disabled={busy}>{t('accountSettingsSyncDisable')}</button>
-              {account.settingsSyncStatus === 'Enabled' ? <button type="button" className="account-danger"
-                onClick={() => void client.resetSettingsSync()} disabled={busy}>{t('accountSettingsSyncReset')}</button> : null}
+              {account.settingsSyncStatus === 'Enabled' && account.settingsSyncLocalOverrides ? <button type="button" className="account-secondary"
+                onClick={() => void client.updateLocalSettingsOverrides()} disabled={busy}>{t('accountSettingsSyncOverridesAction')}</button> : null}
+              <button type="button" className="account-icon-button" popoverTarget="account-sync-menu" aria-label={t('accountMoreOptions')}
+                title={t('accountMoreOptions')} disabled={busy}><DotsHorizontalIcon aria-hidden="true" /></button>
+              <div id="account-sync-menu" className="account-menu" popover="auto" role="group" aria-label={t('accountMoreOptions')}>
+                <p>{t('accountSettingsSyncMenuHint')}</p>
+                {account.settingsSyncStatus === 'Enabled' ? <button type="button" className="account-menu-item"
+                  onClick={() => { closeMenu(); void client.resetSettingsSync(); }} disabled={busy}>{t('accountSettingsSyncReset')}</button> : null}
+                <button type="button" className="account-menu-item is-danger"
+                  onClick={() => { closeMenu(); void client.disableSettingsSync(); }} disabled={busy}>{t('accountSettingsSyncDisable')}</button>
+              </div>
             </>
             : <button type="button" className="account-primary" onClick={() => void client.enableSettingsSync()} disabled={busy}>{t('accountSettingsSyncEnable')}</button>}
         </div>
-        {account.settingsSyncEnabled && account.settingsSyncStatus === 'Enabled' && account.settingsSyncLocalOverrides
-          ? <div className="account-settings-conflict-review" role="group" aria-labelledby="account-settings-overrides-title">
-            <p id="account-settings-overrides-title">{t('accountSettingsSyncOverridesTitle')}</p>
-            <p>{t('accountSettingsSyncOverridesDescription')}</p>
-            <dl>
-              <div><dt>{t('accountSettingsSyncTheme')}</dt><dd>{t(account.settingsSyncLocalOverrides.theme
-                ? 'accountSettingsSyncOverrideLocal' : 'accountSettingsSyncOverrideFollow')}</dd></div>
-              <div><dt>{t('accountSettingsSyncLanguage')}</dt><dd>{t(account.settingsSyncLocalOverrides.language
-                ? 'accountSettingsSyncOverrideLocal' : 'accountSettingsSyncOverrideFollow')}</dd></div>
-              <div><dt>{t('accountSettingsSyncDuration')}</dt><dd>{t(account.settingsSyncLocalOverrides.duration
-                ? 'accountSettingsSyncOverrideLocal' : 'accountSettingsSyncOverrideFollow')}</dd></div>
-            </dl>
-            <button type="button" className="account-secondary" onClick={() => void client.updateLocalSettingsOverrides()}
-              disabled={busy}>{t('accountSettingsSyncOverridesAction')}</button>
-          </div> : null}
         {account.settingsSyncBusy ? <p className="account-notice" role="status">{t('accountSettingsSyncWorking')}</p> : null}
-        {account.settingsSyncStatus === 'Enabled' ? <p className="account-pairing-empty" role="status">{t('accountSettingsSyncEnabled')}</p> : null}
-        {account.settingsSyncStatus === 'Disabled' ? <p className="account-pairing-empty" role="status">{t('accountSettingsSyncDisabled')}</p> : null}
+        {account.settingsSyncStatus === 'Enabled' ? <p className="account-sr" role="status">{t('accountSettingsSyncEnabled')}</p> : null}
+        {account.settingsSyncStatus === 'Disabled' ? <p className="account-hint" role="status">{t('accountSettingsSyncDisabled')}</p> : null}
         {account.settingsSyncStatus === 'Pending' ? <p className="account-notice" role="status">{t('accountSettingsSyncPending')}</p> : null}
         {account.settingsSyncStatus === 'Conflict' && !conflictReview
           ? <p className="account-notice" role="status">{t('accountSettingsSyncConflict')}</p> : null}
@@ -278,7 +267,71 @@ export function AccountPanel({ client, snapshot, t }: {
           {account.settingsSyncRecoveryAvailable ? <button type="button" className="account-secondary" disabled={busy}
             onClick={() => void client.recoverSettingsSync()}>{t('accountSettingsSyncRecover')}</button> : null}
         </div> : null}
-        {account.settingsSyncStatus === 'Cancelled' ? <p className="account-pairing-empty" role="status">{t('accountSettingsSyncCancelled')}</p> : null}
+        {account.settingsSyncStatus === 'Cancelled' ? <p className="account-hint" role="status">{t('accountSettingsSyncCancelled')}</p> : null}
+      </div>
+
+      <div className="account-tiles">
+        <div className="account-pairing account-tile" aria-labelledby="account-settings-transfer-title">
+          <div className="account-tile-head">
+            <span className="account-card-icon" aria-hidden="true"><Share1Icon /></span>
+            <div className="account-tile-title">
+              <div className="account-title-row">
+                <h3 id="account-settings-transfer-title">{t('accountSettingsTransferTitle')}</h3>
+                <InfoTip id="account-settings-transfer-tip" label={t('accountMoreInfo')}>{t('accountSettingsTransferDescription')}</InfoTip>
+              </div>
+              <p>{t('accountSettingsTransferShort')}</p>
+            </div>
+          </div>
+          <div className="account-actions">
+            <button type="button" className="account-secondary" onClick={() => void client.shareSettings()} disabled={busy}>
+              {t('accountSettingsShare')}</button>
+            <button type="button" className="account-secondary" onClick={() => void client.importSettings()} disabled={busy}>
+              {t('accountSettingsImport')}</button>
+          </div>
+          {account.settingsTransferBusy ? <p className="account-notice" role="status">{t('accountSettingsWorking')}</p> : null}
+          {account.settingsTransferStatus === 'Shared' ? <p className="account-hint is-ok" role="status">{t('accountSettingsShared')}</p> : null}
+          {account.settingsTransferStatus === 'Imported' ? <p className="account-hint is-ok" role="status">{t('accountSettingsImported')}</p> : null}
+          {account.settingsTransferStatus === 'NoSharedSettings' ? <p className="account-hint" role="status">{t('accountSettingsNone')}</p> : null}
+        </div>
+        {portableCard}
+      </div>
+    </section> : <div className="account-sections">{portableCard}</div>}
+
+    {account?.signedIn ? <div className="account-sections">
+      {account.accountHasLinkedDevice && !account.deviceLinked ? <div className="account-pairing" aria-labelledby="account-pairing-title">
+        <h3 id="account-pairing-title">{t('accountPairingTitle')}</h3>
+        <p>{t('accountPairingDescription')}</p>
+        {account.pairingId && account.pairingFingerprint ? <div className="account-pairing-code">
+          <span>{t('accountPairingCode')}</span>
+          <code>{account.pairingId}</code>
+          <span>{t('accountPairingFingerprint')}</span>
+          <code>{account.pairingFingerprint}</code>
+          <small>{t('accountPairingCompare')}</small>
+          <button type="button" className="account-secondary" onClick={() => void client.completePairing()} disabled={busy}>
+            {t('accountPairingCheck')}</button>
+        </div> : <button type="button" className="account-primary" onClick={() => void client.requestPairing()}
+          disabled={busy || !account.emailVerified}>{t('accountPairingRequest')}</button>}
+      </div> : null}
+      {account.deviceLinked ? <div className="account-pairing account-tile" aria-labelledby="account-pairing-requests-title">
+        <div className="account-tile-head">
+          <span className="account-card-icon" aria-hidden="true"><LaptopIcon /></span>
+          <div className="account-tile-title">
+            <div className="account-title-row">
+              <h3 id="account-pairing-requests-title">{t('accountPairingRequests')}</h3>
+              <InfoTip id="account-pairing-requests-tip" label={t('accountMoreInfo')}>{t('accountPairingApprovalDescription')}</InfoTip>
+            </div>
+            <p>{t('accountPairingRequestsShort')}</p>
+          </div>
+          <button type="button" className="account-icon-button" onClick={() => void client.refreshPairings()} disabled={busy}
+            aria-label={t('accountPairingRefresh')} title={t('accountPairingRefresh')}><ReloadIcon aria-hidden="true" /></button>
+        </div>
+        {account.pendingPairings.length > 0 ? <ul className="account-pairing-list">{account.pendingPairings.map(pairing => <li key={pairing.pairingId}>
+          <div><strong>{pairing.platform} · {pairing.clientVersion}</strong><span>{t('accountPairingCode')}: <code>{pairing.pairingId}</code></span>
+            <span>{t('accountPairingFingerprint')}: <code>{pairing.fingerprint}</code></span>
+            <small>{t('accountPairingExpires')}: {new Date(pairing.expiresAtUtc).toLocaleString()}</small></div>
+          <button type="button" className="account-primary" onClick={() => void client.approvePairing(pairing.pairingId, pairing.fingerprint)} disabled={busy}>
+            {t('accountPairingApprove')}</button>
+        </li>)}</ul> : <p className="account-hint">{t('accountPairingNone')}</p>}
       </div> : null}
     </div> : <>
       <p className="account-local-note">{t('accountLocalContinues')}</p>
@@ -292,6 +345,13 @@ export function AccountPanel({ client, snapshot, t }: {
     </>}
     <p className="account-boundary">{t('accountBoundary')}</p>
   </section>;
+}
+
+function InfoTip({ id, label, children }: { id: string; label: string; children: ReactNode }) {
+  return <span className="account-tip">
+    <button type="button" className="account-tip-trigger" aria-label={label} aria-describedby={id}><InfoCircledIcon aria-hidden="true" /></button>
+    <span role="tooltip" id={id} className="account-tip-bubble">{children}</span>
+  </span>;
 }
 
 export function accountInitials(displayName?: string | null, email?: string | null) {

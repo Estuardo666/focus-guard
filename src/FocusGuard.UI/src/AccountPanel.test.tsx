@@ -209,6 +209,14 @@ describe('native account panel', () => {
       account: { ...snapshot.account!, settingsSyncEnabled: true, settingsSyncStatus: 'Enabled' } }} t={t}/>));
     expect(container.textContent).toContain(es.accountSettingsSyncEnabled);
     expect(container.textContent).toContain(es.accountSettingsSyncOverrideFollow);
+    expect(container.querySelector('.account-sync-state')?.textContent).toBe(es.accountSettingsSyncStateOn);
+    const syncTip = container.querySelector<HTMLButtonElement>('[aria-describedby="account-settings-sync-tip"]')!;
+    expect(syncTip.getAttribute('aria-label')).toBe(es.accountMoreInfo);
+    expect(container.querySelector('#account-settings-sync-tip')?.getAttribute('role')).toBe('tooltip');
+    const menu = container.querySelector('#account-sync-menu')!;
+    expect(menu.getAttribute('popover')).toBe('auto');
+    expect(container.querySelector('[popovertarget="account-sync-menu"]')?.getAttribute('aria-label')).toBe(es.accountMoreOptions);
+    expect(menu.textContent).toContain(es.accountSettingsSyncDisable);
     const localSettings = [...container.querySelectorAll('button')].find(button => button.textContent === es.accountSettingsSyncOverridesAction)!;
     act(() => localSettings.click());
     expect(accountClient.updateLocalSettingsOverrides).toHaveBeenCalledOnce();
