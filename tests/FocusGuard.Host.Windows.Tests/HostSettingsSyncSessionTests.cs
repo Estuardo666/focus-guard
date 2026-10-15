@@ -471,6 +471,29 @@ public sealed class HostSettingsSyncSessionTests
             Assert.Equal(90, localAfterEdit.LastDurationMinutes);
             Assert.Equal("en", localAfterEdit.UiLanguage);
 
+            var portablePath = Path.Combine(root, "portable-settings.json");
+            await File.WriteAllBytesAsync(portablePath, SettingsExport.Create(new(25, "dark", "es"),
+                ownerConfirmed: true));
+            service.SetPortableSettingsPresenters(
+                (_, _) => Task.FromResult<PortableSettingsFileSelection?>(null),
+                _ => Task.FromResult<string?>(portablePath),
+                (_, _) => Task.FromResult<SettingsFields?>(SettingsFields.Theme));
+            var importQueued = await service.ExecuteAsync(HostAccountAction.ImportPortableSettings,
+                CancellationToken.None);
+            Assert.True(importQueued.SettingsTransferBusy);
+            await GetPrivateTask(service, "settingsTransferTask").WaitAsync(TimeSpan.FromSeconds(5));
+            var importResult = await service.ExecuteAsync(HostAccountAction.Get, CancellationToken.None);
+            Assert.Null(importResult.Error);
+            Assert.Equal("PortableImported", importResult.SettingsTransferStatus);
+            var afterImport = await session.Outbox.LoadAsync();
+            Assert.NotNull(afterImport);
+            Assert.False(afterImport.SyncConsentEnabled);
+            Assert.Equal("dark", afterImport.LocalOverrides.Theme);
+            Assert.Equal(90, afterImport.LocalOverrides.DefaultDurationMinutes);
+            Assert.Equal(readsAfterRevoke, transport.ReadCount);
+            Assert.Equal(publishesAfterRevoke, transport.PublishCount);
+            Assert.Equal(AppTheme.Dark, preferences.Load().Theme);
+
             var reloaded = await deviceVault.LoadForAccountAsync(account.Issuer, accountBinding, CancellationToken.None)
                 ?? throw new InvalidOperationException("The linked device vault could not be reloaded.");
             reenabled = HostSettingsSyncSession.CreateForTesting(accountBinding, transport, reloaded,
@@ -484,9 +507,9 @@ public sealed class HostSettingsSyncSessionTests
             await WaitUntilAsync(() =>
             {
                 var local = preferences.Load();
-                return local.Theme == AppTheme.Light && local.LastDurationMinutes == 90;
+                return local.Theme == AppTheme.Dark && local.LastDurationMinutes == 90;
             }, TimeSpan.FromSeconds(5));
-            Assert.Equal(AppTheme.Light, preferences.Load().Theme);
+            Assert.Equal(AppTheme.Dark, preferences.Load().Theme);
             Assert.Equal(90, preferences.Load().LastDurationMinutes);
             Assert.True(await HostSettingsSyncSession.HasSavedConsentAsync(account, device.Public.DeviceId,
                 localSyncRoot: syncRoot));

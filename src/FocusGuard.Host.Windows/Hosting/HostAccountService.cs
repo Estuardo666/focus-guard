@@ -878,6 +878,9 @@ internal sealed class HostAccountService(
             var synced = await TryImportReviewedSettingsAsync(preview, token).ConfigureAwait(false);
             if (!synced)
             {
+                var selectedFields = selection.Value;
+                _ = await TryPersistDisabledLocalOverrideEditAsync(null, updated, selectedFields, token)
+                    .ConfigureAwait(false);
                 var applied = store.TryApplySharedIfUnchanged(currentDesktop.Theme, currentDesktop.UiLanguage,
                     currentDesktop.LastDurationMinutes,
                     selection.Value.HasFlag(SettingsFields.Theme) ? updated.Theme : null,
@@ -1809,15 +1812,15 @@ internal sealed class HostAccountService(
 
     private static LocalSettingsOverrides UpdateEditedLocalOverrides(LocalSettingsOverrides current,
         DesktopSettings proposed, SettingsFields changedFields) => current with
-    {
-        Theme = current.Theme is not null && (changedFields & SettingsFields.Theme) != 0
+        {
+            Theme = current.Theme is not null && (changedFields & SettingsFields.Theme) != 0
             ? proposed.Theme == AppTheme.Light ? "light" : "dark" : current.Theme,
-        UiLanguage = current.UiLanguage is not null && (changedFields & SettingsFields.Language) != 0
+            UiLanguage = current.UiLanguage is not null && (changedFields & SettingsFields.Language) != 0
             ? proposed.UiLanguage : current.UiLanguage,
-        DefaultDurationMinutes = current.DefaultDurationMinutes is not null &&
+            DefaultDurationMinutes = current.DefaultDurationMinutes is not null &&
             (changedFields & SettingsFields.Duration) != 0
             ? proposed.LastDurationMinutes : current.DefaultDurationMinutes
-    };
+        };
 
     public async Task<bool> TryImportReviewedSettingsAsync(SettingsImportPreview preview,
         CancellationToken cancellationToken)
