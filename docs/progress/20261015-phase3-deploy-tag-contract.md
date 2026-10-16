@@ -15,11 +15,11 @@ El script de despliegue ya admite una etiqueta explícita `phase3-*` para el bac
 
 ## Verificación
 
-- `cloud/deploy/Test-TncApiDeploymentContract.ps1`: PASS; verifica tags, rechazo sin tag y que el probe cursor de fase3 ocurre antes de escribir el nuevo digest; no ejecuta comandos Cloud.
+- `cloud/deploy/Test-TncApiDeploymentContract.ps1`: PASS; verifica tags, rechazo sin tag y orden `deploymentAttempted → probe cursor fase3 → guardar digest`, de modo que el fallo queda dentro del rollback; no ejecuta comandos Cloud.
 - `scripts/test-installer.ps1`: PASS, incluidos contract test, 8 casos de readiness, smoke interactivo y paridad de archivos Chrome/Edge.
 - `cloud/deploy/Test-ApiContainerSmoke.ps1`: PASS con API Docker/PostgreSQL efímeros; health live/ready 200, cursor sin bearer 401 y certificado TLS con SAN incorrecto rechazado. Contenedores y recursos temporales retirados.
 - `git diff --check`: PASS.
-- Graphify: PASS; 1.961 archivos AST, 24.859 nodos, 182.651 aristas y 1.990 comunidades.
+- Graphify: PASS; 1.961 archivos AST, 24.859 nodos, 182.651 aristas y 1.991 comunidades.
 - No se ejecutó ningún comando Cloud, `docker push` ni despliegue. El contract test invocó `Deploy-TncApi.ps1` sin tag para confirmar que falla antes de consultar `gcloud`; staging no se contactó.
 - No cambió el cliente Windows ni se regeneró `.183`.
 

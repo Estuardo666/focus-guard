@@ -17,11 +17,14 @@ if ($tagGuardIndex -lt 0 -or $cloudCommandLookupIndex -lt 0 -or $tagGuardIndex -
     throw 'API image tag validation must run before checking for Cloud SDK commands.'
 }
 $phase3RouteGuardIndex = $source.IndexOf("if (`$ImageTag.StartsWith('phase3-', [StringComparison]::Ordinal)) {", [StringComparison]::Ordinal)
+$deploymentAttemptIndex = $source.IndexOf('$deploymentAttempted = $true', [StringComparison]::Ordinal)
 $cursorRouteCheckIndex = $source.IndexOf("Wait-ApiStatus `$serviceUrl '/v1/sync/cursor' 401", [StringComparison]::Ordinal)
 $pinWriteIndex = $source.IndexOf('$defaults.apiImageDigest = $digest', [StringComparison]::Ordinal)
-if ($phase3RouteGuardIndex -lt 0 -or $cursorRouteCheckIndex -le $phase3RouteGuardIndex -or
-    $pinWriteIndex -le $cursorRouteCheckIndex) {
-    throw 'Phase 3 must verify the protected cursor route before persisting the new image digest.'
+$rollbackIndex = $source.IndexOf('if ($deploymentAttempted) {', [StringComparison]::Ordinal)
+if ($deploymentAttemptIndex -lt 0 -or $phase3RouteGuardIndex -le $deploymentAttemptIndex -or
+    $cursorRouteCheckIndex -le $phase3RouteGuardIndex -or $pinWriteIndex -le $cursorRouteCheckIndex -or
+    $rollbackIndex -le $pinWriteIndex) {
+    throw 'Phase 3 cursor route verification must run after deployment is marked attempted, before pin persistence, and inside the rollback-protected path.'
 }
 if ($source -match '\$ImageTag\s*=\s*''[^'']+''') {
     throw 'API deployment must not silently default to an old image tag.'
