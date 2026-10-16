@@ -63,7 +63,7 @@ function Wait-ApiRevision([string]$ExpectedImage, [string]$Description) {
     throw "API readiness timed out while waiting for $Description."
 }
 
-function Wait-ApiHealth([string]$BaseUrl, [string]$Path) {
+function Wait-ApiStatus([string]$BaseUrl, [string]$Path, [int]$ExpectedStatus) {
     $deadline = [DateTime]::UtcNow.AddSeconds([Math]::Min($ReadyTimeoutSeconds, 180))
     $lastStatus = 0
     $lastFailure = 'no response'
@@ -84,13 +84,13 @@ function Wait-ApiHealth([string]$BaseUrl, [string]$Path) {
                 $lastFailure = $requestException.GetType().Name
             }
         }
-        if ($lastStatus -eq 200) { return }
+        if ($lastStatus -eq $ExpectedStatus) { return }
         if ($lastStatus -ne 0 -and $lastStatus -ne 429 -and $lastStatus -lt 500) {
-            throw "API smoke check failed for $Path ($lastFailure)."
+            throw "API smoke check failed for $Path; expected HTTP $ExpectedStatus ($lastFailure)."
         }
         Start-Sleep -Seconds 3
     } while ([DateTime]::UtcNow -lt $deadline)
-    throw "API smoke check did not recover for $Path ($lastFailure)."
+    throw "API smoke check did not reach HTTP $ExpectedStatus for $Path ($lastFailure)."
 }
 
 try {
@@ -116,7 +116,10 @@ try {
     & $gcloud.Source @updateArgs
     if ($LASTEXITCODE -ne 0) { throw 'Cloud Run rejected the API image update.' }
     $ready = Wait-ApiRevision $pinnedImage 'new API revision'
-    foreach ($path in @('/health/live', '/health/ready')) { Wait-ApiHealth $serviceUrl $path }
+    foreach ($path in @('/health/live', '/health/ready')) { Wait-ApiStatus $serviceUrl $path 200 }
+    if ($ImageTag.StartsWith('phase3-', [StringComparison]::Ordinal)) {
+        Wait-ApiStatus $serviceUrl '/v1/sync/cursor' 401
+    }
 
     $defaults.apiImageDigest = $digest
     [IO.File]::WriteAllText($defaultsPath, ($defaults | ConvertTo-Json -Depth 10) + [Environment]::NewLine,
@@ -124,6 +127,9 @@ try {
     Write-Output "API deployed: $($ready.status.latestReadyRevisionName)"
     Write-Output "Image digest: $digest"
     Write-Output 'Health smoke checks: /health/live 200; /health/ready 200.'
+    if ($ImageTag.StartsWith('phase3-', [StringComparison]::Ordinal)) {
+        Write-Output 'Phase 3 route smoke check: /v1/sync/cursor without credentials returns 401.'
+    }
 }
 catch {
     $failure = $_

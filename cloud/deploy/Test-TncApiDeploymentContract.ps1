@@ -16,6 +16,13 @@ $cloudCommandLookupIndex = $source.IndexOf('Get-Command gcloud', [StringComparis
 if ($tagGuardIndex -lt 0 -or $cloudCommandLookupIndex -lt 0 -or $tagGuardIndex -gt $cloudCommandLookupIndex) {
     throw 'API image tag validation must run before checking for Cloud SDK commands.'
 }
+$phase3RouteGuardIndex = $source.IndexOf("if (`$ImageTag.StartsWith('phase3-', [StringComparison]::Ordinal)) {", [StringComparison]::Ordinal)
+$cursorRouteCheckIndex = $source.IndexOf("Wait-ApiStatus `$serviceUrl '/v1/sync/cursor' 401", [StringComparison]::Ordinal)
+$pinWriteIndex = $source.IndexOf('$defaults.apiImageDigest = $digest', [StringComparison]::Ordinal)
+if ($phase3RouteGuardIndex -lt 0 -or $cursorRouteCheckIndex -le $phase3RouteGuardIndex -or
+    $pinWriteIndex -le $cursorRouteCheckIndex) {
+    throw 'Phase 3 must verify the protected cursor route before persisting the new image digest.'
+}
 if ($source -match '\$ImageTag\s*=\s*''[^'']+''') {
     throw 'API deployment must not silently default to an old image tag.'
 }
@@ -24,6 +31,9 @@ foreach ($guard in @(
     'The current API digest differs from gcp-staging.json; refusing to replace unexpected state.',
     'if ($deploymentAttempted) {',
     'Wait-ApiRevision $previousImage',
+    "`$ImageTag.StartsWith('phase3-', [StringComparison]::Ordinal)",
+    "Wait-ApiStatus `$serviceUrl '/v1/sync/cursor' 401",
+    'Wait-ApiStatus $serviceUrl $path 200',
     "[IO.File]::WriteAllText(`$defaultsPath, `$originalDefaults"
 )) {
     if (-not $source.Contains($guard, [StringComparison]::Ordinal)) {

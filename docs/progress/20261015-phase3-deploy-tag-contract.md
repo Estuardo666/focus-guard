@@ -7,6 +7,7 @@ El script de despliegue ya admite una etiqueta explícita `phase3-*` para el bac
 ## Cambios
 
 - `Deploy-TncApi.ps1` ya no propone por defecto el tag antiguo de Fase 2; requiere `-ImageTag` explícito.
+- Para `phase3-*`, después de readiness también verifica que `/v1/sync/cursor` anónimo responda 401 antes de guardar el pin nuevo; una ruta ausente o fallo activa el rollback.
 - `TncApiDeploymentContract.psm1` valida tags `phase2-*`/`phase3-*` en minúsculas y limita su longitud.
 - `Test-TncApiDeploymentContract.ps1` prueba tags aceptados/rechazados, la ausencia de un tag por defecto y que la validación ocurra antes de consultar `gcloud`.
 - `scripts/test-installer.ps1` parsea y ejecuta el contract test offline.
@@ -14,10 +15,11 @@ El script de despliegue ya admite una etiqueta explícita `phase3-*` para el bac
 
 ## Verificación
 
-- `cloud/deploy/Test-TncApiDeploymentContract.ps1`: PASS; informa que no ejecutó comandos Cloud.
+- `cloud/deploy/Test-TncApiDeploymentContract.ps1`: PASS; verifica tags, rechazo sin tag y que el probe cursor de fase3 ocurre antes de escribir el nuevo digest; no ejecuta comandos Cloud.
 - `scripts/test-installer.ps1`: PASS, incluidos contract test, 8 casos de readiness, smoke interactivo y paridad de archivos Chrome/Edge.
+- `cloud/deploy/Test-ApiContainerSmoke.ps1`: PASS con API Docker/PostgreSQL efímeros; health live/ready 200, cursor sin bearer 401 y certificado TLS con SAN incorrecto rechazado. Contenedores y recursos temporales retirados.
 - `git diff --check`: PASS.
-- Graphify: PASS; 1.961 archivos AST, 24.858 nodos, 182.650 aristas y 2.026 comunidades.
+- Graphify: PASS; 1.961 archivos AST, 24.859 nodos, 182.651 aristas y 1.990 comunidades.
 - No se ejecutó ningún comando Cloud, `docker push` ni despliegue. El contract test invocó `Deploy-TncApi.ps1` sin tag para confirmar que falla antes de consultar `gcloud`; staging no se contactó.
 - No cambió el cliente Windows ni se regeneró `.183`.
 
