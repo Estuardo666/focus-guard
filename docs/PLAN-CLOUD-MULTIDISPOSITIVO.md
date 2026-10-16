@@ -998,6 +998,8 @@ El candidato `.182` aclara en EN/ES que el campo compartido llamado tema es modo
 
 Preparación sin staging: `Deploy-TncApi.ps1` acepta explícitamente tags `phase3-*`, rechaza la ejecución sin tag y, solo para Phase3, exige que `/v1/sync/cursor` anónimo responda 401 después de marcar el intento y antes de actualizar el pin; el fallo está bajo rollback. Conserva digest guard, health/readiness y rollback. El contract test offline verifica el orden y Docker API smoke confirma health200, cursor401 y TLS SAN. El último registro/pin es API `.00016-gc7`/digest `cf4e600…`; el estado vivo debe releerse después del gate físico. No se llamó a Cloud. [Checkpoint](progress/20261015-phase3-deploy-tag-contract.md).
 
+El fixture `-LocalPostgres` ahora replica el rol API de staging: `focusguard_product` es no-superuser y dueño de la base; el API crea `focusguard_device` y `sync_cursors` durante el startup schema con ese rol. Phase3SyncOnly pasa20/20 y el harness completo152/152 con Docker efímero. Así queda probada localmente la autorización DDL necesaria para el cursor, no los permisos actuales de Neon. [Checkpoint](progress/20261015-phase3-api-least-privilege-local.md).
+
 1. Documentos cifrados CAS/ETag.
 2. Snapshot/cursor, outbox y avisos.
 3. Edición offline, conflictos y tombstones.

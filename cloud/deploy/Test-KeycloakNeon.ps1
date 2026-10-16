@@ -32,18 +32,45 @@ if ($LocalPostgres) {
             Start-Sleep -Seconds 1
         }
         if (-not $postgresReady) { throw 'Isolated local PostgreSQL fixture did not become ready.' }
+        $productPassword=[Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(24)).ToLowerInvariant()
+        $createProductRoleSql="CREATE ROLE focusguard_product LOGIN PASSWORD '$productPassword' NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT;"
+        # pg_isready can report success against the temporary bootstrap server before the official image restarts PostgreSQL.
+        # Retry real SQL work through that transition; only use a dedicated non-superuser product owner for the API.
+        $productRoleReady=$false
+        $safeRoleFailure='PostgreSQL did not finish role initialization.'
+        for ($attempt=0; $attempt -lt 30; $attempt++) {
+            $productRoleCheck=(docker exec $postgresContainerName psql -U focusguard -d focusguard_keycloak -tAc "SELECT CASE WHEN rolcanlogin AND NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole AND NOT rolinherit THEN 'least-privilege' ELSE 'privileged' END FROM pg_roles WHERE rolname='focusguard_product'" 2>$null | Out-String).Trim()
+            if ($LASTEXITCODE -eq 0 -and $productRoleCheck -ceq 'least-privilege') { $productRoleReady=$true; break }
+            $createProductRoleOutput=@($createProductRoleSql | docker exec --interactive $postgresContainerName psql -v ON_ERROR_STOP=1 -U focusguard -d focusguard_keycloak 2>&1)
+            $createProductRoleExitCode=$LASTEXITCODE
+            if ($createProductRoleExitCode -eq 0) { $productRoleReady=$true; break }
+            $roleFailure=($createProductRoleOutput -join "`n")
+            $safeRoleFailure=$roleFailure.Replace($productPassword,'[redacted]').Trim()
+            if ($safeRoleFailure.Length -gt 500) { $safeRoleFailure=$safeRoleFailure.Substring(0,500) }
+            Start-Sleep -Seconds 1
+        }
+        if (-not $productRoleReady) { throw "Unable to create the isolated least-privilege product role: $safeRoleFailure" }
+
         $productDatabaseReady=$false
         for ($attempt=0; $attempt -lt 30; $attempt++) {
-            $existingDatabase=docker exec $postgresContainerName psql -U focusguard -d focusguard_keycloak -tAc "SELECT 1 FROM pg_database WHERE datname='focusguard_product'" 2>$null
-            if ($LASTEXITCODE -eq 0 -and (($existingDatabase -join '').Trim() -eq '1')) {
-                $productDatabaseReady=$true
-                break
-            }
-            docker exec $postgresContainerName createdb -U focusguard focusguard_product 2>$null | Out-Null
+            $productDatabaseOwner=(docker exec $postgresContainerName psql -U focusguard -d focusguard_keycloak -tAc "SELECT pg_get_userbyid(datdba) FROM pg_database WHERE datname='focusguard_product'" 2>$null | Out-String).Trim()
+            if ($LASTEXITCODE -eq 0 -and $productDatabaseOwner -ceq 'focusguard_product') { $productDatabaseReady=$true; break }
+            docker exec $postgresContainerName createdb -U focusguard --owner=focusguard_product focusguard_product 2>$null | Out-Null
             if ($LASTEXITCODE -eq 0) { $productDatabaseReady=$true; break }
             Start-Sleep -Seconds 1
         }
-        if (-not $productDatabaseReady) { throw 'Unable to create the isolated product test database after readiness retries.' }
+        if (-not $productDatabaseReady) { throw 'Unable to create the isolated product database with the API role as owner.' }
+
+        $productConnectionReady=$false
+        $stableProductConnections=0
+        for ($attempt=0; $attempt -lt 30; $attempt++) {
+            $productProbe=(docker exec $postgresContainerName psql -U focusguard_product -d focusguard_product -tAc 'SELECT 1' 2>$null | Out-String).Trim()
+            if ($LASTEXITCODE -eq 0 -and $productProbe -ceq '1') { $stableProductConnections++ }
+            else { $stableProductConnections=0 }
+            if ($stableProductConnections -ge 3) { $productConnectionReady=$true; break }
+            Start-Sleep -Seconds 1
+        }
+        if (-not $productConnectionReady) { throw 'The non-superuser API role could not establish stable local PostgreSQL connections.' }
     } catch {
         if ($postgresStarted) { docker rm --volumes --force $postgresContainerName | Out-Null; $postgresStarted=$false }
         throw
@@ -51,7 +78,7 @@ if ($LocalPostgres) {
     $env:KC_DB_URL='jdbc:postgresql://host.docker.internal:' + $postgresPort + '/focusguard_keycloak?sslmode=disable'
     $env:KC_DB_USERNAME='focusguard'
     $env:KC_DB_PASSWORD=$postgresPassword
-    $env:FG_API_TEST_CONNECTION='Host=127.0.0.1;Port=' + $postgresPort + ';Database=focusguard_product;Username=focusguard;Password=' + $postgresPassword + ';SSL Mode=Disable;Timeout=15;Command Timeout=10'
+    $env:FG_API_TEST_CONNECTION='Host=127.0.0.1;Port=' + $postgresPort + ';Database=focusguard_product;Username=focusguard_product;Password=' + $productPassword + ';SSL Mode=Disable;Timeout=15;Command Timeout=10'
     $env:FG_PHASE3_API_SYNC_TEST='1'
     if ($Phase3SyncOnly) {
         $env:FG_PHASE3_SYNC_ONLY='1'
@@ -266,4 +293,5 @@ $fixtureRealm | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $fixtureFile
     if ($postgresStarted) { docker rm --volumes --force $postgresContainerName | Out-Null }
     if ($fixtureFile) { Remove-Item -LiteralPath $fixtureFile -ErrorAction SilentlyContinue }
     foreach ($name in @('KC_DB_URL','KC_DB_USERNAME','KC_DB_PASSWORD','KC_HOSTNAME','KC_LOG_LEVEL','FG_TEST_PASSWORD','KC_BOOTSTRAP_ADMIN_USERNAME','KC_BOOTSTRAP_ADMIN_PASSWORD','Identity__Authority','FG_API_TEST_CONNECTION','ConnectionStrings__Product','FG_PHASE3_API_SYNC_TEST','FG_PHASE3_SYNC_ONLY','FG_PHASE3_HOST_IDENTITY_TEST','NODE_ENV','PORTAL_ORIGIN','OIDC_ISSUER','OIDC_CLIENT_SECRET','DATABASE_URL','FOCUSGUARD_API_ORIGIN','BFF_ENCRYPTION_KEY','FG_BFF_TEST_PASSWORD')) { Remove-Item -LiteralPath ('Env:'+$name) -ErrorAction SilentlyContinue }
+    $postgresPassword=$null; $productPassword=$null; $createProductRoleSql=$null; $createProductRoleOutput=$null; $roleFailure=$null
 }
