@@ -22,6 +22,8 @@ La build `.183` produjo manifest, Setup autónomo y ZIP del menú. El guard de p
 
 El paquete `.183` está generado y validado localmente; no se ha instalado ni desplegado. Después de que `.175` o posterior escriba estado de sync, volver a `.174` detiene sync conservando el archivo; recuperar con `.175` o posterior. No degradar validaciones ni borrar estado para pasar una prueba.
 
+El script de despliegue de API ya admite tags explícitos `phase3-*`; el contract test local pasa sin ejecutar comandos Cloud. El digest `.16` en `gcp-staging.json` es el último valor registrado, no una observación del servicio vivo en este checkpoint; reconciliarlo en un preflight posterior a la aceptación física.
+
 ## Resultado y próximo paso
 
 Los cinco entregables tienen implementación integrada y evidencia local. El propietario reportó convergencia física de los tres campos, cierre/reapertura, conflicto offline de duración y reset compartido normal. Quedan reset offline/tombstone, override físico, portátil en el peer y comparación de preferencias locales; la segunda PC ya no está disponible. Staging sigue detrás del gate físico, según el plan. No repetir suites verdes sin un cambio o hallazgo que lo justifique.

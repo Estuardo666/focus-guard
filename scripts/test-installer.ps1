@@ -5,7 +5,7 @@ $guardTokens = $null
 $guardErrors = $null
 [System.Management.Automation.Language.Parser]::ParseFile($productionGuardPath, [ref]$guardTokens, [ref]$guardErrors) | Out-Null
 if ($guardErrors.Count -ne 0) { throw 'Production Client guard has PowerShell parse errors.' }
-$scripts = @('build-installer.ps1', 'install-focusguard.ps1', 'uninstall-focusguard.ps1', 'build-browser-extension.ps1', 'generate-extension-icons.ps1', 'measure-focusguard-resources.ps1', 'invoke-installer-rollback-drill.ps1', 'arm-fg112-production-reboot-drill.ps1', 'complete-fg112-production-reboot-drill.ps1', '..\cloud\deploy\Deploy-TncApi.ps1')
+$scripts = @('build-installer.ps1', 'install-focusguard.ps1', 'uninstall-focusguard.ps1', 'build-browser-extension.ps1', 'generate-extension-icons.ps1', 'measure-focusguard-resources.ps1', 'invoke-installer-rollback-drill.ps1', 'arm-fg112-production-reboot-drill.ps1', 'complete-fg112-production-reboot-drill.ps1', '..\cloud\deploy\Deploy-TncApi.ps1', '..\cloud\deploy\TncApiDeploymentContract.psm1', '..\cloud\deploy\Test-TncApiDeploymentContract.ps1')
 
 foreach ($scriptName in $scripts) {
     $path = Join-Path $PSScriptRoot $scriptName
@@ -529,4 +529,5 @@ try { Wait-FocusGuardAuthenticatedReadiness -Probe { '0' } -Wait { throw 'Must n
 catch { $invalidResultRejected = $_.Exception.Message -like '*invalid result*' }
 if (-not $invalidResultRejected) { throw 'Malformed readiness result was accepted.' }
 Write-Output 'Authenticated service readiness retry tests passed (8 cases).'
+& (Join-Path $repositoryRoot 'cloud\deploy\Test-TncApiDeploymentContract.ps1')
 Write-Output "Installer script tests passed for $repositoryRoot."

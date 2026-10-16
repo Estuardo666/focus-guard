@@ -1,19 +1,21 @@
 [CmdletBinding()]
 param(
-    [string]$ImageTag = 'phase2-revocation-20261012',
+    [string]$ImageTag = '',
     [int]$ReadyTimeoutSeconds = 600
 )
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
+$deploymentContractPath = Join-Path $PSScriptRoot 'TncApiDeploymentContract.psm1'
+Import-Module -Name $deploymentContractPath -Force
 $defaultsPath = Join-Path $PSScriptRoot 'gcp-staging.json'
 $defaults = Get-Content -LiteralPath $defaultsPath -Raw | ConvertFrom-Json
 if ($defaults.account -cne 'transcitynorwalk@gmail.com' -or $defaults.projectId -cne 'tnc-staging-2026' -or
     $defaults.apiService -cne 'tnc-api-staging' -or $defaults.region -cne 'us-east4') {
     throw 'API deployment target does not match the authorized TNC staging project.'
 }
-if ($ImageTag -notmatch '^phase2-[a-z0-9-]{1,48}$' -or $ReadyTimeoutSeconds -notin 60..1800) {
-    throw 'Invalid API image tag or readiness timeout.'
+if (-not (Test-TncApiImageTag -ImageTag $ImageTag) -or $ReadyTimeoutSeconds -notin 60..1800) {
+    throw 'API image tag must use a supported phase2-/phase3- prefix and readiness timeout must be 60-1800 seconds.'
 }
 $gcloud = Get-Command gcloud -ErrorAction Stop
 $docker = Get-Command docker -ErrorAction Stop

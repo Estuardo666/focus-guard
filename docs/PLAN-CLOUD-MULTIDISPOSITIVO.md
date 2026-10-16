@@ -996,6 +996,8 @@ El candidato `.182` aclara en EN/ES que el campo compartido llamado tema es modo
 
 `.183` extiende esa precisión a Preferencias: el selector ahora se llama «Modo claro/oscuro / Light/dark mode» y la nota de compatibilidad con FocusGuard clásico deja claro que paleta y orbe siguen locales a esta app. UI254/254 y WebView2 empaquetado3/3 pasan; el renderer verifica también el rótulo en 720×480 sin recorte. Host263/263 se repitió con esa integración. Sync162/162 permanece como suite previa porque Sync.Core no cambió. Build/verificaciones de assets, guard, installer tests, self-test y graphify pasan. Setup/ZIP generados y hasheados; no instalados. [Checkpoint](progress/20261015-phase3-preferences-theme-label.md).
 
+Preparación sin staging: `Deploy-TncApi.ps1` ahora acepta explícitamente tags `phase3-*` y rechaza la ejecución sin tag; conserva la comprobación de digest vivo contra `gcp-staging.json`, health/readiness y rollback. El test offline se añadió a `scripts/test-installer.ps1`. El último registro y pin del repositorio es API `.00016-gc7`/digest `cf4e600…`; el estado vivo debe releerse después del gate físico. No se llamó a Cloud. [Checkpoint](progress/20261015-phase3-deploy-tag-contract.md).
+
 1. Documentos cifrados CAS/ETag.
 2. Snapshot/cursor, outbox y avisos.
 3. Edición offline, conflictos y tombstones.
