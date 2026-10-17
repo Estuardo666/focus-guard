@@ -141,6 +141,9 @@ catch {
         if ($LASTEXITCODE -ne 0) { throw 'API deployment failed and the previous image rollback command also failed.' }
         $null = Wait-ApiRevision $previousImage 'previous API image rollback'
         [IO.File]::WriteAllText($defaultsPath, $originalDefaults, [Text.UTF8Encoding]::new($false))
+        foreach ($path in @('/health/live', '/health/ready')) {
+            Wait-ApiStatus $serviceUrl $path 200
+        }
     }
     throw $failure
 }

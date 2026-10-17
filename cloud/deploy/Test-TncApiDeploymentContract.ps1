@@ -90,4 +90,15 @@ if ($stableServiceCheckIndex -lt 0 -or $imageBuildIndex -lt 0 -or $stableService
     throw 'Cloud Run revision stability must be checked before building or pushing a replacement image.'
 }
 
+$rollbackIndex = $source.IndexOf('if ($deploymentAttempted) {', [StringComparison]::Ordinal)
+$rollbackRevisionIndex = $source.IndexOf('Wait-ApiRevision $previousImage', $rollbackIndex, [StringComparison]::Ordinal)
+$rollbackPinRestoreIndex = $source.IndexOf('[IO.File]::WriteAllText($defaultsPath, $originalDefaults', $rollbackIndex, [StringComparison]::Ordinal)
+$rollbackHealthIndex = $source.IndexOf("Wait-ApiStatus `$serviceUrl `$path 200", $rollbackIndex, [StringComparison]::Ordinal)
+$rollbackHealthPathsIndex = $source.IndexOf("foreach (`$path in @('/health/live', '/health/ready'))", $rollbackIndex, [StringComparison]::Ordinal)
+if ($rollbackIndex -lt 0 -or $rollbackRevisionIndex -le $rollbackIndex -or
+    $rollbackPinRestoreIndex -le $rollbackRevisionIndex -or $rollbackHealthPathsIndex -le $rollbackPinRestoreIndex -or
+    $rollbackHealthIndex -le $rollbackHealthPathsIndex) {
+    throw 'Rollback must restore the previous revision and pin, then verify live and ready health before reporting recovery.'
+}
+
 Write-Output 'TNC API deployment contract tests passed; no Cloud commands were run.'
