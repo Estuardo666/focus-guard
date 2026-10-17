@@ -32,8 +32,8 @@ $activeAccount = (& $gcloud.Source config get-value account "--account=$account"
 if ($LASTEXITCODE -ne 0 -or $activeAccount -cne $account) { throw 'The selected Google account is not authenticated.' }
 
 $service = (& $gcloud.Source @serviceArgs | ConvertFrom-Json)
-if ($LASTEXITCODE -ne 0 -or ($service.status.conditions | Where-Object type -eq 'Ready').status -ne 'True') {
-    throw 'The existing API staging service is not Ready; refusing deployment.'
+if ($LASTEXITCODE -ne 0 -or -not (Test-TncApiServiceStable -Service $service)) {
+    throw 'The existing API staging service is not fully Ready or has an in-progress revision; refusing deployment.'
 }
 $previousImage = [string]$service.spec.template.spec.containers[0].image
 $previousDigest = ($previousImage -split '@')[-1]

@@ -10,6 +10,41 @@ foreach ($tag in @('', 'latest', 'phase1-old', 'phase4-new', 'phase3-', 'phase3-
     if (Test-TncApiImageTag -ImageTag $tag) { throw "Expected API image tag to be rejected: $tag" }
 }
 
+function New-ServiceState {
+    param(
+        [string]$LatestCreated = 'tnc-api-staging-00017',
+        [string]$LatestReady = 'tnc-api-staging-00017',
+        [string]$Ready = 'True',
+        [switch]$OmitReadyCondition,
+        [switch]$OmitRevisionNames
+    )
+
+    $status = [ordered]@{ conditions = @() }
+    if (-not $OmitRevisionNames) {
+        $status.latestCreatedRevisionName = $LatestCreated
+        $status.latestReadyRevisionName = $LatestReady
+    }
+    if (-not $OmitReadyCondition) {
+        $status.conditions = @([pscustomobject]@{ type = 'Ready'; status = $Ready })
+    }
+    [pscustomobject]@{ status = [pscustomobject]$status }
+}
+
+if (-not (Test-TncApiServiceStable -Service (New-ServiceState))) {
+    throw 'A fully ready service with no in-progress revision should pass the deployment preflight.'
+}
+foreach ($serviceState in @(
+    (New-ServiceState -LatestCreated 'tnc-api-staging-00018' -LatestReady 'tnc-api-staging-00017'),
+    (New-ServiceState -Ready 'False'),
+    (New-ServiceState -OmitReadyCondition),
+    (New-ServiceState -OmitRevisionNames),
+    ([pscustomobject]@{})
+)) {
+    if (Test-TncApiServiceStable -Service $serviceState) {
+        throw 'An incomplete or unsettled service state must be rejected before deployment.'
+    }
+}
+
 $source = Get-Content -LiteralPath $deploymentScript -Raw
 $tagGuardIndex = $source.IndexOf('Test-TncApiImageTag -ImageTag $ImageTag', [StringComparison]::Ordinal)
 $cloudCommandLookupIndex = $source.IndexOf('Get-Command gcloud', [StringComparison]::Ordinal)
@@ -48,5 +83,11 @@ $missingTagRejected = $false
 try { & $deploymentScript }
 catch { $missingTagRejected = $_.Exception.Message -like '*supported phase2-/phase3-*' }
 if (-not $missingTagRejected) { throw 'Running the deployment script without an explicit image tag was not rejected offline.' }
+
+$stableServiceCheckIndex = $source.IndexOf('Test-TncApiServiceStable -Service $service', [StringComparison]::Ordinal)
+$imageBuildIndex = $source.IndexOf('& $docker.Source build', [StringComparison]::Ordinal)
+if ($stableServiceCheckIndex -lt 0 -or $imageBuildIndex -lt 0 -or $stableServiceCheckIndex -gt $imageBuildIndex) {
+    throw 'Cloud Run revision stability must be checked before building or pushing a replacement image.'
+}
 
 Write-Output 'TNC API deployment contract tests passed; no Cloud commands were run.'
